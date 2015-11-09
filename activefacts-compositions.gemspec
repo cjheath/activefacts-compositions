@@ -19,9 +19,10 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 1.10.a"
+  spec.add_development_dependency "bundler", ">= 1.10", "~> 1.10.6"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec"
+  spec.add_development_dependency "rspec", "~> 3.3"
 
-  spec.add_runtime_dependency(%q<activefacts-metamodel>, [">= 1.7.0", "~> 1.7"])
+  spec.add_runtime_dependency("activefacts-metamodel", ">= 1.8", "~> 1.8.0")
+  spec.add_development_dependency "activefacts", "~> 1.8", "~> 1.8.0"
 end

@@ -1,0 +1,48 @@
+#! /usr/bin/env ruby
+#
+#       ActiveFacts: Read a Vocabulary (from a NORMA, CQL or other file) and run a generator
+#
+# Copyright (c) 2009 Clifford Heath. Read the LICENSE file.
+#
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
+require 'bundler/setup' # Set up gems listed in the Gemfile.
+$:.unshift File.dirname(File.expand_path(__FILE__))+"/../lib"
+
+require 'activefacts/metamodel'
+require 'activefacts/compositions/binary'
+
+arg = ARGV.shift
+
+# Load the file type input method
+if arg
+  arg, *options = *arg.split(/=/)
+  extension = arg.sub(/\A.*\./,'').downcase
+  input_handler = "activefacts/input/#{extension}"
+  require input_handler
+
+  input_class = extension.upcase
+  input_klass = ActiveFacts::Input.const_get(input_class.to_sym)
+  raise "Expected #{input_handler} to define #{input_class}" unless input_klass
+end
+
+# Read the input file:
+begin
+  if input_klass
+    vocabulary = input_klass.readfile(arg, *options)
+  else
+    vocabulary = true
+  end
+
+  exit 0 unless vocabulary
+
+  vocabulary.finalise unless vocabulary == true
+
+  compositor = ActiveFacts::Compositions::Binary.new(vocabulary.constellation, "test")
+  compositor.generate
+
+rescue => e
+  $stderr.puts "#{e.message}"
+  # puts "\t#{e.backtrace*"\n\t"}"
+  $stderr.puts "\t#{e.backtrace*"\n\t"}" if trace :exception
+  exit 1
+end
