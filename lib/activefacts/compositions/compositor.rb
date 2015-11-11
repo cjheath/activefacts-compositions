@@ -99,19 +99,20 @@ module ActiveFacts
 	  # return if rt == :many_one
 	  # return if rt == :supertype  # REVISIT: But look for partition, separate, etc.
 
-	  trace :composition, "Populating reference for #{role_type counterpart} #{counterpart.object_type.name} in #{counterpart.fact_type.default_reading.inspect}"
-	  @constellation.Absorption(:new, parent: parent, object_type: counterpart.object_type, parent_role: role, child_role: counterpart)
+	  a = @constellation.Absorption(:new, parent: parent, object_type: counterpart.object_type, parent_role: role, child_role: counterpart)
+	  #trace :binarize, "Populating absorption for #{role_type counterpart} #{counterpart.object_type.name} in #{counterpart.fact_type.default_reading.inspect}"
 	else
-	  trace :composition, "Populating indicator for #{counterpart.fact_type.default_reading.inspect}"
-	  @constellation.Indicator(:new, parent: parent, role: role)
+	  #trace :binarize, "Populating indicator for #{counterpart.fact_type.default_reading.inspect}"
+	  a = @constellation.Indicator(:new, parent: parent, role: role)
 	end
+	trace :binarize, "Populating #{a.inspect}"
       end
 
       def populate_references
 	@mappings = Hash.new{|h, k| h[k] = @constellation.Mapping(:new, object_type: k)}
 
 	@constellation.ObjectType.each do |key, object_type|
-	  trace :composition, "Populating references for #{object_type.name}" do
+	  trace :binarize, "Populating references for #{object_type.name}" do
 	    object_type.all_role.each do |role|
 	      # REVISIT: dafuq? Is this looking for a constraint over a derivation? This looks wrong.
 	      # next if role.fact_type.preferred_reading.role_sequence.all_role_ref.to_a[0].play
@@ -135,6 +136,10 @@ module ActiveFacts
 	    end
 	  end
 	end
+      end
+
+      def absorb_key component
+	# REVISIT: Absorb copies of the existential roles of this component's composition
       end
 
     end
