@@ -95,30 +95,48 @@ module ActiveFacts
 	if counterpart.fact_type.all_role.size != 1 or
 	  counterpart.fact_type.is_a?(ActiveFacts::Metamodel::LinkFactType)
 	  rt = role_type(counterpart)
-	  explode if rt == :many_many # "Can't happen"
+	  if rt == :many_many
+	    raise "Can't absorb many-to-many (until we absorb derived fact types, or don't require explicit objectification)"
+	  end
 	  # return if rt == :many_one
 	  # return if rt == :supertype  # REVISIT: But look for partition, separate, etc.
 
-	  a = @constellation.Absorption(:new, parent: parent, object_type: counterpart.object_type, parent_role: role, child_role: counterpart)
-	  #trace :binarize, "Populating absorption for #{role_type counterpart} #{counterpart.object_type.name} in #{counterpart.fact_type.default_reading.inspect}"
+	  a = @constellation.Absorption(
+	      :new,
+	      parent: parent,
+	      object_type: counterpart.object_type,
+	      parent_role: role,
+	      child_role: counterpart
+	    )
+	  # Populate the absorption/reverse_absorption (putting the "many" or optional side as reverse)
+	  if r = @component_by_fact[role.fact_type]
+	    if rt == :many_one or	# A non-first-normal-form absorption
+		rt == :supertype or	# Could prevent the supertype from standing alone, but that's ok in partition
+		rt == :one_one && role.is_mandatory && !counterpart.is_mandatory or	# Could prevent the non-mandatory type standing alone
+		rt == :one_one && role.object_type.name > counterpart.object_type.name	# For stability
+	      a.reverse_absorption = r
+	    else
+	      a.absorption = r
+	    end
+	  else
+	    @component_by_fact[role.fact_type] = a
+	  end
 	else
-	  #trace :binarize, "Populating indicator for #{counterpart.fact_type.default_reading.inspect}"
 	  a = @constellation.Indicator(:new, parent: parent, role: role)
+	  @component_by_fact[role.fact_type] = a  # For completeness, in case a subclass uses it
 	end
 	trace :binarize, "Populating #{a.inspect}"
       end
 
       def populate_references
 	@mappings = Hash.new{|h, k| h[k] = @constellation.Mapping(:new, object_type: k)}
+	@component_by_fact = {}
 
 	@constellation.ObjectType.each do |key, object_type|
 	  trace :binarize, "Populating references for #{object_type.name}" do
 	    object_type.all_role.each do |role|
-	      # REVISIT: dafuq? Is this looking for a constraint over a derivation? This looks wrong.
-	      # next if role.fact_type.preferred_reading.role_sequence.all_role_ref.to_a[0].play
-	      next if role.variable_as_projection   # This is a role in a derived fact type
+	      next if role.variable_as_projection   # REVISIT: Ignore roles in derived fact types?
 	      populate_reference object_type, role
-
 	    end
 	  end
 	end
