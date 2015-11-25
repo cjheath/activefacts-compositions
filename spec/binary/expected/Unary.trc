@@ -1,0 +1,7 @@
+# Full binary composition
+#   Mapping (top) of Name
+#   Mapping (top) of Person
+#     0: Absorption (existential) in Person of Person Name in "Person has Person Name" (forward)
+#     1: Indicator "Person is dead"  (as "Is Dead")
+#   Mapping (top) of Person Name
+#     0: Absorption (optional) in Person Name of Person in "Person Name is of Person" (reverse)

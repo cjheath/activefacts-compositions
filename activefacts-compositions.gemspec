@@ -25,4 +25,5 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency("activefacts-metamodel", ">= 1.8", "~> 1.8.3")
   spec.add_development_dependency "activefacts", "~> 1.8", "~> 1.8.0"
+  spec.add_development_dependency "activefacts-cql", "~> 1.8", "~> 1.8.0"
 end

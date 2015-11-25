@@ -1,0 +1,5 @@
+# Full binary composition
+#   Mapping (top) of Id
+#     0: Absorption (optional) in Id of Thing in "Id is of Thing" (reverse)
+#   Mapping (top) of Thing
+#     0: Absorption (existential) in Thing of Id in "Thing has Id" (forward)

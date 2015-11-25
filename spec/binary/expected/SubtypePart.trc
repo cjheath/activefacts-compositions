@@ -1,0 +1,9 @@
+# Full binary composition
+#   Mapping (top) of Id
+#   Mapping (top) of Sub
+#     0: Absorption (supertype) in Sub of Super in "Sub is a kind of Super" (forward)
+#   Mapping (top) of Super
+#     0: Absorption (existential) in Super of Super Id in "Super has Super Id" (forward)
+#     1: Absorption (subtype) in Super of Sub in "Super is a Sub" (reverse)
+#   Mapping (top) of Super Id
+#     0: Absorption (optional) in Super Id of Super in "Super Id is of Super" (reverse)
