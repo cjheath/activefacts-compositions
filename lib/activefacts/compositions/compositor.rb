@@ -86,7 +86,7 @@ module ActiveFacts
 
 	    object_type.all_role.each do |role|
 	      next if role.variable_as_projection   # REVISIT: Ignore roles in derived fact types?
-	      next if !role.is_mirror_role && role.mirror_role_as_base_role # Exclude base roles
+	      next if role.mirror_role_as_base_role # Exclude base roles
 	      populate_reference object_type, role
 	    end
 	    if object_type.is_a?(ActiveFacts::Metamodel::ValueType)
