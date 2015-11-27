@@ -34,8 +34,6 @@ module ActiveFacts
 	  if rt == :many_many
 	    raise "Can't absorb many-to-many (until we absorb derived fact types, or don't require explicit objectification)"
 	  end
-	  # return if rt == :many_one
-	  # return if rt == :supertype  # REVISIT: But look for partition, separate, etc.
 
 	  a = @constellation.Absorption(
 	      :new,
@@ -70,7 +68,7 @@ module ActiveFacts
       end
 
       def populate_references
-	# A table of Mappings by object type, with a default mapping:
+	# A table of Mappings by object type, with a default Mapping for each:
 	@mappings = Hash.new do |h, object_type|
 	  h[object_type] = @constellation.Mapping(
 	      :new,
@@ -85,11 +83,12 @@ module ActiveFacts
 	    @mappings[object_type]  # Ensure we create the top Mapping
 
 	    object_type.all_role.each do |role|
-	      next if role.variable_as_projection   # REVISIT: Ignore roles in derived fact types?
-	      next if role.mirror_role_as_base_role # Exclude base roles
+	      next if role.mirror_role_as_base_role # Exclude base roles, just use link fact types
+	      next if role.variable_as_projection   # REVISIT: Continue to ignore roles in derived fact types?
 	      populate_reference object_type, role
 	    end
 	    if object_type.is_a?(ActiveFacts::Metamodel::ValueType)
+	      # This requires a change in the metamodel to use TypeInheritance for ValueTypes
 	      if object_type.supertype
 		trace :binarize, "REVISIT: Eliding supertype #{object_type.supertype.name} for #{object_type.name}"
 	      end
@@ -112,7 +111,6 @@ module ActiveFacts
 	if fact_type.is_a?(ActiveFacts::Metamodel::LinkFactType)
 	  # Prevent an unnecessary from-1 search:
 	  from_1 = true
-	  #debugger
 	  # Change the to_1 search to detect a one-to-one:
 	  role = fact_type.implying_role
 	  fact_type = role.fact_type

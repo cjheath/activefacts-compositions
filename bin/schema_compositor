@@ -10,6 +10,7 @@ $:.unshift File.dirname(File.expand_path(__FILE__))+"/../lib"
 
 require 'activefacts/metamodel'
 require 'activefacts/compositions/binary'
+require 'activefacts/compositions/relational'
 
 arg = ARGV.shift
 
@@ -37,7 +38,7 @@ begin
 
   vocabulary.finalise unless vocabulary == true
 
-  compositor = ActiveFacts::Compositions::Binary.new(vocabulary.constellation, "test")
+  compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, "test")
   compositor.generate
 
 rescue => e
