@@ -8,7 +8,7 @@ module ActiveFacts
 
       # A candidate is a Mapping of an object type which may become a Composition (a table, in relational-speak)
       class Candidate
-	attr_reader :mapping, :is_table, :tentative
+	attr_reader :mapping, :is_table, :is_tentative
 
 	def initialize mapping
 	  @mapping = mapping
@@ -19,35 +19,39 @@ module ActiveFacts
 	end
 
 	def references_from
-	  @mapping.all_member.select{|c| c.is_a?(MM::Absorption) && !c.reverse_absorption }
+	  @mapping.all_member.select{|m| m.is_a?(MM::Absorption) && !m.reverse_absorption }
 	end
 	alias_method :rf, :references_from
 
 	def references_to
-	  @mapping.all_member.select{|c| c.is_a?(MM::Absorption) && !c.absorption }
+	  @mapping.all_member.select{|m| m.is_a?(MM::Absorption) && !m.absorption }
 	end
 	alias_method :rt, :references_to
 
+	def unique_references
+	  @mapping.all_member.select{|m| m.is_a?(MM::Absorption) && m.parent_role.is_unique }
+	end
+
 	def has_references
-	  @mapping.all_member.select{|c| c.is_a?(MM::Absorption) }
+	  @mapping.all_member.select{|m| m.is_a?(MM::Absorption) }
 	end
 
 	def definitely_not_table
-	  @tentative = @is_table = false
+	  @is_tentative = @is_table = false
 	end
 
 	def definitely_table
-	  @tentative = false
+	  @is_tentative = false
 	  @is_table = true
 	end
 
 	def probably_not_table
-	  @tentative = true
+	  @is_tentative = true
 	  @is_table = false
 	end
 
 	def probably_table
-	  @tentative = @is_table = true
+	  @is_tentative = @is_table = true
 	end
 
 	def assign_default
@@ -144,7 +148,59 @@ module ActiveFacts
 
       def optimise_absorption
 	trace :relational, "Optimise Relational Composition" do
-	  # REVISIT: Incomplete
+	  undecided = @candidates.keys.select{|object_type| @candidates[object_type].is_tentative}
+	  pass = 0
+	  finalised = []
+	  begin
+	    pass += 1
+	    trace :relational, "Starting optimisation pass #{pass}" do
+	      finalised = optimise_absorption_pass(undecided)
+	    end
+	    trace :relational, "Finalised #{finalised.size} on this pass: #{finalised.map{|f| f.name}*', '}"
+	    undecided -= finalised
+	  end while !finalised.empty?
+	end
+      end
+
+      def optimise_absorption_pass undecided
+	possible_flips = {}
+	undecided.select do |object_type|
+	  candidate = @candidates[object_type]
+	  trace :relational, "Considering possible status of #{object_type.name}" do
+
+	    # Rule 1: Always absorb an objectified unary into its role player:
+	    if (f = object_type.fact_type) && f.all_role.size == 1
+	      trace :relational, "Absorb objectified unary #{object_type.name} into #{f.all_role.single.object_type.name}"
+	      candidate.definitely_not_table
+	      next object_type
+	    end
+
+	    # Rule 2: If the preferred_identifier contains one role only, played by an entity type that can absorb us, do that:
+	    absorbing_ref = nil
+	    if object_type.is_a?(MM::EntityType) and		  # We're an entity type
+	      (pi_roles = object_type.preferred_identifier_roles).size == 1 and	  # Our PI has one role
+	      pi_roles[0].object_type.is_a?(MM::EntityType) and	  # played by another Entity Type
+	      candidate.unique_references.detect do |absorption|
+		  next unless absorption.child_role == pi_roles[0] # Not the identifying absorption
+
+		  # Look at the other end; make sure it's a forward absorption:
+		  absorption = absorption.reverse_absorption ? absorption.reverse_absorption : absorption.flip!
+
+		  next absorbing_ref = absorption
+		end
+	      candidate.definitely_not_table
+	      trace :relational, "#{object_type.name} is fully absorbed along its sole reference path #{absorbing_ref.inspect}"
+	      next object_type
+	    end
+
+	    # Rule 3: If there's more than one absorption path and any functional dependencies that can't absorb us, it's a table
+
+	    # Rule 4: If this object can be fully absorbed, do that (might require some flips)
+
+	    # Rule 5: If this object absorbs no non-identifying roles, it's not a table, but is fully absorbed, perhaps in multiple places
+
+	    false   # Otherwise we failed to make a decision about this object type
+	  end
 	end
       end
 
