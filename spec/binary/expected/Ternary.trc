@@ -13,12 +13,12 @@
 #     0: Absorption (optional) in DateTime Value of DateTime in "DateTime Value is of DateTime" (reverse)
 #   Mapping (top) of Film
 #     0: Absorption (existential) in Film of Film ID in "Film has Film ID" (forward)
-#     1: Absorption (optional) in Film of Name in "Film has Name" (reverse)
+#     1: Absorption (optional) in Film of Name in "Film has Name" (forward)
 #     2: Absorption (multiple) in Film of Session in "Session involves Film" (reverse)
 #   Mapping (top) of Film ID
 #     0: Absorption (optional) in Film ID of Film in "Film ID is of Film" (reverse)
 #   Mapping (top) of Name
-#     0: Absorption (multiple) in Name of Film in "Film has Name" (forward)
+#     0: Absorption (multiple) in Name of Film in "Film has Name" (reverse)
 #   Mapping (top) of Session
 #     0: Absorption (existential) in Session of Cinema in "Session involves Cinema" (forward)
 #     1: Absorption (existential) in Session of DateTime in "Session involves DateTime" (forward)
