@@ -1,5 +1,4 @@
-# Full binary composition
-#   Mapping (top) of May
-#     0: Absorption (optional) in May of Must in "May is in Must" (forward)
-#   Mapping (top) of Must
-#     0: Absorption (mandatory) in Must of May in "Must contains May" (reverse)
+# Mapping (top) of May
+#   0: Absorption (optional) in May of Must in "May is in Must" (forward)
+# Mapping (top) of Must
+#   0: Absorption (mandatory) in Must of May in "Must contains May" (reverse)

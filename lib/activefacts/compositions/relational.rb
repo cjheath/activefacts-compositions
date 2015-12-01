@@ -1,4 +1,5 @@
 require "activefacts/compositions"
+require "activefacts/compositions/binary"
 
 module ActiveFacts
   module Compositions
@@ -18,19 +19,18 @@ module ActiveFacts
 	  @mapping.object_type
 	end
 
+	# References from us are things we can absorb and have a forward absorption for
 	def references_from
-	  @mapping.all_member.select{|m| m.is_a?(MM::Absorption) && !m.reverse_absorption }
+	  # Anything that's not a Mapping must be an Absorption
+	  @mapping.all_member.select{|m| !m.is_a?(MM::Mapping) or !m.reverse_absorption && m.parent_role.is_unique }
 	end
 	alias_method :rf, :references_from
 
+	# References to us are things that can absorb us and they have a forward absorption for
 	def references_to
-	  @mapping.all_member.select{|m| m.is_a?(MM::Absorption) && !m.absorption }
+	  @mapping.all_member.map{|m| m.is_a?(MM::Mapping) ? m.reverse_absorption : nil}.compact.select{|r| r.parent_role.is_unique }
 	end
 	alias_method :rt, :references_to
-
-	def unique_references
-	  @mapping.all_member.select{|m| m.is_a?(MM::Absorption) && m.parent_role.is_unique }
-	end
 
 	def has_references
 	  @mapping.all_member.select{|m| m.is_a?(MM::Absorption) }
@@ -57,7 +57,7 @@ module ActiveFacts
 	def assign_default
 	  o = object_type
 	  if o.is_separate
-	    trace :relational, "#{o.name} is a table because it's declared independent or separate"
+	    trace :relational_mapping, "#{o.name} is a table because it's declared independent or separate"
 	    definitely_table
 	    return
 	  end
@@ -65,19 +65,19 @@ module ActiveFacts
 	  case o
 	  when MM::ValueType
 	    if o.is_auto_assigned
-	      trace :relational, "#{o.name} is not a table because it is auto assigned"
+	      trace :relational_mapping, "#{o.name} is not a table because it is auto assigned"
 	      definitely_not_table
 	    elsif references_from.size == 0 and references_to.size > 0 || o.all_value_type_as_supertype.size > 0
-	      trace :relational, "#{o.name} is not a table because it has no references to absorb but can be absorbed elsewhere"
+	      trace :relational_mapping, "#{o.name} is not a table because it has no references to absorb but can be absorbed elsewhere"
 	      definitely_not_table
 	    else
-	      trace :relational, "#{o.name} is a table because it has references to absorb"
+	      trace :relational_mapping, "#{o.name} is a table because it has references to absorb"
 	      definitely_table
 	    end
 
 	  when MM::EntityType
 	    if references_to.empty? and !references_from.detect{|absorption| absorption.parent_role.is_unique && absorption.child_role.is_unique}
-	      trace :relational, "#{o.name} is a table because it has nothing to absorb it"
+	      trace :relational_mapping, "#{o.name} is a table because it has nothing to absorb it"
 	      definitely_table
 	      return
 	    end
@@ -85,26 +85,26 @@ module ActiveFacts
 	      # We know that this entity type is not a separate or partitioned subtype, so a supertype that can absorb us does
 	      identifying_fact_type = o.preferred_identifier.role_sequence.all_role_ref.to_a[0].role.fact_type
 	      if identifying_fact_type.is_a?(MM::TypeInheritance)
-		trace :relational, "#{o.name} is absorbed into supertype #{identifying_fact_type.supertype_role.name}"
+		trace :relational_mapping, "#{o.name} is absorbed into supertype #{identifying_fact_type.supertype_role.name}"
 		definitely_not_table
 	      else
-		trace :relational, "Subtype #{o.name} is initially presumed to be a table"
+		trace :relational_mapping, "Subtype #{o.name} is initially presumed to be a table"
 		probably_not_table
 	      end
 	      return
 	    end	# subtype
 
 	    v = nil
-	    if references_to.size > 1 and   # Absorbed in more than one place
-		o.preferred_identifier.role_sequence.all_role_ref.detect{|rr|
+	    if references_to.size > 1 and   # Can be absorbed in more than one place
+		o.preferred_identifier.role_sequence.all_role_ref.detect do |rr|
 		  (v = rr.role.object_type).is_a?(MM::ValueType) and v.is_auto_assigned
-		}
-	      trace :relational, "#{o.name} must be a table to support its auto-assigned identifier #{v.name}"
+		end
+	      trace :relational_mapping, "#{o.name} must be a table to support its auto-assigned identifier #{v.name}"
 	      definitely_table
 	      return
 	    end
 
-	    trace :relational, "#{o.name} is initially presumed to be a table"
+	    trace :relational_mapping, "#{o.name} is initially presumed to be a table"
 	    probably_table
 
 	  end	# case
@@ -114,49 +114,56 @@ module ActiveFacts
 
     public
       def generate
-	super
+	trace :relational_mapping, "Generating relational composition" do
+	  super
 
-	@candidates = @mappings.inject({}){|h,(absorption, mapping)| h[mapping.object_type] = Candidate.new(mapping); h}
+	  make_candidates
 
-	@ca = @candidates.values
+	  @ca = @candidates.values  # REVISIT: Delete after debugging
 
-	trace :relational, "Setting default assumptions about table/non-table" do
-	  @ca.each(&:assign_default)
-	end
+	  assign_defaults
 
-	optimise_absorption
+	  optimise_absorption
 
-	delete_reverse_absorptions
+	  delete_reverse_absorptions
 
-	absorb_all_columns
+	  absorb_all_columns
 
-	make_composites
+	  make_composites
 
-	inject_value_fields
+	  inject_value_fields
 
-	trace :relational, "Full relational composition" do
-	  @composition.all_composite.sort_by{|composite| composite.mapping.name}.each do |composite|
-	    composite.mapping.show_trace
+	  trace :relational_, "Full relational composition" do
+	    @composition.all_composite.sort_by{|composite| composite.mapping.name}.each do |composite|
+	      composite.mapping.show_trace
+	    end
 	  end
 	end
       end
 
-      # Absorb all items which aren't tables (and keys to those which are) recursively
-      def absorb_all_columns
-	# REVISIT: Incomplete
+      def make_candidates
+	@candidates = @mappings.inject({}){|h,(absorption, mapping)| h[mapping.object_type] = Candidate.new(mapping); h}
+      end
+
+      def assign_defaults
+	trace :relational_mapping, "Preparing relational composition by setting default assumptions" do
+	  @candidates.each do |object_type, candidate|
+	    candidate.assign_default
+	  end
+	end
       end
 
       def optimise_absorption
-	trace :relational, "Optimise Relational Composition" do
+	trace :relational_mapping, "Optimise Relational Composition" do
 	  undecided = @candidates.keys.select{|object_type| @candidates[object_type].is_tentative}
 	  pass = 0
 	  finalised = []
 	  begin
 	    pass += 1
-	    trace :relational, "Starting optimisation pass #{pass}" do
+	    trace :relational_mapping, "Starting optimisation pass #{pass}" do
 	      finalised = optimise_absorption_pass(undecided)
 	    end
-	    trace :relational, "Finalised #{finalised.size} on this pass: #{finalised.map{|f| f.name}*', '}"
+	    trace :relational_mapping, "Finalised #{finalised.size} on this pass: #{finalised.map{|f| f.name}*', '}"
 	    undecided -= finalised
 	  end while !finalised.empty?
 	end
@@ -166,21 +173,23 @@ module ActiveFacts
 	possible_flips = {}
 	undecided.select do |object_type|
 	  candidate = @candidates[object_type]
-	  trace :relational, "Considering possible status of #{object_type.name}" do
+	  trace :relational_mapping, "Considering possible status of #{object_type.name}" do
 
 	    # Rule 1: Always absorb an objectified unary into its role player:
 	    if (f = object_type.fact_type) && f.all_role.size == 1
-	      trace :relational, "Absorb objectified unary #{object_type.name} into #{f.all_role.single.object_type.name}"
+	      trace :relational_mapping, "Absorb objectified unary #{object_type.name} into #{f.all_role.single.object_type.name}"
 	      candidate.definitely_not_table
 	      next object_type
 	    end
 
 	    # Rule 2: If the preferred_identifier contains one role only, played by an entity type that can absorb us, do that:
 	    absorbing_ref = nil
+	    pi_roles = []
 	    if object_type.is_a?(MM::EntityType) and		  # We're an entity type
 	      (pi_roles = object_type.preferred_identifier_roles).size == 1 and	  # Our PI has one role
 	      pi_roles[0].object_type.is_a?(MM::EntityType) and	  # played by another Entity Type
-	      candidate.unique_references.detect do |absorption|
+	      candidate.references_from.detect do |absorption|
+		  next unless absorption.is_a?(MM::Absorption)
 		  next unless absorption.child_role == pi_roles[0] # Not the identifying absorption
 
 		  # Look at the other end; make sure it's a forward absorption:
@@ -189,11 +198,32 @@ module ActiveFacts
 		  next absorbing_ref = absorption
 		end
 	      candidate.definitely_not_table
-	      trace :relational, "#{object_type.name} is fully absorbed along its sole reference path #{absorbing_ref.inspect}"
+	      trace :relational_mapping, "#{object_type.name} is fully absorbed along its sole reference path #{absorbing_ref.inspect}"
 	      next object_type
 	    end
 
 	    # Rule 3: If there's more than one absorption path and any functional dependencies that can't absorb us, it's a table
+	    non_identifying_refs_from =
+	      candidate.references_from.reject do |absorption|
+		absorption.is_a?(MM::Absorption) && pi_roles.include?(absorption.child_role.base_role)
+	      end
+	    trace :relational_mapping, "#{object_type.name} has #{non_identifying_refs_from.size} non-identifying functional roles" do
+	      non_identifying_refs_from.each do |a|
+		trace :relational_mapping, a.inspect
+	      end
+	    end
+
+	    trace :relational_mapping, "#{object_type.name} has #{candidate.references_to.size} absorption paths" do
+	      candidate.references_to.each do |a|
+		trace :relational_mapping, a.inspect
+	      end
+	    end
+	    if candidate.references_to.size > 1 and
+		non_identifying_refs_from.size > 0
+	      trace :relational_mapping, "#{object_type.name} has #{non_identifying_refs_from.size} non-identifying functional dependencies and #{candidate.references_to.size} absorption paths so 3NF requires it be a table"
+	      candidate.definitely_table
+	      next object_type
+	    end
 
 	    # Rule 4: If this object can be fully absorbed, do that (might require some flips)
 
@@ -216,6 +246,11 @@ module ActiveFacts
 	end
       end
 
+      # Absorb all items which aren't tables (and keys to those which are) recursively
+      def absorb_all_columns
+	# REVISIT: Incomplete
+      end
+
       # After all table/non-table decisions are made, convert Mappings for tables into Composites and retract the rest:
       def make_composites
 	@candidates.keys.to_a.each do |object_type|
@@ -236,7 +271,7 @@ module ActiveFacts
 	@candidates.each do |object_type, candidate|
 	  mapping = candidate.mapping
 	  if object_type.is_a?(MM::ValueType) and !mapping.all_member.detect{|m| m.is_a?(MM::ValueField)}
-	    trace :relational, "Adding value field for #{object_type.name}"
+	    trace :relational_mapping, "Adding value field for #{object_type.name}"
 	    @constellation.ValueField(:new, parent: mapping, name: "Value", object_type: object_type)
 	    mapping.re_rank
 	  end

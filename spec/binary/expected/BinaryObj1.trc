@@ -1,15 +1,14 @@
-# Full binary composition
-#   Mapping (top) of Beer
-#     0: Absorption (existential) in Beer of Beer Name in "Beer has Beer Name" (forward)
-#     1: Absorption (multiple) in Beer of Favorite Beer in "Favorite Beer involves Beer" (reverse)
-#   Mapping (top) of Beer Name
-#     0: Absorption (optional) in Beer Name of Beer in "Beer Name is of Beer" (reverse)
-#   Mapping (top) of Favorite Beer
-#     0: Absorption (existential) in Favorite Beer of Person in "Favorite Beer involves Person" (forward)
-#     1: Absorption (mandatory) in Favorite Beer of Beer in "Favorite Beer involves Beer" (forward)
-#   Mapping (top) of Name
-#   Mapping (top) of Person
-#     0: Absorption (existential) in Person of Person Name in "Person has Person Name" (forward)
-#     1: Absorption (optional) in Person of Favorite Beer in "Favorite Beer involves Person" (reverse)
-#   Mapping (top) of Person Name
-#     0: Absorption (optional) in Person Name of Person in "Person Name is of Person" (reverse)
+# Mapping (top) of Beer
+#   0: Absorption (existential) in Beer of Beer Name in "Beer has Beer Name" (forward)
+#   1: Absorption (multiple) in Beer of Favorite Beer in "Favorite Beer involves Beer" (reverse)
+# Mapping (top) of Beer Name
+#   0: Absorption (optional) in Beer Name of Beer in "Beer Name is of Beer" (reverse)
+# Mapping (top) of Favorite Beer
+#   0: Absorption (existential) in Favorite Beer of Person in "Favorite Beer involves Person" (forward)
+#   1: Absorption (mandatory) in Favorite Beer of Beer in "Favorite Beer involves Beer" (forward)
+# Mapping (top) of Name
+# Mapping (top) of Person
+#   0: Absorption (existential) in Person of Person Name in "Person has Person Name" (forward)
+#   1: Absorption (optional) in Person of Favorite Beer in "Favorite Beer involves Person" (reverse)
+# Mapping (top) of Person Name
+#   0: Absorption (optional) in Person Name of Person in "Person Name is of Person" (reverse)

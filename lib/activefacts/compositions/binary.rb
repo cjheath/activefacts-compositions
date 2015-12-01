@@ -6,14 +6,14 @@ module ActiveFacts
       def generate
 	super
 
-	trace :binary, "Constructing Binary Composition" do
+	trace :binary_, "Constructing Binary Composition" do
 	  @mappings.keys.sort_by(&:name).each do |object_type|
 	    mapping = @mappings[object_type]
 	    mapping.re_rank
 	  end
 	end
 
-	trace :composition, "Full binary composition" do
+	trace :binary_, "Full binary composition" do
 	  @mappings.keys.sort_by(&:name).each do |object_type|
 	    mapping = @mappings[object_type]
 	    mapping.show_trace 

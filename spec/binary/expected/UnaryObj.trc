@@ -1,9 +1,8 @@
-# Full binary composition
-#   Mapping (top) of Death
-#     0: Absorption (existential) in Death of Person in "Death involves Person" (forward)
-#   Mapping (top) of Name
-#   Mapping (top) of Person
-#     0: Absorption (existential) in Person of Person Name in "Person has Person Name" (forward)
-#     1: Absorption (optional) in Person of Death in "Death involves Person" (reverse)
-#   Mapping (top) of Person Name
-#     0: Absorption (optional) in Person Name of Person in "Person Name is of Person" (reverse)
+# Mapping (top) of Death
+#   0: Absorption (existential) in Death of Person in "Death involves Person" (forward)
+# Mapping (top) of Name
+# Mapping (top) of Person
+#   0: Absorption (existential) in Person of Person Name in "Person has Person Name" (forward)
+#   1: Absorption (optional) in Person of Death in "Death involves Person" (reverse)
+# Mapping (top) of Person Name
+#   0: Absorption (optional) in Person Name of Person in "Person Name is of Person" (reverse)

@@ -2,13 +2,13 @@ ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../../Gemfile', __FILE__)
 require 'bundler/setup' # Set up gems listed in the Gemfile.
 
 # require 'spec_helper'
-require 'activefacts/compositions/binary'
+require 'activefacts/compositions/relational'
 require 'activefacts/input/cql'
 
 # Hack into the tracing mechanism to save the output from the :composition key:
 class << trace
   def display key, str
-    $trace_output << str+"\n" if key == :composition
+    $trace_output << str+"\n" # if [:composition, :relational].include? key 
   end
 end
 
@@ -31,7 +31,7 @@ RSpec::Matchers.define :be_like do |expected|
   diffable
 end
 
-describe "Binary absorption from CQL" do
+describe "Relational absorption from CQL" do
   dir = Pathname.new(__FILE__+'/../').relative_path_from(Pathname(Dir.pwd)).to_s
   actual_dir = dir+'/actual'
   Dir.mkdir actual_dir unless Dir.exist? actual_dir
@@ -41,9 +41,9 @@ describe "Binary absorption from CQL" do
     files = `git ls-files "#{dir}/*.cql"`.split(/\n/)
   end
   files.each do |cql_file|
-    it "produces the expected binary absorption for #{cql_file}" do
+    it "produces the expected relational absorption for #{cql_file}" do
       trace.reinitialize
-      trace.enable :composition
+      trace.enable :relational
 
       expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, dir+'/expected/\2.trc')
       actual = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, dir+'/actual/\2.trc')
@@ -54,7 +54,7 @@ describe "Binary absorption from CQL" do
 
       vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
       vocabulary.finalise
-      compositor = ActiveFacts::Compositions::Binary.new(vocabulary.constellation, "test")
+      compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, "test")
       compositor.generate
       output = generated_trace
 

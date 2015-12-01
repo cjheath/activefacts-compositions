@@ -1,0 +1,35 @@
+# Full relational composition
+#   Mapping (top) of Acceptable Substitution
+#     0: Absorption (existential) in Acceptable Substitution of Product in "Acceptable Substitution involves Product"
+#     1: Absorption (existential) in Acceptable Substitution of Product in "Acceptable Substitution involves Product"
+#     2: Absorption (existential) in Acceptable Substitution of Season in "Acceptable Substitution involves Season"
+#   Mapping (top) of Month
+#     0: Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#     1: Absorption (mandatory) in Month of Season in "Month is in Season"
+#   Mapping (top) of Product
+#     0: Absorption (existential) in Product of Product Name in "Product has Product Name"
+#   Mapping (top) of Production Forecast
+#     0: Absorption (existential) in Production Forecast of Refinery in "Production Forecast involves Refinery"
+#     1: Absorption (existential) in Production Forecast of Supply Period in "Production Forecast involves Supply Period"
+#     2: Absorption (existential) in Production Forecast of Product in "Production Forecast involves Product"
+#     3: Absorption (mandatory) in Production Forecast of Quantity in "Production Forecast involves Quantity"
+#     4: Absorption (optional) in Production Forecast of Cost in "Production Forecast predicts Cost"
+#   Mapping (top) of Refinery
+#     0: Absorption (existential) in Refinery of Refinery Name in "Refinery has Refinery Name"
+#   Mapping (top) of Region
+#     0: Absorption (existential) in Region of Region Name in "Region has Region Name"
+#   Mapping (top) of Regional Demand
+#     0: Absorption (existential) in Regional Demand of Region in "Regional Demand involves Region"
+#     1: Absorption (existential) in Regional Demand of Supply Period in "Regional Demand involves Supply Period"
+#     2: Absorption (existential) in Regional Demand of Product in "Regional Demand involves Product"
+#     3: Absorption (mandatory) in Regional Demand of Quantity in "Regional Demand involves Quantity"
+#   Mapping (top) of Supply Period
+#     0: Absorption (existential) in Supply Period of Year in "Supply Period is in Year"
+#     1: Absorption (existential) in Supply Period of Month in "Supply Period is in Month"
+#   Mapping (top) of Transport Route
+#     0: Absorption (existential) in Transport Route of Transport Method in "Transport Route involves Transport Method"
+#     1: Absorption (existential) in Transport Route of Refinery in "Transport Route involves Refinery"
+#     2: Absorption (existential) in Transport Route of Region in "Transport Route involves Region"
+#     3: Absorption (optional) in Transport Route of Cost in "Transport Route incurs Cost per kl"
+#   Mapping (top) of Year
+#     0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
