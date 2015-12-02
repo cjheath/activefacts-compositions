@@ -10,6 +10,7 @@ module ActiveFacts
       # A candidate is a Mapping of an object type which may become a Composition (a table, in relational-speak)
       class Candidate
 	attr_reader :mapping, :is_table, :is_tentative
+	attr_accessor :is_absorbed
 
 	def initialize mapping
 	  @mapping = mapping
@@ -67,16 +68,19 @@ module ActiveFacts
 	    if o.is_auto_assigned
 	      trace :relational_mapping, "#{o.name} is not a table because it is auto assigned"
 	      definitely_not_table
-	    elsif references_from.size == 0 and references_to.size > 0 || o.all_value_type_as_supertype.size > 0
-	      trace :relational_mapping, "#{o.name} is not a table because it has no references to absorb but can be absorbed elsewhere"
-	      definitely_not_table
-	    else
+	    elsif references_from.size > 0
 	      trace :relational_mapping, "#{o.name} is a table because it has references to absorb"
 	      definitely_table
+	    else
+	      trace :relational_mapping, "#{o.name} is not a table because it will be absorbed wherever needed"
+	      definitely_not_table
 	    end
 
 	  when MM::EntityType
-	    if references_to.empty? and !references_from.detect{|absorption| absorption.parent_role.is_unique && absorption.child_role.is_unique}
+	    if references_to.empty? and
+		!references_from.detect do |absorption|	  # detect whether anything can absorb this entity type
+		  absorption.is_a?(MM::Mapping) && absorption.parent_role.is_unique && absorption.child_role.is_unique
+		end
 	      trace :relational_mapping, "#{o.name} is a table because it has nothing to absorb it"
 	      definitely_table
 	      return
@@ -197,8 +201,8 @@ module ActiveFacts
 
 		  next absorbing_ref = absorption
 		end
-	      candidate.definitely_not_table
 	      trace :relational_mapping, "#{object_type.name} is fully absorbed along its sole reference path #{absorbing_ref.inspect}"
+	      candidate.definitely_not_table
 	      next object_type
 	    end
 
@@ -213,7 +217,7 @@ module ActiveFacts
 	      end
 	    end
 
-	    trace :relational_mapping, "#{object_type.name} has #{candidate.references_to.size} absorption paths" do
+	    trace :relational_mapping, "#{object_type.name} has #{candidate.references_to.size} references to it" do
 	      candidate.references_to.each do |a|
 		trace :relational_mapping, a.inspect
 	      end
@@ -225,9 +229,49 @@ module ActiveFacts
 	      next object_type
 	    end
 
-	    # Rule 4: If this object can be fully absorbed, do that (might require some flips)
+	    # At this point, this object has no functional dependencies that would prevent its absorption
+	    next false if !candidate.is_table	# We can't reduce the number of tables by absorbing this one
 
-	    # Rule 5: If this object absorbs no non-identifying roles, it's not a table, but is fully absorbed, perhaps in multiple places
+	    absorption_paths =
+	      ( non_identifying_refs_from +   # But we should exclude any that are already involved in an absorption; pre-decided ET=>ET or supertype absorption!
+	        candidate.references_to
+	      ).reject do |a|
+		next true unless a.is_a?(MM::Absorption)
+		cc = @candidates[a.child_role.object_type]
+		next true if !cc.is_table
+		next true if !(a.child_role.is_unique && a.parent_role.is_unique)
+
+		# Allow the sole identifying role for this object
+		next false if pi_roles.size == 1 && pi_roles.include?(a.parent_role)
+		next true unless a.parent_role.is_mandatory
+		next true if cc.is_absorbed # REVISIT: We can be absorbed into something that's also absorbed, but not into us!
+		false
+	      end
+
+	    trace :relational_mapping, "#{object_type.name} has #{absorption_paths.size} absorption paths"
+
+	    # Rule 4: If this object can be fully absorbed along non-identifying roles, do that (maybe flip some absorptions)
+	    if absorption_paths.size > 0
+	      trace :relational_mapping, "#{object_type.name} is fully absorbed in #{absorption_paths.size} places" do
+		absorption_paths.each do |a|
+		  flip = a.reverse_absorption
+		  a.flip! if flip
+		  trace :relational_mapping, "#{object_type.name} is FULLY ABSORBED via #{a.inspect}#{flip ? ' (flipped)' : ''}"
+		end
+	      end
+
+	      candidate.definitely_not_table
+	      candidate.is_absorbed = true
+	      next object_type
+	    end
+
+	    # Rule 5: If this object has no functional dependencies, it can be fully absorbed (must be along an identifying role?)
+	    if non_identifying_refs_from.size == 0
+	      trace :relational_mapping, "#{object_type.name} is fully absorbed in #{candidate.references_to.size} places: #{candidate.references_to.map{|ref| ref.inspect}*", "}"
+	      candidate.definitely_not_table
+	      candidate.is_absorbed = true
+	      next object_type
+	    end
 
 	    false   # Otherwise we failed to make a decision about this object type
 	  end

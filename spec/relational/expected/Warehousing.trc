@@ -8,8 +8,6 @@
 #     1: Absorption (mandatory) in Bin of Quantity in "Bin contains Quantity"
 #     2: Absorption (optional) in Bin of Product in "Bin contains Product"
 #     3: Absorption (optional) in Bin of Warehouse in "Warehouse contains Bin"
-#   Mapping (top) of Dispatch
-#     0: Absorption (existential) in Dispatch of Dispatch ID in "Dispatch has Dispatch ID"
 #   Mapping (top) of Dispatch Item
 #     0: Absorption (existential) in Dispatch Item of Dispatch Item ID in "Dispatch Item has Dispatch Item ID"
 #     1: Absorption (mandatory) in Dispatch Item of Product in "Dispatch Item is Product"
@@ -31,8 +29,6 @@
 #     0: Absorption (existential) in Purchase Order Item of Purchase Order in "Purchase Order Item is part of Purchase Order"
 #     1: Absorption (existential) in Purchase Order Item of Product in "Purchase Order Item is for Product"
 #     2: Absorption (mandatory) in Purchase Order Item of Quantity in "Purchase Order Item is in Quantity"
-#   Mapping (top) of Receipt
-#     0: Absorption (existential) in Receipt of Receipt ID in "Receipt has Receipt ID"
 #   Mapping (top) of Received Item
 #     0: Absorption (existential) in Received Item of Received Item ID in "Received Item has Received Item ID"
 #     1: Absorption (mandatory) in Received Item of Product in "Received Item is Product"

@@ -1,0 +1,8 @@
+# Full relational composition
+#   Mapping (top) of Company
+#     0: Absorption (existential) in Company of Company Name in "Company has Company Name"
+#     1: Absorption (optional) in Company of Address in "Company has head office at Address"
+#   Mapping (top) of Person
+#     0: Absorption (existential) in Person of Family in "Person is of Family"
+#     1: Absorption (existential) in Person of Given Names in "Person has Given Names"
+#     2: Absorption (optional) in Person of Address in "Person lives at Address"

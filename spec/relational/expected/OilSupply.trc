@@ -31,5 +31,3 @@
 #     1: Absorption (existential) in Transport Route of Refinery in "Transport Route involves Refinery"
 #     2: Absorption (existential) in Transport Route of Region in "Transport Route involves Region"
 #     3: Absorption (optional) in Transport Route of Cost in "Transport Route incurs Cost per kl"
-#   Mapping (top) of Year
-#     0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"

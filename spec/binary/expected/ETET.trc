@@ -6,3 +6,4 @@
 # Mapping (top) of ID
 # Mapping (top) of Incident
 #   0: Absorption (existential) in Incident of Claim in "Incident is of Claim" (reverse)
+#   1: Indicator "Incident has been reported"  (as "Has Been Reported")
