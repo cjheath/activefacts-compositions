@@ -1,3 +1,16 @@
+#
+# ActiveFacts Compositions, Fundamental Compositor
+# 
+#	All Compositors derive from this one, which can calculate the basic binary bi-directional mapping
+#
+#	The term "reference" used here means either an Absorption
+#	(one direction of a binary fact type relating two object types),
+#	or an Indicator (for a unary fact type).
+#
+#	n-ary fact types and other objectified fact types are factored out by using the associated LinkFactTypes.
+#
+# Copyright (c) 2015 Clifford Heath. Read the LICENSE file.
+#
 require "activefacts/metamodel"
 
 module ActiveFacts
@@ -9,7 +22,7 @@ module ActiveFacts
 	@options = options
       end
 
-      # Generate all Mappings into @mapping for a binary composition of all ObjectTypes in this constellation
+      # Generate all Mappings into @binary_mappings for a binary composition of all ObjectTypes in this constellation
       def generate
 	# Retract an existing composition by this name
 	if existing = @constellation.Name[[@name]] and
@@ -20,12 +33,11 @@ module ActiveFacts
 
 	@composition = @constellation.Composition(:new, :name => @name)
 	populate_references
-	# show_references
       end
 
     private
       def populate_reference object_type, role
-	parent = @mappings[role.object_type]
+	parent = @binary_mappings[role.object_type]
 
 	return if role.fact_type.all_role.size > 2
 	if role.fact_type.all_role.size != 1
@@ -69,7 +81,7 @@ module ActiveFacts
 
       def populate_references
 	# A table of Mappings by object type, with a default Mapping for each:
-	@mappings = Hash.new do |h, object_type|
+	@binary_mappings = Hash.new do |h, object_type|
 	  h[object_type] = @constellation.Mapping(
 	      :new,
 	      name: object_type.name,
@@ -80,7 +92,7 @@ module ActiveFacts
 
 	@constellation.ObjectType.each do |key, object_type|
 	  trace :binarize, "Populating possible absorptions for #{object_type.name}" do
-	    @mappings[object_type]  # Ensure we create the top Mapping
+	    @binary_mappings[object_type]  # Ensure we create the top Mapping even if it has no references
 
 	    object_type.all_role.each do |role|
 	      next if role.mirror_role_as_base_role # Exclude base roles, just use link fact types
@@ -154,8 +166,8 @@ module ActiveFacts
       # Display the primitive binary mapping:
       def show_references
 	trace :composition, "Displaying the mappings:" do
-	  @mappings.keys.sort_by(&:name).each do |object_type|
-	    mapping = @mappings[object_type]
+	  @binary_mappings.keys.sort_by(&:name).each do |object_type|
+	    mapping = @binary_mappings[object_type]
 	    trace :composition, "#{object_type.name}" do
 	      mapping.all_member.each do |component|
 		trace :composition, component.inspect
@@ -163,22 +175,6 @@ module ActiveFacts
 	    end
 	  end
 	end
-      end
-
-      # Recursively add members to this component for the existential roles of
-      # the composite mapping for the absorbed (child_role) object:
-      def absorb_key component
-	trace :absorb, "Absorb key of #{component.child_role.object_type.name.inspect} under #{component.inspect}"
-=begin
-	debugger
-	if ActiveFacts::Metamodel::Absorption == component and
-	    composite = @mappings[component.child_role.object_type].composite
-	  debugger
-	  identifying_components = composite.mapping.all_member.select{|m| m.rank_key[0] <= 2}
-	  true
-	# else nothing more to do here
-	end
-=end
       end
 
     end

@@ -21,6 +21,6 @@
 # Mapping (top) of Session
 #   0: Absorption (existential) in Session of Cinema in "Session involves Cinema" (forward)
 #   1: Absorption (existential) in Session of DateTime in "Session involves DateTime" (forward)
-#   2: Indicator "Session is confirmed"  (as "Is Confirmed")
+#   2: Indicator "Session is confirmed" (as "Is Confirmed")
 #   3: Absorption (mandatory) in Session of Film in "Session involves Film" (forward)
 # Mapping (top) of String
