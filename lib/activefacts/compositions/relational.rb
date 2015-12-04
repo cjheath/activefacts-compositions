@@ -251,7 +251,7 @@ module ActiveFacts
 
       def absorb_all mapping, from
 	(from||mapping).all_member.each do |member|
-	  member = clone_component_to_new_parent mapping, member if from	  # Top-level members are already instantiated
+	  member = fork_component_to_new_parent mapping, member if from	  # Top-level members are already instantiated
 	  if member.is_a?(MM::Absorption)
 	    # Should we absorb a foreign key or the whole contents?
 	    table = @candidates[member.child_role.object_type]
@@ -273,7 +273,7 @@ module ActiveFacts
       def absorb_key mapping, target
 	target.all_member.each do |member|
 	  next unless member.rank_key[0] == MM::Component::RANK_IDENT
-	  member = clone_component_to_new_parent mapping, member
+	  member = fork_component_to_new_parent mapping, member
 	  if member.is_a?(MM::Absorption)
 	    absorb_key member, @binary_mappings[member.child_role.object_type]
 	  end
@@ -281,36 +281,14 @@ module ActiveFacts
 	# mapping.re_rank
       end
 
-      def clone_component_to_new_parent parent, component
+      def fork_component_to_new_parent parent, component
 	case component
-	when MM::Absorption
-	  @constellation.Absorption(
-	    :new,
-	    name: component.name,
-	    ordinal: component.ordinal,
-	    parent: parent,
-	    object_type: component.object_type,
-	    parent_role: component.parent_role,
-	    child_role: component.child_role
-	  )
-	when MM::Indicator
-	  @constellation.Indicator(
-	    :new,
-	    name: component.name,
-	    ordinal: component.ordinal,
-	    parent: parent,
-	    role: component.role
-	  )
+	# A place to put more special cases.
 	when MM::ValueField
-	  @constellation.ValueField(
-	    :new,
-	    name: component.object_type.name,
-	    ordinal: component.ordinal,
-	    parent: parent,
-	    object_type: component.object_type
-	  )
+	  # When we fork from a ValueField, we want to use the name of the ValueType, not the ValueField name
+	  @constellation.fork component, guid: :new, parent: parent, name: component.object_type.name
 	else
-	  raise "REVISIT: Absorbing a #{component.class.basename} is not yet implemented"
+	  @constellation.fork component, guid: :new, parent: parent
 	end
       end
 
