@@ -2,7 +2,7 @@
 #   Mapping (top) of AllocatableCinemaSection
 #     0: Absorption (existential) in AllocatableCinemaSection of Cinema in "AllocatableCinemaSection involves Cinema"
 #       0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
-#     1: Absorption (existential) in AllocatableCinemaSection of Section in "AllocatableCinemaSection involves Section"
+#     1: Absorption (existential) in AllocatableCinemaSection of Section (full) in "AllocatableCinemaSection involves Section"
 #       0: Absorption (existential) in Section of Section Name in "Section has Section Name"
 #   Mapping (top) of Booking
 #     0: Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
@@ -21,10 +21,10 @@
 #         2: Absorption (existential) in Session Time of Day in "Session Time is on Day"
 #         3: Absorption (existential) in Session Time of Hour in "Session Time is at Hour"
 #         4: Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
-#     5: Absorption (optional) in Booking of Address in "tickets for Booking are being mailed to Address"
+#     5: Absorption (optional) in Booking of Address (full) in "tickets for Booking are being mailed to Address"
 #       0: Absorption (existential) in Address of Address Text in "Address has Address Text"
 #     6: Absorption (optional) in Booking of Collection Code in "Booking has Collection Code"
-#     7: Absorption (optional) in Booking of Section in "Booking is for seats in Section"
+#     7: Absorption (optional) in Booking of Section (full) in "Booking is for seats in Section"
 #       0: Absorption (existential) in Section of Section Name in "Section has Section Name"
 #   Mapping (top) of Cinema
 #     0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
@@ -32,7 +32,7 @@
 #   Mapping (top) of Film
 #     0: Absorption (existential) in Film of Film ID in "Film has Film ID"
 #     1: Absorption (mandatory) in Film of Name in "Film has Name"
-#     2: Absorption (optional) in Film of Year in "Film was made in Year"
+#     2: Absorption (optional) in Film of Year (full) in "Film was made in Year"
 #       0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
 #   Mapping (top) of Person
 #     0: Absorption (existential) in Person of Person ID in "Person has Person ID"
@@ -41,16 +41,16 @@
 #   Mapping (top) of Places Paid
 #     0: Absorption (existential) in Places Paid of Booking in "Places Paid involves Booking"
 #       0: Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
-#     1: Absorption (existential) in Places Paid of Payment Method in "Places Paid involves Payment Method"
+#     1: Absorption (existential) in Places Paid of Payment Method (full) in "Places Paid involves Payment Method"
 #       0: Absorption (existential) in Payment Method of Payment Method Code in "Payment Method has Payment Method Code"
 #     2: Absorption (mandatory) in Places Paid of Number in "Places Paid involves Number"
 #   Mapping (top) of Seat
-#     0: Absorption (existential) in Seat of Row in "Seat is in Row"
+#     0: Absorption (existential) in Seat of Row (full) in "Seat is in Row"
 #       0: Absorption (existential) in Row of Cinema in "Row is in Cinema"
 #         0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
 #       1: Absorption (existential) in Row of Row Nr in "Row has Row Nr"
 #     1: Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
-#     2: Absorption (optional) in Seat of Section in "Seat is in Section"
+#     2: Absorption (optional) in Seat of Section (full) in "Seat is in Section"
 #       0: Absorption (existential) in Section of Section Name in "Section has Section Name"
 #   Mapping (top) of Seat Allocation
 #     0: Absorption (existential) in Seat Allocation of Booking in "Seat Allocation involves Booking"
@@ -64,7 +64,7 @@
 #   Mapping (top) of Session
 #     0: Absorption (existential) in Session of Cinema in "Session involves Cinema"
 #       0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
-#     1: Absorption (existential) in Session of Session Time in "Session involves Session Time"
+#     1: Absorption (existential) in Session of Session Time (full) in "Session involves Session Time"
 #       0: Absorption (existential) in Session Time of Year in "Session Time is in Year"
 #         0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
 #       1: Absorption (existential) in Session Time of Month in "Session Time is in Month"
@@ -77,7 +77,7 @@
 #     4: Absorption (mandatory) in Session of Film in "Session involves Film"
 #       0: Absorption (existential) in Film of Film ID in "Film has Film ID"
 #   Mapping (top) of Ticket Pricing
-#     0: Absorption (existential) in Ticket Pricing of Session Time in "Ticket Pricing involves Session Time"
+#     0: Absorption (existential) in Ticket Pricing of Session Time (full) in "Ticket Pricing involves Session Time"
 #       0: Absorption (existential) in Session Time of Year in "Session Time is in Year"
 #         0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
 #       1: Absorption (existential) in Session Time of Month in "Session Time is in Month"
@@ -87,7 +87,7 @@
 #       4: Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
 #     1: Absorption (existential) in Ticket Pricing of Cinema in "Ticket Pricing involves Cinema"
 #       0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
-#     2: Absorption (existential) in Ticket Pricing of Section in "Ticket Pricing involves Section"
+#     2: Absorption (existential) in Ticket Pricing of Section (full) in "Ticket Pricing involves Section"
 #       0: Absorption (existential) in Section of Section Name in "Section has Section Name"
 #     3: Absorption (existential) in Ticket Pricing of High Demand in "Ticket Pricing involves High Demand"
 #     4: Absorption (mandatory) in Ticket Pricing of Price in "Ticket Pricing involves Price"

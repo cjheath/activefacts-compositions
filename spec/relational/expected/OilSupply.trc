@@ -38,7 +38,7 @@
 #       0: Absorption (existential) in Product of Product Name in "Product has Product Name"
 #     3: Absorption (mandatory) in Regional Demand of Quantity in "Regional Demand involves Quantity"
 #   Mapping (top) of Supply Period
-#     0: Absorption (existential) in Supply Period of Year in "Supply Period is in Year"
+#     0: Absorption (existential) in Supply Period of Year (full) in "Supply Period is in Year"
 #       0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
 #     1: Absorption (existential) in Supply Period of Month in "Supply Period is in Month"
 #       0: Absorption (existential) in Month of Month Nr in "Month has Month Nr"

@@ -109,6 +109,7 @@ module ActiveFacts
 		  next absorbing_ref = absorption
 		end
 	      trace :relational_mapping, "#{object_type.name} is fully absorbed along its sole reference path #{absorbing_ref.inspect}"
+	      @constellation.FullAbsorption(composition: @composition, absorption: absorbing_ref)
 	      candidate.definitely_not_table
 	      next object_type
 	    end
@@ -164,7 +165,8 @@ module ActiveFacts
 		absorption_paths.each do |a|
 		  flip = a.reverse_absorption
 		  a.flip! if flip
-		  trace :relational_mapping, "#{object_type.name} is FULLY ABSORBED via #{a.inspect}#{flip ? ' (flipped)' : ''}"
+		  trace :relational_mapping, "#{object_type.name} is fully absorbed via #{a.inspect}#{flip ? ' (flipped)' : ''}"
+		  @constellation.FullAbsorption(composition: @composition, absorption: a)
 		end
 	      end
 
@@ -176,6 +178,9 @@ module ActiveFacts
 	    # Rule 5: If this object has no functional dependencies, it can be fully absorbed (must be along an identifying role?)
 	    if non_identifying_refs_from.size == 0
 	      trace :relational_mapping, "#{object_type.name} is fully absorbed in #{candidate.references_to.size} places: #{candidate.references_to.map{|ref| ref.inspect}*", "}"
+	      candidate.references_to.each do |a|
+		@constellation.FullAbsorption(composition: @composition, absorption: a)
+	      end
 	      candidate.definitely_not_table
 	      candidate.is_absorbed = true
 	      next object_type
