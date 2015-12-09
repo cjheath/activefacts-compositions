@@ -41,7 +41,7 @@ module ActiveFacts
 	  # Remove mappings for objects we have absorbed
 	  clean_unused_mappings
 
-	  trace :relational_, "Full relational composition" do
+	  trace :relational!, "Full relational composition" do
 	    @composition.all_composite.sort_by{|composite| composite.mapping.name}.each do |composite|
 	      composite.mapping.show_trace
 	    end
@@ -260,6 +260,13 @@ module ActiveFacts
 	  if member.is_a?(MM::Absorption)
 	    # Should we absorb a foreign key or the whole contents?
 	    table = @candidates[member.child_role.object_type]
+	    full_absorptions = @composition.all_full_absorption.select{|fa| fa.absorption.object_type == member.child_role.object_type}
+=begin
+	    if full_absorptions.size > 0 && !full_absorptions.detect{|fa| fa.absorption.child_role == member.child_role} && !table
+	      p member
+	      debugger
+	    end
+=end
 	    trace :relational_mapping, "Absorbing #{table ? 'key' : 'contents'} of #{member.child_role.name} in #{member.inspect_reading}" do
 	      target = @binary_mappings[member.child_role.object_type]
 	      if table
