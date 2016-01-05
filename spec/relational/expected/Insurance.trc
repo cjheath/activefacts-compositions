@@ -1,371 +1,493 @@
 # Full relational composition
-#   Mapping (top) of Asset
-#     0: Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
-#     1: Absorption (subtype) in Asset of Vehicle in "Asset is a Vehicle"
-#       0: Absorption (existential) in Vehicle of VIN in "Vehicle has VIN"
-#       1: Indicator "Vehicle has commercial registration" (as "Has Commercial Registration")
-#       2: Absorption (mandatory) in Vehicle of Model Year in "Vehicle is of model-Year"
-#         0: Absorption (existential) in Model Year of Year Nr in "Year has Year Nr"
-#       3: Absorption (mandatory) in Vehicle of Registration in "Vehicle has Registration"
-#         0: Absorption (existential) in Registration of Registration Nr in "Registration has Registration Nr"
-#       4: Absorption (mandatory) in Vehicle of Vehicle Type in "Vehicle is of Vehicle Type"
-#         0: Absorption (existential) in Vehicle Type of Make in "Vehicle Type is of Make"
-#         1: Absorption (existential) in Vehicle Type of Model in "Vehicle Type is of Model"
-#         2: Absorption (existential) in Vehicle Type of Badge in "Vehicle Type has Badge"
-#       5: Absorption (optional) in Vehicle of Colour in "Vehicle is of Colour"
-#       6: Absorption (optional) in Vehicle of Dealer in "Vehicle was sold by Dealer"
-#       7: Absorption (optional) in Vehicle of Engine Number in "Vehicle has Engine Number"
-#       8: Absorption (optional) in Vehicle of Finance Institution in "Vehicle is subject to finance with Finance Institution"
-#   Mapping (top) of Claim
-#     0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
-#     1: Absorption (mandatory) in Claim of Policy in "Claim is on Policy"
-#       0: Absorption (existential) in Policy of p_year in "Policy was issued in Year"
-#         0: Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
-#       1: Absorption (existential) in Policy of p_product in "Policy is for product having Product"
-#         0: Absorption (existential) in p_product of Product Code in "Product has Product Code"
-#       2: Absorption (existential) in Policy of p_state in "Policy issued in state having State"
-#         0: Absorption (existential) in p_state of State Code in "State has State Code"
-#       3: Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
-#     2: Absorption (mandatory) in Claim of p_sequence in "Claim has Claim Sequence"
-#     3: Absorption (optional) in Claim of Incident in "Claim concerns Incident"
-#   Mapping (top) of Contractor Appointment
-#     0: Absorption (existential) in Contractor Appointment of Claim in "Contractor Appointment involves Claim"
-#       0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
-#     1: Absorption (existential) in Contractor Appointment of Contractor in "Contractor Appointment involves Contractor"
-#       0: Absorption (subtype) in Contractor of Assessor in "Contractor is an Assessor"
-#       1: Absorption (subtype) in Contractor of Investigator in "Contractor is an Investigator"
-#       2: Absorption (subtype) in Contractor of Repairer in "Contractor is a Repairer"
-#       3: Absorption (subtype) in Contractor of Solicitor in "Contractor is a Solicitor"
-#   Mapping (top) of Cover
-#     0: Absorption (existential) in Cover of Policy in "Cover involves Policy"
-#       0: Absorption (existential) in Policy of p_year in "Policy was issued in Year"
-#         0: Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
-#       1: Absorption (existential) in Policy of p_product in "Policy is for product having Product"
-#         0: Absorption (existential) in p_product of Product Code in "Product has Product Code"
-#       2: Absorption (existential) in Policy of p_state in "Policy issued in state having State"
-#         0: Absorption (existential) in p_state of State Code in "State has State Code"
-#       3: Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
-#     1: Absorption (existential) in Cover of Cover Type in "Cover involves Cover Type"
-#       0: Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
-#     2: Absorption (existential) in Cover of Asset in "Cover involves Asset"
-#       0: Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
-#   Mapping (top) of Cover Type
-#     0: Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
-#     1: Absorption (mandatory) in Cover Type of Cover Type Name in "Cover Type has Cover Type Name"
-#   Mapping (top) of Cover Wording
-#     0: Absorption (existential) in Cover Wording of Cover Type in "Cover Wording involves Cover Type"
-#       0: Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
-#     1: Absorption (existential) in Cover Wording of Policy Wording (full) in "Cover Wording involves Policy Wording"
-#       0: Absorption (existential) in Policy Wording of Policy Wording Text in "Policy Wording has Policy Wording Text"
-#     2: Absorption (existential) in Cover Wording of Date in "Cover Wording involves Date"
-#   Mapping (top) of Driving Charge
-#     0: Absorption (existential) in Driving Charge of Driving in "Driving Charge involves Driving"
-#       0: Absorption (existential) in Driving of Vehicle Incident in "Driving involves Vehicle Incident"
-#       1: Absorption (mandatory) in Driving of Person in "Driving was by Person"
-#         0: Absorption (mandatory) in Person of Contact Methods in "Person has Contact Methods"
-#           0: Absorption (optional) in Contact Methods of Business Phone in "Contact Methods includes business-Phone"
-#             0: Absorption (existential) in Business Phone of Phone Nr in "Phone has Phone Nr"
-#           1: Absorption (optional) in Contact Methods of Contact Time in "Contact Methods prefers contact-Time"
-#           2: Absorption (optional) in Contact Methods of Email in "Contact Methods includes Email"
-#           3: Absorption (optional) in Contact Methods of Home Phone in "Contact Methods includes home-Phone"
-#             0: Absorption (existential) in Home Phone of Phone Nr in "Phone has Phone Nr"
-#           4: Absorption (optional) in Contact Methods of Mobile Phone in "Contact Methods includes mobile-Phone"
-#             0: Absorption (existential) in Mobile Phone of Phone Nr in "Phone has Phone Nr"
-#           5: Absorption (optional) in Contact Methods of Preferred Contact Method in "Contact Methods has preferred-Contact Method"
-#         1: Absorption (mandatory) in Person of Family Name in "Person has family-Name"
-#         2: Absorption (mandatory) in Person of Given Name in "Person has given-Name"
-#         3: Absorption (mandatory) in Person of Title in "Person has Title"
-#         4: Absorption (optional) in Person of Address in "Person lives at Address"
+#   Composite Mapping (top) of Asset
+#     Columns
+#       Mapping (top) of Asset
+#         0: Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#         1: Absorption (subtype) in Asset of Vehicle (full) in "Asset is a Vehicle"
+#           0: Absorption (existential) in Vehicle of VIN in "Vehicle has VIN"
+#           1: Indicator "Vehicle has commercial registration" (as "Has Commercial Registration")
+#           2: Absorption (mandatory) in Vehicle of Model Year in "Vehicle is of model-Year"
+#             0: Absorption (existential) in Model Year of Year Nr in "Year has Year Nr"
+#           3: Absorption (mandatory) in Vehicle of Registration in "Vehicle has Registration"
+#             0: Absorption (existential) in Registration of Registration Nr in "Registration has Registration Nr"
+#           4: Absorption (mandatory) in Vehicle of Vehicle Type in "Vehicle is of Vehicle Type"
+#             0: Absorption (existential) in Vehicle Type of Make in "Vehicle Type is of Make"
+#             1: Absorption (existential) in Vehicle Type of Model in "Vehicle Type is of Model"
+#             2: Absorption (existential) in Vehicle Type of Badge in "Vehicle Type has Badge"
+#           5: Absorption (optional) in Vehicle of Colour in "Vehicle is of Colour"
+#           6: Absorption (optional) in Vehicle of Dealer in "Vehicle was sold by Dealer"
+#             0: Absorption (mandatory) in Dealer of Party ID in "Party has Party ID"
+#           7: Absorption (optional) in Vehicle of Engine Number in "Vehicle has Engine Number"
+#           8: Absorption (optional) in Vehicle of Finance Institution in "Vehicle is subject to finance with Finance Institution"
+#     Indices
+#       Primary index to Asset
+#         AccessKey part 0 in Asset references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#       Unique index to Asset
+#         AccessKey part 0 in Asset references Absorption (existential) in Vehicle of VIN in "Vehicle has VIN"
+#       Unique index to Asset
+#         AccessKey part 0 in Asset references Absorption (existential) in Vehicle of VIN in "Vehicle has VIN"
+#         AccessKey part 1 in Asset references Indicator "Vehicle has commercial registration"
+#         AccessKey part 2 in Asset references Absorption (existential) in Model Year of Year Nr in "Year has Year Nr"
+#         AccessKey part 3 in Asset references Absorption (existential) in Registration of Registration Nr in "Registration has Registration Nr"
+#         AccessKey part 4 in Asset references Absorption (existential) in Vehicle Type of Make in "Vehicle Type is of Make"
+#         AccessKey part 5 in Asset references Absorption (existential) in Vehicle Type of Model in "Vehicle Type is of Model"
+#         AccessKey part 6 in Asset references Absorption (existential) in Vehicle Type of Badge in "Vehicle Type has Badge"
+#         AccessKey part 7 in Asset references Absorption (optional) in Vehicle of Colour in "Vehicle is of Colour"
+#         AccessKey part 8 in Asset references Absorption (mandatory) in Dealer of Party ID in "Party has Party ID"
+#         AccessKey part 9 in Asset references Absorption (optional) in Vehicle of Engine Number in "Vehicle has Engine Number"
+#     Foreign keys inbound
+#       Foreign Key from Cover to Asset
+#         ForeignKey part 0 in Cover is Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#     Foreign keys outbound
+#   Composite Mapping (top) of Claim
+#     Columns
+#       Mapping (top) of Claim
+#         0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         1: Absorption (mandatory) in Claim of Policy in "Claim is on Policy"
+#           0: Absorption (existential) in Policy of p_year in "Policy was issued in Year"
+#             0: Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
+#           1: Absorption (existential) in Policy of p_product in "Policy is for product having Product"
+#             0: Absorption (existential) in p_product of Product Code in "Product has Product Code"
+#           2: Absorption (existential) in Policy of p_state in "Policy issued in state having State"
+#             0: Absorption (existential) in p_state of State Code in "State has State Code"
+#           3: Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
+#         2: Absorption (mandatory) in Claim of p_sequence in "Claim has Claim Sequence"
+#     Indices
+#       Primary index to Claim
+#         AccessKey part 0 in Claim references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#       Unique index to Claim
+#         AccessKey part 0 in Claim references Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
+#         AccessKey part 1 in Claim references Absorption (existential) in p_product of Product Code in "Product has Product Code"
+#         AccessKey part 2 in Claim references Absorption (existential) in p_state of State Code in "State has State Code"
+#         AccessKey part 3 in Claim references Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
+#         AccessKey part 4 in Claim references Absorption (mandatory) in Claim of p_sequence in "Claim has Claim Sequence"
+#     Foreign keys inbound
+#       Foreign Key from Contractor Appointment to Claim
+#         ForeignKey part 0 in Contractor Appointment is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#       Foreign Key from Lodgement to Claim
+#         ForeignKey part 0 in Lodgement is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#     Foreign keys outbound
+#       Foreign Key from Claim to Policy
+#         ForeignKey part 0 in Claim is Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
+#         ForeignKey part 1 in Claim is Absorption (existential) in p_product of Product Code in "Product has Product Code"
+#         ForeignKey part 2 in Claim is Absorption (existential) in p_state of State Code in "State has State Code"
+#         ForeignKey part 3 in Claim is Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
+#   Composite Mapping (top) of Contractor Appointment
+#     Columns
+#       Mapping (top) of Contractor Appointment
+#         0: Absorption (existential) in Contractor Appointment of Claim in "Contractor Appointment involves Claim"
+#           0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         1: Absorption (existential) in Contractor Appointment of Contractor in "Contractor Appointment involves Contractor"
+#     Indices
+#       Primary index to Contractor Appointment
+#         AccessKey part 0 in Contractor Appointment references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#       Foreign Key from Contractor Appointment to Claim
+#         ForeignKey part 0 in Contractor Appointment is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#   Composite Mapping (top) of Cover
+#     Columns
+#       Mapping (top) of Cover
+#         0: Absorption (existential) in Cover of Policy in "Cover involves Policy"
+#           0: Absorption (existential) in Policy of p_year in "Policy was issued in Year"
+#             0: Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
+#           1: Absorption (existential) in Policy of p_product in "Policy is for product having Product"
+#             0: Absorption (existential) in p_product of Product Code in "Product has Product Code"
+#           2: Absorption (existential) in Policy of p_state in "Policy issued in state having State"
+#             0: Absorption (existential) in p_state of State Code in "State has State Code"
+#           3: Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
+#         1: Absorption (existential) in Cover of Cover Type in "Cover involves Cover Type"
+#           0: Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
+#         2: Absorption (existential) in Cover of Asset in "Cover involves Asset"
+#           0: Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#     Indices
+#       Primary index to Cover
+#         AccessKey part 0 in Cover references Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
+#         AccessKey part 1 in Cover references Absorption (existential) in p_product of Product Code in "Product has Product Code"
+#         AccessKey part 2 in Cover references Absorption (existential) in p_state of State Code in "State has State Code"
+#         AccessKey part 3 in Cover references Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
+#         AccessKey part 4 in Cover references Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
+#         AccessKey part 5 in Cover references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#       Foreign Key from Cover to Asset
+#         ForeignKey part 0 in Cover is Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#       Foreign Key from Cover to Cover Type
+#         ForeignKey part 0 in Cover is Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
+#       Foreign Key from Cover to Policy
+#         ForeignKey part 0 in Cover is Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
+#         ForeignKey part 1 in Cover is Absorption (existential) in p_product of Product Code in "Product has Product Code"
+#         ForeignKey part 2 in Cover is Absorption (existential) in p_state of State Code in "State has State Code"
+#         ForeignKey part 3 in Cover is Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
+#   Composite Mapping (top) of Cover Type
+#     Columns
+#       Mapping (top) of Cover Type
+#         0: Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
+#         1: Absorption (mandatory) in Cover Type of Cover Type Name in "Cover Type has Cover Type Name"
+#     Indices
+#       Primary index to Cover Type
+#         AccessKey part 0 in Cover Type references Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
+#       Unique index to Cover Type
+#         AccessKey part 0 in Cover Type references Absorption (mandatory) in Cover Type of Cover Type Name in "Cover Type has Cover Type Name"
+#     Foreign keys inbound
+#       Foreign Key from Cover Wording to Cover Type
+#         ForeignKey part 0 in Cover Wording is Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
+#       Foreign Key from Cover to Cover Type
+#         ForeignKey part 0 in Cover is Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
+#     Foreign keys outbound
+#   Composite Mapping (top) of Cover Wording
+#     Columns
+#       Mapping (top) of Cover Wording
+#         0: Absorption (existential) in Cover Wording of Cover Type in "Cover Wording involves Cover Type"
+#           0: Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
+#         1: Absorption (existential) in Cover Wording of Policy Wording in "Cover Wording involves Policy Wording"
+#           0: Absorption (existential) in Policy Wording of Policy Wording Text in "Policy Wording has Policy Wording Text"
+#         2: Absorption (existential) in Cover Wording of Date in "Cover Wording involves Date"
+#     Indices
+#       Primary index to Cover Wording
+#         AccessKey part 0 in Cover Wording references Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
+#         AccessKey part 1 in Cover Wording references Absorption (existential) in Policy Wording of Policy Wording Text in "Policy Wording has Policy Wording Text"
+#         AccessKey part 2 in Cover Wording references Absorption (existential) in Cover Wording of Date in "Cover Wording involves Date"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#       Foreign Key from Cover Wording to Cover Type
+#         ForeignKey part 0 in Cover Wording is Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
+#   Composite Mapping (top) of Driving Charge
+#     Columns
+#       Mapping (top) of Driving Charge
+#         0: Absorption (existential) in Driving Charge of Driving in "Driving Charge involves Driving"
+#         1: Indicator "Driving Charge is a warning" (as "Is A Warning")
+#         2: Absorption (mandatory) in Driving Charge of Charge in "Driving Charge involves Charge"
+#     Indices
+#       Primary index to Driving Charge
+#     Foreign keys inbound
+#     Foreign keys outbound
+#   Composite Mapping (top) of Hospitalization
+#     Columns
+#       Mapping (top) of Hospitalization
+#         0: Absorption (existential) in Hospitalization of Driving in "Hospitalization involves Driving"
+#         1: Absorption (mandatory) in Hospitalization of Hospital in "Hospitalization involves Hospital"
+#           0: Absorption (existential) in Hospital of Hospital Name in "Hospital has Hospital Name"
+#         2: Absorption (optional) in Hospitalization of Blood Test Result in "Hospitalization resulted in blood-Test Result"
+#     Indices
+#       Primary index to Hospitalization
+#     Foreign keys inbound
+#     Foreign keys outbound
+#   Composite Mapping (top) of Lodgement
+#     Columns
+#       Mapping (top) of Lodgement
+#         0: Absorption (existential) in Lodgement of Claim in "Lodgement involves Claim"
+#           0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         1: Absorption (mandatory) in Lodgement of Person in "Lodgement involves Person"
+#           0: Absorption (mandatory) in Person of Party ID in "Party has Party ID"
+#         2: Absorption (optional) in Lodgement of Date Time in "Lodgement was made at Date Time"
+#     Indices
+#       Primary index to Lodgement
+#         AccessKey part 0 in Lodgement references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#       Foreign Key from Lodgement to Claim
+#         ForeignKey part 0 in Lodgement is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#   Composite Mapping (top) of Loss Type
+#     Columns
+#       Mapping (top) of Loss Type
+#         0: Absorption (existential) in Loss Type of Loss Type Code in "Loss Type has Loss Type Code"
+#         1: Indicator "Loss Type involves driving" (as "Involves Driving")
+#         2: Indicator "Loss Type is single vehicle incident" (as "Is Single Vehicle Incident")
+#         3: Absorption (optional) in Loss Type of Liability in "Loss Type implies Liability"
+#           0: Absorption (existential) in Liability of Liability Code in "Liability has Liability Code"
+#     Indices
+#       Primary index to Loss Type
+#         AccessKey part 0 in Loss Type references Absorption (existential) in Loss Type of Loss Type Code in "Loss Type has Loss Type Code"
+#     Foreign keys inbound
+#       Foreign Key from Vehicle Incident to Loss Type
+#         ForeignKey part 0 in Vehicle Incident is Absorption (existential) in Loss Type of Loss Type Code in "Loss Type has Loss Type Code"
+#     Foreign keys outbound
+#   Composite Mapping (top) of Lost Item
+#     Columns
+#       Mapping (top) of Lost Item
+#         0: Absorption (existential) in Lost Item of Incident in "Lost Item was lost in Incident"
+#           0: Absorption (existential) in Incident of Claim in "Incident is of Claim"
+#             0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         1: Absorption (existential) in Lost Item of Lost Item Nr in "Lost Item has Lost Item Nr"
+#         2: Absorption (mandatory) in Lost Item of Description in "Lost Item has Description"
+#         3: Absorption (optional) in Lost Item of Purchase Date in "Lost Item was purchased on purchase-Date"
+#         4: Absorption (optional) in Lost Item of Purchase Place in "Lost Item was purchased at purchase-Place"
+#         5: Absorption (optional) in Lost Item of Purchase Price in "Lost Item was purchased for purchase-Price"
+#     Indices
+#       Primary index to Lost Item
+#         AccessKey part 0 in Lost Item references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         AccessKey part 1 in Lost Item references Absorption (existential) in Lost Item of Lost Item Nr in "Lost Item has Lost Item Nr"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#   Composite Mapping (top) of Party
+#     Columns
+#       Mapping (top) of Party
+#         0: Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         1: Indicator "Party is a company" (as "Is A Company")
+#         2: Absorption (optional) in Party of Postal Address in "Party has postal-Address"
+#           0: Absorption (existential) in Postal Address of Street in "Address is at Street"
+#           1: Absorption (existential) in Postal Address of City in "Address is in City"
+#           2: Absorption (existential) in Postal Address of Postcode in "Address is in Postcode"
+#           3: Absorption (existential) in Postal Address of State in "Address is in State"
+#             0: Absorption (existential) in State of State Code in "State has State Code"
+#         3: Absorption (subtype) in Party of Authorised Rep (full) in "Party is an Authorised Rep"
+#         4: Absorption (subtype) in Party of Company (full) in "Party is a Company"
+#           0: Absorption (mandatory) in Company of Contact Person in "Company has contact-Person"
+#             0: Absorption (mandatory) in Contact Person of Party ID in "Party has Party ID"
+#           1: Absorption (subtype) in Company of Contractor in "Company is a Contractor"
+#           2: Absorption (subtype) in Company of Finance Institution in "Company is a Finance Institution"
+#           3: Absorption (subtype) in Company of Insurer in "Company is an Insurer"
+#         5: Absorption (subtype) in Party of Dealer (full) in "Party is a Dealer"
+#         6: Absorption (subtype) in Party of Insured (full) in "Party is an Insured"
+#         7: Absorption (subtype) in Party of Person (full) in "Party is a Person"
+#           0: Absorption (mandatory) in Person of Family Name in "Person has family-Name"
+#           1: Absorption (mandatory) in Person of Given Name in "Person has given-Name"
+#           2: Absorption (mandatory) in Person of Title in "Person has Title"
+#           3: Absorption (optional) in Person of Address in "Person lives at Address"
+#             0: Absorption (existential) in Address of Street in "Address is at Street"
+#             1: Absorption (existential) in Address of City in "Address is in City"
+#             2: Absorption (existential) in Address of Postcode in "Address is in Postcode"
+#             3: Absorption (existential) in Address of State in "Address is in State"
+#               0: Absorption (existential) in State of State Code in "State has State Code"
+#           4: Absorption (optional) in Person of Birth Date in "Person has birth-Date"
+#           5: Absorption (optional) in Person of Occupation in "Person has Occupation"
+#     Indices
+#       Unique index to Party
+#       Unique index to Party
+#       Unique index to Party
+#       Unique index to Party
+#       Unique index to Party
+#       Unique index to Party
+#       Primary index to Party
+#         AccessKey part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Unique index to Party
+#         AccessKey part 0 in Party references Absorption (mandatory) in Contact Person of Party ID in "Party has Party ID"
+#       Unique index to Party
+#         AccessKey part 0 in Party references Absorption (mandatory) in Person of Family Name in "Person has family-Name"
+#         AccessKey part 1 in Party references Absorption (mandatory) in Person of Given Name in "Person has given-Name"
+#         AccessKey part 2 in Party references Absorption (mandatory) in Person of Title in "Person has Title"
+#         AccessKey part 3 in Party references Absorption (existential) in Address of Street in "Address is at Street"
+#         AccessKey part 4 in Party references Absorption (existential) in Address of City in "Address is in City"
+#         AccessKey part 5 in Party references Absorption (existential) in Address of Postcode in "Address is in Postcode"
+#         AccessKey part 6 in Party references Absorption (existential) in State of State Code in "State has State Code"
+#         AccessKey part 7 in Party references Absorption (optional) in Person of Birth Date in "Person has birth-Date"
+#         AccessKey part 8 in Party references Absorption (optional) in Person of Occupation in "Person has Occupation"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#       Foreign Key from Party to State
+#         ForeignKey part 0 in Party is Absorption (existential) in State of State Code in "State has State Code"
+#       Foreign Key from Party to State
+#         ForeignKey part 0 in Party is Absorption (existential) in State of State Code in "State has State Code"
+#   Composite Mapping (top) of Policy
+#     Columns
+#       Mapping (top) of Policy
+#         0: Absorption (existential) in Policy of p_year in "Policy was issued in Year"
+#           0: Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
+#         1: Absorption (existential) in Policy of p_product in "Policy is for product having Product"
+#           0: Absorption (existential) in p_product of Product Code in "Product has Product Code"
+#         2: Absorption (existential) in Policy of p_state in "Policy issued in state having State"
+#           0: Absorption (existential) in p_state of State Code in "State has State Code"
+#         3: Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
+#         4: Absorption (mandatory) in Policy of Application in "Policy has Application"
+#           0: Absorption (existential) in Application of Application Nr in "Application has Application Nr"
+#         5: Absorption (mandatory) in Policy of Insured in "Policy belongs to Insured"
+#           0: Absorption (mandatory) in Insured of Party ID in "Party has Party ID"
+#         6: Absorption (optional) in Policy of Authorised Rep in "Policy was sold by Authorised Rep"
+#           0: Absorption (mandatory) in Authorised Rep of Party ID in "Party has Party ID"
+#         7: Absorption (optional) in Policy of ITC Claimed in "Policy has ITC Claimed"
+#         8: Absorption (subtype) in Policy of Motor Policy (full) in "Policy is a Motor Policy"
+#           0: Absorption (subtype) in Motor Policy of Motor Fleet Policy in "Motor Policy is a Motor Fleet Policy"
+#           1: Absorption (subtype) in Motor Policy of Single Motor Policy in "Motor Policy is a Single Motor Policy"
+#     Indices
+#       Unique index to Policy
+#       Unique index to Policy
+#       Unique index to Policy
+#       Primary index to Policy
+#         AccessKey part 0 in Policy references Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
+#         AccessKey part 1 in Policy references Absorption (existential) in p_product of Product Code in "Product has Product Code"
+#         AccessKey part 2 in Policy references Absorption (existential) in p_state of State Code in "State has State Code"
+#         AccessKey part 3 in Policy references Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
+#     Foreign keys inbound
+#       Foreign Key from Claim to Policy
+#         ForeignKey part 0 in Claim is Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
+#         ForeignKey part 1 in Claim is Absorption (existential) in p_product of Product Code in "Product has Product Code"
+#         ForeignKey part 2 in Claim is Absorption (existential) in p_state of State Code in "State has State Code"
+#         ForeignKey part 3 in Claim is Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
+#       Foreign Key from Cover to Policy
+#         ForeignKey part 0 in Cover is Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
+#         ForeignKey part 1 in Cover is Absorption (existential) in p_product of Product Code in "Product has Product Code"
+#         ForeignKey part 2 in Cover is Absorption (existential) in p_state of State Code in "State has State Code"
+#         ForeignKey part 3 in Cover is Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
+#     Foreign keys outbound
+#       Foreign Key from Policy to Product
+#         ForeignKey part 0 in Policy is Absorption (existential) in p_product of Product Code in "Product has Product Code"
+#       Foreign Key from Policy to State
+#         ForeignKey part 0 in Policy is Absorption (existential) in p_state of State Code in "State has State Code"
+#   Composite Mapping (top) of Product
+#     Columns
+#       Mapping (top) of Product
+#         0: Absorption (existential) in Product of Product Code in "Product has Product Code"
+#         1: Absorption (optional) in Product of Alias in "Product has Alias"
+#         2: Absorption (optional) in Product of Description in "Product has Description"
+#     Indices
+#       Primary index to Product
+#         AccessKey part 0 in Product references Absorption (existential) in Product of Product Code in "Product has Product Code"
+#       Unique index to Product
+#         AccessKey part 0 in Product references Absorption (optional) in Product of Alias in "Product has Alias"
+#       Unique index to Product
+#         AccessKey part 0 in Product references Absorption (optional) in Product of Description in "Product has Description"
+#     Foreign keys inbound
+#       Foreign Key from Policy to Product
+#         ForeignKey part 0 in Policy is Absorption (existential) in p_product of Product Code in "Product has Product Code"
+#     Foreign keys outbound
+#   Composite Mapping (top) of Property Damage
+#     Columns
+#       Mapping (top) of Property Damage
+#         0: Absorption (existential) in Property Damage of Incident in "Property Damage was damaged in Incident"
+#           0: Absorption (existential) in Incident of Claim in "Incident is of Claim"
+#             0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         1: Absorption (existential) in Property Damage of Address in "Property Damage is at Address"
 #           0: Absorption (existential) in Address of Street in "Address is at Street"
 #           1: Absorption (existential) in Address of City in "Address is in City"
 #           2: Absorption (existential) in Address of Postcode in "Address is in Postcode"
 #           3: Absorption (existential) in Address of State in "Address is in State"
 #             0: Absorption (existential) in State of State Code in "State has State Code"
-#         5: Absorption (optional) in Person of Birth Date in "Person has birth-Date"
-#         6: Absorption (optional) in Person of License in "Person holds License"
-#           0: Indicator "License is international" (as "Is International")
-#           1: Absorption (mandatory) in License of License Number in "License has License Number"
-#           2: Absorption (mandatory) in License of License Type in "License is of License Type"
-#           3: Absorption (optional) in License of Year in "License was granted in Year"
-#             0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
-#         7: Absorption (optional) in Person of Occupation in "Person has Occupation"
-#       2: Absorption (optional) in Driving of Breath Test Result in "Driving resulted in breath-Test Result"
-#       3: Absorption (optional) in Driving of Intoxication in "Driving followed Intoxication"
-#       4: Absorption (optional) in Driving of Nonconsent Reason in "Driving was without owners consent for nonconsent-Reason"
-#       5: Absorption (optional) in Driving of Unlicensed Reason in "Driving was unlicenced for unlicensed-Reason"
-#     1: Indicator "Driving Charge is a warning" (as "Is A Warning")
-#     2: Absorption (mandatory) in Driving Charge of Charge in "Driving Charge involves Charge"
-#   Mapping (top) of Hospitalization
-#     0: Absorption (existential) in Hospitalization of Driving in "Hospitalization involves Driving"
-#       0: Absorption (existential) in Driving of Vehicle Incident in "Driving involves Vehicle Incident"
-#       1: Absorption (mandatory) in Driving of Person in "Driving was by Person"
-#         0: Absorption (mandatory) in Person of Contact Methods in "Person has Contact Methods"
-#           0: Absorption (optional) in Contact Methods of Business Phone in "Contact Methods includes business-Phone"
-#             0: Absorption (existential) in Business Phone of Phone Nr in "Phone has Phone Nr"
-#           1: Absorption (optional) in Contact Methods of Contact Time in "Contact Methods prefers contact-Time"
-#           2: Absorption (optional) in Contact Methods of Email in "Contact Methods includes Email"
-#           3: Absorption (optional) in Contact Methods of Home Phone in "Contact Methods includes home-Phone"
-#             0: Absorption (existential) in Home Phone of Phone Nr in "Phone has Phone Nr"
-#           4: Absorption (optional) in Contact Methods of Mobile Phone in "Contact Methods includes mobile-Phone"
-#             0: Absorption (existential) in Mobile Phone of Phone Nr in "Phone has Phone Nr"
-#           5: Absorption (optional) in Contact Methods of Preferred Contact Method in "Contact Methods has preferred-Contact Method"
-#         1: Absorption (mandatory) in Person of Family Name in "Person has family-Name"
-#         2: Absorption (mandatory) in Person of Given Name in "Person has given-Name"
-#         3: Absorption (mandatory) in Person of Title in "Person has Title"
-#         4: Absorption (optional) in Person of Address in "Person lives at Address"
+#         2: Absorption (optional) in Property Damage of Owner Name in "Property Damage belongs to owner-Name"
+#         3: Absorption (optional) in Property Damage of Phone in "Property Damage owner has contact Phone"
+#           0: Absorption (existential) in Phone of Phone Nr in "Phone has Phone Nr"
+#     Indices
+#       Primary index to Property Damage
+#         AccessKey part 0 in Property Damage references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         AccessKey part 1 in Property Damage references Absorption (existential) in Address of Street in "Address is at Street"
+#         AccessKey part 2 in Property Damage references Absorption (existential) in Address of City in "Address is in City"
+#         AccessKey part 3 in Property Damage references Absorption (existential) in Address of Postcode in "Address is in Postcode"
+#         AccessKey part 4 in Property Damage references Absorption (existential) in State of State Code in "State has State Code"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#       Foreign Key from Property Damage to State
+#         ForeignKey part 0 in Property Damage is Absorption (existential) in State of State Code in "State has State Code"
+#   Composite Mapping (top) of State
+#     Columns
+#       Mapping (top) of State
+#         0: Absorption (existential) in State of State Code in "State has State Code"
+#         1: Absorption (optional) in State of State Name in "State has State Name"
+#     Indices
+#       Primary index to State
+#         AccessKey part 0 in State references Absorption (existential) in State of State Code in "State has State Code"
+#       Unique index to State
+#         AccessKey part 0 in State references Absorption (optional) in State of State Name in "State has State Name"
+#     Foreign keys inbound
+#       Foreign Key from Party to State
+#         ForeignKey part 0 in Party is Absorption (existential) in State of State Code in "State has State Code"
+#       Foreign Key from Party to State
+#         ForeignKey part 0 in Party is Absorption (existential) in State of State Code in "State has State Code"
+#       Foreign Key from Policy to State
+#         ForeignKey part 0 in Policy is Absorption (existential) in p_state of State Code in "State has State Code"
+#       Foreign Key from Property Damage to State
+#         ForeignKey part 0 in Property Damage is Absorption (existential) in State of State Code in "State has State Code"
+#       Foreign Key from Witness to State
+#         ForeignKey part 0 in Witness is Absorption (existential) in State of State Code in "State has State Code"
+#     Foreign keys outbound
+#   Composite Mapping (top) of Third Party
+#     Columns
+#       Mapping (top) of Third Party
+#         0: Absorption (existential) in Third Party of Person in "Third Party involves Person"
+#           0: Absorption (mandatory) in Person of Party ID in "Party has Party ID"
+#         1: Absorption (existential) in Third Party of Vehicle Incident in "Third Party involves Vehicle Incident"
+#         2: Absorption (optional) in Third Party of Insurer in "Third Party is insured by Insurer"
+#         3: Absorption (optional) in Third Party of Model Year in "Third Party vehicle is of model-Year"
+#           0: Absorption (existential) in Model Year of Year Nr in "Year has Year Nr"
+#         4: Absorption (optional) in Third Party of Vehicle Registration in "Third Party drove vehicle-Registration"
+#           0: Absorption (existential) in Vehicle Registration of Registration Nr in "Registration has Registration Nr"
+#         5: Absorption (optional) in Third Party of Vehicle Type in "Third Party vehicle is of Vehicle Type"
+#           0: Absorption (existential) in Vehicle Type of Make in "Vehicle Type is of Make"
+#           1: Absorption (existential) in Vehicle Type of Model in "Vehicle Type is of Model"
+#           2: Absorption (existential) in Vehicle Type of Badge in "Vehicle Type has Badge"
+#     Indices
+#       Primary index to Third Party
+#         AccessKey part 0 in Third Party references Absorption (mandatory) in Person of Party ID in "Party has Party ID"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#       Foreign Key from Third Party to Vehicle Incident
+#   Composite Mapping (top) of Underwriting Demerit
+#     Columns
+#       Mapping (top) of Underwriting Demerit
+#         0: Absorption (existential) in Underwriting Demerit of Vehicle Incident in "Underwriting Demerit preceded Vehicle Incident"
+#         1: Absorption (existential) in Underwriting Demerit of Underwriting Question in "Underwriting Demerit has Underwriting Question"
+#           0: Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
+#         2: Absorption (optional) in Underwriting Demerit of Occurrence Count in "Underwriting Demerit occurred occurrence-Count times"
+#     Indices
+#       Primary index to Underwriting Demerit
+#         AccessKey part 0 in Underwriting Demerit references Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#       Foreign Key from Underwriting Demerit to Vehicle Incident
+#       Foreign Key from Underwriting Demerit to Underwriting Question
+#         ForeignKey part 0 in Underwriting Demerit is Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
+#   Composite Mapping (top) of Underwriting Question
+#     Columns
+#       Mapping (top) of Underwriting Question
+#         0: Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
+#         1: Absorption (mandatory) in Underwriting Question of Text in "Underwriting Question has Text"
+#     Indices
+#       Primary index to Underwriting Question
+#         AccessKey part 0 in Underwriting Question references Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
+#       Unique index to Underwriting Question
+#         AccessKey part 0 in Underwriting Question references Absorption (mandatory) in Underwriting Question of Text in "Underwriting Question has Text"
+#     Foreign keys inbound
+#       Foreign Key from Underwriting Demerit to Underwriting Question
+#         ForeignKey part 0 in Underwriting Demerit is Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
+#     Foreign keys outbound
+#   Composite Mapping (top) of Vehicle Incident
+#     Columns
+#       Mapping (top) of Vehicle Incident
+#         0: Absorption (supertype) in Vehicle Incident of Incident in "Vehicle Incident is a kind of Incident"
+#           0: Absorption (existential) in Incident of Claim in "Incident is of Claim"
+#             0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         1: Absorption (optional) in Vehicle Incident of Description in "Vehicle Incident has Description"
+#         2: Absorption (optional) in Vehicle Incident of Driving (full) in "Driving involves Vehicle Incident"
+#           0: Absorption (mandatory) in Driving of Person in "Driving was by Person"
+#             0: Absorption (mandatory) in Person of Party ID in "Party has Party ID"
+#           1: Absorption (optional) in Driving of Breath Test Result in "Driving resulted in breath-Test Result"
+#           2: Absorption (optional) in Driving of Intoxication in "Driving followed Intoxication"
+#           3: Absorption (optional) in Driving of Nonconsent Reason in "Driving was without owners consent for nonconsent-Reason"
+#           4: Absorption (optional) in Driving of Unlicensed Reason in "Driving was unlicenced for unlicensed-Reason"
+#         3: Absorption (optional) in Vehicle Incident of Loss Type in "Vehicle Incident resulted from Loss Type"
+#           0: Absorption (existential) in Loss Type of Loss Type Code in "Loss Type has Loss Type Code"
+#         4: Absorption (optional) in Vehicle Incident of Previous_damage Description in "Vehicle Incident involved previous_damage-Description"
+#         5: Absorption (optional) in Vehicle Incident of Reason in "Vehicle Incident was caused by Reason"
+#         6: Absorption (optional) in Vehicle Incident of Towed Location in "Vehicle Incident resulted in vehicle being towed to towed-Location"
+#         7: Absorption (optional) in Vehicle Incident of Weather Description in "Vehicle Incident occurred during weather-Description"
+#     Indices
+#       Primary index to Vehicle Incident
+#         AccessKey part 0 in Vehicle Incident references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#     Foreign keys inbound
+#       Foreign Key from Third Party to Vehicle Incident
+#       Foreign Key from Underwriting Demerit to Vehicle Incident
+#     Foreign keys outbound
+#       Foreign Key from Vehicle Incident to Loss Type
+#         ForeignKey part 0 in Vehicle Incident is Absorption (existential) in Loss Type of Loss Type Code in "Loss Type has Loss Type Code"
+#   Composite Mapping (top) of Witness
+#     Columns
+#       Mapping (top) of Witness
+#         0: Absorption (existential) in Witness of Incident in "Witness saw Incident"
+#           0: Absorption (existential) in Incident of Claim in "Incident is of Claim"
+#             0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         1: Absorption (existential) in Witness of Name in "Witness is called Name"
+#         2: Absorption (optional) in Witness of Address in "Witness lives at Address"
 #           0: Absorption (existential) in Address of Street in "Address is at Street"
 #           1: Absorption (existential) in Address of City in "Address is in City"
 #           2: Absorption (existential) in Address of Postcode in "Address is in Postcode"
 #           3: Absorption (existential) in Address of State in "Address is in State"
 #             0: Absorption (existential) in State of State Code in "State has State Code"
-#         5: Absorption (optional) in Person of Birth Date in "Person has birth-Date"
-#         6: Absorption (optional) in Person of License in "Person holds License"
-#           0: Indicator "License is international" (as "Is International")
-#           1: Absorption (mandatory) in License of License Number in "License has License Number"
-#           2: Absorption (mandatory) in License of License Type in "License is of License Type"
-#           3: Absorption (optional) in License of Year in "License was granted in Year"
-#             0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
-#         7: Absorption (optional) in Person of Occupation in "Person has Occupation"
-#       2: Absorption (optional) in Driving of Breath Test Result in "Driving resulted in breath-Test Result"
-#       3: Absorption (optional) in Driving of Intoxication in "Driving followed Intoxication"
-#       4: Absorption (optional) in Driving of Nonconsent Reason in "Driving was without owners consent for nonconsent-Reason"
-#       5: Absorption (optional) in Driving of Unlicensed Reason in "Driving was unlicenced for unlicensed-Reason"
-#     1: Absorption (mandatory) in Hospitalization of Hospital (full) in "Hospitalization involves Hospital"
-#       0: Absorption (existential) in Hospital of Hospital Name in "Hospital has Hospital Name"
-#     2: Absorption (optional) in Hospitalization of Blood Test Result in "Hospitalization resulted in blood-Test Result"
-#   Mapping (top) of Incident
-#     0: Absorption (mandatory) in Incident of Address (full) in "Incident relates to loss at Address"
-#       0: Absorption (existential) in Address of Street in "Address is at Street"
-#       1: Absorption (existential) in Address of City in "Address is in City"
-#       2: Absorption (existential) in Address of Postcode in "Address is in Postcode"
-#       3: Absorption (existential) in Address of State in "Address is in State"
-#         0: Absorption (existential) in State of State Code in "State has State Code"
-#     1: Absorption (mandatory) in Incident of Date Time in "Incident relates to loss on Date Time"
-#     2: Absorption (optional) in Incident of Police Report (full) in "Incident is covered by Police Report"
-#       0: Absorption (optional) in Police Report of Officer Name in "Police Report was to officer-Name"
-#       1: Absorption (optional) in Police Report of Police Report Nr in "Police Report has police-Report Nr"
-#       2: Absorption (optional) in Police Report of Report Date Time in "Police Report was on report-Date Time"
-#       3: Absorption (optional) in Police Report of Reporter Name in "Police Report was by reporter-Name"
-#       4: Absorption (optional) in Police Report of Station Name in "Police Report was at station-Name"
-#   Mapping (top) of Lodgement
-#     0: Absorption (existential) in Lodgement of Claim in "Lodgement involves Claim"
-#       0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
-#     1: Absorption (mandatory) in Lodgement of Person in "Lodgement involves Person"
-#       0: Absorption (mandatory) in Person of Contact Methods in "Person has Contact Methods"
-#         0: Absorption (optional) in Contact Methods of Business Phone in "Contact Methods includes business-Phone"
-#           0: Absorption (existential) in Business Phone of Phone Nr in "Phone has Phone Nr"
-#         1: Absorption (optional) in Contact Methods of Contact Time in "Contact Methods prefers contact-Time"
-#         2: Absorption (optional) in Contact Methods of Email in "Contact Methods includes Email"
-#         3: Absorption (optional) in Contact Methods of Home Phone in "Contact Methods includes home-Phone"
-#           0: Absorption (existential) in Home Phone of Phone Nr in "Phone has Phone Nr"
-#         4: Absorption (optional) in Contact Methods of Mobile Phone in "Contact Methods includes mobile-Phone"
-#           0: Absorption (existential) in Mobile Phone of Phone Nr in "Phone has Phone Nr"
-#         5: Absorption (optional) in Contact Methods of Preferred Contact Method in "Contact Methods has preferred-Contact Method"
-#       1: Absorption (mandatory) in Person of Family Name in "Person has family-Name"
-#       2: Absorption (mandatory) in Person of Given Name in "Person has given-Name"
-#       3: Absorption (mandatory) in Person of Title in "Person has Title"
-#       4: Absorption (optional) in Person of Address in "Person lives at Address"
-#         0: Absorption (existential) in Address of Street in "Address is at Street"
-#         1: Absorption (existential) in Address of City in "Address is in City"
-#         2: Absorption (existential) in Address of Postcode in "Address is in Postcode"
-#         3: Absorption (existential) in Address of State in "Address is in State"
-#           0: Absorption (existential) in State of State Code in "State has State Code"
-#       5: Absorption (optional) in Person of Birth Date in "Person has birth-Date"
-#       6: Absorption (optional) in Person of License in "Person holds License"
-#         0: Indicator "License is international" (as "Is International")
-#         1: Absorption (mandatory) in License of License Number in "License has License Number"
-#         2: Absorption (mandatory) in License of License Type in "License is of License Type"
-#         3: Absorption (optional) in License of Year in "License was granted in Year"
-#           0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
-#       7: Absorption (optional) in Person of Occupation in "Person has Occupation"
-#     2: Absorption (optional) in Lodgement of Date Time in "Lodgement was made at Date Time"
-#   Mapping (top) of Loss Type
-#     0: Absorption (existential) in Loss Type of Loss Type Code in "Loss Type has Loss Type Code"
-#     1: Indicator "Loss Type involves driving" (as "Involves Driving")
-#     2: Indicator "Loss Type is single vehicle incident" (as "Is Single Vehicle Incident")
-#     3: Absorption (optional) in Loss Type of Liability (full) in "Loss Type implies Liability"
-#       0: Absorption (existential) in Liability of Liability Code in "Liability has Liability Code"
-#   Mapping (top) of Lost Item
-#     0: Absorption (existential) in Lost Item of Incident in "Lost Item was lost in Incident"
-#     1: Absorption (existential) in Lost Item of Lost Item Nr in "Lost Item has Lost Item Nr"
-#     2: Absorption (mandatory) in Lost Item of Description in "Lost Item has Description"
-#     3: Absorption (optional) in Lost Item of Purchase Date in "Lost Item was purchased on purchase-Date"
-#     4: Absorption (optional) in Lost Item of Purchase Place in "Lost Item was purchased at purchase-Place"
-#     5: Absorption (optional) in Lost Item of Purchase Price in "Lost Item was purchased for purchase-Price"
-#   Mapping (top) of Party
-#     0: Absorption (existential) in Party of Party ID in "Party has Party ID"
-#     1: Indicator "Party is a company" (as "Is A Company")
-#     2: Absorption (optional) in Party of Postal Address (full) in "Party has postal-Address"
-#       0: Absorption (existential) in Postal Address of Street in "Address is at Street"
-#       1: Absorption (existential) in Postal Address of City in "Address is in City"
-#       2: Absorption (existential) in Postal Address of Postcode in "Address is in Postcode"
-#       3: Absorption (existential) in Postal Address of State in "Address is in State"
-#         0: Absorption (existential) in State of State Code in "State has State Code"
-#     3: Absorption (subtype) in Party of Authorised Rep in "Party is an Authorised Rep"
-#     4: Absorption (subtype) in Party of Company in "Party is a Company"
-#       0: Absorption (mandatory) in Company of Contact Person in "Company has contact-Person"
-#         0: Absorption (mandatory) in Contact Person of Contact Methods in "Person has Contact Methods"
-#           0: Absorption (optional) in Contact Methods of Business Phone in "Contact Methods includes business-Phone"
-#             0: Absorption (existential) in Business Phone of Phone Nr in "Phone has Phone Nr"
-#           1: Absorption (optional) in Contact Methods of Contact Time in "Contact Methods prefers contact-Time"
-#           2: Absorption (optional) in Contact Methods of Email in "Contact Methods includes Email"
-#           3: Absorption (optional) in Contact Methods of Home Phone in "Contact Methods includes home-Phone"
-#             0: Absorption (existential) in Home Phone of Phone Nr in "Phone has Phone Nr"
-#           4: Absorption (optional) in Contact Methods of Mobile Phone in "Contact Methods includes mobile-Phone"
-#             0: Absorption (existential) in Mobile Phone of Phone Nr in "Phone has Phone Nr"
-#           5: Absorption (optional) in Contact Methods of Preferred Contact Method in "Contact Methods has preferred-Contact Method"
-#         1: Absorption (mandatory) in Contact Person of Family Name in "Person has family-Name"
-#         2: Absorption (mandatory) in Contact Person of Given Name in "Person has given-Name"
-#         3: Absorption (mandatory) in Contact Person of Title in "Person has Title"
-#         4: Absorption (optional) in Contact Person of Address in "Person lives at Address"
-#           0: Absorption (existential) in Address of Street in "Address is at Street"
-#           1: Absorption (existential) in Address of City in "Address is in City"
-#           2: Absorption (existential) in Address of Postcode in "Address is in Postcode"
-#           3: Absorption (existential) in Address of State in "Address is in State"
-#             0: Absorption (existential) in State of State Code in "State has State Code"
-#         5: Absorption (optional) in Contact Person of Birth Date in "Person has birth-Date"
-#         6: Absorption (optional) in Contact Person of License in "Person holds License"
-#           0: Indicator "License is international" (as "Is International")
-#           1: Absorption (mandatory) in License of License Number in "License has License Number"
-#           2: Absorption (mandatory) in License of License Type in "License is of License Type"
-#           3: Absorption (optional) in License of Year in "License was granted in Year"
-#             0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
-#         7: Absorption (optional) in Contact Person of Occupation in "Person has Occupation"
-#       1: Absorption (subtype) in Company of Contractor in "Company is a Contractor"
-#         0: Absorption (subtype) in Contractor of Assessor in "Contractor is an Assessor"
-#         1: Absorption (subtype) in Contractor of Investigator in "Contractor is an Investigator"
-#         2: Absorption (subtype) in Contractor of Repairer in "Contractor is a Repairer"
-#         3: Absorption (subtype) in Contractor of Solicitor in "Contractor is a Solicitor"
-#       2: Absorption (subtype) in Company of Finance Institution in "Company is a Finance Institution"
-#       3: Absorption (subtype) in Company of Insurer in "Company is an Insurer"
-#     5: Absorption (subtype) in Party of Dealer in "Party is a Dealer"
-#     6: Absorption (subtype) in Party of Insured in "Party is an Insured"
-#     7: Absorption (subtype) in Party of Person in "Party is a Person"
-#       0: Absorption (mandatory) in Person of Contact Methods in "Person has Contact Methods"
-#         0: Absorption (optional) in Contact Methods of Business Phone in "Contact Methods includes business-Phone"
-#           0: Absorption (existential) in Business Phone of Phone Nr in "Phone has Phone Nr"
-#         1: Absorption (optional) in Contact Methods of Contact Time in "Contact Methods prefers contact-Time"
-#         2: Absorption (optional) in Contact Methods of Email in "Contact Methods includes Email"
-#         3: Absorption (optional) in Contact Methods of Home Phone in "Contact Methods includes home-Phone"
-#           0: Absorption (existential) in Home Phone of Phone Nr in "Phone has Phone Nr"
-#         4: Absorption (optional) in Contact Methods of Mobile Phone in "Contact Methods includes mobile-Phone"
-#           0: Absorption (existential) in Mobile Phone of Phone Nr in "Phone has Phone Nr"
-#         5: Absorption (optional) in Contact Methods of Preferred Contact Method in "Contact Methods has preferred-Contact Method"
-#       1: Absorption (mandatory) in Person of Family Name in "Person has family-Name"
-#       2: Absorption (mandatory) in Person of Given Name in "Person has given-Name"
-#       3: Absorption (mandatory) in Person of Title in "Person has Title"
-#       4: Absorption (optional) in Person of Address in "Person lives at Address"
-#         0: Absorption (existential) in Address of Street in "Address is at Street"
-#         1: Absorption (existential) in Address of City in "Address is in City"
-#         2: Absorption (existential) in Address of Postcode in "Address is in Postcode"
-#         3: Absorption (existential) in Address of State in "Address is in State"
-#           0: Absorption (existential) in State of State Code in "State has State Code"
-#       5: Absorption (optional) in Person of Birth Date in "Person has birth-Date"
-#       6: Absorption (optional) in Person of License in "Person holds License"
-#         0: Indicator "License is international" (as "Is International")
-#         1: Absorption (mandatory) in License of License Number in "License has License Number"
-#         2: Absorption (mandatory) in License of License Type in "License is of License Type"
-#         3: Absorption (optional) in License of Year in "License was granted in Year"
-#           0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
-#       7: Absorption (optional) in Person of Occupation in "Person has Occupation"
-#   Mapping (top) of Policy
-#     0: Absorption (existential) in Policy of p_year (full) in "Policy was issued in Year"
-#       0: Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
-#     1: Absorption (existential) in Policy of p_product in "Policy is for product having Product"
-#       0: Absorption (existential) in p_product of Product Code in "Product has Product Code"
-#     2: Absorption (existential) in Policy of p_state in "Policy issued in state having State"
-#       0: Absorption (existential) in p_state of State Code in "State has State Code"
-#     3: Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
-#     4: Absorption (mandatory) in Policy of Application (full) in "Policy has Application"
-#       0: Absorption (existential) in Application of Application Nr in "Application has Application Nr"
-#     5: Absorption (mandatory) in Policy of Insured in "Policy belongs to Insured"
-#     6: Absorption (optional) in Policy of Authorised Rep in "Policy was sold by Authorised Rep"
-#     7: Absorption (optional) in Policy of ITC Claimed in "Policy has ITC Claimed"
-#     8: Absorption (subtype) in Policy of Motor Policy in "Policy is a Motor Policy"
-#       0: Absorption (subtype) in Motor Policy of Motor Fleet Policy in "Motor Policy is a Motor Fleet Policy"
-#       1: Absorption (subtype) in Motor Policy of Single Motor Policy in "Motor Policy is a Single Motor Policy"
-#   Mapping (top) of Product
-#     0: Absorption (existential) in Product of Product Code in "Product has Product Code"
-#     1: Absorption (optional) in Product of Alias in "Product has Alias"
-#     2: Absorption (optional) in Product of Description in "Product has Description"
-#   Mapping (top) of Property Damage
-#     0: Absorption (existential) in Property Damage of Incident in "Property Damage was damaged in Incident"
-#     1: Absorption (existential) in Property Damage of Address (full) in "Property Damage is at Address"
-#       0: Absorption (existential) in Address of Street in "Address is at Street"
-#       1: Absorption (existential) in Address of City in "Address is in City"
-#       2: Absorption (existential) in Address of Postcode in "Address is in Postcode"
-#       3: Absorption (existential) in Address of State in "Address is in State"
-#         0: Absorption (existential) in State of State Code in "State has State Code"
-#     2: Absorption (optional) in Property Damage of Owner Name in "Property Damage belongs to owner-Name"
-#     3: Absorption (optional) in Property Damage of Phone (full) in "Property Damage owner has contact Phone"
-#       0: Absorption (existential) in Phone of Phone Nr in "Phone has Phone Nr"
-#   Mapping (top) of State
-#     0: Absorption (existential) in State of State Code in "State has State Code"
-#     1: Absorption (optional) in State of State Name in "State has State Name"
-#   Mapping (top) of Third Party
-#     0: Absorption (existential) in Third Party of Person in "Third Party involves Person"
-#       0: Absorption (mandatory) in Person of Contact Methods in "Person has Contact Methods"
-#         0: Absorption (optional) in Contact Methods of Business Phone in "Contact Methods includes business-Phone"
-#           0: Absorption (existential) in Business Phone of Phone Nr in "Phone has Phone Nr"
-#         1: Absorption (optional) in Contact Methods of Contact Time in "Contact Methods prefers contact-Time"
-#         2: Absorption (optional) in Contact Methods of Email in "Contact Methods includes Email"
-#         3: Absorption (optional) in Contact Methods of Home Phone in "Contact Methods includes home-Phone"
-#           0: Absorption (existential) in Home Phone of Phone Nr in "Phone has Phone Nr"
-#         4: Absorption (optional) in Contact Methods of Mobile Phone in "Contact Methods includes mobile-Phone"
-#           0: Absorption (existential) in Mobile Phone of Phone Nr in "Phone has Phone Nr"
-#         5: Absorption (optional) in Contact Methods of Preferred Contact Method in "Contact Methods has preferred-Contact Method"
-#       1: Absorption (mandatory) in Person of Family Name in "Person has family-Name"
-#       2: Absorption (mandatory) in Person of Given Name in "Person has given-Name"
-#       3: Absorption (mandatory) in Person of Title in "Person has Title"
-#       4: Absorption (optional) in Person of Address in "Person lives at Address"
-#         0: Absorption (existential) in Address of Street in "Address is at Street"
-#         1: Absorption (existential) in Address of City in "Address is in City"
-#         2: Absorption (existential) in Address of Postcode in "Address is in Postcode"
-#         3: Absorption (existential) in Address of State in "Address is in State"
-#           0: Absorption (existential) in State of State Code in "State has State Code"
-#       5: Absorption (optional) in Person of Birth Date in "Person has birth-Date"
-#       6: Absorption (optional) in Person of License in "Person holds License"
-#         0: Indicator "License is international" (as "Is International")
-#         1: Absorption (mandatory) in License of License Number in "License has License Number"
-#         2: Absorption (mandatory) in License of License Type in "License is of License Type"
-#         3: Absorption (optional) in License of Year in "License was granted in Year"
-#           0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
-#       7: Absorption (optional) in Person of Occupation in "Person has Occupation"
-#     1: Absorption (existential) in Third Party of Vehicle Incident in "Third Party involves Vehicle Incident"
-#     2: Absorption (optional) in Third Party of Insurer in "Third Party is insured by Insurer"
-#     3: Absorption (optional) in Third Party of Model Year (full) in "Third Party vehicle is of model-Year"
-#       0: Absorption (existential) in Model Year of Year Nr in "Year has Year Nr"
-#     4: Absorption (optional) in Third Party of Vehicle Registration (full) in "Third Party drove vehicle-Registration"
-#       0: Absorption (existential) in Vehicle Registration of Registration Nr in "Registration has Registration Nr"
-#     5: Absorption (optional) in Third Party of Vehicle Type (full) in "Third Party vehicle is of Vehicle Type"
-#       0: Absorption (existential) in Vehicle Type of Make in "Vehicle Type is of Make"
-#       1: Absorption (existential) in Vehicle Type of Model in "Vehicle Type is of Model"
-#       2: Absorption (existential) in Vehicle Type of Badge in "Vehicle Type has Badge"
-#   Mapping (top) of Underwriting Demerit
-#     0: Absorption (existential) in Underwriting Demerit of Vehicle Incident in "Underwriting Demerit preceded Vehicle Incident"
-#     1: Absorption (existential) in Underwriting Demerit of Underwriting Question in "Underwriting Demerit has Underwriting Question"
-#       0: Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
-#     2: Absorption (optional) in Underwriting Demerit of Occurrence Count in "Underwriting Demerit occurred occurrence-Count times"
-#   Mapping (top) of Underwriting Question
-#     0: Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
-#     1: Absorption (mandatory) in Underwriting Question of Text in "Underwriting Question has Text"
-#   Mapping (top) of Vehicle Incident
-#     0: Absorption (supertype) in Vehicle Incident of Incident in "Vehicle Incident is a kind of Incident"
-#     1: Absorption (optional) in Vehicle Incident of Description in "Vehicle Incident has Description"
-#     2: Absorption (optional) in Vehicle Incident of Loss Type in "Vehicle Incident resulted from Loss Type"
-#       0: Absorption (existential) in Loss Type of Loss Type Code in "Loss Type has Loss Type Code"
-#     3: Absorption (optional) in Vehicle Incident of Previous_damage Description in "Vehicle Incident involved previous_damage-Description"
-#     4: Absorption (optional) in Vehicle Incident of Reason in "Vehicle Incident was caused by Reason"
-#     5: Absorption (optional) in Vehicle Incident of Towed Location in "Vehicle Incident resulted in vehicle being towed to towed-Location"
-#     6: Absorption (optional) in Vehicle Incident of Weather Description in "Vehicle Incident occurred during weather-Description"
-#   Mapping (top) of Witness
-#     0: Absorption (existential) in Witness of Incident in "Witness saw Incident"
-#     1: Absorption (existential) in Witness of Name in "Witness is called Name"
-#     2: Absorption (optional) in Witness of Address (full) in "Witness lives at Address"
-#       0: Absorption (existential) in Address of Street in "Address is at Street"
-#       1: Absorption (existential) in Address of City in "Address is in City"
-#       2: Absorption (existential) in Address of Postcode in "Address is in Postcode"
-#       3: Absorption (existential) in Address of State in "Address is in State"
-#         0: Absorption (existential) in State of State Code in "State has State Code"
-#     3: Absorption (optional) in Witness of Contact Phone (full) in "Witness has contact-Phone"
-#       0: Absorption (existential) in Contact Phone of Phone Nr in "Phone has Phone Nr"
+#         3: Absorption (optional) in Witness of Contact Phone in "Witness has contact-Phone"
+#           0: Absorption (existential) in Contact Phone of Phone Nr in "Phone has Phone Nr"
+#     Indices
+#       Primary index to Witness
+#         AccessKey part 0 in Witness references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         AccessKey part 1 in Witness references Absorption (existential) in Witness of Name in "Witness is called Name"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#       Foreign Key from Witness to State
+#         ForeignKey part 0 in Witness is Absorption (existential) in State of State Code in "State has State Code"

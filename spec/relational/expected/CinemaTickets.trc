@@ -1,93 +1,251 @@
 # Full relational composition
-#   Mapping (top) of AllocatableCinemaSection
-#     0: Absorption (existential) in AllocatableCinemaSection of Cinema in "AllocatableCinemaSection involves Cinema"
-#       0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
-#     1: Absorption (existential) in AllocatableCinemaSection of Section (full) in "AllocatableCinemaSection involves Section"
-#       0: Absorption (existential) in Section of Section Name in "Section has Section Name"
-#   Mapping (top) of Booking
-#     0: Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
-#     1: Indicator "tickets for Booking have been issued" (as "Tickets For Have Been Issued")
-#     2: Absorption (mandatory) in Booking of Number in "Booking involves Number"
-#     3: Absorption (mandatory) in Booking of Person in "Booking involves Person"
-#       0: Absorption (existential) in Person of Person ID in "Person has Person ID"
-#     4: Absorption (mandatory) in Booking of Session in "Booking involves Session"
-#       0: Absorption (existential) in Session of Cinema in "Session involves Cinema"
-#         0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
-#       1: Absorption (existential) in Session of Session Time in "Session involves Session Time"
-#         0: Absorption (existential) in Session Time of Year in "Session Time is in Year"
-#           0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
-#         1: Absorption (existential) in Session Time of Month in "Session Time is in Month"
-#           0: Absorption (existential) in Month of Month Nr in "Month has Month Nr"
-#         2: Absorption (existential) in Session Time of Day in "Session Time is on Day"
-#         3: Absorption (existential) in Session Time of Hour in "Session Time is at Hour"
-#         4: Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
-#     5: Absorption (optional) in Booking of Address (full) in "tickets for Booking are being mailed to Address"
-#       0: Absorption (existential) in Address of Address Text in "Address has Address Text"
-#     6: Absorption (optional) in Booking of Collection Code in "Booking has Collection Code"
-#     7: Absorption (optional) in Booking of Section (full) in "Booking is for seats in Section"
-#       0: Absorption (existential) in Section of Section Name in "Section has Section Name"
-#   Mapping (top) of Cinema
-#     0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
-#     1: Absorption (mandatory) in Cinema of Name in "Cinema has Name"
-#   Mapping (top) of Film
-#     0: Absorption (existential) in Film of Film ID in "Film has Film ID"
-#     1: Absorption (mandatory) in Film of Name in "Film has Name"
-#     2: Absorption (optional) in Film of Year (full) in "Film was made in Year"
-#       0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
-#   Mapping (top) of Person
-#     0: Absorption (existential) in Person of Person ID in "Person has Person ID"
-#     1: Absorption (optional) in Person of Encrypted Password in "Person has Encrypted Password"
-#     2: Absorption (optional) in Person of Login Name in "Person has login-Name"
-#   Mapping (top) of Places Paid
-#     0: Absorption (existential) in Places Paid of Booking in "Places Paid involves Booking"
-#       0: Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
-#     1: Absorption (existential) in Places Paid of Payment Method (full) in "Places Paid involves Payment Method"
-#       0: Absorption (existential) in Payment Method of Payment Method Code in "Payment Method has Payment Method Code"
-#     2: Absorption (mandatory) in Places Paid of Number in "Places Paid involves Number"
-#   Mapping (top) of Seat
-#     0: Absorption (existential) in Seat of Row (full) in "Seat is in Row"
-#       0: Absorption (existential) in Row of Cinema in "Row is in Cinema"
-#         0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
-#       1: Absorption (existential) in Row of Row Nr in "Row has Row Nr"
-#     1: Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
-#     2: Absorption (optional) in Seat of Section (full) in "Seat is in Section"
-#       0: Absorption (existential) in Section of Section Name in "Section has Section Name"
-#   Mapping (top) of Seat Allocation
-#     0: Absorption (existential) in Seat Allocation of Booking in "Seat Allocation involves Booking"
-#       0: Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
-#     1: Absorption (existential) in Seat Allocation of Seat in "Seat Allocation involves Seat"
-#       0: Absorption (existential) in Seat of Row in "Seat is in Row"
-#         0: Absorption (existential) in Row of Cinema in "Row is in Cinema"
+#   Composite Mapping (top) of AllocatableCinemaSection
+#     Columns
+#       Mapping (top) of AllocatableCinemaSection
+#         0: Absorption (existential) in AllocatableCinemaSection of Cinema in "AllocatableCinemaSection involves Cinema"
 #           0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
-#         1: Absorption (existential) in Row of Row Nr in "Row has Row Nr"
-#       1: Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
-#   Mapping (top) of Session
-#     0: Absorption (existential) in Session of Cinema in "Session involves Cinema"
-#       0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
-#     1: Absorption (existential) in Session of Session Time (full) in "Session involves Session Time"
-#       0: Absorption (existential) in Session Time of Year in "Session Time is in Year"
-#         0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
-#       1: Absorption (existential) in Session Time of Month in "Session Time is in Month"
-#         0: Absorption (existential) in Month of Month Nr in "Month has Month Nr"
-#       2: Absorption (existential) in Session Time of Day in "Session Time is on Day"
-#       3: Absorption (existential) in Session Time of Hour in "Session Time is at Hour"
-#       4: Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
-#     2: Indicator "Session is high-demand" (as "Is High Demand")
-#     3: Indicator "Session uses allocated seating" (as "Uses Allocated Seating")
-#     4: Absorption (mandatory) in Session of Film in "Session involves Film"
-#       0: Absorption (existential) in Film of Film ID in "Film has Film ID"
-#   Mapping (top) of Ticket Pricing
-#     0: Absorption (existential) in Ticket Pricing of Session Time (full) in "Ticket Pricing involves Session Time"
-#       0: Absorption (existential) in Session Time of Year in "Session Time is in Year"
-#         0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
-#       1: Absorption (existential) in Session Time of Month in "Session Time is in Month"
-#         0: Absorption (existential) in Month of Month Nr in "Month has Month Nr"
-#       2: Absorption (existential) in Session Time of Day in "Session Time is on Day"
-#       3: Absorption (existential) in Session Time of Hour in "Session Time is at Hour"
-#       4: Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
-#     1: Absorption (existential) in Ticket Pricing of Cinema in "Ticket Pricing involves Cinema"
-#       0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
-#     2: Absorption (existential) in Ticket Pricing of Section (full) in "Ticket Pricing involves Section"
-#       0: Absorption (existential) in Section of Section Name in "Section has Section Name"
-#     3: Absorption (existential) in Ticket Pricing of High Demand in "Ticket Pricing involves High Demand"
-#     4: Absorption (mandatory) in Ticket Pricing of Price in "Ticket Pricing involves Price"
+#         1: Absorption (existential) in AllocatableCinemaSection of Section in "AllocatableCinemaSection involves Section"
+#           0: Absorption (existential) in Section of Section Name in "Section has Section Name"
+#     Indices
+#       Primary index to AllocatableCinemaSection
+#         AccessKey part 0 in AllocatableCinemaSection references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         AccessKey part 1 in AllocatableCinemaSection references Absorption (existential) in Section of Section Name in "Section has Section Name"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#       Foreign Key from AllocatableCinemaSection to Cinema
+#         ForeignKey part 0 in AllocatableCinemaSection is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#   Composite Mapping (top) of Booking
+#     Columns
+#       Mapping (top) of Booking
+#         0: Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
+#         1: Indicator "tickets for Booking have been issued" (as "Tickets For Have Been Issued")
+#         2: Absorption (mandatory) in Booking of Number in "Booking involves Number"
+#         3: Absorption (mandatory) in Booking of Person in "Booking involves Person"
+#           0: Absorption (existential) in Person of Person ID in "Person has Person ID"
+#         4: Absorption (mandatory) in Booking of Session in "Booking involves Session"
+#           0: Absorption (existential) in Session of Cinema in "Session involves Cinema"
+#             0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#           1: Absorption (existential) in Session of Session Time in "Session involves Session Time"
+#             0: Absorption (existential) in Session Time of Year in "Session Time is in Year"
+#               0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#             1: Absorption (existential) in Session Time of Month in "Session Time is in Month"
+#               0: Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#             2: Absorption (existential) in Session Time of Day in "Session Time is on Day"
+#             3: Absorption (existential) in Session Time of Hour in "Session Time is at Hour"
+#             4: Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
+#         5: Absorption (optional) in Booking of Address in "tickets for Booking are being mailed to Address"
+#           0: Absorption (existential) in Address of Address Text in "Address has Address Text"
+#         6: Absorption (optional) in Booking of Collection Code in "Booking has Collection Code"
+#         7: Absorption (optional) in Booking of Section in "Booking is for seats in Section"
+#           0: Absorption (existential) in Section of Section Name in "Section has Section Name"
+#     Indices
+#       Primary index to Booking
+#         AccessKey part 0 in Booking references Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
+#       Unique index to Booking
+#         AccessKey part 0 in Booking references Absorption (existential) in Person of Person ID in "Person has Person ID"
+#         AccessKey part 1 in Booking references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         AccessKey part 2 in Booking references Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#         AccessKey part 3 in Booking references Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#         AccessKey part 4 in Booking references Absorption (existential) in Session Time of Day in "Session Time is on Day"
+#         AccessKey part 5 in Booking references Absorption (existential) in Session Time of Hour in "Session Time is at Hour"
+#         AccessKey part 6 in Booking references Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
+#     Foreign keys inbound
+#       Foreign Key from Places Paid to Booking
+#         ForeignKey part 0 in Places Paid is Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
+#       Foreign Key from Seat Allocation to Booking
+#         ForeignKey part 0 in Seat Allocation is Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
+#     Foreign keys outbound
+#       Foreign Key from Booking to Session
+#         ForeignKey part 0 in Booking is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         ForeignKey part 1 in Booking is Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#         ForeignKey part 2 in Booking is Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#         ForeignKey part 3 in Booking is Absorption (existential) in Session Time of Day in "Session Time is on Day"
+#         ForeignKey part 4 in Booking is Absorption (existential) in Session Time of Hour in "Session Time is at Hour"
+#         ForeignKey part 5 in Booking is Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
+#       Foreign Key from Booking to Person
+#         ForeignKey part 0 in Booking is Absorption (existential) in Person of Person ID in "Person has Person ID"
+#   Composite Mapping (top) of Cinema
+#     Columns
+#       Mapping (top) of Cinema
+#         0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         1: Absorption (mandatory) in Cinema of Name in "Cinema has Name"
+#     Indices
+#       Primary index to Cinema
+#         AccessKey part 0 in Cinema references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#       Unique index to Cinema
+#         AccessKey part 0 in Cinema references Absorption (mandatory) in Cinema of Name in "Cinema has Name"
+#     Foreign keys inbound
+#       Foreign Key from AllocatableCinemaSection to Cinema
+#         ForeignKey part 0 in AllocatableCinemaSection is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#       Foreign Key from Seat to Cinema
+#         ForeignKey part 0 in Seat is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#       Foreign Key from Session to Cinema
+#         ForeignKey part 0 in Session is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#       Foreign Key from Ticket Pricing to Cinema
+#         ForeignKey part 0 in Ticket Pricing is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#     Foreign keys outbound
+#   Composite Mapping (top) of Film
+#     Columns
+#       Mapping (top) of Film
+#         0: Absorption (existential) in Film of Film ID in "Film has Film ID"
+#         1: Absorption (mandatory) in Film of Name in "Film has Name"
+#         2: Absorption (optional) in Film of Year in "Film was made in Year"
+#           0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#     Indices
+#       Primary index to Film
+#         AccessKey part 0 in Film references Absorption (existential) in Film of Film ID in "Film has Film ID"
+#       Unique index to Film
+#         AccessKey part 0 in Film references Absorption (mandatory) in Film of Name in "Film has Name"
+#         AccessKey part 1 in Film references Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#     Foreign keys inbound
+#       Foreign Key from Session to Film
+#         ForeignKey part 0 in Session is Absorption (existential) in Film of Film ID in "Film has Film ID"
+#     Foreign keys outbound
+#   Composite Mapping (top) of Person
+#     Columns
+#       Mapping (top) of Person
+#         0: Absorption (existential) in Person of Person ID in "Person has Person ID"
+#         1: Absorption (optional) in Person of Encrypted Password in "Person has Encrypted Password"
+#         2: Absorption (optional) in Person of Login Name in "Person has login-Name"
+#     Indices
+#       Primary index to Person
+#         AccessKey part 0 in Person references Absorption (existential) in Person of Person ID in "Person has Person ID"
+#       Unique index to Person
+#         AccessKey part 0 in Person references Absorption (optional) in Person of Login Name in "Person has login-Name"
+#     Foreign keys inbound
+#       Foreign Key from Booking to Person
+#         ForeignKey part 0 in Booking is Absorption (existential) in Person of Person ID in "Person has Person ID"
+#     Foreign keys outbound
+#   Composite Mapping (top) of Places Paid
+#     Columns
+#       Mapping (top) of Places Paid
+#         0: Absorption (existential) in Places Paid of Booking in "Places Paid involves Booking"
+#           0: Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
+#         1: Absorption (existential) in Places Paid of Payment Method in "Places Paid involves Payment Method"
+#           0: Absorption (existential) in Payment Method of Payment Method Code in "Payment Method has Payment Method Code"
+#         2: Absorption (mandatory) in Places Paid of Number in "Places Paid involves Number"
+#     Indices
+#       Primary index to Places Paid
+#         AccessKey part 0 in Places Paid references Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
+#         AccessKey part 1 in Places Paid references Absorption (existential) in Payment Method of Payment Method Code in "Payment Method has Payment Method Code"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#       Foreign Key from Places Paid to Booking
+#         ForeignKey part 0 in Places Paid is Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
+#   Composite Mapping (top) of Seat
+#     Columns
+#       Mapping (top) of Seat
+#         0: Absorption (existential) in Seat of Row in "Seat is in Row"
+#           0: Absorption (existential) in Row of Cinema in "Row is in Cinema"
+#             0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#           1: Absorption (existential) in Row of Row Nr in "Row has Row Nr"
+#         1: Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
+#         2: Absorption (optional) in Seat of Section in "Seat is in Section"
+#           0: Absorption (existential) in Section of Section Name in "Section has Section Name"
+#     Indices
+#       Primary index to Seat
+#         AccessKey part 0 in Seat references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         AccessKey part 1 in Seat references Absorption (existential) in Row of Row Nr in "Row has Row Nr"
+#         AccessKey part 2 in Seat references Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
+#     Foreign keys inbound
+#       Foreign Key from Seat Allocation to Seat
+#         ForeignKey part 0 in Seat Allocation is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         ForeignKey part 1 in Seat Allocation is Absorption (existential) in Row of Row Nr in "Row has Row Nr"
+#         ForeignKey part 2 in Seat Allocation is Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
+#     Foreign keys outbound
+#       Foreign Key from Seat to Cinema
+#         ForeignKey part 0 in Seat is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#   Composite Mapping (top) of Seat Allocation
+#     Columns
+#       Mapping (top) of Seat Allocation
+#         0: Absorption (existential) in Seat Allocation of Booking in "Seat Allocation involves Booking"
+#           0: Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
+#         1: Absorption (existential) in Seat Allocation of Seat in "Seat Allocation involves Seat"
+#           0: Absorption (existential) in Seat of Row in "Seat is in Row"
+#             0: Absorption (existential) in Row of Cinema in "Row is in Cinema"
+#               0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#             1: Absorption (existential) in Row of Row Nr in "Row has Row Nr"
+#           1: Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
+#     Indices
+#       Primary index to Seat Allocation
+#         AccessKey part 0 in Seat Allocation references Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
+#         AccessKey part 1 in Seat Allocation references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         AccessKey part 2 in Seat Allocation references Absorption (existential) in Row of Row Nr in "Row has Row Nr"
+#         AccessKey part 3 in Seat Allocation references Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#       Foreign Key from Seat Allocation to Booking
+#         ForeignKey part 0 in Seat Allocation is Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
+#       Foreign Key from Seat Allocation to Seat
+#         ForeignKey part 0 in Seat Allocation is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         ForeignKey part 1 in Seat Allocation is Absorption (existential) in Row of Row Nr in "Row has Row Nr"
+#         ForeignKey part 2 in Seat Allocation is Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
+#   Composite Mapping (top) of Session
+#     Columns
+#       Mapping (top) of Session
+#         0: Absorption (existential) in Session of Cinema in "Session involves Cinema"
+#           0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         1: Absorption (existential) in Session of Session Time in "Session involves Session Time"
+#           0: Absorption (existential) in Session Time of Year in "Session Time is in Year"
+#             0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#           1: Absorption (existential) in Session Time of Month in "Session Time is in Month"
+#             0: Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#           2: Absorption (existential) in Session Time of Day in "Session Time is on Day"
+#           3: Absorption (existential) in Session Time of Hour in "Session Time is at Hour"
+#           4: Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
+#         2: Indicator "Session is high-demand" (as "Is High Demand")
+#         3: Indicator "Session uses allocated seating" (as "Uses Allocated Seating")
+#         4: Absorption (mandatory) in Session of Film in "Session involves Film"
+#           0: Absorption (existential) in Film of Film ID in "Film has Film ID"
+#     Indices
+#       Primary index to Session
+#         AccessKey part 0 in Session references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         AccessKey part 1 in Session references Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#         AccessKey part 2 in Session references Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#         AccessKey part 3 in Session references Absorption (existential) in Session Time of Day in "Session Time is on Day"
+#         AccessKey part 4 in Session references Absorption (existential) in Session Time of Hour in "Session Time is at Hour"
+#         AccessKey part 5 in Session references Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
+#     Foreign keys inbound
+#       Foreign Key from Booking to Session
+#         ForeignKey part 0 in Booking is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         ForeignKey part 1 in Booking is Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#         ForeignKey part 2 in Booking is Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#         ForeignKey part 3 in Booking is Absorption (existential) in Session Time of Day in "Session Time is on Day"
+#         ForeignKey part 4 in Booking is Absorption (existential) in Session Time of Hour in "Session Time is at Hour"
+#         ForeignKey part 5 in Booking is Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
+#     Foreign keys outbound
+#       Foreign Key from Session to Cinema
+#         ForeignKey part 0 in Session is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#       Foreign Key from Session to Film
+#         ForeignKey part 0 in Session is Absorption (existential) in Film of Film ID in "Film has Film ID"
+#   Composite Mapping (top) of Ticket Pricing
+#     Columns
+#       Mapping (top) of Ticket Pricing
+#         0: Absorption (existential) in Ticket Pricing of Session Time in "Ticket Pricing involves Session Time"
+#           0: Absorption (existential) in Session Time of Year in "Session Time is in Year"
+#             0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#           1: Absorption (existential) in Session Time of Month in "Session Time is in Month"
+#             0: Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#           2: Absorption (existential) in Session Time of Day in "Session Time is on Day"
+#           3: Absorption (existential) in Session Time of Hour in "Session Time is at Hour"
+#           4: Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
+#         1: Absorption (existential) in Ticket Pricing of Cinema in "Ticket Pricing involves Cinema"
+#           0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         2: Absorption (existential) in Ticket Pricing of Section in "Ticket Pricing involves Section"
+#           0: Absorption (existential) in Section of Section Name in "Section has Section Name"
+#         3: Absorption (existential) in Ticket Pricing of High Demand in "Ticket Pricing involves High Demand"
+#         4: Absorption (mandatory) in Ticket Pricing of Price in "Ticket Pricing involves Price"
+#     Indices
+#       Primary index to Ticket Pricing
+#         AccessKey part 0 in Ticket Pricing references Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#         AccessKey part 1 in Ticket Pricing references Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#         AccessKey part 2 in Ticket Pricing references Absorption (existential) in Session Time of Day in "Session Time is on Day"
+#         AccessKey part 3 in Ticket Pricing references Absorption (existential) in Session Time of Hour in "Session Time is at Hour"
+#         AccessKey part 4 in Ticket Pricing references Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
+#         AccessKey part 5 in Ticket Pricing references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         AccessKey part 6 in Ticket Pricing references Absorption (existential) in Section of Section Name in "Section has Section Name"
+#         AccessKey part 7 in Ticket Pricing references Absorption (existential) in Ticket Pricing of High Demand in "Ticket Pricing involves High Demand"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#       Foreign Key from Ticket Pricing to Cinema
+#         ForeignKey part 0 in Ticket Pricing is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"

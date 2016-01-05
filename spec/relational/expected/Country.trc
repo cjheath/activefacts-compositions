@@ -1,0 +1,17 @@
+# Full relational composition
+#   Composite Mapping (top) of Country
+#     Columns
+#       Mapping (top) of Country
+#         0: Absorption (existential) in Country of ISO3166Code3 in "Country has ISO3166Code3"
+#         1: Absorption (mandatory) in Country of Country Name in "Country is called Country Name"
+#         2: Absorption (mandatory) in Country of ISO3166Code2 in "Country has ISO3166Code2"
+#         3: Absorption (mandatory) in Country of ISO3166Numeric3 in "Country has ISO3166Numeric3"
+#     Indices
+#       Primary index to Country
+#         AccessKey part 0 in Country references Absorption (existential) in Country of ISO3166Code3 in "Country has ISO3166Code3"
+#       Unique index to Country
+#         AccessKey part 0 in Country references Absorption (mandatory) in Country of Country Name in "Country is called Country Name"
+#       Unique index to Country
+#         AccessKey part 0 in Country references Absorption (mandatory) in Country of ISO3166Code2 in "Country has ISO3166Code2"
+#       Unique index to Country
+#         AccessKey part 0 in Country references Absorption (mandatory) in Country of ISO3166Numeric3 in "Country has ISO3166Numeric3"

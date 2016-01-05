@@ -1,43 +1,146 @@
 # Full relational composition
-#   Mapping (top) of Attendance
-#     0: Absorption (existential) in Attendance of Attendee in "Attendance involves Person"
-#       0: Absorption (existential) in Attendee of Given Name in "Person has given-Name"
-#       1: Absorption (existential) in Attendee of Family Name in "Person is called family-Name"
-#     1: Absorption (existential) in Attendance of Meeting in "Attendance involves Meeting"
-#       0: Absorption (existential) in Meeting of Company in "Meeting is held by Company"
+#   Composite Mapping (top) of Attendance
+#     Columns
+#       Mapping (top) of Attendance
+#         0: Absorption (existential) in Attendance of Attendee in "Attendance involves Person"
+#           0: Absorption (existential) in Attendee of Given Name in "Person has given-Name"
+#           1: Absorption (existential) in Attendee of Family Name in "Person is called family-Name"
+#         1: Absorption (existential) in Attendance of Meeting in "Attendance involves Meeting"
+#           0: Absorption (existential) in Meeting of Company in "Meeting is held by Company"
+#             0: Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#           1: Absorption (existential) in Meeting of Date in "Meeting is held on Date"
+#           2: Indicator "Meeting is board meeting" (as "Is Board Meeting")
+#     Indices
+#       Primary index to Attendance
+#         AccessKey part 0 in Attendance references Absorption (existential) in Attendee of Given Name in "Person has given-Name"
+#         AccessKey part 1 in Attendance references Absorption (existential) in Attendee of Family Name in "Person is called family-Name"
+#         AccessKey part 2 in Attendance references Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#         AccessKey part 3 in Attendance references Absorption (existential) in Meeting of Date in "Meeting is held on Date"
+#         AccessKey part 4 in Attendance references Indicator "Meeting is board meeting"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#       Foreign Key from Attendance to Person
+#         ForeignKey part 0 in Attendance is Absorption (existential) in Attendee of Given Name in "Person has given-Name"
+#         ForeignKey part 1 in Attendance is Absorption (existential) in Attendee of Family Name in "Person is called family-Name"
+#       Foreign Key from Attendance to Meeting
+#         ForeignKey part 0 in Attendance is Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#         ForeignKey part 1 in Attendance is Absorption (existential) in Meeting of Date in "Meeting is held on Date"
+#         ForeignKey part 2 in Attendance is Indicator "Meeting is board meeting"
+#   Composite Mapping (top) of Company
+#     Columns
+#       Mapping (top) of Company
 #         0: Absorption (existential) in Company of Company Name in "Company is called Company Name"
-#       1: Absorption (existential) in Meeting of Date in "Meeting is held on Date"
-#       2: Indicator "Meeting is board meeting" (as "Is Board Meeting")
-#   Mapping (top) of Company
-#     0: Absorption (existential) in Company of Company Name in "Company is called Company Name"
-#     1: Indicator "Company is listed" (as "Is Listed")
-#   Mapping (top) of Directorship
-#     0: Absorption (existential) in Directorship of Director in "Directorship involves Person"
-#       0: Absorption (existential) in Director of Given Name in "Person has given-Name"
-#       1: Absorption (existential) in Director of Family Name in "Person is called family-Name"
-#     1: Absorption (existential) in Directorship of Company in "Directorship involves Company"
-#       0: Absorption (existential) in Company of Company Name in "Company is called Company Name"
-#     2: Absorption (mandatory) in Directorship of Appointment Date in "Directorship began on appointment-Date"
-#   Mapping (top) of Employee
-#     0: Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
-#     1: Absorption (mandatory) in Employee of Company in "Employee works at Company"
-#       0: Absorption (existential) in Company of Company Name in "Company is called Company Name"
-#     2: Absorption (optional) in Employee of Manager in "Employee is supervised by Manager"
-#       0: Indicator "Manager is ceo" (as "Is Ceo")
-#     3: Absorption (subtype) in Employee of Manager in "Employee is a Manager"
-#       0: Indicator "Manager is ceo" (as "Is Ceo")
-#   Mapping (top) of Employment
-#     0: Absorption (existential) in Employment of Person in "Employment involves Person"
-#       0: Absorption (existential) in Person of Given Name in "Person has given-Name"
-#       1: Absorption (existential) in Person of Family Name in "Person is called family-Name"
-#     1: Absorption (existential) in Employment of Employee in "Employment involves Employee"
-#       0: Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
-#   Mapping (top) of Meeting
-#     0: Absorption (existential) in Meeting of Company in "Meeting is held by Company"
-#       0: Absorption (existential) in Company of Company Name in "Company is called Company Name"
-#     1: Absorption (existential) in Meeting of Date in "Meeting is held on Date"
-#     2: Indicator "Meeting is board meeting" (as "Is Board Meeting")
-#   Mapping (top) of Person
-#     0: Absorption (existential) in Person of Given Name in "Person has given-Name"
-#     1: Absorption (existential) in Person of Family Name in "Person is called family-Name"
-#     2: Absorption (optional) in Person of Birth Date in "Person was born on birth-Date"
+#         1: Indicator "Company is listed" (as "Is Listed")
+#     Indices
+#       Primary index to Company
+#         AccessKey part 0 in Company references Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#     Foreign keys inbound
+#       Foreign Key from Directorship to Company
+#         ForeignKey part 0 in Directorship is Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#       Foreign Key from Employee to Company
+#         ForeignKey part 0 in Employee is Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#       Foreign Key from Meeting to Company
+#         ForeignKey part 0 in Meeting is Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#     Foreign keys outbound
+#   Composite Mapping (top) of Directorship
+#     Columns
+#       Mapping (top) of Directorship
+#         0: Absorption (existential) in Directorship of Director in "Directorship involves Person"
+#           0: Absorption (existential) in Director of Given Name in "Person has given-Name"
+#           1: Absorption (existential) in Director of Family Name in "Person is called family-Name"
+#         1: Absorption (existential) in Directorship of Company in "Directorship involves Company"
+#           0: Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#         2: Absorption (mandatory) in Directorship of Appointment Date in "Directorship began on appointment-Date"
+#     Indices
+#       Primary index to Directorship
+#         AccessKey part 0 in Directorship references Absorption (existential) in Director of Given Name in "Person has given-Name"
+#         AccessKey part 1 in Directorship references Absorption (existential) in Director of Family Name in "Person is called family-Name"
+#         AccessKey part 2 in Directorship references Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#       Foreign Key from Directorship to Company
+#         ForeignKey part 0 in Directorship is Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#       Foreign Key from Directorship to Person
+#         ForeignKey part 0 in Directorship is Absorption (existential) in Director of Given Name in "Person has given-Name"
+#         ForeignKey part 1 in Directorship is Absorption (existential) in Director of Family Name in "Person is called family-Name"
+#   Composite Mapping (top) of Employee
+#     Columns
+#       Mapping (top) of Employee
+#         0: Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
+#         1: Absorption (mandatory) in Employee of Company in "Employee works at Company"
+#           0: Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#         2: Absorption (optional) in Employee of Manager in "Employee is supervised by Manager"
+#           0: Absorption (mandatory) in Manager of Employee Nr in "Employee has Employee Nr"
+#         3: Absorption (subtype) in Employee of Manager (full) in "Employee is a Manager"
+#           0: Indicator "Manager is ceo" (as "Is Ceo")
+#     Indices
+#       Primary index to Employee
+#         AccessKey part 0 in Employee references Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
+#       Unique index to Employee
+#         AccessKey part 0 in Employee references Indicator "Manager is ceo"
+#     Foreign keys inbound
+#       Foreign Key from Employment to Employee
+#         ForeignKey part 0 in Employment is Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
+#     Foreign keys outbound
+#       Foreign Key from Employee to Company
+#         ForeignKey part 0 in Employee is Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#   Composite Mapping (top) of Employment
+#     Columns
+#       Mapping (top) of Employment
+#         0: Absorption (existential) in Employment of Person in "Employment involves Person"
+#           0: Absorption (existential) in Person of Given Name in "Person has given-Name"
+#           1: Absorption (existential) in Person of Family Name in "Person is called family-Name"
+#         1: Absorption (existential) in Employment of Employee in "Employment involves Employee"
+#           0: Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
+#     Indices
+#       Primary index to Employment
+#         AccessKey part 0 in Employment references Absorption (existential) in Person of Given Name in "Person has given-Name"
+#         AccessKey part 1 in Employment references Absorption (existential) in Person of Family Name in "Person is called family-Name"
+#         AccessKey part 2 in Employment references Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#       Foreign Key from Employment to Employee
+#         ForeignKey part 0 in Employment is Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
+#       Foreign Key from Employment to Person
+#         ForeignKey part 0 in Employment is Absorption (existential) in Person of Given Name in "Person has given-Name"
+#         ForeignKey part 1 in Employment is Absorption (existential) in Person of Family Name in "Person is called family-Name"
+#   Composite Mapping (top) of Meeting
+#     Columns
+#       Mapping (top) of Meeting
+#         0: Absorption (existential) in Meeting of Company in "Meeting is held by Company"
+#           0: Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#         1: Absorption (existential) in Meeting of Date in "Meeting is held on Date"
+#         2: Indicator "Meeting is board meeting" (as "Is Board Meeting")
+#     Indices
+#       Primary index to Meeting
+#         AccessKey part 0 in Meeting references Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#         AccessKey part 1 in Meeting references Absorption (existential) in Meeting of Date in "Meeting is held on Date"
+#         AccessKey part 2 in Meeting references Indicator "Meeting is board meeting"
+#     Foreign keys inbound
+#       Foreign Key from Attendance to Meeting
+#         ForeignKey part 0 in Attendance is Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#         ForeignKey part 1 in Attendance is Absorption (existential) in Meeting of Date in "Meeting is held on Date"
+#         ForeignKey part 2 in Attendance is Indicator "Meeting is board meeting"
+#     Foreign keys outbound
+#       Foreign Key from Meeting to Company
+#         ForeignKey part 0 in Meeting is Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#   Composite Mapping (top) of Person
+#     Columns
+#       Mapping (top) of Person
+#         0: Absorption (existential) in Person of Given Name in "Person has given-Name"
+#         1: Absorption (existential) in Person of Family Name in "Person is called family-Name"
+#         2: Absorption (optional) in Person of Birth Date in "Person was born on birth-Date"
+#     Indices
+#       Primary index to Person
+#         AccessKey part 0 in Person references Absorption (existential) in Person of Given Name in "Person has given-Name"
+#         AccessKey part 1 in Person references Absorption (existential) in Person of Family Name in "Person is called family-Name"
+#     Foreign keys inbound
+#       Foreign Key from Attendance to Person
+#         ForeignKey part 0 in Attendance is Absorption (existential) in Attendee of Given Name in "Person has given-Name"
+#         ForeignKey part 1 in Attendance is Absorption (existential) in Attendee of Family Name in "Person is called family-Name"
+#       Foreign Key from Directorship to Person
+#         ForeignKey part 0 in Directorship is Absorption (existential) in Director of Given Name in "Person has given-Name"
+#         ForeignKey part 1 in Directorship is Absorption (existential) in Director of Family Name in "Person is called family-Name"
+#       Foreign Key from Employment to Person
+#         ForeignKey part 0 in Employment is Absorption (existential) in Person of Given Name in "Person has given-Name"
+#         ForeignKey part 1 in Employment is Absorption (existential) in Person of Family Name in "Person is called family-Name"

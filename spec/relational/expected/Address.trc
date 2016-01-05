@@ -1,23 +1,36 @@
 # Full relational composition
-#   Mapping (top) of Company
-#     0: Absorption (existential) in Company of Company Name in "Company has Company Name"
-#     1: Absorption (optional) in Company of Address (full) in "Company has head office at Address"
-#       0: Absorption (existential) in Address of Street Number in "Address is at street-Number"
-#       1: Absorption (existential) in Address of Street in "Address is at Street"
-#         0: Absorption (existential) in Street of First Street Line in "Street includes first-Street Line"
-#         1: Absorption (existential) in Street of Second Street Line in "Street includes second-Street Line"
-#         2: Absorption (existential) in Street of Third Street Line in "Street includes third-Street Line"
-#       2: Absorption (existential) in Address of City in "Address is in City"
-#       3: Absorption (existential) in Address of Postcode in "Address is in Postcode"
-#   Mapping (top) of Person
-#     0: Absorption (existential) in Person of Family (full) in "Person is of Family"
-#       0: Absorption (existential) in Family of Family Name in "Family has Family Name"
-#     1: Absorption (existential) in Person of Given Names in "Person has Given Names"
-#     2: Absorption (optional) in Person of Address (full) in "Person lives at Address"
-#       0: Absorption (existential) in Address of Street Number in "Address is at street-Number"
-#       1: Absorption (existential) in Address of Street in "Address is at Street"
-#         0: Absorption (existential) in Street of First Street Line in "Street includes first-Street Line"
-#         1: Absorption (existential) in Street of Second Street Line in "Street includes second-Street Line"
-#         2: Absorption (existential) in Street of Third Street Line in "Street includes third-Street Line"
-#       2: Absorption (existential) in Address of City in "Address is in City"
-#       3: Absorption (existential) in Address of Postcode in "Address is in Postcode"
+#   Composite Mapping (top) of Company
+#     Columns
+#       Mapping (top) of Company
+#         0: Absorption (existential) in Company of Company Name in "Company has Company Name"
+#         1: Absorption (optional) in Company of Address in "Company has head office at Address"
+#           0: Absorption (existential) in Address of Street Number in "Address is at street-Number"
+#           1: Absorption (existential) in Address of Street in "Address is at Street"
+#             0: Absorption (existential) in Street of First Street Line in "Street includes first-Street Line"
+#             1: Absorption (existential) in Street of Second Street Line in "Street includes second-Street Line"
+#             2: Absorption (existential) in Street of Third Street Line in "Street includes third-Street Line"
+#           2: Absorption (existential) in Address of City in "Address is in City"
+#           3: Absorption (existential) in Address of Postcode in "Address is in Postcode"
+#     Indices
+#       Primary index to Company
+#         AccessKey part 0 in Company references Absorption (existential) in Company of Company Name in "Company has Company Name"
+#     Foreign keys inbound
+#     Foreign keys outbound
+#   Composite Mapping (top) of Person
+#     Columns
+#       Mapping (top) of Person
+#         0: Absorption (existential) in Person of Family in "Person is of Family"
+#           0: Absorption (existential) in Family of Family Name in "Family has Family Name"
+#         1: Absorption (existential) in Person of Given Names in "Person has Given Names"
+#         2: Absorption (optional) in Person of Address in "Person lives at Address"
+#           0: Absorption (existential) in Address of Street Number in "Address is at street-Number"
+#           1: Absorption (existential) in Address of Street in "Address is at Street"
+#             0: Absorption (existential) in Street of First Street Line in "Street includes first-Street Line"
+#             1: Absorption (existential) in Street of Second Street Line in "Street includes second-Street Line"
+#             2: Absorption (existential) in Street of Third Street Line in "Street includes third-Street Line"
+#           2: Absorption (existential) in Address of City in "Address is in City"
+#           3: Absorption (existential) in Address of Postcode in "Address is in Postcode"
+#     Indices
+#       Primary index to Person
+#         AccessKey part 0 in Person references Absorption (existential) in Family of Family Name in "Family has Family Name"
+#         AccessKey part 1 in Person references Absorption (existential) in Person of Given Names in "Person has Given Names"

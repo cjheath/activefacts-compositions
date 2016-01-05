@@ -59,9 +59,9 @@ module ActiveFacts
 	  if r = @component_by_fact[role.fact_type]
 	    # Second occurrence of this fact type, set the direction:
 	    if a.is_preferred_direction
-	      a.absorption = r
-	    else  # Set this as the reverse absorption
 	      a.reverse_absorption = r
+	    else  # Set this as the reverse absorption
+	      a.forward_absorption = r
 	    end
 	  else
 	    # First occurrence of this fact type
