@@ -105,19 +105,18 @@ module ActiveFacts
 	    if object_type.is_a?(MM::EntityType) and		  # We're an entity type
 	      pi_roles = object_type.preferred_identifier_roles and	# Our PI
 	      pi_roles.size == 1 and					# has one role
-	      first_pi_role = pi_roles[0] and				# that role is
-	      first_pi_role.object_type.is_a?(MM::EntityType) and	# played by another Entity Type
+	      single_pi_role = pi_roles[0] and				# that role is
+	      single_pi_role.object_type.is_a?(MM::EntityType) and	# played by another Entity Type
 	      absorbing_ref =
 		candidate.mapping.all_member.detect do |absorption|
 		  next unless absorption.is_a?(MM::Absorption)
-		  next unless absorption.parent_role.base_role.fact_type == first_pi_role.fact_type
-		  # next unless [absorption.parent_role, absorption.child_role].map(&:base_role).include?(first_pi_role) # Not the identifying absorption
+		  next unless absorption.parent_role.base_role.fact_type == single_pi_role.fact_type
 
 		  absorption = absorption.flip! if absorption.forward_absorption  # Flip it if it's a reverse_absorption
 		  next absorption
 		end
 	      @constellation.FullAbsorption(composition: @composition, absorption: absorbing_ref, object_type: object_type)
-	      trace :relational_mapping, "EntityType #{first_pi_role.object_type.name} identifies EntityType #{object_type.name}, so absorbs it"
+	      trace :relational_mapping, "EntityType #{single_pi_role.object_type.name} identifies EntityType #{object_type.name}, so absorbs it"
 	      candidate.definitely_not_table
 	      next object_type
 	    end
@@ -161,9 +160,8 @@ module ActiveFacts
 	      ).select do |a|
 		next false unless a.is_a?(MM::Absorption)   # Skip Indicators, we can't be absorbed there
 		next false if a.full_absorption		    # Skip this, we absorb them, it can't be mutual
-		if (a.forward_absorption || a.reverse_absorption).full_absorption
-		  raise "REVISIT: FullAbsorption not detected; Remove this when we know it won't fire"
-		end
+		next false if a.forward_absorption && a.forward_absorption.full_absorption  # This has happened
+		next false if a.reverse_absorption && a.reverse_absorption.full_absorption  # Not sure that this can/will happen
 		cc = @candidates[a.child_role.object_type]
 		next false unless cc.is_table		    # Other end must already be a table
                 # REVISIT: Or if the other end is absorbed into another table???
