@@ -8,10 +8,10 @@
 #         3: Absorption (mandatory) in Country of ISO3166Numeric3 in "Country has ISO3166Numeric3"
 #     Indices
 #       Primary index to Country
-#         AccessKey part 0 in Country references Absorption (existential) in Country of ISO3166Code3 in "Country has ISO3166Code3"
+#         IndexField part 0 in Country references Absorption (existential) in Country of ISO3166Code3 in "Country has ISO3166Code3"
 #       Unique index to Country
-#         AccessKey part 0 in Country references Absorption (mandatory) in Country of Country Name in "Country is called Country Name"
+#         IndexField part 0 in Country references Absorption (mandatory) in Country of Country Name in "Country is called Country Name"
 #       Unique index to Country
-#         AccessKey part 0 in Country references Absorption (mandatory) in Country of ISO3166Code2 in "Country has ISO3166Code2"
+#         IndexField part 0 in Country references Absorption (mandatory) in Country of ISO3166Code2 in "Country has ISO3166Code2"
 #       Unique index to Country
-#         AccessKey part 0 in Country references Absorption (mandatory) in Country of ISO3166Numeric3 in "Country has ISO3166Numeric3"
+#         IndexField part 0 in Country references Absorption (mandatory) in Country of ISO3166Numeric3 in "Country has ISO3166Numeric3"

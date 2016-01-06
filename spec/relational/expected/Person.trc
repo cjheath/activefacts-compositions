@@ -6,5 +6,5 @@
 #         1: Absorption (existential) in Person of Given Name in "Person has given-Name"
 #     Indices
 #       Primary index to Person
-#         AccessKey part 0 in Person references Absorption (existential) in Person of Family Name in "Person has family-Name"
-#         AccessKey part 1 in Person references Absorption (existential) in Person of Given Name in "Person has given-Name"
+#         IndexField part 0 in Person references Absorption (existential) in Person of Family Name in "Person has family-Name"
+#         IndexField part 1 in Person references Absorption (existential) in Person of Given Name in "Person has given-Name"

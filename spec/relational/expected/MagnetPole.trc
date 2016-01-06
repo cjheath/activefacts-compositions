@@ -5,10 +5,10 @@
 #         0: Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"
 #     Indices
 #       Primary index to Magnet
-#         AccessKey part 0 in Magnet references Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"
+#         IndexField part 0 in Magnet references Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"
 #     Foreign keys inbound
 #       Foreign Key from MagnetPole to Magnet
-#         ForeignKey part 0 in MagnetPole is Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"
+#         ForeignKeyField part 0 in MagnetPole is Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"
 #     Foreign keys outbound
 #   Composite Mapping (top) of MagnetPole
 #     Columns
@@ -18,9 +18,9 @@
 #         1: Indicator "MagnetPole is north" (as "Is North")
 #     Indices
 #       Primary index to MagnetPole
-#         AccessKey part 0 in MagnetPole references Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"
-#         AccessKey part 1 in MagnetPole references Indicator "MagnetPole is north"
+#         IndexField part 0 in MagnetPole references Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"
+#         IndexField part 1 in MagnetPole references Indicator "MagnetPole is north"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from MagnetPole to Magnet
-#         ForeignKey part 0 in MagnetPole is Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"
+#         ForeignKeyField part 0 in MagnetPole is Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"

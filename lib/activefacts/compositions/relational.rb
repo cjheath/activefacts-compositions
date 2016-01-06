@@ -166,6 +166,7 @@ module ActiveFacts
 		end
 		cc = @candidates[a.child_role.object_type]
 		next false unless cc.is_table		    # Other end must already be a table
+                # REVISIT: Or if the other end is absorbed into another table???
 		next false unless a.child_role.is_unique && a.parent_role.is_unique   # Must be one-to-one
 
 		# next true if pi_roles.size == 1 && pi_roles.include?(a.parent_role) # Allow the sole identifying role for this object
@@ -277,7 +278,7 @@ module ActiveFacts
 	end
       end
 
-      # Build a hash of local PresenceConstraints to index the AccessPath we might make for each
+      # Build a hash of local PresenceConstraints to index the Index we might make for each
       def empty_pc_map_for mapping
 	mapping.
 	  object_type.
@@ -322,9 +323,9 @@ module ActiveFacts
 	  return base_access_paths unless member.parent_role.is_unique
 	  role = member.child_role
 	when MM::ValueField
-	  raise "There can be no other AccessPath for a ValueField" unless base_access_paths.empty?
-	  ap = [@constellation.AccessPath(:new, composite: mapping.root, is_unique: true)]
-	  ap[0].identified_composite = mapping.composite if mapping.composite
+	  raise "There can be no other Index for a ValueField" unless base_access_paths.empty?
+	  ap = [@constellation.Index(:new, composite: mapping.root, is_unique: true, name: member.name+'PK')]
+	  ap[0].composite_as_primary_index = mapping.composite if mapping.composite
 	  return ap
 	end
 	return base_access_paths unless role
@@ -341,12 +342,12 @@ module ActiveFacts
 	end
 
 	if unique_absorption
-	  # First find relevant PresenceConstraints for which we need a new AccessPath:
+	  # First find relevant PresenceConstraints for which we need a new Index:
 	  new_pcs = pcs.select{ |pc, path| !path && pc.covers_role(role.base_role) }.keys
 	  new_pcs.each do |pc|
 	    pcs[pc] =
-	      access_path = @constellation.AccessPath(:new, composite: mapping.root, is_unique: true)
-	    access_path.identified_composite = mapping.composite if mapping.composite && pc.is_preferred_identifier && root == mapping
+	      access_path = @constellation.Index(:new, composite: mapping.root, is_unique: true)
+	    access_path.composite_as_primary_index = mapping.composite if mapping.composite && pc.is_preferred_identifier && root == mapping
 	    trace :relational_mapping, "creating new #{access_path.inspect} for #{member.inspect}, PC #{pc.describe}"
 	  end
 	end
@@ -374,7 +375,7 @@ module ActiveFacts
 	  if table
 	    # Prepare to build a foreign key:
 	    access_paths = access_paths.dup
-	    access_paths << @constellation.AccessPath(:new, parent_composite: mapping.root, composite: target.composite, is_unique: true)
+	    access_paths << @constellation.ForeignKey(:new, source_composite: mapping.root, composite: target.composite)
 	    trace :relational_mapping, "creating new #{access_paths[-1].inspect} for #{member.inspect}"
 	    absorb_key member, target, access_paths
 	  elsif full_absorption && full_absorption != member.full_absorption
@@ -445,21 +446,20 @@ module ActiveFacts
       def augment_paths access_paths, mapping
 	return if mapping.is_a?(MM::Mapping) and mapping.object_type.is_a?(MM::EntityType)
 	access_paths.each do |ap|
-	  trace :relational_mapping, "Adding AccessKey for #{mapping.inspect}" do
-	    if ap.parent_composite
+	  trace :relational_mapping, "Adding IndexKey for #{mapping.inspect}" do
+	    if ap.is_a?(MM::ForeignKey)
 	      # REVISIT: The target object may not have had its identifier elaborated yet, and in any case we don't know it.
-	      next  # REVISIT: "mapping" relates to a foreign key. The required AccessKey is the matching primary key
+	      next  # REVISIT: "mapping" relates to a foreign key. The required ForeignKeyField is the matching primary key
 	    end
-	    @constellation.AccessKey(
+	    @constellation.IndexField(
 	      access_path: ap,
-	      ordinal: ap.all_access_key.size,
+	      ordinal: ap.all_index_field.size,
 	      component: mapping
 	    )
 	  end
-	  if ap.parent_composite
-	    trace :relational_mapping, "Adding ForeignKey for #{mapping.inspect}" do
-	      # This is a foreign key field; add it to the AccessPath:
-	      @constellation.ForeignKey(access_path: ap, ordinal: ap.all_foreign_key.size, component: mapping)
+	  if ap.is_a?(MM::ForeignKey)
+	    trace :relational_mapping, "Adding ForeignKeyField for #{mapping.inspect}" do
+	      @constellation.ForeignKeyField(foreign_key: ap, ordinal: ap.all_foreign_key_field.size, component: mapping)
 	    end
 	  end
 	end
@@ -566,6 +566,8 @@ module ActiveFacts
 	    v = nil
 	    if references_to.size > 1 and   # Can be absorbed in more than one place
 		o.preferred_identifier.role_sequence.all_role_ref.detect do |rr|
+                  # If the preferred_identifier includes a ValueType that's auto-assigned ON COMMIT (like an SQL sequence), we need a single table to control the sequence.
+                  # REVISIT: This enforces it also for auto-assignment ON ASSERT, and where the ValueType is actually just a foreign key to another object (in a composite PI)
 		  (v = rr.role.object_type).is_a?(MM::ValueType) and v.is_auto_assigned
 		end
 	      trace :relational_mapping, "#{o.name} must be a table to support its auto-assigned identifier #{v.name}"
