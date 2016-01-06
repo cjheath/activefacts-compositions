@@ -5,20 +5,13 @@
 #         0: Absorption (existential) in Country of Country Code in "Country has Country Code"
 #           0: ValueField "Country Code" (as "Country Code")
 #     Indices
-#       Primary index to Country
-#         IndexField part 0 in Country references ValueField "Country Code"
-#         IndexField part 1 in Country references Absorption (existential) in Country of Country Code in "Country has Country Code"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Country to Country Code
-#         ForeignKeyField part 0 in Country is ValueField "Country Code"
 #   Composite Mapping (top) of Country Code
 #     Columns
 #       Mapping (top) of Country Code
 #         0: ValueField "Country Code" (as "Country Code Value")
 #     Indices
-#       Primary index "Country Code ValuePK" to Country Code
-#         IndexField part 0 in Country Code references ValueField "Country Code"
 #     Foreign keys inbound
 #       Foreign Key from Country to Country Code
-#         ForeignKeyField part 0 in Country is ValueField "Country Code"

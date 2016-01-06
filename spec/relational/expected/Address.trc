@@ -12,8 +12,6 @@
 #           2: Absorption (existential) in Address of City in "Address is in City"
 #           3: Absorption (existential) in Address of Postcode in "Address is in Postcode"
 #     Indices
-#       Primary index to Company
-#         IndexField part 0 in Company references Absorption (existential) in Company of Company Name in "Company has Company Name"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #   Composite Mapping (top) of Person
@@ -30,7 +28,3 @@
 #             2: Absorption (existential) in Street of Third Street Line in "Street includes third-Street Line"
 #           2: Absorption (existential) in Address of City in "Address is in City"
 #           3: Absorption (existential) in Address of Postcode in "Address is in Postcode"
-#     Indices
-#       Primary index to Person
-#         IndexField part 0 in Person references Absorption (existential) in Family of Family Name in "Family has Family Name"
-#         IndexField part 1 in Person references Absorption (existential) in Person of Given Names in "Person has Given Names"

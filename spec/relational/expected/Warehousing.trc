@@ -14,19 +14,10 @@
 #             0: Absorption (existential) in Product of Product ID in "Product has Product ID"
 #         2: Absorption (mandatory) in Back Order Allocation of Quantity in "Back Order Allocation is for Quantity"
 #     Indices
-#       Primary index to Back Order Allocation
-#         IndexField part 0 in Back Order Allocation references Absorption (existential) in Purchase Order of Purchase Order ID in "Purchase Order has Purchase Order ID"
-#         IndexField part 1 in Back Order Allocation references Absorption (existential) in Product of Product ID in "Product has Product ID"
-#         IndexField part 2 in Back Order Allocation references Absorption (existential) in Sales Order of Sales Order ID in "Sales Order has Sales Order ID"
-#         IndexField part 3 in Back Order Allocation references Absorption (existential) in Product of Product ID in "Product has Product ID"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Back Order Allocation to Purchase Order Item
-#         ForeignKeyField part 0 in Back Order Allocation is Absorption (existential) in Purchase Order of Purchase Order ID in "Purchase Order has Purchase Order ID"
-#         ForeignKeyField part 1 in Back Order Allocation is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Back Order Allocation to Sales Order Item
-#         ForeignKeyField part 0 in Back Order Allocation is Absorption (existential) in Sales Order of Sales Order ID in "Sales Order has Sales Order ID"
-#         ForeignKeyField part 1 in Back Order Allocation is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #   Composite Mapping (top) of Bin
 #     Columns
 #       Mapping (top) of Bin
@@ -37,14 +28,10 @@
 #         3: Absorption (optional) in Bin of Warehouse in "Warehouse contains Bin"
 #           0: Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Indices
-#       Primary index to Bin
-#         IndexField part 0 in Bin references Absorption (existential) in Bin of Bin ID in "Bin has Bin ID"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Bin to Product
-#         ForeignKeyField part 0 in Bin is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Bin to Warehouse
-#         ForeignKeyField part 0 in Bin is Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #   Composite Mapping (top) of Dispatch Item
 #     Columns
 #       Mapping (top) of Dispatch Item
@@ -62,17 +49,11 @@
 #         5: Absorption (optional) in Dispatch Item of Transfer Request in "Dispatch Item is for Transfer Request"
 #           0: Absorption (existential) in Transfer Request of Transfer Request ID in "Transfer Request has Transfer Request ID"
 #     Indices
-#       Primary index to Dispatch Item
-#         IndexField part 0 in Dispatch Item references Absorption (existential) in Dispatch Item of Dispatch Item ID in "Dispatch Item has Dispatch Item ID"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Dispatch Item to Product
-#         ForeignKeyField part 0 in Dispatch Item is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Dispatch Item to Sales Order Item
-#         ForeignKeyField part 0 in Dispatch Item is Absorption (existential) in Sales Order of Sales Order ID in "Sales Order has Sales Order ID"
-#         ForeignKeyField part 1 in Dispatch Item is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Dispatch Item to Transfer Request
-#         ForeignKeyField part 0 in Dispatch Item is Absorption (existential) in Transfer Request of Transfer Request ID in "Transfer Request has Transfer Request ID"
 #   Composite Mapping (top) of Party
 #     Columns
 #       Mapping (top) of Party
@@ -80,10 +61,6 @@
 #         1: Absorption (subtype) in Party of Customer (full) in "Party is a Customer"
 #         2: Absorption (subtype) in Party of Supplier (full) in "Party is a Supplier"
 #     Indices
-#       Unique index to Party
-#       Unique index to Party
-#       Primary index to Party
-#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #   Composite Mapping (top) of Product
@@ -91,21 +68,13 @@
 #       Mapping (top) of Product
 #         0: Absorption (existential) in Product of Product ID in "Product has Product ID"
 #     Indices
-#       Primary index to Product
-#         IndexField part 0 in Product references Absorption (existential) in Product of Product ID in "Product has Product ID"
 #     Foreign keys inbound
 #       Foreign Key from Bin to Product
-#         ForeignKeyField part 0 in Bin is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Dispatch Item to Product
-#         ForeignKeyField part 0 in Dispatch Item is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Purchase Order Item to Product
-#         ForeignKeyField part 0 in Purchase Order Item is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Received Item to Product
-#         ForeignKeyField part 0 in Received Item is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Sales Order Item to Product
-#         ForeignKeyField part 0 in Sales Order Item is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Transfer Request to Product
-#         ForeignKeyField part 0 in Transfer Request is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #     Foreign keys outbound
 #   Composite Mapping (top) of Purchase Order
 #     Columns
@@ -116,14 +85,10 @@
 #         2: Absorption (mandatory) in Purchase Order of Warehouse in "Purchase Order is to Warehouse"
 #           0: Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Indices
-#       Primary index to Purchase Order
-#         IndexField part 0 in Purchase Order references Absorption (existential) in Purchase Order of Purchase Order ID in "Purchase Order has Purchase Order ID"
 #     Foreign keys inbound
 #       Foreign Key from Purchase Order Item to Purchase Order
-#         ForeignKeyField part 0 in Purchase Order Item is Absorption (existential) in Purchase Order of Purchase Order ID in "Purchase Order has Purchase Order ID"
 #     Foreign keys outbound
 #       Foreign Key from Purchase Order to Warehouse
-#         ForeignKeyField part 0 in Purchase Order is Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #   Composite Mapping (top) of Purchase Order Item
 #     Columns
 #       Mapping (top) of Purchase Order Item
@@ -133,21 +98,12 @@
 #           0: Absorption (existential) in Product of Product ID in "Product has Product ID"
 #         2: Absorption (mandatory) in Purchase Order Item of Quantity in "Purchase Order Item is in Quantity"
 #     Indices
-#       Primary index to Purchase Order Item
-#         IndexField part 0 in Purchase Order Item references Absorption (existential) in Purchase Order of Purchase Order ID in "Purchase Order has Purchase Order ID"
-#         IndexField part 1 in Purchase Order Item references Absorption (existential) in Product of Product ID in "Product has Product ID"
 #     Foreign keys inbound
 #       Foreign Key from Back Order Allocation to Purchase Order Item
-#         ForeignKeyField part 0 in Back Order Allocation is Absorption (existential) in Purchase Order of Purchase Order ID in "Purchase Order has Purchase Order ID"
-#         ForeignKeyField part 1 in Back Order Allocation is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Received Item to Purchase Order Item
-#         ForeignKeyField part 0 in Received Item is Absorption (existential) in Purchase Order of Purchase Order ID in "Purchase Order has Purchase Order ID"
-#         ForeignKeyField part 1 in Received Item is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #     Foreign keys outbound
 #       Foreign Key from Purchase Order Item to Product
-#         ForeignKeyField part 0 in Purchase Order Item is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Purchase Order Item to Purchase Order
-#         ForeignKeyField part 0 in Purchase Order Item is Absorption (existential) in Purchase Order of Purchase Order ID in "Purchase Order has Purchase Order ID"
 #   Composite Mapping (top) of Received Item
 #     Columns
 #       Mapping (top) of Received Item
@@ -165,17 +121,11 @@
 #         5: Absorption (optional) in Received Item of Transfer Request in "Received Item is for Transfer Request"
 #           0: Absorption (existential) in Transfer Request of Transfer Request ID in "Transfer Request has Transfer Request ID"
 #     Indices
-#       Primary index to Received Item
-#         IndexField part 0 in Received Item references Absorption (existential) in Received Item of Received Item ID in "Received Item has Received Item ID"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Received Item to Product
-#         ForeignKeyField part 0 in Received Item is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Received Item to Purchase Order Item
-#         ForeignKeyField part 0 in Received Item is Absorption (existential) in Purchase Order of Purchase Order ID in "Purchase Order has Purchase Order ID"
-#         ForeignKeyField part 1 in Received Item is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Received Item to Transfer Request
-#         ForeignKeyField part 0 in Received Item is Absorption (existential) in Transfer Request of Transfer Request ID in "Transfer Request has Transfer Request ID"
 #   Composite Mapping (top) of Sales Order
 #     Columns
 #       Mapping (top) of Sales Order
@@ -185,14 +135,10 @@
 #         2: Absorption (mandatory) in Sales Order of Warehouse in "Sales Order is from Warehouse"
 #           0: Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Indices
-#       Primary index to Sales Order
-#         IndexField part 0 in Sales Order references Absorption (existential) in Sales Order of Sales Order ID in "Sales Order has Sales Order ID"
 #     Foreign keys inbound
 #       Foreign Key from Sales Order Item to Sales Order
-#         ForeignKeyField part 0 in Sales Order Item is Absorption (existential) in Sales Order of Sales Order ID in "Sales Order has Sales Order ID"
 #     Foreign keys outbound
 #       Foreign Key from Sales Order to Warehouse
-#         ForeignKeyField part 0 in Sales Order is Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #   Composite Mapping (top) of Sales Order Item
 #     Columns
 #       Mapping (top) of Sales Order Item
@@ -202,21 +148,12 @@
 #           0: Absorption (existential) in Product of Product ID in "Product has Product ID"
 #         2: Absorption (mandatory) in Sales Order Item of Quantity in "Sales Order Item is in Quantity"
 #     Indices
-#       Primary index to Sales Order Item
-#         IndexField part 0 in Sales Order Item references Absorption (existential) in Sales Order of Sales Order ID in "Sales Order has Sales Order ID"
-#         IndexField part 1 in Sales Order Item references Absorption (existential) in Product of Product ID in "Product has Product ID"
 #     Foreign keys inbound
 #       Foreign Key from Back Order Allocation to Sales Order Item
-#         ForeignKeyField part 0 in Back Order Allocation is Absorption (existential) in Sales Order of Sales Order ID in "Sales Order has Sales Order ID"
-#         ForeignKeyField part 1 in Back Order Allocation is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Dispatch Item to Sales Order Item
-#         ForeignKeyField part 0 in Dispatch Item is Absorption (existential) in Sales Order of Sales Order ID in "Sales Order has Sales Order ID"
-#         ForeignKeyField part 1 in Dispatch Item is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #     Foreign keys outbound
 #       Foreign Key from Sales Order Item to Product
-#         ForeignKeyField part 0 in Sales Order Item is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Sales Order Item to Sales Order
-#         ForeignKeyField part 0 in Sales Order Item is Absorption (existential) in Sales Order of Sales Order ID in "Sales Order has Sales Order ID"
 #   Composite Mapping (top) of Transfer Request
 #     Columns
 #       Mapping (top) of Transfer Request
@@ -229,35 +166,21 @@
 #         4: Absorption (mandatory) in Transfer Request of To Warehouse in "Transfer Request is to Warehouse"
 #           0: Absorption (existential) in To Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Indices
-#       Primary index to Transfer Request
-#         IndexField part 0 in Transfer Request references Absorption (existential) in Transfer Request of Transfer Request ID in "Transfer Request has Transfer Request ID"
 #     Foreign keys inbound
 #       Foreign Key from Dispatch Item to Transfer Request
-#         ForeignKeyField part 0 in Dispatch Item is Absorption (existential) in Transfer Request of Transfer Request ID in "Transfer Request has Transfer Request ID"
 #       Foreign Key from Received Item to Transfer Request
-#         ForeignKeyField part 0 in Received Item is Absorption (existential) in Transfer Request of Transfer Request ID in "Transfer Request has Transfer Request ID"
 #     Foreign keys outbound
 #       Foreign Key from Transfer Request to Product
-#         ForeignKeyField part 0 in Transfer Request is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Transfer Request to Warehouse
-#         ForeignKeyField part 0 in Transfer Request is Absorption (existential) in From Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #       Foreign Key from Transfer Request to Warehouse
-#         ForeignKeyField part 0 in Transfer Request is Absorption (existential) in To Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #   Composite Mapping (top) of Warehouse
 #     Columns
 #       Mapping (top) of Warehouse
 #         0: Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Indices
-#       Primary index to Warehouse
-#         IndexField part 0 in Warehouse references Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Foreign keys inbound
 #       Foreign Key from Bin to Warehouse
-#         ForeignKeyField part 0 in Bin is Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #       Foreign Key from Purchase Order to Warehouse
-#         ForeignKeyField part 0 in Purchase Order is Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #       Foreign Key from Sales Order to Warehouse
-#         ForeignKeyField part 0 in Sales Order is Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #       Foreign Key from Transfer Request to Warehouse
-#         ForeignKeyField part 0 in Transfer Request is Absorption (existential) in From Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #       Foreign Key from Transfer Request to Warehouse
-#         ForeignKeyField part 0 in Transfer Request is Absorption (existential) in To Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
