@@ -9,7 +9,7 @@
 #     Indices
 #     Foreign keys inbound
 #     Foreign keys outbound
-#       Foreign Key from AllocatableCinemaSection to Cinema
+#       Foreign Key from AllocatableCinemaSection to Cinema over Absorption (existential) in AllocatableCinemaSection of Cinema in "AllocatableCinemaSection involves Cinema"
 #   Composite Mapping (top) of Booking
 #     Columns
 #       Mapping (top) of Booking
@@ -36,11 +36,11 @@
 #           0: Absorption (existential) in Section of Section Name in "Section has Section Name"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Places Paid to Booking
-#       Foreign Key from Seat Allocation to Booking
+#       Foreign Key from Places Paid to Booking over Absorption (existential) in Places Paid of Booking in "Places Paid involves Booking"
+#       Foreign Key from Seat Allocation to Booking over Absorption (existential) in Seat Allocation of Booking in "Seat Allocation involves Booking"
 #     Foreign keys outbound
-#       Foreign Key from Booking to Person
-#       Foreign Key from Booking to Session
+#       Foreign Key from Booking to Person over Absorption (mandatory) in Booking of Person in "Booking involves Person"
+#       Foreign Key from Booking to Session over Absorption (mandatory) in Booking of Session in "Booking involves Session"
 #   Composite Mapping (top) of Cinema
 #     Columns
 #       Mapping (top) of Cinema
@@ -48,10 +48,10 @@
 #         1: Absorption (mandatory) in Cinema of Name in "Cinema has Name"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from AllocatableCinemaSection to Cinema
-#       Foreign Key from Seat to Cinema
-#       Foreign Key from Session to Cinema
-#       Foreign Key from Ticket Pricing to Cinema
+#       Foreign Key from AllocatableCinemaSection to Cinema over Absorption (existential) in AllocatableCinemaSection of Cinema in "AllocatableCinemaSection involves Cinema"
+#       Foreign Key from Seat to Cinema over Absorption (existential) in Row of Cinema in "Row is in Cinema"
+#       Foreign Key from Session to Cinema over Absorption (existential) in Session of Cinema in "Session involves Cinema"
+#       Foreign Key from Ticket Pricing to Cinema over Absorption (existential) in Ticket Pricing of Cinema in "Ticket Pricing involves Cinema"
 #     Foreign keys outbound
 #   Composite Mapping (top) of Film
 #     Columns
@@ -62,7 +62,7 @@
 #           0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Session to Film
+#       Foreign Key from Session to Film over Absorption (mandatory) in Session of Film in "Session involves Film"
 #     Foreign keys outbound
 #   Composite Mapping (top) of Person
 #     Columns
@@ -72,7 +72,7 @@
 #         2: Absorption (optional) in Person of Login Name in "Person has login-Name"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Booking to Person
+#       Foreign Key from Booking to Person over Absorption (mandatory) in Booking of Person in "Booking involves Person"
 #     Foreign keys outbound
 #   Composite Mapping (top) of Places Paid
 #     Columns
@@ -85,7 +85,7 @@
 #     Indices
 #     Foreign keys inbound
 #     Foreign keys outbound
-#       Foreign Key from Places Paid to Booking
+#       Foreign Key from Places Paid to Booking over Absorption (existential) in Places Paid of Booking in "Places Paid involves Booking"
 #   Composite Mapping (top) of Seat
 #     Columns
 #       Mapping (top) of Seat
@@ -98,9 +98,9 @@
 #           0: Absorption (existential) in Section of Section Name in "Section has Section Name"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Seat Allocation to Seat
+#       Foreign Key from Seat Allocation to Seat over Absorption (existential) in Seat Allocation of Seat in "Seat Allocation involves Seat"
 #     Foreign keys outbound
-#       Foreign Key from Seat to Cinema
+#       Foreign Key from Seat to Cinema over Absorption (existential) in Row of Cinema in "Row is in Cinema"
 #   Composite Mapping (top) of Seat Allocation
 #     Columns
 #       Mapping (top) of Seat Allocation
@@ -115,8 +115,8 @@
 #     Indices
 #     Foreign keys inbound
 #     Foreign keys outbound
-#       Foreign Key from Seat Allocation to Booking
-#       Foreign Key from Seat Allocation to Seat
+#       Foreign Key from Seat Allocation to Booking over Absorption (existential) in Seat Allocation of Booking in "Seat Allocation involves Booking"
+#       Foreign Key from Seat Allocation to Seat over Absorption (existential) in Seat Allocation of Seat in "Seat Allocation involves Seat"
 #   Composite Mapping (top) of Session
 #     Columns
 #       Mapping (top) of Session
@@ -136,10 +136,10 @@
 #           0: Absorption (existential) in Film of Film ID in "Film has Film ID"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Booking to Session
+#       Foreign Key from Booking to Session over Absorption (mandatory) in Booking of Session in "Booking involves Session"
 #     Foreign keys outbound
-#       Foreign Key from Session to Cinema
-#       Foreign Key from Session to Film
+#       Foreign Key from Session to Cinema over Absorption (existential) in Session of Cinema in "Session involves Cinema"
+#       Foreign Key from Session to Film over Absorption (mandatory) in Session of Film in "Session involves Film"
 #   Composite Mapping (top) of Ticket Pricing
 #     Columns
 #       Mapping (top) of Ticket Pricing
@@ -160,4 +160,4 @@
 #     Indices
 #     Foreign keys inbound
 #     Foreign keys outbound
-#       Foreign Key from Ticket Pricing to Cinema
+#       Foreign Key from Ticket Pricing to Cinema over Absorption (existential) in Ticket Pricing of Cinema in "Ticket Pricing involves Cinema"

@@ -57,7 +57,7 @@ module ActiveFacts
       end
 
       def assign_default_tabulation
-	trace :relational_mapping, "Preparing relational composition by setting default assumptions" do
+	trace :relational_defaults!, "Preparing relational composition by setting default assumptions" do
 	  @candidates.each do |object_type, candidate|
 	    candidate.assign_default(@composition)
 	  end
@@ -65,7 +65,7 @@ module ActiveFacts
       end
 
       def optimise_absorption
-	trace :relational_mapping, "Optimise Relational Composition" do
+	trace :relational_optimiser!, "Optimise Relational Composition" do
 	  undecided = @candidates.keys.select{|object_type| @candidates[object_type].is_tentative}
 	  pass = 0
 	  finalised = []
@@ -267,7 +267,7 @@ module ActiveFacts
 
       # Absorb all items which aren't tables (and keys to those which are) recursively
       def absorb_all_columns
-	trace :relational_mapping, "Absorbing full contents of all tables" do
+	trace :relational_columns!, "Absorbing full contents of all tables" do
 	  @composition.all_composite_by_name.each do |composite|
 	    trace :relational_mapping, "Absorbing contents of #{composite.mapping.name}" do
 	      absorb_all composite.mapping, nil
@@ -279,29 +279,46 @@ module ActiveFacts
       # This member is an Absorption. Process it recursively, absorbing all its members
       # or just a key depending on whether the absorbed object is a Composite or not.
       def absorb_nested mapping, member
-	table = @candidates[member.child_role.object_type]
-	full_absorption = @composition.all_full_absorption.detect{|fa| fa.object_type == member.child_role.object_type}
 	# Should we absorb a foreign key or the whole contents?
 
-	trace :relational_mapping, "Absorbing nested #{table ? 'key' : 'contents'} of #{member.child_role.name} in #{member.inspect_reading}" do
-	  target = @binary_mappings[member.child_role.object_type]
+	target_object_type = member.child_role.object_type
+	table = @candidates[target_object_type]
+	target_mapping = @binary_mappings[target_object_type]
+	trace :relational_mapping?, "Absorbing #{member.child_role.name} in #{member.inspect_reading}" do
 	  if table
-	    @constellation.ForeignKey(:new, source_composite: mapping.root, composite: target.composite)
-	    absorb_key member, target
-	  elsif full_absorption && full_absorption != member.full_absorption
-	    # The target object type is fully absorbed elsewhere. Absorb its key instead.
-	    target_object_type = full_absorption.absorption.parent_role.object_type
-	    target_mapping = @binary_mappings[target_object_type]
-	    if target_object_type.is_a?(MM::Absorption) && target_mapping.full_absorption
-	      p member
-	      debugger
-	      # We should stop here when trying to generate a FK to an object that's absorbed into an object that's absorbed (transitive absorption)
-	      raise "REVISIT: Need to look at target absorption transitively"
-	    end
+	    @constellation.ForeignKey(:new, source_composite: mapping.root, composite: target_mapping.composite, absorption: member)
 	    absorb_key member, target_mapping
-	  else
-	    absorb_all member, target
+	    return
 	  end
+
+	  # Is our target object_type fully absorbed?
+	  full_absorption = member.child_role.object_type.all_full_absorption[@composition]
+	  # full_absorption = target_object_type.all_full_absorption[@composition]
+	  if full_absorption && full_absorption.absorption.parent_role.fact_type != member.parent_role.fact_type
+	  # We can't use member.full_absorption here, as it's not populated on forked copies!
+	  # if full_absorption && full_absorption != member.full_absorption
+
+	    target_object_type = full_absorption.absorption.parent_role.object_type
+
+	    # member = fork_component_to_new_parent(full_absorption.absorption, member)
+
+	    while full_absorption = target_object_type.all_full_absorption[@composition]
+	      # member = fork_component_to_new_parent(full_absorption.absorption, member)
+	      # Follow transitive target absorption 
+	      target_object_type = full_absorption.absorption.parent_role.object_type
+	    end
+
+	    target_mapping = @binary_mappings[target_object_type]
+
+	    # The target object type is fully absorbed elsewhere. Absorb its key instead.
+	    @constellation.ForeignKey(:new, source_composite: mapping.root, composite: target_mapping.composite, absorption: member)
+	    absorb_key member, target_mapping
+	    return
+	  end
+
+	  #trace :relational_mapping?, "Absorbing full contents of #{member.child_role.name} in #{member.inspect_reading}" do
+	    absorb_all member, target_mapping
+	  #end
 	end
       end
 
@@ -317,15 +334,17 @@ module ActiveFacts
 	from.re_rank
 	ordered = from.all_member.sort_by(&:ordinal)
 	ordered.each do |member|
-	  unless top_level    # Top-level members are already instantiated
-	    member = fork_component_to_new_parent(mapping, member)
-	  end
+	  trace :relational_mapping, "#{top_level ? 'Existing' : 'Absorbing'} #{member.inspect}" do
+	    unless top_level    # Top-level members are already instantiated
+	      member = fork_component_to_new_parent(mapping, member)
+	    end
 
-	  if member.is_a?(MM::Absorption)
-	    absorb_nested mapping, member
-	  end
+	    if member.is_a?(MM::Absorption)
+	      absorb_nested mapping, member
+	    end
 
-	  # augment_paths ap, member
+	    # augment_paths ap, member
+	  end
 	end
 
 	# mapping.re_rank

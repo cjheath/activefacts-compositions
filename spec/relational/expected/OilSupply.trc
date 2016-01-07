@@ -10,8 +10,8 @@
 #     Indices
 #     Foreign keys inbound
 #     Foreign keys outbound
-#       Foreign Key from Acceptable Substitution to Product
-#       Foreign Key from Acceptable Substitution to Product
+#       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Product in "Acceptable Substitution involves Product"
+#       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Product in "Acceptable Substitution involves Product"
 #   Composite Mapping (top) of Month
 #     Columns
 #       Mapping (top) of Month
@@ -19,7 +19,7 @@
 #         1: Absorption (mandatory) in Month of Season in "Month is in Season"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Supply Period to Month
+#       Foreign Key from Supply Period to Month over Absorption (existential) in Supply Period of Month in "Supply Period is in Month"
 #     Foreign keys outbound
 #   Composite Mapping (top) of Product
 #     Columns
@@ -27,10 +27,10 @@
 #         0: Absorption (existential) in Product of Product Name in "Product has Product Name"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Acceptable Substitution to Product
-#       Foreign Key from Acceptable Substitution to Product
-#       Foreign Key from Production Forecast to Product
-#       Foreign Key from Regional Demand to Product
+#       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Product in "Acceptable Substitution involves Product"
+#       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Product in "Acceptable Substitution involves Product"
+#       Foreign Key from Production Forecast to Product over Absorption (existential) in Production Forecast of Product in "Production Forecast involves Product"
+#       Foreign Key from Regional Demand to Product over Absorption (existential) in Regional Demand of Product in "Regional Demand involves Product"
 #     Foreign keys outbound
 #   Composite Mapping (top) of Production Forecast
 #     Columns
@@ -49,17 +49,17 @@
 #     Indices
 #     Foreign keys inbound
 #     Foreign keys outbound
-#       Foreign Key from Production Forecast to Product
-#       Foreign Key from Production Forecast to Refinery
-#       Foreign Key from Production Forecast to Supply Period
+#       Foreign Key from Production Forecast to Product over Absorption (existential) in Production Forecast of Product in "Production Forecast involves Product"
+#       Foreign Key from Production Forecast to Refinery over Absorption (existential) in Production Forecast of Refinery in "Production Forecast involves Refinery"
+#       Foreign Key from Production Forecast to Supply Period over Absorption (existential) in Production Forecast of Supply Period in "Production Forecast involves Supply Period"
 #   Composite Mapping (top) of Refinery
 #     Columns
 #       Mapping (top) of Refinery
 #         0: Absorption (existential) in Refinery of Refinery Name in "Refinery has Refinery Name"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Production Forecast to Refinery
-#       Foreign Key from Transport Route to Refinery
+#       Foreign Key from Production Forecast to Refinery over Absorption (existential) in Production Forecast of Refinery in "Production Forecast involves Refinery"
+#       Foreign Key from Transport Route to Refinery over Absorption (existential) in Transport Route of Refinery in "Transport Route involves Refinery"
 #     Foreign keys outbound
 #   Composite Mapping (top) of Region
 #     Columns
@@ -67,8 +67,8 @@
 #         0: Absorption (existential) in Region of Region Name in "Region has Region Name"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Regional Demand to Region
-#       Foreign Key from Transport Route to Region
+#       Foreign Key from Regional Demand to Region over Absorption (existential) in Regional Demand of Region in "Regional Demand involves Region"
+#       Foreign Key from Transport Route to Region over Absorption (existential) in Transport Route of Region in "Transport Route involves Region"
 #     Foreign keys outbound
 #   Composite Mapping (top) of Regional Demand
 #     Columns
@@ -86,9 +86,9 @@
 #     Indices
 #     Foreign keys inbound
 #     Foreign keys outbound
-#       Foreign Key from Regional Demand to Product
-#       Foreign Key from Regional Demand to Region
-#       Foreign Key from Regional Demand to Supply Period
+#       Foreign Key from Regional Demand to Product over Absorption (existential) in Regional Demand of Product in "Regional Demand involves Product"
+#       Foreign Key from Regional Demand to Region over Absorption (existential) in Regional Demand of Region in "Regional Demand involves Region"
+#       Foreign Key from Regional Demand to Supply Period over Absorption (existential) in Regional Demand of Supply Period in "Regional Demand involves Supply Period"
 #   Composite Mapping (top) of Supply Period
 #     Columns
 #       Mapping (top) of Supply Period
@@ -98,10 +98,10 @@
 #           0: Absorption (existential) in Month of Month Nr in "Month has Month Nr"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Production Forecast to Supply Period
-#       Foreign Key from Regional Demand to Supply Period
+#       Foreign Key from Production Forecast to Supply Period over Absorption (existential) in Production Forecast of Supply Period in "Production Forecast involves Supply Period"
+#       Foreign Key from Regional Demand to Supply Period over Absorption (existential) in Regional Demand of Supply Period in "Regional Demand involves Supply Period"
 #     Foreign keys outbound
-#       Foreign Key from Supply Period to Month
+#       Foreign Key from Supply Period to Month over Absorption (existential) in Supply Period of Month in "Supply Period is in Month"
 #   Composite Mapping (top) of Transport Route
 #     Columns
 #       Mapping (top) of Transport Route
@@ -114,5 +114,5 @@
 #     Indices
 #     Foreign keys inbound
 #     Foreign keys outbound
-#       Foreign Key from Transport Route to Refinery
-#       Foreign Key from Transport Route to Region
+#       Foreign Key from Transport Route to Refinery over Absorption (existential) in Transport Route of Refinery in "Transport Route involves Refinery"
+#       Foreign Key from Transport Route to Region over Absorption (existential) in Transport Route of Region in "Transport Route involves Region"

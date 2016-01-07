@@ -13,8 +13,8 @@
 #     Indices
 #     Foreign keys inbound
 #     Foreign keys outbound
-#       Foreign Key from Attendance to Meeting
-#       Foreign Key from Attendance to Person
+#       Foreign Key from Attendance to Person over Absorption (existential) in Attendance of Attendee in "Attendance involves Person"
+#       Foreign Key from Attendance to Meeting over Absorption (existential) in Attendance of Meeting in "Attendance involves Meeting"
 #   Composite Mapping (top) of Company
 #     Columns
 #       Mapping (top) of Company
@@ -22,9 +22,9 @@
 #         1: Indicator "Company is listed" (as "Is Listed")
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Directorship to Company
-#       Foreign Key from Employee to Company
-#       Foreign Key from Meeting to Company
+#       Foreign Key from Directorship to Company over Absorption (existential) in Directorship of Company in "Directorship involves Company"
+#       Foreign Key from Employee to Company over Absorption (mandatory) in Employee of Company in "Employee works at Company"
+#       Foreign Key from Meeting to Company over Absorption (existential) in Meeting of Company in "Meeting is held by Company"
 #     Foreign keys outbound
 #   Composite Mapping (top) of Directorship
 #     Columns
@@ -38,8 +38,8 @@
 #     Indices
 #     Foreign keys inbound
 #     Foreign keys outbound
-#       Foreign Key from Directorship to Company
-#       Foreign Key from Directorship to Person
+#       Foreign Key from Directorship to Company over Absorption (existential) in Directorship of Company in "Directorship involves Company"
+#       Foreign Key from Directorship to Person over Absorption (existential) in Directorship of Director in "Directorship involves Person"
 #   Composite Mapping (top) of Employee
 #     Columns
 #       Mapping (top) of Employee
@@ -52,9 +52,11 @@
 #           0: Indicator "Manager is ceo" (as "Is Ceo")
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Employment to Employee
+#       Foreign Key from Employee to Employee over Absorption (optional) in Employee of Manager in "Employee is supervised by Manager"
+#       Foreign Key from Employment to Employee over Absorption (existential) in Employment of Employee in "Employment involves Employee"
 #     Foreign keys outbound
-#       Foreign Key from Employee to Company
+#       Foreign Key from Employee to Company over Absorption (mandatory) in Employee of Company in "Employee works at Company"
+#       Foreign Key from Employee to Employee over Absorption (optional) in Employee of Manager in "Employee is supervised by Manager"
 #   Composite Mapping (top) of Employment
 #     Columns
 #       Mapping (top) of Employment
@@ -66,8 +68,8 @@
 #     Indices
 #     Foreign keys inbound
 #     Foreign keys outbound
-#       Foreign Key from Employment to Employee
-#       Foreign Key from Employment to Person
+#       Foreign Key from Employment to Employee over Absorption (existential) in Employment of Employee in "Employment involves Employee"
+#       Foreign Key from Employment to Person over Absorption (existential) in Employment of Person in "Employment involves Person"
 #   Composite Mapping (top) of Meeting
 #     Columns
 #       Mapping (top) of Meeting
@@ -77,9 +79,9 @@
 #         2: Indicator "Meeting is board meeting" (as "Is Board Meeting")
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Attendance to Meeting
+#       Foreign Key from Attendance to Meeting over Absorption (existential) in Attendance of Meeting in "Attendance involves Meeting"
 #     Foreign keys outbound
-#       Foreign Key from Meeting to Company
+#       Foreign Key from Meeting to Company over Absorption (existential) in Meeting of Company in "Meeting is held by Company"
 #   Composite Mapping (top) of Person
 #     Columns
 #       Mapping (top) of Person
@@ -88,6 +90,6 @@
 #         2: Absorption (optional) in Person of Birth Date in "Person was born on birth-Date"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Attendance to Person
-#       Foreign Key from Directorship to Person
-#       Foreign Key from Employment to Person
+#       Foreign Key from Attendance to Person over Absorption (existential) in Attendance of Attendee in "Attendance involves Person"
+#       Foreign Key from Directorship to Person over Absorption (existential) in Directorship of Director in "Directorship involves Person"
+#       Foreign Key from Employment to Person over Absorption (existential) in Employment of Person in "Employment involves Person"

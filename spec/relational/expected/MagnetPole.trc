@@ -5,7 +5,7 @@
 #         0: Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from MagnetPole to Magnet
+#       Foreign Key from MagnetPole to Magnet over Absorption (existential) in MagnetPole of Magnet in "MagnetPole belongs to Magnet"
 #     Foreign keys outbound
 #   Composite Mapping (top) of MagnetPole
 #     Columns
@@ -16,4 +16,4 @@
 #     Indices
 #     Foreign keys inbound
 #     Foreign keys outbound
-#       Foreign Key from MagnetPole to Magnet
+#       Foreign Key from MagnetPole to Magnet over Absorption (existential) in MagnetPole of Magnet in "MagnetPole belongs to Magnet"

@@ -7,11 +7,11 @@
 #     Indices
 #     Foreign keys inbound
 #     Foreign keys outbound
-#       Foreign Key from Country to Country Code
+#       Foreign Key from Country to Country Code over Absorption (existential) in Country of Country Code in "Country has Country Code"
 #   Composite Mapping (top) of Country Code
 #     Columns
 #       Mapping (top) of Country Code
 #         0: ValueField "Country Code" (as "Country Code Value")
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Country to Country Code
+#       Foreign Key from Country to Country Code over Absorption (existential) in Country of Country Code in "Country has Country Code"

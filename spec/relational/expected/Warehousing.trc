@@ -16,8 +16,8 @@
 #     Indices
 #     Foreign keys inbound
 #     Foreign keys outbound
-#       Foreign Key from Back Order Allocation to Purchase Order Item
-#       Foreign Key from Back Order Allocation to Sales Order Item
+#       Foreign Key from Back Order Allocation to Purchase Order Item over Absorption (existential) in Back Order Allocation of Purchase Order Item in "Back Order Allocation involves Purchase Order Item"
+#       Foreign Key from Back Order Allocation to Sales Order Item over Absorption (existential) in Back Order Allocation of Sales Order Item in "Back Order Allocation involves Sales Order Item"
 #   Composite Mapping (top) of Bin
 #     Columns
 #       Mapping (top) of Bin
@@ -30,8 +30,8 @@
 #     Indices
 #     Foreign keys inbound
 #     Foreign keys outbound
-#       Foreign Key from Bin to Product
-#       Foreign Key from Bin to Warehouse
+#       Foreign Key from Bin to Product over Absorption (optional) in Bin of Product in "Bin contains Product"
+#       Foreign Key from Bin to Warehouse over Absorption (optional) in Bin of Warehouse in "Warehouse contains Bin"
 #   Composite Mapping (top) of Dispatch Item
 #     Columns
 #       Mapping (top) of Dispatch Item
@@ -51,9 +51,9 @@
 #     Indices
 #     Foreign keys inbound
 #     Foreign keys outbound
-#       Foreign Key from Dispatch Item to Product
-#       Foreign Key from Dispatch Item to Sales Order Item
-#       Foreign Key from Dispatch Item to Transfer Request
+#       Foreign Key from Dispatch Item to Product over Absorption (mandatory) in Dispatch Item of Product in "Dispatch Item is Product"
+#       Foreign Key from Dispatch Item to Sales Order Item over Absorption (optional) in Dispatch Item of Sales Order Item in "Dispatch Item is for Sales Order Item"
+#       Foreign Key from Dispatch Item to Transfer Request over Absorption (optional) in Dispatch Item of Transfer Request in "Dispatch Item is for Transfer Request"
 #   Composite Mapping (top) of Party
 #     Columns
 #       Mapping (top) of Party
@@ -62,6 +62,8 @@
 #         2: Absorption (subtype) in Party of Supplier (full) in "Party is a Supplier"
 #     Indices
 #     Foreign keys inbound
+#       Foreign Key from Purchase Order to Party over Absorption (mandatory) in Purchase Order of Supplier in "Purchase Order is to Supplier"
+#       Foreign Key from Sales Order to Party over Absorption (mandatory) in Sales Order of Customer in "Sales Order was made by Customer"
 #     Foreign keys outbound
 #   Composite Mapping (top) of Product
 #     Columns
@@ -69,12 +71,12 @@
 #         0: Absorption (existential) in Product of Product ID in "Product has Product ID"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Bin to Product
-#       Foreign Key from Dispatch Item to Product
-#       Foreign Key from Purchase Order Item to Product
-#       Foreign Key from Received Item to Product
-#       Foreign Key from Sales Order Item to Product
-#       Foreign Key from Transfer Request to Product
+#       Foreign Key from Bin to Product over Absorption (optional) in Bin of Product in "Bin contains Product"
+#       Foreign Key from Dispatch Item to Product over Absorption (mandatory) in Dispatch Item of Product in "Dispatch Item is Product"
+#       Foreign Key from Purchase Order Item to Product over Absorption (existential) in Purchase Order Item of Product in "Purchase Order Item is for Product"
+#       Foreign Key from Received Item to Product over Absorption (mandatory) in Received Item of Product in "Received Item is Product"
+#       Foreign Key from Sales Order Item to Product over Absorption (existential) in Sales Order Item of Product in "Sales Order Item is for Product"
+#       Foreign Key from Transfer Request to Product over Absorption (mandatory) in Transfer Request of Product in "Transfer Request is for Product"
 #     Foreign keys outbound
 #   Composite Mapping (top) of Purchase Order
 #     Columns
@@ -86,9 +88,10 @@
 #           0: Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Purchase Order Item to Purchase Order
+#       Foreign Key from Purchase Order Item to Purchase Order over Absorption (existential) in Purchase Order Item of Purchase Order in "Purchase Order Item is part of Purchase Order"
 #     Foreign keys outbound
-#       Foreign Key from Purchase Order to Warehouse
+#       Foreign Key from Purchase Order to Party over Absorption (mandatory) in Purchase Order of Supplier in "Purchase Order is to Supplier"
+#       Foreign Key from Purchase Order to Warehouse over Absorption (mandatory) in Purchase Order of Warehouse in "Purchase Order is to Warehouse"
 #   Composite Mapping (top) of Purchase Order Item
 #     Columns
 #       Mapping (top) of Purchase Order Item
@@ -99,11 +102,11 @@
 #         2: Absorption (mandatory) in Purchase Order Item of Quantity in "Purchase Order Item is in Quantity"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Back Order Allocation to Purchase Order Item
-#       Foreign Key from Received Item to Purchase Order Item
+#       Foreign Key from Back Order Allocation to Purchase Order Item over Absorption (existential) in Back Order Allocation of Purchase Order Item in "Back Order Allocation involves Purchase Order Item"
+#       Foreign Key from Received Item to Purchase Order Item over Absorption (optional) in Received Item of Purchase Order Item in "Received Item is for Purchase Order Item"
 #     Foreign keys outbound
-#       Foreign Key from Purchase Order Item to Product
-#       Foreign Key from Purchase Order Item to Purchase Order
+#       Foreign Key from Purchase Order Item to Product over Absorption (existential) in Purchase Order Item of Product in "Purchase Order Item is for Product"
+#       Foreign Key from Purchase Order Item to Purchase Order over Absorption (existential) in Purchase Order Item of Purchase Order in "Purchase Order Item is part of Purchase Order"
 #   Composite Mapping (top) of Received Item
 #     Columns
 #       Mapping (top) of Received Item
@@ -123,9 +126,9 @@
 #     Indices
 #     Foreign keys inbound
 #     Foreign keys outbound
-#       Foreign Key from Received Item to Product
-#       Foreign Key from Received Item to Purchase Order Item
-#       Foreign Key from Received Item to Transfer Request
+#       Foreign Key from Received Item to Product over Absorption (mandatory) in Received Item of Product in "Received Item is Product"
+#       Foreign Key from Received Item to Purchase Order Item over Absorption (optional) in Received Item of Purchase Order Item in "Received Item is for Purchase Order Item"
+#       Foreign Key from Received Item to Transfer Request over Absorption (optional) in Received Item of Transfer Request in "Received Item is for Transfer Request"
 #   Composite Mapping (top) of Sales Order
 #     Columns
 #       Mapping (top) of Sales Order
@@ -136,9 +139,10 @@
 #           0: Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Sales Order Item to Sales Order
+#       Foreign Key from Sales Order Item to Sales Order over Absorption (existential) in Sales Order Item of Sales Order in "Sales Order Item is part of Sales Order"
 #     Foreign keys outbound
-#       Foreign Key from Sales Order to Warehouse
+#       Foreign Key from Sales Order to Party over Absorption (mandatory) in Sales Order of Customer in "Sales Order was made by Customer"
+#       Foreign Key from Sales Order to Warehouse over Absorption (mandatory) in Sales Order of Warehouse in "Sales Order is from Warehouse"
 #   Composite Mapping (top) of Sales Order Item
 #     Columns
 #       Mapping (top) of Sales Order Item
@@ -149,11 +153,11 @@
 #         2: Absorption (mandatory) in Sales Order Item of Quantity in "Sales Order Item is in Quantity"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Back Order Allocation to Sales Order Item
-#       Foreign Key from Dispatch Item to Sales Order Item
+#       Foreign Key from Back Order Allocation to Sales Order Item over Absorption (existential) in Back Order Allocation of Sales Order Item in "Back Order Allocation involves Sales Order Item"
+#       Foreign Key from Dispatch Item to Sales Order Item over Absorption (optional) in Dispatch Item of Sales Order Item in "Dispatch Item is for Sales Order Item"
 #     Foreign keys outbound
-#       Foreign Key from Sales Order Item to Product
-#       Foreign Key from Sales Order Item to Sales Order
+#       Foreign Key from Sales Order Item to Product over Absorption (existential) in Sales Order Item of Product in "Sales Order Item is for Product"
+#       Foreign Key from Sales Order Item to Sales Order over Absorption (existential) in Sales Order Item of Sales Order in "Sales Order Item is part of Sales Order"
 #   Composite Mapping (top) of Transfer Request
 #     Columns
 #       Mapping (top) of Transfer Request
@@ -167,20 +171,20 @@
 #           0: Absorption (existential) in To Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Dispatch Item to Transfer Request
-#       Foreign Key from Received Item to Transfer Request
+#       Foreign Key from Dispatch Item to Transfer Request over Absorption (optional) in Dispatch Item of Transfer Request in "Dispatch Item is for Transfer Request"
+#       Foreign Key from Received Item to Transfer Request over Absorption (optional) in Received Item of Transfer Request in "Received Item is for Transfer Request"
 #     Foreign keys outbound
-#       Foreign Key from Transfer Request to Product
-#       Foreign Key from Transfer Request to Warehouse
-#       Foreign Key from Transfer Request to Warehouse
+#       Foreign Key from Transfer Request to Warehouse over Absorption (mandatory) in Transfer Request of From Warehouse in "Transfer Request is from Warehouse"
+#       Foreign Key from Transfer Request to Product over Absorption (mandatory) in Transfer Request of Product in "Transfer Request is for Product"
+#       Foreign Key from Transfer Request to Warehouse over Absorption (mandatory) in Transfer Request of To Warehouse in "Transfer Request is to Warehouse"
 #   Composite Mapping (top) of Warehouse
 #     Columns
 #       Mapping (top) of Warehouse
 #         0: Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Indices
 #     Foreign keys inbound
-#       Foreign Key from Bin to Warehouse
-#       Foreign Key from Purchase Order to Warehouse
-#       Foreign Key from Sales Order to Warehouse
-#       Foreign Key from Transfer Request to Warehouse
-#       Foreign Key from Transfer Request to Warehouse
+#       Foreign Key from Bin to Warehouse over Absorption (optional) in Bin of Warehouse in "Warehouse contains Bin"
+#       Foreign Key from Purchase Order to Warehouse over Absorption (mandatory) in Purchase Order of Warehouse in "Purchase Order is to Warehouse"
+#       Foreign Key from Sales Order to Warehouse over Absorption (mandatory) in Sales Order of Warehouse in "Sales Order is from Warehouse"
+#       Foreign Key from Transfer Request to Warehouse over Absorption (mandatory) in Transfer Request of From Warehouse in "Transfer Request is from Warehouse"
+#       Foreign Key from Transfer Request to Warehouse over Absorption (mandatory) in Transfer Request of To Warehouse in "Transfer Request is to Warehouse"
