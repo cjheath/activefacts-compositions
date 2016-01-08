@@ -47,7 +47,8 @@
 #         1: Absorption (mandatory) in Employee of Company in "Employee works at Company"
 #           0: Absorption (existential) in Company of Company Name in "Company is called Company Name"
 #         2: Absorption (optional) in Employee of Manager in "Employee is supervised by Manager"
-#           0: Absorption (mandatory) in Manager of Employee Nr in "Employee has Employee Nr"
+#           3: Absorption (subtype) in Manager of Manager in "Manager is a kind of Employee"
+#             0: Absorption (mandatory) in Manager of Employee Nr in "Employee has Employee Nr"
 #         3: Absorption (subtype) in Employee of Manager (full) in "Employee is a Manager"
 #           0: Indicator "Manager is ceo" (as "Is Ceo")
 #     Indices

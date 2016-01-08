@@ -291,34 +291,25 @@ module ActiveFacts
 	    return
 	  end
 
-	  # Is our target object_type fully absorbed?
-	  full_absorption = member.child_role.object_type.all_full_absorption[@composition]
-	  # full_absorption = target_object_type.all_full_absorption[@composition]
-	  if full_absorption && full_absorption.absorption.parent_role.fact_type != member.parent_role.fact_type
-	  # We can't use member.full_absorption here, as it's not populated on forked copies!
+	  # Is our target object_type fully absorbed (and not through this absorption)?
+	  full_absorption = target_object_type.all_full_absorption[@composition]
+	  # We can't use member.full_absorption here, as it's not populated on forked copies
 	  # if full_absorption && full_absorption != member.full_absorption
+	  if full_absorption && full_absorption.absorption.parent_role.fact_type != member.parent_role.fact_type
 
-	    target_object_type = full_absorption.absorption.parent_role.object_type
-
-	    # member = fork_component_to_new_parent(full_absorption.absorption, member)
-
-	    while full_absorption = target_object_type.all_full_absorption[@composition]
-	      # member = fork_component_to_new_parent(full_absorption.absorption, member)
-	      # Follow transitive target absorption 
+	    absorption = member	# Retain this for the ForeignKey
+	    begin     # Follow transitive target absorption 
+	      member = mirror(full_absorption.absorption, member)
 	      target_object_type = full_absorption.absorption.parent_role.object_type
-	    end
+	    end while full_absorption = target_object_type.all_full_absorption[@composition]
 
 	    target_mapping = @binary_mappings[target_object_type]
-
-	    # The target object type is fully absorbed elsewhere. Absorb its key instead.
-	    @constellation.ForeignKey(:new, source_composite: mapping.root, composite: target_mapping.composite, absorption: member)
+	    @constellation.ForeignKey(:new, source_composite: mapping.root, composite: target_mapping.composite, absorption: absorption)
 	    absorb_key member, target_mapping
 	    return
 	  end
 
-	  #trace :relational_mapping?, "Absorbing full contents of #{member.child_role.name} in #{member.inspect_reading}" do
-	    absorb_all member, target_mapping
-	  #end
+	  absorb_all member, target_mapping
 	end
       end
 
@@ -374,6 +365,10 @@ module ActiveFacts
 	else
 	  @constellation.fork component, guid: :new, parent: parent
 	end
+      end
+
+      def mirror absorption, parent
+	@constellation.fork absorption, guid: :new, parent: parent, parent_role: absorption.child_role, child_role: absorption.parent_role
       end
 
       # A candidate is a Mapping of an object type which may become a Composition (a table, in relational-speak)
