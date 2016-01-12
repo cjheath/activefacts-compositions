@@ -24,6 +24,11 @@
 #               0: Absorption (subtype) in Finance Institution of Company in "Company is a kind of Party"
 #                 0: Absorption (mandatory) in Company of Party ID in "Party has Party ID"
 #     Indices
+#       Primary index to Asset over PresenceConstraint over (Asset-ID) occurs at most one time DUPLICATE
+#       Unique index to Asset over PresenceConstraint over (Asset-ID) occurs at most one time
+#         IndexField part 0 in Asset references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#       Unique index to Asset over PresenceConstraint over (VIN) occurs at most one time
+#         IndexField part 0 in Asset references Absorption (existential) in Vehicle of VIN in "Vehicle has VIN"
 #     Foreign keys inbound
 #       Foreign Key from Cover to Asset over Absorption (existential) in Cover of Asset in "Cover involves Asset"
 #     Foreign keys outbound
@@ -62,6 +67,14 @@
 #             3: Absorption (optional) in Police Report of Reporter Name in "Police Report was by reporter-Name"
 #             4: Absorption (optional) in Police Report of Station Name in "Police Report was at station-Name"
 #     Indices
+#       Primary index to Claim over PresenceConstraint over (Claim-ID) occurs at most one time
+#         IndexField part 0 in Claim references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#       Unique index to Claim over PresenceConstraint over (Policy, p_sequence) occurs at most one time
+#         IndexField part 0 in Claim references Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
+#         IndexField part 1 in Claim references Absorption (existential) in p_product of Product Code in "Product has Product Code"
+#         IndexField part 2 in Claim references Absorption (existential) in p_state of State Code in "State has State Code"
+#         IndexField part 3 in Claim references Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
+#         IndexField part 4 in Claim references Absorption (mandatory) in Claim of p_sequence in "Claim has Claim Sequence"
 #     Foreign keys inbound
 #       Foreign Key from Contractor Appointment to Claim over Absorption (existential) in Contractor Appointment of Claim in "Contractor Appointment involves Claim"
 #       Foreign Key from Lost Item to Claim over Absorption (existential) in Lost Item of Incident in "Lost Item was lost in Incident"
@@ -82,6 +95,9 @@
 #             0: Absorption (subtype) in Contractor of Company in "Company is a kind of Party"
 #               0: Absorption (mandatory) in Company of Party ID in "Party has Party ID"
 #     Indices
+#       Primary index to Contractor Appointment over PresenceConstraint over (Claim, Contractor) occurs at most one time
+#         IndexField part 0 in Contractor Appointment references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 1 in Contractor Appointment references Absorption (mandatory) in Company of Party ID in "Party has Party ID"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Contractor Appointment to Claim over Absorption (existential) in Contractor Appointment of Claim in "Contractor Appointment involves Claim"
@@ -102,6 +118,13 @@
 #         2: Absorption (existential) in Cover of Asset in "Cover involves Asset"
 #           0: Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
 #     Indices
+#       Primary index to Cover over PresenceConstraint over (Policy, Cover-Type, Asset) occurs at most one time
+#         IndexField part 0 in Cover references Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
+#         IndexField part 1 in Cover references Absorption (existential) in p_product of Product Code in "Product has Product Code"
+#         IndexField part 2 in Cover references Absorption (existential) in p_state of State Code in "State has State Code"
+#         IndexField part 3 in Cover references Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
+#         IndexField part 4 in Cover references Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
+#         IndexField part 5 in Cover references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Cover to Asset over Absorption (existential) in Cover of Asset in "Cover involves Asset"
@@ -113,6 +136,10 @@
 #         0: Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
 #         1: Absorption (mandatory) in Cover Type of Cover Type Name in "Cover Type has Cover Type Name"
 #     Indices
+#       Primary index to Cover Type over PresenceConstraint over (Cover-Type-Code) occurs at most one time
+#         IndexField part 0 in Cover Type references Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
+#       Unique index to Cover Type over PresenceConstraint over (Cover-Type-Name) occurs at most one time
+#         IndexField part 0 in Cover Type references Absorption (mandatory) in Cover Type of Cover Type Name in "Cover Type has Cover Type Name"
 #     Foreign keys inbound
 #       Foreign Key from Cover to Cover Type over Absorption (existential) in Cover of Cover Type in "Cover involves Cover Type"
 #       Foreign Key from Cover Wording to Cover Type over Absorption (existential) in Cover Wording of Cover Type in "Cover Wording involves Cover Type"
@@ -126,6 +153,10 @@
 #           0: Absorption (existential) in Policy Wording of Policy Wording Text in "Policy Wording has Policy Wording Text"
 #         2: Absorption (existential) in Cover Wording of Date in "Cover Wording involves Date"
 #     Indices
+#       Primary index to Cover Wording over PresenceConstraint over (Cover-Type, Policy-Wording, start-Date) occurs at most one time
+#         IndexField part 0 in Cover Wording references Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
+#         IndexField part 1 in Cover Wording references Absorption (existential) in Policy Wording of Policy Wording Text in "Policy Wording has Policy Wording Text"
+#         IndexField part 2 in Cover Wording references Absorption (existential) in Cover Wording of Date in "Cover Wording involves Date"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Cover Wording to Cover Type over Absorption (existential) in Cover Wording of Cover Type in "Cover Wording involves Cover Type"
@@ -138,6 +169,8 @@
 #         3: Absorption (optional) in Loss Type of Liability in "Loss Type implies Liability"
 #           0: Absorption (existential) in Liability of Liability Code in "Liability has Liability Code"
 #     Indices
+#       Primary index to Loss Type over PresenceConstraint over (Loss-Type-Code) occurs at most one time
+#         IndexField part 0 in Loss Type references Absorption (existential) in Loss Type of Loss Type Code in "Loss Type has Loss Type Code"
 #     Foreign keys inbound
 #       Foreign Key from Vehicle Incident to Loss Type over Absorption (optional) in Vehicle Incident of Loss Type in "Vehicle Incident resulted from Loss Type"
 #     Foreign keys outbound
@@ -153,6 +186,9 @@
 #         4: Absorption (optional) in Lost Item of Purchase Place in "Lost Item was purchased at purchase-Place"
 #         5: Absorption (optional) in Lost Item of Purchase Price in "Lost Item was purchased for purchase-Price"
 #     Indices
+#       Primary index to Lost Item over PresenceConstraint over (Incident, Lost-Item-Nr) occurs at most one time
+#         IndexField part 0 in Lost Item references Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
+#         IndexField part 1 in Lost Item references Absorption (existential) in Lost Item of Lost Item Nr in "Lost Item has Lost Item Nr"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Lost Item to Claim over Absorption (existential) in Lost Item of Incident in "Lost Item was lost in Incident"
@@ -210,6 +246,14 @@
 #               0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
 #           7: Absorption (optional) in Person of Occupation in "Person has Occupation"
 #     Indices
+#       Unique index to Party over PresenceConstraint over (Party-ID) occurs at most one time DUPLICATE
+#       Unique index to Party over PresenceConstraint over (Party-ID) occurs at most one time DUPLICATE
+#       Primary index to Party over PresenceConstraint over (Party-ID) occurs at most one time
+#       Unique index to Party over PresenceConstraint over (Party-ID) occurs at most one time DUPLICATE
+#       Unique index to Party over PresenceConstraint over (Party-ID) occurs at most one time DUPLICATE
+#       Unique index to Party over PresenceConstraint over (Party-ID) occurs at most one time DUPLICATE
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+MISSING License Number
 #     Foreign keys inbound
 #       Foreign Key from Asset to Party over Absorption (optional) in Vehicle of Dealer in "Vehicle was sold by Dealer"
 #       Foreign Key from Asset to Party over Absorption (optional) in Vehicle of Finance Institution in "Vehicle is subject to finance with Finance Institution"
@@ -248,6 +292,12 @@
 #           0: Absorption (subtype) in Motor Policy of Motor Fleet Policy in "Motor Policy is a Motor Fleet Policy"
 #           1: Absorption (subtype) in Motor Policy of Single Motor Policy in "Motor Policy is a Single Motor Policy"
 #     Indices
+#       Primary index to Policy over PresenceConstraint over (p_year, p_product, p_state, p_serial) occurs at most one time
+#       Unique index to Policy over PresenceConstraint over (p_year, p_product, p_state, p_serial) occurs at most one time DUPLICATE
+#         IndexField part 0 in Policy references Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
+#         IndexField part 1 in Policy references Absorption (existential) in p_product of Product Code in "Product has Product Code"
+#         IndexField part 2 in Policy references Absorption (existential) in p_state of State Code in "State has State Code"
+#         IndexField part 3 in Policy references Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
 #     Foreign keys inbound
 #       Foreign Key from Claim to Policy over Absorption (mandatory) in Claim of Policy in "Claim is on Policy"
 #       Foreign Key from Cover to Policy over Absorption (existential) in Cover of Policy in "Cover involves Policy"
@@ -263,6 +313,12 @@
 #         1: Absorption (optional) in Product of Alias in "Product has Alias"
 #         2: Absorption (optional) in Product of Description in "Product has Description"
 #     Indices
+#       Primary index to Product over PresenceConstraint over (Product-Code) occurs at most one time
+#         IndexField part 0 in Product references Absorption (existential) in Product of Product Code in "Product has Product Code"
+#       Unique index to Product over PresenceConstraint over (Alias) occurs at most one time
+#         IndexField part 0 in Product references Absorption (optional) in Product of Alias in "Product has Alias"
+#       Unique index to Product over PresenceConstraint over (Description) occurs at most one time
+#         IndexField part 0 in Product references Absorption (optional) in Product of Description in "Product has Description"
 #     Foreign keys inbound
 #       Foreign Key from Policy to Product over Absorption (existential) in Policy of p_product in "Policy is for product having Product"
 #     Foreign keys outbound
@@ -282,6 +338,12 @@
 #         3: Absorption (optional) in Property Damage of Phone in "Property Damage owner has contact Phone"
 #           0: Absorption (existential) in Phone of Phone Nr in "Phone has Phone Nr"
 #     Indices
+#       Primary index to Property Damage over PresenceConstraint over (Incident, Address) occurs at most one time
+#         IndexField part 0 in Property Damage references Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
+#         IndexField part 1 in Property Damage references Absorption (existential) in Address of Street in "Address is at Street"
+#         IndexField part 2 in Property Damage references Absorption (existential) in Address of City in "Address is in City"
+#         IndexField part 3 in Property Damage references Absorption (existential) in Address of Postcode in "Address is in Postcode"
+#         IndexField part 4 in Property Damage references Absorption (existential) in State of State Code in "State has State Code"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Property Damage to State over Absorption (existential) in Address of State in "Address is in State"
@@ -292,6 +354,10 @@
 #         0: Absorption (existential) in State of State Code in "State has State Code"
 #         1: Absorption (optional) in State of State Name in "State has State Name"
 #     Indices
+#       Primary index to State over PresenceConstraint over (State-Code) occurs at most one time
+#         IndexField part 0 in State references Absorption (existential) in State of State Code in "State has State Code"
+#       Unique index to State over PresenceConstraint over (State-Name) occurs at most one time
+#         IndexField part 0 in State references Absorption (optional) in State of State Name in "State has State Name"
 #     Foreign keys inbound
 #       Foreign Key from Claim to State over Absorption (existential) in Address of State in "Address is in State"
 #       Foreign Key from Party to State over Absorption (existential) in Address of State in "Address is in State"
@@ -320,6 +386,9 @@
 #           1: Absorption (existential) in Vehicle Type of Model in "Vehicle Type is of Model"
 #           2: Absorption (existential) in Vehicle Type of Badge in "Vehicle Type has Badge"
 #     Indices
+#       Primary index to Third Party over PresenceConstraint over (Person, Vehicle-Incident) occurs at most one time
+#         IndexField part 0 in Third Party references Absorption (mandatory) in Person of Party ID in "Party has Party ID"
+MISSING IndexField Vehicle Incident ClaimID
 #     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Third Party to Party over Absorption (existential) in Third Party of Person in "Third Party involves Person"
@@ -333,6 +402,9 @@
 #           0: Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
 #         2: Absorption (optional) in Underwriting Demerit of Occurrence Count in "Underwriting Demerit occurred occurrence-Count times"
 #     Indices
+#       Primary index to Underwriting Demerit over PresenceConstraint over (Vehicle-Incident, Underwriting-Question) occurs at most one time
+MISSING IndexField ClaimID
+#         IndexField part 0 in Underwriting Demerit references Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Underwriting Demerit to Underwriting Question over Absorption (existential) in Underwriting Demerit of Underwriting Question in "Underwriting Demerit has Underwriting Question"
@@ -343,6 +415,10 @@
 #         0: Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
 #         1: Absorption (mandatory) in Underwriting Question of Text in "Underwriting Question has Text"
 #     Indices
+#       Primary index to Underwriting Question over PresenceConstraint over (Underwriting-Question-ID) occurs at most one time
+#         IndexField part 0 in Underwriting Question references Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
+#       Unique index to Underwriting Question over PresenceConstraint over (Text) occurs at most one time
+#         IndexField part 0 in Underwriting Question references Absorption (mandatory) in Underwriting Question of Text in "Underwriting Question has Text"
 #     Foreign keys inbound
 #       Foreign Key from Underwriting Demerit to Underwriting Question over Absorption (existential) in Underwriting Demerit of Underwriting Question in "Underwriting Demerit has Underwriting Question"
 #     Foreign keys outbound
@@ -375,6 +451,7 @@
 #         6: Absorption (optional) in Vehicle Incident of Towed Location in "Vehicle Incident resulted in vehicle being towed to towed-Location"
 #         7: Absorption (optional) in Vehicle Incident of Weather Description in "Vehicle Incident occurred during weather-Description"
 #     Indices
+#       Primary index to Vehicle Incident over PresenceConstraint over (occurred-while-being-driven) occurs at most one time INCORRECT: Should be over Incident->ClaimID
 #     Foreign keys inbound
 #       Foreign Key from Third Party to Vehicle Incident over Absorption (existential) in Third Party of Vehicle Incident in "Third Party involves Vehicle Incident"
 #       Foreign Key from Underwriting Demerit to Vehicle Incident over Absorption (existential) in Underwriting Demerit of Vehicle Incident in "Underwriting Demerit preceded Vehicle Incident"
@@ -398,6 +475,9 @@
 #         3: Absorption (optional) in Witness of Contact Phone in "Witness has contact-Phone"
 #           0: Absorption (existential) in Contact Phone of Phone Nr in "Phone has Phone Nr"
 #     Indices
+#       Primary index to Witness over PresenceConstraint over (Incident, Name) occurs at most one time
+#         IndexField part 0 in Witness references Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
+#         IndexField part 1 in Witness references Absorption (existential) in Witness of Name in "Witness is called Name"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Witness to State over Absorption (existential) in Address of State in "Address is in State"

@@ -5,6 +5,9 @@
 #         0: Absorption (existential) in Country of Country Code in "Country has Country Code"
 #           0: ValueField "Country Code" (as "Country Code")
 #     Indices
+#       Primary index to Country over PresenceConstraint over (Country-Code) occurs at most one time
+#         IndexField part 0 in Country references Absorption (existential) in Country of Country Code in "Country has Country Code"
+#         IndexField part 1 in Country references ValueField "Country Code"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Country to Country Code over Absorption (existential) in Country of Country Code in "Country has Country Code"

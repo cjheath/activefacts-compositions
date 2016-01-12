@@ -270,29 +270,29 @@ module ActiveFacts
 	trace :relational_columns!, "Absorbing full contents of all tables" do
 	  @composition.all_composite_by_name.each do |composite|
 	    trace :relational_mapping, "Absorbing contents of #{composite.mapping.name}" do
-	      absorb_all composite.mapping, nil
+	      absorb_all composite.mapping, composite.mapping
 	    end
 	  end
 	end
       end
 
-      # This member is an Absorption. Process it recursively, absorbing all its members
-      # or just a key depending on whether the absorbed object is a Composite or not.
-      def absorb_nested mapping, member
+      # This member is an Absorption. Process it recursively, absorbing all its members or just a key
+      # depending on whether the absorbed object is a Composite (or absorbed into one) or not.
+      def absorb_nested mapping, member, paths
 	# Should we absorb a foreign key or the whole contents?
 
-	target_object_type = member.child_role.object_type
-	table = @candidates[target_object_type]
-	target_mapping = @binary_mappings[target_object_type]
+	child_object_type = member.child_role.object_type
+	table = @candidates[child_object_type]
+	child_mapping = @binary_mappings[child_object_type]
 	trace :relational_mapping?, "Absorbing #{member.child_role.name} in #{member.inspect_reading}" do
 	  if table
-	    @constellation.ForeignKey(:new, source_composite: mapping.root, composite: target_mapping.composite, absorption: member)
-	    absorb_key member, target_mapping
+	    @constellation.ForeignKey(:new, source_composite: mapping.root, composite: child_mapping.composite, absorption: member)
+	    absorb_key member, child_mapping, paths
 	    return
 	  end
 
 	  # Is our target object_type fully absorbed (and not through this absorption)?
-	  full_absorption = target_object_type.all_full_absorption[@composition]
+	  full_absorption = child_object_type.all_full_absorption[@composition]
 	  # We can't use member.full_absorption here, as it's not populated on forked copies
 	  # if full_absorption && full_absorption != member.full_absorption
 	  if full_absorption && full_absorption.absorption.parent_role.fact_type != member.parent_role.fact_type
@@ -300,27 +300,46 @@ module ActiveFacts
 	    absorption = member	# Retain this for the ForeignKey
 	    begin     # Follow transitive target absorption 
 	      member = mirror(full_absorption.absorption, member)
-	      target_object_type = full_absorption.absorption.parent_role.object_type
-	    end while full_absorption = target_object_type.all_full_absorption[@composition]
+	      child_object_type = full_absorption.absorption.parent_role.object_type
+	    end while full_absorption = child_object_type.all_full_absorption[@composition]
 
-	    target_mapping = @binary_mappings[target_object_type]
-	    @constellation.ForeignKey(:new, source_composite: mapping.root, composite: target_mapping.composite, absorption: absorption)
-	    absorb_key member, target_mapping
+	    child_mapping = @binary_mappings[child_object_type]
+	    @constellation.ForeignKey(:new, source_composite: mapping.root, composite: child_mapping.composite, absorption: absorption)
+	    absorb_key member, child_mapping, paths
 	    return
 	  end
 
-	  absorb_all member, target_mapping
+	  absorb_all member, child_mapping, paths
 	end
+      end
+
+      # Recursively add members to this component for the existential roles of
+      # the composite mapping for the absorbed (child_role) object:
+      def absorb_key mapping, target, paths
+	target.re_rank
+	target.all_member.sort_by(&:ordinal).each do |member|
+	  next unless member.rank_key[0] == MM::Component::RANK_IDENT
+	  member = fork_component_to_new_parent mapping, member
+	  augment_paths paths, member
+	  if member.is_a?(MM::Absorption)
+	    absorb_key member, @binary_mappings[member.child_role.object_type], paths
+	  end
+	end
+	# mapping.re_rank
       end
 
       # Augment the mapping with copies of the children of the "from" mapping.
       # At the top level, no "from" is given and the children already exist
-      def absorb_all mapping, from
+      def absorb_all mapping, from, paths = {}
+	top_level = mapping == from
 
-	top_level = !from
-	from ||= mapping
+	pcs = []
+	newpaths = {}
+	if mapping.composite || mapping.full_absorption
+	  pcs = find_uniqueness_constraints(mapping)
 
-	# pcs = empty_pc_map_for(from)
+	  newpaths = make_new_paths mapping, paths.keys, pcs
+	end
 
 	from.re_rank
 	ordered = from.all_member.sort_by(&:ordinal)
@@ -329,31 +348,135 @@ module ActiveFacts
 	    unless top_level    # Top-level members are already instantiated
 	      member = fork_component_to_new_parent(mapping, member)
 	    end
+	    rel = paths.merge(relevant_paths(newpaths, member))
+	    augment_paths rel, member
 
 	    if member.is_a?(MM::Absorption)
-	      absorb_nested mapping, member
+	      absorb_nested mapping, member, rel
 	    end
-
-	    # augment_paths ap, member
 	  end
 	end
 
 	# mapping.re_rank
       end
 
-      # Recursively add members to this component for the existential roles of
-      # the composite mapping for the absorbed (child_role) object:
-      def absorb_key mapping, target
-	target.re_rank
-	target.all_member.sort_by(&:ordinal).each do |member|
-	  next unless member.rank_key[0] == MM::Component::RANK_IDENT
-	  member = fork_component_to_new_parent mapping, member
-	  # augment_paths access_paths, member
-	  if member.is_a?(MM::Absorption)
-	    absorb_key member, @binary_mappings[member.child_role.object_type]
+      # Find all PresenceConstraints to index the object in this Mapping
+      def find_uniqueness_constraints mapping
+	return [] unless mapping.object_type.is_a?(MM::EntityType)
+
+	start_roles =
+	    mapping.
+	    object_type.
+	    all_role_transitive.	# Includes objectification roles for objectified fact types
+	    select do |role|
+	      (role.is_unique ||		# Must be unique on near role
+		role.fact_type.is_unary) &&	# Or be a unary role
+	      !role.fact_type.is_a?(MM::TypeInheritance)	# Must not be inheritance
+	    end.
+	    map(&:counterpart).		# (Same role if it's a unary)
+	    compact.			# Ignore nil counterpart of a role in an n-ary
+	    map(&:base_role).		# In case it's a link fact type
+	    uniq
+
+	pcs =
+	  start_roles.
+	  flat_map(&:all_role_ref).	# All role_refs
+	  map(&:role_sequence).		# The role_sequence
+	  uniq.
+	  flat_map(&:all_presence_constraint).
+	  uniq.
+	  reject do |pc|
+	    pc.max_frequency != 1 ||	# Must be unique
+	    pc.enforcement ||		# and alethic
+	    pc.role_sequence.all_role_ref.detect do |rr|
+	      !start_roles.include?(rr.role)	# and span only valid roles
+	    end ||			# and not be the full absorption path
+	    (	# Reject a constraint that caused full absorption
+	      pc.role_sequence.all_role_ref.size == 1 and
+	      mapping.is_a?(MM::Absorption) and
+	      fa = mapping.full_absorption and
+	      pc.role_sequence.all_role_ref.single.role.base_role == fa.absorption.parent_role.base_role
+	    )
+	  end  # Alethic uniqueness constraint on far end
+
+	non_absorption_pcs = pcs.reject do |pc|
+	  # An absorption PC is a PC that covers some role that is involved in a FullAbsorption
+	  full_absorptions =
+	    pc.
+	    role_sequence.
+	    all_role_ref.
+	    map(&:role).
+	    flat_map do |role|
+	      (role.all_absorption_as_parent_role.to_a + role.all_absorption_as_child_role.to_a).
+		select do |abs|
+		  abs.full_absorption && abs.full_absorption.composition == @composition
+		end
+	    end
+	  full_absorptions.size > 0
+	end
+	pcs = non_absorption_pcs
+
+	trace :relational_uniqueness, "Uniqueness Constraints for #{mapping.object_type.name}" do
+	  pcs.each do |pc|
+	    trace :relational_uniqueness, "#{pc.describe.inspect}#{pc.is_preferred_identifier ? ' (PI)' : ''}"
 	  end
 	end
-	# mapping.re_rank
+
+	pcs
+      end
+
+      def make_new_paths mapping, existing_pcs, pcs
+	newpaths = {}
+	new_pcs = pcs-existing_pcs
+	trace :relational_index?, "Adding #{new_pcs.size} new indices for presence constraints on #{mapping.inspect}" do
+	  new_pcs.each do |pc|
+	    newpaths[pc] = index = @constellation.Index(:new, composite: mapping.root, is_unique: true, presence_constraint: pc)
+	    if pc.is_preferred_identifier
+	      index.composite_as_primary_index = mapping.root
+	    end
+	    trace :relational_index, "Added new index #{index.inspect} for #{pc.describe} on #{pc.role_sequence.all_role_ref.map(&:role).map(&:fact_type).map(&:default_reading).inspect}"
+	  end
+	end
+	newpaths
+      end
+
+      def relevant_paths path_hash, component
+	rel = {}  # REVISIT: return a hash subset of path_hash containing paths relevant to this component
+	case component
+	when MM::Absorption
+	  role = component.child_role.base_role
+	when MM::Indicator
+	  role = component.role
+	else
+	  return rel  # Can't participate in an AccessPath
+	end
+
+	path_hash.each do |pc, path|
+	  next unless pc.role_sequence.all_role_ref.detect{|rr| rr.role == role}
+	  rel[pc] = path
+	end
+	rel
+      end
+
+      def augment_paths paths, mapping
+	return unless MM::Indicator === mapping || MM::ValueType === mapping.object_type
+
+	paths.each do |pc, path|
+	  @constellation.IndexField(
+	    access_path: path,
+	    ordinal: path.all_index_field.size,
+	    component: mapping
+	  )
+	end
+      end
+
+      # This function name is from FP lore, e.g. Haskell. Ruby has none built-in
+      def unfoldr arg, &b
+	result = []
+	begin
+	  result << arg
+	end while arg = b.call(arg)
+	result
       end
 
       def fork_component_to_new_parent parent, component
