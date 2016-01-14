@@ -403,7 +403,7 @@ MISSING IndexField Vehicle Incident ClaimID
 #         2: Absorption (optional) in Underwriting Demerit of Occurrence Count in "Underwriting Demerit occurred occurrence-Count times"
 #     Indices
 #       Primary index to Underwriting Demerit over PresenceConstraint over (Vehicle-Incident, Underwriting-Question) occurs at most one time
-MISSING IndexField ClaimID
+MISSING IndexField Vehicle Incident ClaimID
 #         IndexField part 0 in Underwriting Demerit references Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
 #     Foreign keys inbound
 #     Foreign keys outbound
@@ -451,7 +451,7 @@ MISSING IndexField ClaimID
 #         6: Absorption (optional) in Vehicle Incident of Towed Location in "Vehicle Incident resulted in vehicle being towed to towed-Location"
 #         7: Absorption (optional) in Vehicle Incident of Weather Description in "Vehicle Incident occurred during weather-Description"
 #     Indices
-#       Primary index to Vehicle Incident over PresenceConstraint over (occurred-while-being-driven) occurs at most one time INCORRECT: Should be over Incident->ClaimID
+MISSING index over ClaimID FK
 #     Foreign keys inbound
 #       Foreign Key from Third Party to Vehicle Incident over Absorption (existential) in Third Party of Vehicle Incident in "Third Party involves Vehicle Incident"
 #       Foreign Key from Underwriting Demerit to Vehicle Incident over Absorption (existential) in Underwriting Demerit of Vehicle Incident in "Underwriting Demerit preceded Vehicle Incident"

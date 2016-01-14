@@ -32,10 +32,17 @@ module ActiveFacts
 	end
 
 	@composition = @constellation.Composition(:new, :name => @name)
+	preload_preferred_identifiers
 	populate_references
       end
 
     private
+      # Preferred identifiers are cached, but the process produces trace output
+      # that appears in the "tutti" mode used in testing. This precludes that.
+      def preload_preferred_identifiers
+	@constellation.EntityType.map{|k, et| et.preferred_identifier }
+      end
+
       def populate_reference object_type, role
 	parent = @binary_mappings[role.object_type]
 
