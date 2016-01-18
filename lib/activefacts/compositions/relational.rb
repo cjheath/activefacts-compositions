@@ -439,7 +439,9 @@ module ActiveFacts
 	  new_pcs.each do |pc|
 	    newpaths[pc] = index = @constellation.Index(:new, composite: mapping.root, is_unique: true, presence_constraint: pc)
 	    if pc.is_preferred_identifier
-	      index.composite_as_primary_index = mapping.root
+	      unless @composition.all_full_absorption[mapping.object_type]
+		index.composite_as_primary_index = mapping.root
+	      end
 	    end
 	    trace :relational_index, "Added new index #{index.inspect} for #{pc.describe} on #{pc.role_sequence.all_role_ref.map(&:role).map(&:fact_type).map(&:default_reading).inspect}"
 	  end
