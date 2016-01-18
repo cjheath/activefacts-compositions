@@ -447,7 +447,8 @@
 #         6: Absorption (optional) in Vehicle Incident of Towed Location in "Vehicle Incident resulted in vehicle being towed to towed-Location"
 #         7: Absorption (optional) in Vehicle Incident of Weather Description in "Vehicle Incident occurred during weather-Description"
 #     Indices
-MISSING index over ClaimID FK
+#       Primary index to Vehicle Incident over PresenceConstraint over (Incident) occurs at most one time
+#         IndexField part 0 in Vehicle Incident references Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
 #     Foreign keys inbound
 #       Foreign Key from Third Party to Vehicle Incident over Absorption (existential) in Third Party of Vehicle Incident in "Third Party involves Vehicle Incident"
 #       Foreign Key from Underwriting Demerit to Vehicle Incident over Absorption (existential) in Underwriting Demerit of Vehicle Incident in "Underwriting Demerit preceded Vehicle Incident"

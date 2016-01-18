@@ -379,7 +379,7 @@ module ActiveFacts
 	    select do |role|
 	      (role.is_unique ||		# Must be unique on near role
 		role.fact_type.is_unary) &&	# Or be a unary role
-	      !role.fact_type.is_a?(MM::TypeInheritance)	# Must not be inheritance
+	      !(role.fact_type.is_a?(MM::TypeInheritance) && role == role.fact_type.supertype_role) # allow roles as subtype
 	    end.
 	    map(&:counterpart).		# (Same role if it's a unary)
 	    compact.			# Ignore nil counterpart of a role in an n-ary
