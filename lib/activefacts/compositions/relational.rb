@@ -352,7 +352,7 @@ module ActiveFacts
 	from.re_rank
 	ordered = from.all_member.sort_by(&:ordinal)
 	ordered.each do |member|
-	  trace :relational_mapping, "#{top_level ? 'Existing' : 'Absorbing'} #{member.inspect}" do
+	  trace :relational_mapping, proc {"#{top_level ? 'Existing' : 'Absorbing'} #{member.inspect}"} do
 	    unless top_level    # Top-level members are already instantiated
 	      member = fork_component_to_new_parent(mapping, member)
 	    end
