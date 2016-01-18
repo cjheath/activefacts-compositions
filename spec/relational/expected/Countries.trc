@@ -15,5 +15,7 @@
 #       Mapping (top) of Country Code
 #         0: ValueField "Country Code" (as "Country Code Value")
 #     Indices
+#       Primary index to Country Code
+#         IndexField part 0 in Country Code references ValueField "Country Code"
 #     Foreign keys inbound
 #       Foreign Key from Country to Country Code over Absorption (existential) in Country of Country Code in "Country has Country Code"
