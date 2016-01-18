@@ -10,7 +10,6 @@
 #       Primary index to AllocatableCinemaSection over PresenceConstraint over (Cinema, Section) occurs at most one time
 #         IndexField part 0 in AllocatableCinemaSection references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
 #         IndexField part 1 in AllocatableCinemaSection references Absorption (existential) in Section of Section Name in "Section has Section Name"
-#     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from AllocatableCinemaSection to Cinema over Absorption (existential) in AllocatableCinemaSection of Cinema in "AllocatableCinemaSection involves Cinema"
 #   Composite Mapping (top) of Booking
@@ -69,7 +68,6 @@
 #       Foreign Key from Seat to Cinema over Absorption (existential) in Row of Cinema in "Row is in Cinema"
 #       Foreign Key from Session to Cinema over Absorption (existential) in Session of Cinema in "Session involves Cinema"
 #       Foreign Key from Ticket Pricing to Cinema over Absorption (existential) in Ticket Pricing of Cinema in "Ticket Pricing involves Cinema"
-#     Foreign keys outbound
 #   Composite Mapping (top) of Film
 #     Columns
 #       Mapping (top) of Film
@@ -85,7 +83,6 @@
 #         IndexField part 1 in Film references Absorption (existential) in Year of Year Nr in "Year has Year Nr"
 #     Foreign keys inbound
 #       Foreign Key from Session to Film over Absorption (mandatory) in Session of Film in "Session involves Film"
-#     Foreign keys outbound
 #   Composite Mapping (top) of Person
 #     Columns
 #       Mapping (top) of Person
@@ -99,7 +96,6 @@
 #         IndexField part 0 in Person references Absorption (optional) in Person of Login Name in "Person has login-Name"
 #     Foreign keys inbound
 #       Foreign Key from Booking to Person over Absorption (mandatory) in Booking of Person in "Booking involves Person"
-#     Foreign keys outbound
 #   Composite Mapping (top) of Places Paid
 #     Columns
 #       Mapping (top) of Places Paid
@@ -112,7 +108,6 @@
 #       Primary index to Places Paid over PresenceConstraint over (Booking, Payment-Method) occurs one time
 #         IndexField part 0 in Places Paid references Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
 #         IndexField part 1 in Places Paid references Absorption (existential) in Payment Method of Payment Method Code in "Payment Method has Payment Method Code"
-#     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Places Paid to Booking over Absorption (existential) in Places Paid of Booking in "Places Paid involves Booking"
 #   Composite Mapping (top) of Seat
@@ -151,7 +146,6 @@
 #         IndexField part 1 in Seat Allocation references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
 #         IndexField part 2 in Seat Allocation references Absorption (existential) in Row of Row Nr in "Row has Row Nr"
 #         IndexField part 3 in Seat Allocation references Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
-#     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Seat Allocation to Booking over Absorption (existential) in Seat Allocation of Booking in "Seat Allocation involves Booking"
 #       Foreign Key from Seat Allocation to Seat over Absorption (existential) in Seat Allocation of Seat in "Seat Allocation involves Seat"
@@ -212,6 +206,5 @@
 #         IndexField part 5 in Ticket Pricing references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
 #         IndexField part 6 in Ticket Pricing references Absorption (existential) in Section of Section Name in "Section has Section Name"
 #         IndexField part 7 in Ticket Pricing references Absorption (existential) in Ticket Pricing of High Demand in "Ticket Pricing involves High Demand"
-#     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Ticket Pricing to Cinema over Absorption (existential) in Ticket Pricing of Cinema in "Ticket Pricing involves Cinema"

@@ -17,7 +17,6 @@
 #         IndexField part 2 in Attendance references Absorption (existential) in Company of Company Name in "Company is called Company Name"
 #         IndexField part 3 in Attendance references Absorption (existential) in Meeting of Date in "Meeting is held on Date"
 #         IndexField part 4 in Attendance references Indicator "Meeting is board meeting"
-#     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Attendance to Person over Absorption (existential) in Attendance of Attendee in "Attendance involves Person"
 #       Foreign Key from Attendance to Meeting over Absorption (existential) in Attendance of Meeting in "Attendance involves Meeting"
@@ -33,7 +32,6 @@
 #       Foreign Key from Directorship to Company over Absorption (existential) in Directorship of Company in "Directorship involves Company"
 #       Foreign Key from Employee to Company over Absorption (mandatory) in Employee of Company in "Employee works at Company"
 #       Foreign Key from Meeting to Company over Absorption (existential) in Meeting of Company in "Meeting is held by Company"
-#     Foreign keys outbound
 #   Composite Mapping (top) of Directorship
 #     Columns
 #       Mapping (top) of Directorship
@@ -48,7 +46,6 @@
 #         IndexField part 0 in Directorship references Absorption (existential) in Director of Given Name in "Person has given-Name"
 #         IndexField part 1 in Directorship references Absorption (existential) in Director of Family Name in "Person is called family-Name"
 #         IndexField part 2 in Directorship references Absorption (existential) in Company of Company Name in "Company is called Company Name"
-#     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Directorship to Company over Absorption (existential) in Directorship of Company in "Directorship involves Company"
 #       Foreign Key from Directorship to Person over Absorption (existential) in Directorship of Director in "Directorship involves Person"
@@ -85,7 +82,6 @@
 #         IndexField part 0 in Employment references Absorption (existential) in Person of Given Name in "Person has given-Name"
 #         IndexField part 1 in Employment references Absorption (existential) in Person of Family Name in "Person is called family-Name"
 #         IndexField part 2 in Employment references Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
-#     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Employment to Employee over Absorption (existential) in Employment of Employee in "Employment involves Employee"
 #       Foreign Key from Employment to Person over Absorption (existential) in Employment of Person in "Employment involves Person"

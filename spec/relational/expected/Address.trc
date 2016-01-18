@@ -14,8 +14,6 @@
 #     Indices
 #       Primary index to Company over PresenceConstraint over (Company-Name) occurs at most one time
 #         IndexField part 0 in Company references Absorption (existential) in Company of Company Name in "Company has Company Name"
-#     Foreign keys inbound
-#     Foreign keys outbound
 #   Composite Mapping (top) of Person
 #     Columns
 #       Mapping (top) of Person

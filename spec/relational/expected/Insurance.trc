@@ -97,7 +97,6 @@
 #       Primary index to Contractor Appointment over PresenceConstraint over (Claim, Contractor) occurs at most one time
 #         IndexField part 0 in Contractor Appointment references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
 #         IndexField part 1 in Contractor Appointment references Absorption (mandatory) in Company of Party ID in "Party has Party ID"
-#     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Contractor Appointment to Claim over Absorption (existential) in Contractor Appointment of Claim in "Contractor Appointment involves Claim"
 #       Foreign Key from Contractor Appointment to Party over Absorption (existential) in Contractor Appointment of Contractor in "Contractor Appointment involves Contractor"
@@ -124,7 +123,6 @@
 #         IndexField part 3 in Cover references Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
 #         IndexField part 4 in Cover references Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
 #         IndexField part 5 in Cover references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
-#     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Cover to Asset over Absorption (existential) in Cover of Asset in "Cover involves Asset"
 #       Foreign Key from Cover to Cover Type over Absorption (existential) in Cover of Cover Type in "Cover involves Cover Type"
@@ -142,7 +140,6 @@
 #     Foreign keys inbound
 #       Foreign Key from Cover to Cover Type over Absorption (existential) in Cover of Cover Type in "Cover involves Cover Type"
 #       Foreign Key from Cover Wording to Cover Type over Absorption (existential) in Cover Wording of Cover Type in "Cover Wording involves Cover Type"
-#     Foreign keys outbound
 #   Composite Mapping (top) of Cover Wording
 #     Columns
 #       Mapping (top) of Cover Wording
@@ -156,7 +153,6 @@
 #         IndexField part 0 in Cover Wording references Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
 #         IndexField part 1 in Cover Wording references Absorption (existential) in Policy Wording of Policy Wording Text in "Policy Wording has Policy Wording Text"
 #         IndexField part 2 in Cover Wording references Absorption (existential) in Cover Wording of Date in "Cover Wording involves Date"
-#     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Cover Wording to Cover Type over Absorption (existential) in Cover Wording of Cover Type in "Cover Wording involves Cover Type"
 #   Composite Mapping (top) of Loss Type
@@ -172,7 +168,6 @@
 #         IndexField part 0 in Loss Type references Absorption (existential) in Loss Type of Loss Type Code in "Loss Type has Loss Type Code"
 #     Foreign keys inbound
 #       Foreign Key from Vehicle Incident to Loss Type over Absorption (optional) in Vehicle Incident of Loss Type in "Vehicle Incident resulted from Loss Type"
-#     Foreign keys outbound
 #   Composite Mapping (top) of Lost Item
 #     Columns
 #       Mapping (top) of Lost Item
@@ -188,7 +183,6 @@
 #       Primary index to Lost Item over PresenceConstraint over (Incident, Lost-Item-Nr) occurs at most one time
 #         IndexField part 0 in Lost Item references Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
 #         IndexField part 1 in Lost Item references Absorption (existential) in Lost Item of Lost Item Nr in "Lost Item has Lost Item Nr"
-#     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Lost Item to Claim over Absorption (existential) in Lost Item of Incident in "Lost Item was lost in Incident"
 #   Composite Mapping (top) of Party
@@ -313,7 +307,6 @@
 #         IndexField part 0 in Product references Absorption (optional) in Product of Description in "Product has Description"
 #     Foreign keys inbound
 #       Foreign Key from Policy to Product over Absorption (existential) in Policy of p_product in "Policy is for product having Product"
-#     Foreign keys outbound
 #   Composite Mapping (top) of Property Damage
 #     Columns
 #       Mapping (top) of Property Damage
@@ -336,7 +329,6 @@
 #         IndexField part 2 in Property Damage references Absorption (existential) in Address of City in "Address is in City"
 #         IndexField part 3 in Property Damage references Absorption (existential) in Address of Postcode in "Address is in Postcode"
 #         IndexField part 4 in Property Damage references Absorption (existential) in State of State Code in "State has State Code"
-#     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Property Damage to State over Absorption (existential) in Address of State in "Address is in State"
 #       Foreign Key from Property Damage to Claim over Absorption (existential) in Property Damage of Incident in "Property Damage was damaged in Incident"
@@ -357,7 +349,6 @@
 #       Foreign Key from Policy to State over Absorption (existential) in Policy of p_state in "Policy issued in state having State"
 #       Foreign Key from Property Damage to State over Absorption (existential) in Address of State in "Address is in State"
 #       Foreign Key from Witness to State over Absorption (existential) in Address of State in "Address is in State"
-#     Foreign keys outbound
 #   Composite Mapping (top) of Third Party
 #     Columns
 #       Mapping (top) of Third Party
@@ -383,7 +374,6 @@
 #       Primary index to Third Party over PresenceConstraint over (Person, Vehicle-Incident) occurs at most one time
 #         IndexField part 0 in Third Party references Absorption (mandatory) in Person of Party ID in "Party has Party ID"
 #         IndexField part 1 in Third Party references Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
-#     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Third Party to Party over Absorption (existential) in Third Party of Person in "Third Party involves Person"
 #       Foreign Key from Third Party to Vehicle Incident over Absorption (existential) in Third Party of Vehicle Incident in "Third Party involves Vehicle Incident"
@@ -401,7 +391,6 @@
 #       Primary index to Underwriting Demerit over PresenceConstraint over (Vehicle-Incident, Underwriting-Question) occurs at most one time
 #         IndexField part 0 in Underwriting Demerit references Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
 #         IndexField part 1 in Underwriting Demerit references Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
-#     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Underwriting Demerit to Underwriting Question over Absorption (existential) in Underwriting Demerit of Underwriting Question in "Underwriting Demerit has Underwriting Question"
 #       Foreign Key from Underwriting Demerit to Vehicle Incident over Absorption (existential) in Underwriting Demerit of Vehicle Incident in "Underwriting Demerit preceded Vehicle Incident"
@@ -417,7 +406,6 @@
 #         IndexField part 0 in Underwriting Question references Absorption (mandatory) in Underwriting Question of Text in "Underwriting Question has Text"
 #     Foreign keys inbound
 #       Foreign Key from Underwriting Demerit to Underwriting Question over Absorption (existential) in Underwriting Demerit of Underwriting Question in "Underwriting Demerit has Underwriting Question"
-#     Foreign keys outbound
 #   Composite Mapping (top) of Vehicle Incident
 #     Columns
 #       Mapping (top) of Vehicle Incident
@@ -475,7 +463,6 @@
 #       Primary index to Witness over PresenceConstraint over (Incident, Name) occurs at most one time
 #         IndexField part 0 in Witness references Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
 #         IndexField part 1 in Witness references Absorption (existential) in Witness of Name in "Witness is called Name"
-#     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Witness to State over Absorption (existential) in Address of State in "Address is in State"
 #       Foreign Key from Witness to Claim over Absorption (existential) in Witness of Incident in "Witness saw Incident"
