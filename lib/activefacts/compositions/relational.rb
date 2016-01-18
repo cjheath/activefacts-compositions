@@ -325,7 +325,7 @@ module ActiveFacts
 	    object_type = member.child_role.object_type
 	    if fa = @composition.all_full_absorption[member.child_role.object_type]
 	      # The target object is fully absorbed. Absorb a key to where it was absorbed
-	      absorb_key member, fa.absorption.root.mapping, paths
+	      absorb_key member, fa.absorption.parent, paths
 	    else
 	      absorb_key member, @binary_mappings[member.child_role.object_type], paths
 	    end
