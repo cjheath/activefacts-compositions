@@ -24,8 +24,7 @@
 #               0: Absorption (subtype) in Finance Institution of Company in "Company is a kind of Party"
 #                 0: Absorption (mandatory) in Company of Party ID in "Party has Party ID"
 #     Indices
-#       Primary index to Asset over PresenceConstraint over (Asset-ID) occurs at most one time DUPLICATE
-#       Unique index to Asset over PresenceConstraint over (Asset-ID) occurs at most one time
+#       Primary index to Asset over PresenceConstraint over (Asset-ID) occurs at most one time
 #         IndexField part 0 in Asset references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
 #       Unique index to Asset over PresenceConstraint over (VIN) occurs at most one time
 #         IndexField part 0 in Asset references Absorption (existential) in Vehicle of VIN in "Vehicle has VIN"
@@ -246,14 +245,8 @@
 #               0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
 #           7: Absorption (optional) in Person of Occupation in "Person has Occupation"
 #     Indices
-#       Unique index to Party over PresenceConstraint over (Party-ID) occurs at most one time DUPLICATE
-#       Unique index to Party over PresenceConstraint over (Party-ID) occurs at most one time DUPLICATE
 #       Primary index to Party over PresenceConstraint over (Party-ID) occurs at most one time
-#       Unique index to Party over PresenceConstraint over (Party-ID) occurs at most one time DUPLICATE
-#       Unique index to Party over PresenceConstraint over (Party-ID) occurs at most one time DUPLICATE
-#       Unique index to Party over PresenceConstraint over (Party-ID) occurs at most one time DUPLICATE
 #         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
-MISSING License Number
 #     Foreign keys inbound
 #       Foreign Key from Asset to Party over Absorption (optional) in Vehicle of Dealer in "Vehicle was sold by Dealer"
 #       Foreign Key from Asset to Party over Absorption (optional) in Vehicle of Finance Institution in "Vehicle is subject to finance with Finance Institution"
@@ -293,7 +286,6 @@ MISSING License Number
 #           1: Absorption (subtype) in Motor Policy of Single Motor Policy in "Motor Policy is a Single Motor Policy"
 #     Indices
 #       Primary index to Policy over PresenceConstraint over (p_year, p_product, p_state, p_serial) occurs at most one time
-#       Unique index to Policy over PresenceConstraint over (p_year, p_product, p_state, p_serial) occurs at most one time DUPLICATE
 #         IndexField part 0 in Policy references Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
 #         IndexField part 1 in Policy references Absorption (existential) in p_product of Product Code in "Product has Product Code"
 #         IndexField part 2 in Policy references Absorption (existential) in p_state of State Code in "State has State Code"
@@ -373,6 +365,8 @@ MISSING License Number
 #           0: Absorption (subtype) in Person of Person in "Person is a kind of Party"
 #             0: Absorption (mandatory) in Person of Party ID in "Party has Party ID"
 #         1: Absorption (existential) in Third Party of Vehicle Incident in "Third Party involves Vehicle Incident"
+#           0: Absorption (supertype) in Vehicle Incident of Incident in "Vehicle Incident is a kind of Incident"
+#             0: Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
 #         2: Absorption (optional) in Third Party of Insurer in "Third Party is insured by Insurer"
 #           0: Absorption (subtype) in Insurer of Insurer in "Insurer is a kind of Company"
 #             0: Absorption (subtype) in Insurer of Company in "Company is a kind of Party"
@@ -388,7 +382,7 @@ MISSING License Number
 #     Indices
 #       Primary index to Third Party over PresenceConstraint over (Person, Vehicle-Incident) occurs at most one time
 #         IndexField part 0 in Third Party references Absorption (mandatory) in Person of Party ID in "Party has Party ID"
-MISSING IndexField Vehicle Incident ClaimID
+#         IndexField part 1 in Third Party references Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Third Party to Party over Absorption (existential) in Third Party of Person in "Third Party involves Person"
@@ -398,13 +392,15 @@ MISSING IndexField Vehicle Incident ClaimID
 #     Columns
 #       Mapping (top) of Underwriting Demerit
 #         0: Absorption (existential) in Underwriting Demerit of Vehicle Incident in "Underwriting Demerit preceded Vehicle Incident"
+#           0: Absorption (supertype) in Vehicle Incident of Incident in "Vehicle Incident is a kind of Incident"
+#             0: Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
 #         1: Absorption (existential) in Underwriting Demerit of Underwriting Question in "Underwriting Demerit has Underwriting Question"
 #           0: Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
 #         2: Absorption (optional) in Underwriting Demerit of Occurrence Count in "Underwriting Demerit occurred occurrence-Count times"
 #     Indices
 #       Primary index to Underwriting Demerit over PresenceConstraint over (Vehicle-Incident, Underwriting-Question) occurs at most one time
-MISSING IndexField Vehicle Incident ClaimID
-#         IndexField part 0 in Underwriting Demerit references Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
+#         IndexField part 0 in Underwriting Demerit references Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
+#         IndexField part 1 in Underwriting Demerit references Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
 #     Foreign keys inbound
 #     Foreign keys outbound
 #       Foreign Key from Underwriting Demerit to Underwriting Question over Absorption (existential) in Underwriting Demerit of Underwriting Question in "Underwriting Demerit has Underwriting Question"

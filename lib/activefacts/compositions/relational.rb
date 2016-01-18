@@ -318,11 +318,17 @@ module ActiveFacts
       def absorb_key mapping, target, paths
 	target.re_rank
 	target.all_member.sort_by(&:ordinal).each do |member|
-	  next unless member.rank_key[0] == MM::Component::RANK_IDENT
+	  next unless member.rank_key[0] <= MM::Component::RANK_IDENT
 	  member = fork_component_to_new_parent mapping, member
 	  augment_paths paths, member
 	  if member.is_a?(MM::Absorption)
-	    absorb_key member, @binary_mappings[member.child_role.object_type], paths
+	    object_type = member.child_role.object_type
+	    if fa = @composition.all_full_absorption[member.child_role.object_type]
+	      # The target object is fully absorbed. Absorb a key to where it was absorbed
+	      absorb_key member, fa.absorption.root.mapping, paths
+	    else
+	      absorb_key member, @binary_mappings[member.child_role.object_type], paths
+	    end
 	  end
 	end
 	# mapping.re_rank
@@ -338,7 +344,8 @@ module ActiveFacts
 	if mapping.composite || mapping.full_absorption
 	  pcs = find_uniqueness_constraints(mapping)
 
-	  newpaths = make_new_paths mapping, paths.keys, pcs
+	  existing_pcs = @constellation.Index.values.map{|i| i.presence_constraint}
+	  newpaths = make_new_paths mapping, paths.keys+existing_pcs, pcs
 	end
 
 	from.re_rank
@@ -618,4 +625,11 @@ module ActiveFacts
     end
   end
 
+=begin
+  module Metamodel
+    class Index
+      attr_accessor :mapping
+    end
+  end
+=end
 end

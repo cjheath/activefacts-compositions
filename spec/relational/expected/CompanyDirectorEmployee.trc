@@ -65,7 +65,6 @@
 #           0: Indicator "Manager is ceo" (as "Is Ceo")
 #     Indices
 #       Primary index to Employee over PresenceConstraint over (Employee-Nr) occurs at most one time
-#       Unique index to Employee over PresenceConstraint over (Employee-Nr) occurs at most one time
 #         IndexField part 0 in Employee references Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
 #     Foreign keys inbound
 #       Foreign Key from Employee to Employee over Absorption (optional) in Employee of Manager in "Employee is supervised by Manager"

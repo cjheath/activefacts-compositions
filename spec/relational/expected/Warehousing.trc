@@ -70,9 +70,7 @@
 #         1: Absorption (subtype) in Party of Customer (full) in "Party is a Customer"
 #         2: Absorption (subtype) in Party of Supplier (full) in "Party is a Supplier"
 #     Indices
-#       Unique index to Party over PresenceConstraint over (Party-ID) occurs at most one time
 #       Primary index to Party over PresenceConstraint over (Party-ID) occurs at most one time
-#       Unique index to Party over PresenceConstraint over (Party-ID) occurs at most one time
 #         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
 #     Foreign keys inbound
 #       Foreign Key from Purchase Order to Party over Absorption (mandatory) in Purchase Order of Supplier in "Purchase Order is to Supplier"
