@@ -471,6 +471,11 @@ module ActiveFacts
       def augment_paths paths, mapping
 	return unless MM::Indicator === mapping || MM::ValueType === mapping.object_type
 
+	if MM::ValueField === mapping && mapping.parent.composite   # ValueType that's a composite (table) by itself
+	  # This AccessPath has exactly one field and no presence constraint, so just make the index.
+	  paths[nil] = @constellation.Index(:new, composite: mapping.root, is_unique: true, presence_constraint: nil, composite_as_primary_index: mapping.root)
+	end
+
 	paths.each do |pc, path|
 	  @constellation.IndexField(
 	    access_path: path,
