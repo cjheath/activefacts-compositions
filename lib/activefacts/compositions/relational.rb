@@ -344,7 +344,8 @@ module ActiveFacts
 	if mapping.composite || mapping.full_absorption
 	  pcs = find_uniqueness_constraints(mapping)
 
-	  existing_pcs = @constellation.Index.values.map{|i| i.presence_constraint}
+	  # Don't build an index from the same PresenceConstraint twice on the same composite (e.g. for a subtype)
+	  existing_pcs = mapping.root.all_access_path.select{|ap| MM::Index === ap}.map(&:presence_constraint)
 	  newpaths = make_new_paths mapping, paths.keys+existing_pcs, pcs
 	end
 
