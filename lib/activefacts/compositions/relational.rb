@@ -3,6 +3,9 @@
 #
 #	Computes an Optimal Normal Form (close to 5NF) relational schema.
 #
+# Options to the constructor:
+#   single_sequence: The database technology can only increment one sequence per table (MS-SQL)
+#
 # Copyright (c) 2015 Clifford Heath. Read the LICENSE file.
 #
 require "activefacts/compositions"
@@ -51,7 +54,7 @@ module ActiveFacts
 
       def make_candidates
 	@candidates = @binary_mappings.inject({}) do |hash, (absorption, mapping)|
-	  hash[mapping.object_type] = Candidate.new(mapping)
+	  hash[mapping.object_type] = Candidate.new(self, mapping)
 	  hash
 	end
       end
@@ -515,7 +518,8 @@ module ActiveFacts
 	attr_reader :mapping, :is_table, :is_tentative
 	attr_accessor :full_absorption
 
-	def initialize mapping
+	def initialize compositor, mapping
+	  @compositor = compositor
 	  @mapping = mapping
 	end
 
@@ -610,14 +614,18 @@ module ActiveFacts
 	      return
 	    end	# subtype
 
-	    v = nil
-	    if references_to.size > 1 and   # Can be absorbed in more than one place
-		o.preferred_identifier.role_sequence.all_role_ref.detect do |rr|
-                  # If the preferred_identifier includes a ValueType that's auto-assigned ON COMMIT (like an SQL sequence), we need a single table to control the sequence.
-                  # REVISIT: This enforces it also for auto-assignment ON ASSERT, and where the ValueType is actually just a foreign key to another object (in a composite PI)
-		  (v = rr.role.object_type).is_a?(MM::ValueType) and v.is_auto_assigned
-		end
-	      trace :relational_mapping, "#{o.name} must be a table to support its auto-assigned identifier #{v.name}"
+	    # If the preferred_identifier consists of a ValueType that's auto-assigned ON COMMIT (like an SQL sequence),
+	    # that can only happen in one table, which controls the sequence.
+	    auto_assigned_identifying_role_player = nil
+	    pi_role_refs = o.preferred_identifier.role_sequence.all_role_ref
+	    if pi_role_refs.size == 1 and
+		rr = pi_role_refs.single and
+		(v = rr.role.object_type).is_a?(MM::ValueType) and
+		v.is_auto_assigned == 'commit'
+	      auto_assigned_identifying_role_player = v
+	    end
+	    if (@compositor.options['single_sequence'] || references_to.size > 1) and auto_assigned_identifying_role_player   # Can be absorbed in more than one place
+	      trace :relational_defaults, "#{o.name} must be a table to support its auto-assigned identifier #{auto_assigned_identifying_role_player.name}"
 	      definitely_table
 	      return
 	    end
@@ -632,12 +640,4 @@ module ActiveFacts
 
     end
   end
-
-=begin
-  module Metamodel
-    class Index
-      attr_accessor :mapping
-    end
-  end
-=end
 end

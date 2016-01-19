@@ -12,11 +12,15 @@ require 'activefacts/metamodel'
 require 'activefacts/compositions/binary'
 require 'activefacts/compositions/relational'
 
-arg = ARGV.shift
+options = {}
+while arg = ARGV.shift and arg =~ /^-/
+  option, value = arg.split(/=/, 2)
+  options[option.sub(/^-*/,'')] = value =~ /,/ ? value.split(',') : (value || true)
+end
 
 # Load the file type input method
 if arg
-  arg, *options = *arg.split(/=/)
+  arg, input_options = *arg.split(/=/, 2)
   extension = arg.sub(/\A.*\./,'').downcase
   input_handler = "activefacts/input/#{extension}"
   require input_handler
@@ -29,7 +33,7 @@ end
 # Read the input file:
 begin
   if input_klass
-    vocabulary = input_klass.readfile(arg, *options)
+    vocabulary = input_klass.readfile(arg, *input_options)
   else
     vocabulary = true
   end
@@ -38,7 +42,7 @@ begin
 
   vocabulary.finalise unless vocabulary == true
 
-  compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, "test")
+  compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, "test", options)
   compositor.generate
 
 rescue => e

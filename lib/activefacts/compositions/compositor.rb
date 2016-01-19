@@ -16,6 +16,8 @@ require "activefacts/metamodel"
 module ActiveFacts
   module Compositions
     class Compositor
+      attr_reader :options, :name
+
       def initialize constellation, name, options = {}
 	@constellation = constellation
 	@name = name
