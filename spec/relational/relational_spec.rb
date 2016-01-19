@@ -74,8 +74,8 @@ describe "Relational absorption from CQL" do
       if expected_text
 	expect(output).to be_like(expected_text), "Output #{actual} doesn't match expected #{expected}"
       else
-	pending "Expected file #{expected} not found, actual output saved in #{actual}"
-	raise exception
+	pending "Actual output in #{actual} can't be compared with missing expected file #{expected}"
+	expect(expected_text).to_not be_nil, "I don't know what to expect"
       end
     end
   end
