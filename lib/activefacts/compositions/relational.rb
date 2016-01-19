@@ -17,9 +17,9 @@ module ActiveFacts
       MM = ActiveFacts::Metamodel
     public
       def generate
-	trace :relational_mapping, "Generating relational composition" do
-	  super
+	super
 
+	trace :relational_details!, "Generating relational composition" do
 	  # Make a data structure to help in computing the tables
 	  make_candidates
 
@@ -43,11 +43,11 @@ module ActiveFacts
 
 	  # Remove mappings for objects we have absorbed
 	  clean_unused_mappings
+	end
 
-	  trace :relational!, "Full relational composition" do
-	    @composition.all_composite.sort_by{|composite| composite.mapping.name}.each do |composite|
-	      composite.show_trace
-	    end
+	trace :relational!, "Full relational composition" do
+	  @composition.all_composite.sort_by{|composite| composite.mapping.name}.each do |composite|
+	    composite.show_trace
 	  end
 	end
       end
@@ -74,20 +74,19 @@ module ActiveFacts
 	  finalised = []
 	  begin
 	    pass += 1
-	    trace :relational_mapping, "Starting optimisation pass #{pass}" do
+	    trace :relational_optimiser, "Starting optimisation pass #{pass}" do
 	      finalised = optimise_absorption_pass(undecided)
 	    end
-	    trace :relational_mapping, "Finalised #{finalised.size} on this pass: #{finalised.map{|f| f.name}*', '}"
+	    trace :relational_optimiser, "Finalised #{finalised.size} on this pass: #{finalised.map{|f| f.name}*', '}"
 	    undecided -= finalised
 	  end while !finalised.empty?
 	end
       end
 
       def optimise_absorption_pass undecided
-	possible_flips = {}
 	undecided.select do |object_type|
 	  candidate = @candidates[object_type]
-	  trace :relational_mapping, "Considering possible status of #{object_type.name}" do
+	  trace :relational_optimiser, "Considering possible status of #{object_type.name}" do
 
 	    # Rule 1: Always absorb an objectified unary into its role player (unless its forced to be separate)
 	    if !object_type.is_separate && (f = object_type.fact_type) && f.all_role.size == 1
@@ -96,7 +95,7 @@ module ActiveFacts
 	      absorbing_ref = absorbing_ref.flip!
 	      candidate.full_absorption =
 		@constellation.FullAbsorption(composition: @composition, absorption: absorbing_ref, object_type: object_type)
-	      trace :relational_mapping, "Absorb objectified unary #{object_type.name} into #{f.all_role.single.object_type.name}"
+	      trace :relational_optimiser, "Absorb objectified unary #{object_type.name} into #{f.all_role.single.object_type.name}"
 	      candidate.definitely_not_table
 	      next object_type
 	    end
@@ -118,7 +117,7 @@ module ActiveFacts
 	      absorbing_ref = absorbing_ref.forward_absorption || absorbing_ref.flip!
 	      candidate.full_absorption =
 		@constellation.FullAbsorption(composition: @composition, absorption: absorbing_ref, object_type: object_type)
-	      trace :relational_mapping, "EntityType #{single_pi_role.object_type.name} identifies EntityType #{object_type.name}, so absorbs it"
+	      trace :relational_optimiser, "EntityType #{single_pi_role.object_type.name} identifies EntityType #{object_type.name}, so absorbs it"
 	      candidate.definitely_not_table
 	      next object_type
 	    end
@@ -135,20 +134,20 @@ module ActiveFacts
 		  false
 		end
 	      end
-	    trace :relational_mapping, "#{object_type.name} has #{non_identifying_refs_from.size} non-identifying functional roles" do
+	    trace :relational_optimiser, "#{object_type.name} has #{non_identifying_refs_from.size} non-identifying functional roles" do
 	      non_identifying_refs_from.each do |a|
-		trace :relational_mapping, a.inspect
+		trace :relational_optimiser, a.inspect
 	      end
 	    end
 
-	    trace :relational_mapping, "#{object_type.name} has #{candidate.references_to.size} references to it" do
+	    trace :relational_optimiser, "#{object_type.name} has #{candidate.references_to.size} references to it" do
 	      candidate.references_to.each do |a|
-		trace :relational_mapping, a.inspect
+		trace :relational_optimiser, a.inspect
 	      end
 	    end
 	    if candidate.references_to.size > 1 and	  # More than one place wants us
 		non_identifying_refs_from.size > 0	  # And we carry dependent values so cannot be absorbed
-	      trace :relational_mapping, "#{object_type.name} has #{non_identifying_refs_from.size} non-identifying functional dependencies and #{candidate.references_to.size} absorption paths so 3NF requires it be a table"
+	      trace :relational_optimiser, "#{object_type.name} has #{non_identifying_refs_from.size} non-identifying functional dependencies and #{candidate.references_to.size} absorption paths so 3NF requires it be a table"
 	      candidate.definitely_table
 	      next object_type
 	    end
@@ -179,14 +178,14 @@ module ActiveFacts
 		true
 	      end
 
-	    trace :relational_mapping, "#{object_type.name} has #{absorption_paths.size} absorption paths"
+	    trace :relational_optimiser, "#{object_type.name} has #{absorption_paths.size} absorption paths"
 
 	    # Rule 4: If this object can be fully absorbed along non-identifying roles, do that (maybe flip some absorptions)
 	    if absorption_paths.size > 0
-	      trace :relational_mapping, "#{object_type.name} is fully absorbed in #{absorption_paths.size} places" do
+	      trace :relational_optimiser, "#{object_type.name} is fully absorbed in #{absorption_paths.size} places" do
 		absorption_paths.each do |a|
 		  a = a.flip! if a.forward_absorption
-		  trace :relational_mapping, "#{object_type.name} is fully absorbed via #{a.inspect}"
+		  trace :relational_optimiser, "#{object_type.name} is fully absorbed via #{a.inspect}"
 		end
 	      end
 
@@ -202,7 +201,7 @@ module ActiveFacts
 		a = a.flip! if a.reverse_absorption   # We were forward, but the other end must be
 		a.forward_absorption
 	      end
-	      trace :relational_mapping, "#{object_type.name} is fully absorbed in #{refs_to.size} places: #{refs_to.map{|ref| ref.inspect}*", "}"
+	      trace :relational_optimiser, "#{object_type.name} is fully absorbed in #{refs_to.size} places: #{refs_to.map{|ref| ref.inspect}*", "}"
 	      candidate.definitely_not_table
 	      next object_type
 	    end
@@ -246,7 +245,7 @@ module ActiveFacts
 	  mapping = composite.mapping
 	  if mapping.object_type.is_a?(MM::ValueType) and		# Composite needs a ValueField
 	      !mapping.all_member.detect{|m| m.is_a?(MM::ValueField)}	# And don't already have one
-	    trace :relational_mapping, "Adding value field for #{mapping.object_type.name}"
+	    trace :relational_columns, "Adding value field for #{mapping.object_type.name}"
 	    @constellation.ValueField(
 	      :new,
 	      parent: mapping,
@@ -272,7 +271,7 @@ module ActiveFacts
       def absorb_all_columns
 	trace :relational_columns!, "Absorbing full contents of all tables" do
 	  @composition.all_composite_by_name.each do |composite|
-	    trace :relational_mapping, "Absorbing contents of #{composite.mapping.name}" do
+	    trace :relational_columns, "Absorbing contents of #{composite.mapping.name}" do
 	      absorb_all composite.mapping, composite.mapping
 	    end
 	  end
@@ -287,7 +286,7 @@ module ActiveFacts
 	child_object_type = member.child_role.object_type
 	table = @candidates[child_object_type]
 	child_mapping = @binary_mappings[child_object_type]
-	trace :relational_mapping?, "Absorbing #{member.child_role.name} in #{member.inspect_reading}" do
+	trace :relational_columns?, "Absorbing #{member.child_role.name} in #{member.inspect_reading}" do
 	  if table
 	    @constellation.ForeignKey(:new, source_composite: mapping.root, composite: child_mapping.composite, absorption: member)
 	    absorb_key member, child_mapping, paths
@@ -355,7 +354,7 @@ module ActiveFacts
 	from.re_rank
 	ordered = from.all_member.sort_by(&:ordinal)
 	ordered.each do |member|
-	  trace :relational_mapping, proc {"#{top_level ? 'Existing' : 'Absorbing'} #{member.inspect}"} do
+	  trace :relational_columns, proc {"#{top_level ? 'Existing' : 'Absorbing'} #{member.inspect}"} do
 	    unless top_level    # Top-level members are already instantiated
 	      member = fork_component_to_new_parent(mapping, member)
 	    end
@@ -427,9 +426,9 @@ module ActiveFacts
 	end
 	pcs = non_absorption_pcs
 
-	trace :relational_uniqueness, "Uniqueness Constraints for #{mapping.object_type.name}" do
+	trace :relational_index, "Uniqueness Constraints for #{mapping.object_type.name}" do
 	  pcs.each do |pc|
-	    trace :relational_uniqueness, "#{pc.describe.inspect}#{pc.is_preferred_identifier ? ' (PI)' : ''}"
+	    trace :relational_index, "#{pc.describe.inspect}#{pc.is_preferred_identifier ? ' (PI)' : ''}"
 	  end
 	end
 
@@ -564,7 +563,7 @@ module ActiveFacts
 	def assign_default composition
 	  o = object_type
 	  if o.is_separate
-	    trace :relational_mapping, "#{o.name} is a table because it's declared independent or separate"
+	    trace :relational_defaults, "#{o.name} is a table because it's declared independent or separate"
 	    definitely_table
 	    return
 	  end
@@ -572,13 +571,13 @@ module ActiveFacts
 	  case o
 	  when MM::ValueType
 	    if o.is_auto_assigned
-	      trace :relational_mapping, "#{o.name} is not a table because it is auto assigned"
+	      trace :relational_defaults, "#{o.name} is not a table because it is auto assigned"
 	      definitely_not_table
 	    elsif references_from.size > 0
-	      trace :relational_mapping, "#{o.name} is a table because it has references to absorb"
+	      trace :relational_defaults, "#{o.name} is a table because it has references to absorb"
 	      definitely_table
 	    else
-	      trace :relational_mapping, "#{o.name} is not a table because it will be absorbed wherever needed"
+	      trace :relational_defaults, "#{o.name} is not a table because it will be absorbed wherever needed"
 	      definitely_not_table
 	    end
 
@@ -587,7 +586,7 @@ module ActiveFacts
 		!references_from.detect do |absorption|	  # detect whether anything can absorb this entity type
 		  absorption.is_a?(MM::Mapping) && absorption.parent_role.is_unique && absorption.child_role.is_unique
 		end
-	      trace :relational_mapping, "#{o.name} is a table because it has nothing to absorb it"
+	      trace :relational_defaults, "#{o.name} is a table because it has nothing to absorb it"
 	      definitely_table
 	      return
 	    end
@@ -598,7 +597,7 @@ module ActiveFacts
 		fact_type = identifying_fact_type
 	      else
 		if o.all_type_inheritance_as_subtype.size > 1
-		  trace :relational_mapping, "REVISIT: #{o.name} cannot be absorbed into a supertype that doesn't also absorb all our other supertypes (or is absorbed into one of its supertypes that does)"
+		  trace :relational_defaults, "REVISIT: #{o.name} cannot be absorbed into a supertype that doesn't also absorb all our other supertypes (or is absorbed into one of its supertypes that does)"
 		end
 		fact_type = o.all_type_inheritance_as_subtype.to_a[0]
 	      end
@@ -609,7 +608,7 @@ module ActiveFacts
 	      absorbing_ref = absorbing_ref.forward_absorption
 	      self.full_absorption =
 		o.constellation.FullAbsorption(composition: composition, absorption: absorbing_ref, object_type: o)
-	      trace :relational_mapping, "Supertype #{fact_type.supertype_role.name} absorbs subtype #{o.name}"
+	      trace :relational_defaults, "Supertype #{fact_type.supertype_role.name} absorbs subtype #{o.name}"
 	      definitely_not_table
 	      return
 	    end	# subtype
@@ -630,7 +629,7 @@ module ActiveFacts
 	      return
 	    end
 
-	    trace :relational_mapping, "#{o.name} is initially presumed to be a table"
+	    trace :relational_defaults, "#{o.name} is initially presumed to be a table"
 	    probably_table
 
 	  end	# case
