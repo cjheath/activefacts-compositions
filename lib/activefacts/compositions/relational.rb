@@ -509,7 +509,7 @@ module ActiveFacts
 
       # Make a new Absorption in the reverse direction from the one given
       def mirror absorption, parent
-	@constellation.fork absorption, guid: :new, parent: parent, parent_role: absorption.child_role, child_role: absorption.parent_role, ordinal: 0
+	@constellation.fork absorption, guid: :new, object_type: absorption.parent_role.object_type, parent: parent, parent_role: absorption.child_role, child_role: absorption.parent_role, ordinal: 0, name: absorption.parent_role.name
       end
 
       # A candidate is a Mapping of an object type which may become a Composition (a table, in relational-speak)
