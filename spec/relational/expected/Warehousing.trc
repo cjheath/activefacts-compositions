@@ -91,8 +91,8 @@
 #       Mapping (top) of Purchase Order
 #         0: Absorption (existential) in Purchase Order of Purchase Order ID in "Purchase Order has Purchase Order ID"
 #         1: Absorption (mandatory) in Purchase Order of Supplier in "Purchase Order is to Supplier"
-#           0: Absorption (subtype) in Supplier of Supplier in "Supplier is a kind of Party"
-#             0: Absorption (mandatory) in Supplier of Party ID in "Party has Party ID"
+#           0: Absorption (supertype) in Supplier of Party in "Supplier is a kind of Party"
+#             0: Absorption (existential) in Party of Party ID in "Party has Party ID"
 #         2: Absorption (mandatory) in Purchase Order of Warehouse in "Purchase Order is to Warehouse"
 #           0: Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Indices
@@ -149,8 +149,8 @@
 #       Mapping (top) of Sales Order
 #         0: Absorption (existential) in Sales Order of Sales Order ID in "Sales Order has Sales Order ID"
 #         1: Absorption (mandatory) in Sales Order of Customer in "Sales Order was made by Customer"
-#           0: Absorption (subtype) in Customer of Customer in "Customer is a kind of Party"
-#             0: Absorption (mandatory) in Customer of Party ID in "Party has Party ID"
+#           0: Absorption (supertype) in Customer of Party in "Customer is a kind of Party"
+#             0: Absorption (existential) in Party of Party ID in "Party has Party ID"
 #         2: Absorption (mandatory) in Sales Order of Warehouse in "Sales Order is from Warehouse"
 #           0: Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Indices

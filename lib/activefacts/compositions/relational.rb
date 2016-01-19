@@ -195,8 +195,8 @@ module ActiveFacts
 
 	    # Rule 5: If this object has no functional dependencies (only its identifier), it can be absorbed in multiple places
 	    # We don't create FullAbsorptions, because they're only used to resolve references to this object; and there are none here
-	    if non_identifying_refs_from.size == 0
-	      refs_to = candidate.references_to.to_a
+	    refs_to = candidate.references_to.reject{|a|a.parent_role.base_role.is_identifying}
+	    if !refs_to.empty? and non_identifying_refs_from.size == 0
 	      refs_to.map! do |a|
 		a = a.flip! if a.reverse_absorption   # We were forward, but the other end must be
 		a.forward_absorption
@@ -269,9 +269,9 @@ module ActiveFacts
 
       # Absorb all items which aren't tables (and keys to those which are) recursively
       def absorb_all_columns
-	trace :relational_columns!, "Absorbing full contents of all tables" do
+	trace :relational_columns!, "Computing contents of all tables" do
 	  @composition.all_composite_by_name.each do |composite|
-	    trace :relational_columns, "Absorbing contents of #{composite.mapping.name}" do
+	    trace :relational_columns, "Computing contents of #{composite.mapping.name}" do
 	      absorb_all composite.mapping, composite.mapping
 	    end
 	  end
@@ -299,13 +299,14 @@ module ActiveFacts
 	  # if full_absorption && full_absorption != member.full_absorption
 	  if full_absorption && full_absorption.absorption.parent_role.fact_type != member.parent_role.fact_type
 
+	    # REVISIT: This should be done by recursing to absorb_key, not using a loop
 	    absorption = member	# Retain this for the ForeignKey
 	    begin     # Follow transitive target absorption 
 	      member = mirror(full_absorption.absorption, member)
 	      child_object_type = full_absorption.absorption.parent_role.object_type
 	    end while full_absorption = child_object_type.all_full_absorption[@composition]
-
 	    child_mapping = @binary_mappings[child_object_type]
+
 	    @constellation.ForeignKey(:new, source_composite: mapping.root, composite: child_mapping.composite, absorption: absorption)
 	    absorb_key member, child_mapping, paths
 	    return

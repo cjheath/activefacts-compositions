@@ -1,9 +1,15 @@
+#
+# Test the binary composition from CQL files by comparing specific trace output
+#
+
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../../Gemfile', __FILE__)
 require 'bundler/setup' # Set up gems listed in the Gemfile.
 
 # require 'spec_helper'
 require 'activefacts/compositions/binary'
 require 'activefacts/input/cql'
+
+CQL_DIR = Pathname.new(__FILE__+'/../').relative_path_from(Pathname(Dir.pwd)).to_s
 
 # Hack into the tracing mechanism to save the output from the :composition key:
 class << trace
@@ -32,11 +38,11 @@ RSpec::Matchers.define :be_like do |expected|
 end
 
 describe "Binary absorption from CQL" do
-  dir = Pathname.new(__FILE__+'/../').relative_path_from(Pathname(Dir.pwd)).to_s
-  actual_dir = dir+'/actual'
+  dir = ENV['CQL_DIR'] || CQL_DIR
+  actual_dir = (ENV['CQL_DIR'] ? '' : CQL_DIR+'/') + 'actual'
   Dir.mkdir actual_dir unless Dir.exist? actual_dir
-  if ENV['TEST_ALL']
-    files = Dir[dir+'/*.cql']
+  if f = ENV['TEST_FILES']
+    files = Dir[dir+"/#{f}*.cql"]
   else
     files = `git ls-files "#{dir}/*.cql"`.split(/\n/)
   end
@@ -46,10 +52,10 @@ describe "Binary absorption from CQL" do
       trace.enable :composition
 
       expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, dir+'/expected/\2.trc')
-      actual = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, dir+'/actual/\2.trc')
+      actual = actual_dir + cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, '/\2.trc')
       begin
 	expected_text = File.read(expected)
-      rescue => exception
+      rescue Errno::ENOENT => exception
       end
 
       vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
@@ -68,8 +74,8 @@ describe "Binary absorption from CQL" do
       if expected_text
 	expect(output).to be_like(expected_text), "Output #{actual} doesn't match expected #{expected}"
       else
-	pending "Expected file #{expected} not found, actual output saved in #{actual}"
-	raise exception
+	pending "Actual output in #{actual} can't be compared with missing expected file #{expected}"
+	expect(expected_text).to_not be_nil, "I don't know what to expect"
       end
     end
   end

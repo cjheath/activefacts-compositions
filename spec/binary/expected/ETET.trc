@@ -1,9 +1,9 @@
 # Mapping (top) of Claim
 #   0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID" (forward)
-#   1: Absorption (optional) in Claim of Incident in "Claim concerns Incident" (forward)
+#   1: Absorption (optional) in Claim of Incident in "Claim concerns Incident" (reverse)
 # Mapping (top) of Claim ID
 #   0: Absorption (optional) in Claim ID of Claim in "Claim ID is of Claim" (reverse)
 # Mapping (top) of ID
 # Mapping (top) of Incident
-#   0: Absorption (existential) in Incident of Claim in "Incident is of Claim" (reverse)
+#   0: Absorption (existential) in Incident of Claim in "Incident is of Claim" (forward)
 #   1: Indicator "Incident has been reported" (as "Has Been Reported")

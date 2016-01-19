@@ -16,13 +16,13 @@
 #             2: Absorption (existential) in Vehicle Type of Badge in "Vehicle Type has Badge"
 #           5: Absorption (optional) in Vehicle of Colour in "Vehicle is of Colour"
 #           6: Absorption (optional) in Vehicle of Dealer in "Vehicle was sold by Dealer"
-#             0: Absorption (subtype) in Dealer of Dealer in "Dealer is a kind of Party"
-#               0: Absorption (mandatory) in Dealer of Party ID in "Party has Party ID"
+#             0: Absorption (supertype) in Dealer of Party in "Dealer is a kind of Party"
+#               0: Absorption (existential) in Party of Party ID in "Party has Party ID"
 #           7: Absorption (optional) in Vehicle of Engine Number in "Vehicle has Engine Number"
 #           8: Absorption (optional) in Vehicle of Finance Institution in "Vehicle is subject to finance with Finance Institution"
-#             0: Absorption (subtype) in Finance Institution of Finance Institution in "Finance Institution is a kind of Company"
-#               0: Absorption (subtype) in Finance Institution of Company in "Company is a kind of Party"
-#                 0: Absorption (mandatory) in Company of Party ID in "Party has Party ID"
+#             0: Absorption (supertype) in Finance Institution of Company in "Finance Institution is a kind of Company"
+#               0: Absorption (supertype) in Company of Party in "Company is a kind of Party"
+#                 0: Absorption (existential) in Party of Party ID in "Party has Party ID"
 #     Indices
 #       Primary index to Asset over PresenceConstraint over (Asset-ID) occurs at most one time
 #         IndexField part 0 in Asset references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
@@ -39,8 +39,8 @@
 #         0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
 #         1: Absorption (mandatory) in Claim of Lodgement (full) in "Lodgement involves Claim"
 #           0: Absorption (mandatory) in Lodgement of Person in "Lodgement involves Person"
-#             0: Absorption (subtype) in Person of Person in "Person is a kind of Party"
-#               0: Absorption (mandatory) in Person of Party ID in "Party has Party ID"
+#             0: Absorption (supertype) in Person of Party in "Person is a kind of Party"
+#               0: Absorption (existential) in Party of Party ID in "Party has Party ID"
 #           1: Absorption (optional) in Lodgement of Date Time in "Lodgement was made at Date Time"
 #         2: Absorption (mandatory) in Claim of Policy in "Claim is on Policy"
 #           0: Absorption (existential) in Policy of p_year in "Policy was issued in Year"
@@ -90,13 +90,13 @@
 #         0: Absorption (existential) in Contractor Appointment of Claim in "Contractor Appointment involves Claim"
 #           0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
 #         1: Absorption (existential) in Contractor Appointment of Contractor in "Contractor Appointment involves Contractor"
-#           0: Absorption (subtype) in Contractor of Contractor in "Contractor is a kind of Company"
-#             0: Absorption (subtype) in Contractor of Company in "Company is a kind of Party"
-#               0: Absorption (mandatory) in Company of Party ID in "Party has Party ID"
+#           0: Absorption (supertype) in Contractor of Company in "Contractor is a kind of Company"
+#             0: Absorption (supertype) in Company of Party in "Company is a kind of Party"
+#               0: Absorption (existential) in Party of Party ID in "Party has Party ID"
 #     Indices
 #       Primary index to Contractor Appointment over PresenceConstraint over (Claim, Contractor) occurs at most one time
 #         IndexField part 0 in Contractor Appointment references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
-#         IndexField part 1 in Contractor Appointment references Absorption (mandatory) in Company of Party ID in "Party has Party ID"
+#         IndexField part 1 in Contractor Appointment references Absorption (existential) in Party of Party ID in "Party has Party ID"
 #     Foreign keys outbound
 #       Foreign Key from Contractor Appointment to Claim over Absorption (existential) in Contractor Appointment of Claim in "Contractor Appointment involves Claim"
 #       Foreign Key from Contractor Appointment to Party over Absorption (existential) in Contractor Appointment of Contractor in "Contractor Appointment involves Contractor"
@@ -172,8 +172,8 @@
 #     Columns
 #       Mapping (top) of Lost Item
 #         0: Absorption (existential) in Lost Item of Incident in "Lost Item was lost in Incident"
-#           0: Absorption (existential) in Incident of Incident in "Incident is of Claim"
-#             0: Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
+#           0: Absorption (existential) in Incident of Claim in "Incident is of Claim"
+#             0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
 #         1: Absorption (existential) in Lost Item of Lost Item Nr in "Lost Item has Lost Item Nr"
 #         2: Absorption (mandatory) in Lost Item of Description in "Lost Item has Description"
 #         3: Absorption (optional) in Lost Item of Purchase Date in "Lost Item was purchased on purchase-Date"
@@ -181,7 +181,7 @@
 #         5: Absorption (optional) in Lost Item of Purchase Price in "Lost Item was purchased for purchase-Price"
 #     Indices
 #       Primary index to Lost Item over PresenceConstraint over (Incident, Lost-Item-Nr) occurs at most one time
-#         IndexField part 0 in Lost Item references Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Lost Item references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
 #         IndexField part 1 in Lost Item references Absorption (existential) in Lost Item of Lost Item Nr in "Lost Item has Lost Item Nr"
 #     Foreign keys outbound
 #       Foreign Key from Lost Item to Claim over Absorption (existential) in Lost Item of Incident in "Lost Item was lost in Incident"
@@ -199,8 +199,8 @@
 #         3: Absorption (subtype) in Party of Authorised Rep (full) in "Party is an Authorised Rep"
 #         4: Absorption (subtype) in Party of Company (full) in "Party is a Company"
 #           0: Absorption (mandatory) in Company of Contact Person in "Company has contact-Person"
-#             0: Absorption (subtype) in Contact Person of Person in "Person is a kind of Party"
-#               0: Absorption (mandatory) in Person of Party ID in "Party has Party ID"
+#             0: Absorption (supertype) in Contact Person of Party in "Person is a kind of Party"
+#               0: Absorption (existential) in Party of Party ID in "Party has Party ID"
 #           1: Absorption (subtype) in Company of Contractor in "Company is a Contractor"
 #             0: Absorption (subtype) in Contractor of Assessor in "Contractor is an Assessor"
 #             1: Absorption (subtype) in Contractor of Investigator in "Contractor is an Investigator"
@@ -269,11 +269,11 @@
 #         4: Absorption (mandatory) in Policy of Application in "Policy has Application"
 #           0: Absorption (existential) in Application of Application Nr in "Application has Application Nr"
 #         5: Absorption (mandatory) in Policy of Insured in "Policy belongs to Insured"
-#           0: Absorption (subtype) in Insured of Insured in "Insured is a kind of Party"
-#             0: Absorption (mandatory) in Insured of Party ID in "Party has Party ID"
+#           0: Absorption (supertype) in Insured of Party in "Insured is a kind of Party"
+#             0: Absorption (existential) in Party of Party ID in "Party has Party ID"
 #         6: Absorption (optional) in Policy of Authorised Rep in "Policy was sold by Authorised Rep"
-#           0: Absorption (subtype) in Authorised Rep of Authorised Rep in "Authorised Rep is a kind of Party"
-#             0: Absorption (mandatory) in Authorised Rep of Party ID in "Party has Party ID"
+#           0: Absorption (supertype) in Authorised Rep of Party in "Authorised Rep is a kind of Party"
+#             0: Absorption (existential) in Party of Party ID in "Party has Party ID"
 #         7: Absorption (optional) in Policy of ITC Claimed in "Policy has ITC Claimed"
 #         8: Absorption (subtype) in Policy of Motor Policy (full) in "Policy is a Motor Policy"
 #           0: Absorption (subtype) in Motor Policy of Motor Fleet Policy in "Motor Policy is a Motor Fleet Policy"
@@ -311,8 +311,8 @@
 #     Columns
 #       Mapping (top) of Property Damage
 #         0: Absorption (existential) in Property Damage of Incident in "Property Damage was damaged in Incident"
-#           0: Absorption (existential) in Incident of Incident in "Incident is of Claim"
-#             0: Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
+#           0: Absorption (existential) in Incident of Claim in "Incident is of Claim"
+#             0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
 #         1: Absorption (existential) in Property Damage of Address in "Property Damage is at Address"
 #           0: Absorption (existential) in Address of Street in "Address is at Street"
 #           1: Absorption (existential) in Address of City in "Address is in City"
@@ -324,7 +324,7 @@
 #           0: Absorption (existential) in Phone of Phone Nr in "Phone has Phone Nr"
 #     Indices
 #       Primary index to Property Damage over PresenceConstraint over (Incident, Address) occurs at most one time
-#         IndexField part 0 in Property Damage references Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Property Damage references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
 #         IndexField part 1 in Property Damage references Absorption (existential) in Address of Street in "Address is at Street"
 #         IndexField part 2 in Property Damage references Absorption (existential) in Address of City in "Address is in City"
 #         IndexField part 3 in Property Damage references Absorption (existential) in Address of Postcode in "Address is in Postcode"
@@ -353,15 +353,15 @@
 #     Columns
 #       Mapping (top) of Third Party
 #         0: Absorption (existential) in Third Party of Person in "Third Party involves Person"
-#           0: Absorption (subtype) in Person of Person in "Person is a kind of Party"
-#             0: Absorption (mandatory) in Person of Party ID in "Party has Party ID"
+#           0: Absorption (supertype) in Person of Party in "Person is a kind of Party"
+#             0: Absorption (existential) in Party of Party ID in "Party has Party ID"
 #         1: Absorption (existential) in Third Party of Vehicle Incident in "Third Party involves Vehicle Incident"
 #           0: Absorption (supertype) in Vehicle Incident of Incident in "Vehicle Incident is a kind of Incident"
 #             0: Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
 #         2: Absorption (optional) in Third Party of Insurer in "Third Party is insured by Insurer"
-#           0: Absorption (subtype) in Insurer of Insurer in "Insurer is a kind of Company"
-#             0: Absorption (subtype) in Insurer of Company in "Company is a kind of Party"
-#               0: Absorption (mandatory) in Company of Party ID in "Party has Party ID"
+#           0: Absorption (supertype) in Insurer of Company in "Insurer is a kind of Company"
+#             0: Absorption (supertype) in Company of Party in "Company is a kind of Party"
+#               0: Absorption (existential) in Party of Party ID in "Party has Party ID"
 #         3: Absorption (optional) in Third Party of Model Year in "Third Party vehicle is of model-Year"
 #           0: Absorption (existential) in Model Year of Year Nr in "Year has Year Nr"
 #         4: Absorption (optional) in Third Party of Vehicle Registration in "Third Party drove vehicle-Registration"
@@ -372,7 +372,7 @@
 #           2: Absorption (existential) in Vehicle Type of Badge in "Vehicle Type has Badge"
 #     Indices
 #       Primary index to Third Party over PresenceConstraint over (Person, Vehicle-Incident) occurs at most one time
-#         IndexField part 0 in Third Party references Absorption (mandatory) in Person of Party ID in "Party has Party ID"
+#         IndexField part 0 in Third Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
 #         IndexField part 1 in Third Party references Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
 #     Foreign keys outbound
 #       Foreign Key from Third Party to Party over Absorption (existential) in Third Party of Person in "Third Party involves Person"
@@ -410,13 +410,13 @@
 #     Columns
 #       Mapping (top) of Vehicle Incident
 #         0: Absorption (supertype) in Vehicle Incident of Incident in "Vehicle Incident is a kind of Incident"
-#           0: Absorption (existential) in Incident of Incident in "Incident is of Claim"
-#             0: Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
+#           0: Absorption (existential) in Incident of Claim in "Incident is of Claim"
+#             0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
 #         1: Absorption (optional) in Vehicle Incident of Description in "Vehicle Incident has Description"
 #         2: Absorption (optional) in Vehicle Incident of Driving (full) in "Driving involves Vehicle Incident"
 #           0: Absorption (mandatory) in Driving of Person in "Driving was by Person"
-#             0: Absorption (subtype) in Person of Person in "Person is a kind of Party"
-#               0: Absorption (mandatory) in Person of Party ID in "Party has Party ID"
+#             0: Absorption (supertype) in Person of Party in "Person is a kind of Party"
+#               0: Absorption (existential) in Party of Party ID in "Party has Party ID"
 #           1: Absorption (optional) in Driving of Breath Test Result in "Driving resulted in breath-Test Result"
 #           2: Absorption (optional) in Driving of Driving Charge in "Driving Charge involves Driving"
 #             0: Indicator "Driving Charge is a warning" (as "Is A Warning")
@@ -436,7 +436,7 @@
 #         7: Absorption (optional) in Vehicle Incident of Weather Description in "Vehicle Incident occurred during weather-Description"
 #     Indices
 #       Primary index to Vehicle Incident over PresenceConstraint over (Incident) occurs at most one time
-#         IndexField part 0 in Vehicle Incident references Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Vehicle Incident references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
 #     Foreign keys inbound
 #       Foreign Key from Third Party to Vehicle Incident over Absorption (existential) in Third Party of Vehicle Incident in "Third Party involves Vehicle Incident"
 #       Foreign Key from Underwriting Demerit to Vehicle Incident over Absorption (existential) in Underwriting Demerit of Vehicle Incident in "Underwriting Demerit preceded Vehicle Incident"
@@ -448,8 +448,8 @@
 #     Columns
 #       Mapping (top) of Witness
 #         0: Absorption (existential) in Witness of Incident in "Witness saw Incident"
-#           0: Absorption (existential) in Incident of Incident in "Incident is of Claim"
-#             0: Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
+#           0: Absorption (existential) in Incident of Claim in "Incident is of Claim"
+#             0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
 #         1: Absorption (existential) in Witness of Name in "Witness is called Name"
 #         2: Absorption (optional) in Witness of Address in "Witness lives at Address"
 #           0: Absorption (existential) in Address of Street in "Address is at Street"
@@ -461,7 +461,7 @@
 #           0: Absorption (existential) in Contact Phone of Phone Nr in "Phone has Phone Nr"
 #     Indices
 #       Primary index to Witness over PresenceConstraint over (Incident, Name) occurs at most one time
-#         IndexField part 0 in Witness references Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Witness references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
 #         IndexField part 1 in Witness references Absorption (existential) in Witness of Name in "Witness is called Name"
 #     Foreign keys outbound
 #       Foreign Key from Witness to State over Absorption (existential) in Address of State in "Address is in State"
