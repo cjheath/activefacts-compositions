@@ -11,12 +11,15 @@ $:.unshift File.dirname(File.expand_path(__FILE__))+"/../lib"
 require 'activefacts/metamodel'
 require 'activefacts/compositions/binary'
 require 'activefacts/compositions/relational'
+require 'activefacts/compositions/validator'
 
 options = {}
 while arg = ARGV.shift and arg =~ /^-/
   option, value = arg.split(/=/, 2)
   options[option.sub(/^-*/,'')] = value =~ /,/ ? value.split(',') : (value || true)
 end
+
+validate = options.delete('validate')
 
 # Load the file type input method
 if arg
@@ -44,6 +47,10 @@ begin
 
   compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, "test", options)
   compositor.generate
+  trace.enable 'composition_validator'
+  compositor.validate do |component, problem|
+    trace :composition_validator, "!!PROBLEM!! #{component.inspect}: #{problem}"
+  end if validate
 
 rescue => e
   $stderr.puts "#{e.message}"
