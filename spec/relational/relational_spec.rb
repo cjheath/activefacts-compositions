@@ -7,6 +7,7 @@ require 'bundler/setup' # Set up gems listed in the Gemfile.
 
 # require 'spec_helper'
 require 'activefacts/compositions/relational'
+require 'activefacts/compositions/validator'
 require 'activefacts/input/cql'
 
 CQL_DIR = Pathname.new(__FILE__+'/../').relative_path_from(Pathname(Dir.pwd)).to_s
@@ -69,6 +70,10 @@ describe "Relational absorption from CQL" do
 	File.write(actual, output)
       else
 	File.delete(actual) rescue nil
+      end
+
+      compositor.validate do |component, problem|
+	expect("#{component.inspect}: #{problem}").to be_nil
       end
 
       if expected_text
