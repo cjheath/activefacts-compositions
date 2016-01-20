@@ -126,7 +126,7 @@
 #         IndexField part 1 in Seat references Absorption (existential) in Row of Row Nr in "Row has Row Nr"
 #         IndexField part 2 in Seat references Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
 #     Foreign keys inbound
-#       Foreign Key from Seat Allocation to Seat over Absorption (existential) in Seat Allocation of Seat in "Seat Allocation involves Seat"
+#       Foreign Key from Seat Allocation to Seat over Absorption (existential) in Seat Allocation of Allocated Seat in "Seat Allocation involves Seat"
 #     Foreign keys outbound
 #       Foreign Key from Seat to Cinema over Absorption (existential) in Row of Cinema in "Row is in Cinema"
 #   Composite Mapping (top) of Seat Allocation
@@ -134,21 +134,21 @@
 #       Mapping (top) of Seat Allocation
 #         0: Absorption (existential) in Seat Allocation of Booking in "Seat Allocation involves Booking"
 #           0: Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
-#         1: Absorption (existential) in Seat Allocation of Seat in "Seat Allocation involves Seat"
-#           0: Absorption (existential) in Seat of Row in "Seat is in Row"
+#         1: Absorption (existential) in Seat Allocation of Allocated Seat in "Seat Allocation involves Seat"
+#           0: Absorption (existential) in Allocated Seat of Row in "Seat is in Row"
 #             0: Absorption (existential) in Row of Cinema in "Row is in Cinema"
 #               0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
 #             1: Absorption (existential) in Row of Row Nr in "Row has Row Nr"
-#           1: Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
+#           1: Absorption (existential) in Allocated Seat of Seat Number in "Seat has Seat Number"
 #     Indices
 #       Primary index to Seat Allocation over PresenceConstraint over (Booking, allocated-Seat) occurs at most one time
 #         IndexField part 0 in Seat Allocation references Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
 #         IndexField part 1 in Seat Allocation references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
 #         IndexField part 2 in Seat Allocation references Absorption (existential) in Row of Row Nr in "Row has Row Nr"
-#         IndexField part 3 in Seat Allocation references Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
+#         IndexField part 3 in Seat Allocation references Absorption (existential) in Allocated Seat of Seat Number in "Seat has Seat Number"
 #     Foreign keys outbound
+#       Foreign Key from Seat Allocation to Seat over Absorption (existential) in Seat Allocation of Allocated Seat in "Seat Allocation involves Seat"
 #       Foreign Key from Seat Allocation to Booking over Absorption (existential) in Seat Allocation of Booking in "Seat Allocation involves Booking"
-#       Foreign Key from Seat Allocation to Seat over Absorption (existential) in Seat Allocation of Seat in "Seat Allocation involves Seat"
 #   Composite Mapping (top) of Session
 #     Columns
 #       Mapping (top) of Session

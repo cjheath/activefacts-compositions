@@ -42,15 +42,15 @@
 #             0: Absorption (supertype) in Person of Party in "Person is a kind of Party"
 #               0: Absorption (existential) in Party of Party ID in "Party has Party ID"
 #           1: Absorption (optional) in Lodgement of Date Time in "Lodgement was made at Date Time"
-#         2: Absorption (mandatory) in Claim of Policy in "Claim is on Policy"
-#           0: Absorption (existential) in Policy of p_year in "Policy was issued in Year"
-#             0: Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
-#           1: Absorption (existential) in Policy of p_product in "Policy is for product having Product"
-#             0: Absorption (existential) in p_product of Product Code in "Product has Product Code"
-#           2: Absorption (existential) in Policy of p_state in "Policy issued in state having State"
-#             0: Absorption (existential) in p_state of State Code in "State has State Code"
-#           3: Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
-#         3: Absorption (mandatory) in Claim of p_sequence in "Claim has Claim Sequence"
+#         2: Absorption (mandatory) in Claim of P_sequence in "Claim has Claim Sequence"
+#         3: Absorption (mandatory) in Claim of Policy in "Claim is on Policy"
+#           0: Absorption (existential) in Policy of P_year in "Policy was issued in Year"
+#             0: Absorption (existential) in P_year of Year Nr in "Year has Year Nr"
+#           1: Absorption (existential) in Policy of P_product in "Policy is for product having Product"
+#             0: Absorption (existential) in P_product of Product Code in "Product has Product Code"
+#           2: Absorption (existential) in Policy of P_state in "Policy issued in state having State"
+#             0: Absorption (existential) in P_state of State Code in "State has State Code"
+#           3: Absorption (existential) in Policy of P_serial in "Policy has Policy Serial"
 #         4: Absorption (optional) in Claim of Incident (full) in "Claim concerns Incident"
 #           0: Absorption (mandatory) in Incident of Address in "Incident relates to loss at Address"
 #             0: Absorption (existential) in Address of Street in "Address is at Street"
@@ -69,11 +69,11 @@
 #       Primary index to Claim over PresenceConstraint over (Claim-ID) occurs at most one time
 #         IndexField part 0 in Claim references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
 #       Unique index to Claim over PresenceConstraint over (Policy, p_sequence) occurs at most one time
-#         IndexField part 0 in Claim references Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
-#         IndexField part 1 in Claim references Absorption (existential) in p_product of Product Code in "Product has Product Code"
-#         IndexField part 2 in Claim references Absorption (existential) in p_state of State Code in "State has State Code"
-#         IndexField part 3 in Claim references Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
-#         IndexField part 4 in Claim references Absorption (mandatory) in Claim of p_sequence in "Claim has Claim Sequence"
+#         IndexField part 0 in Claim references Absorption (mandatory) in Claim of P_sequence in "Claim has Claim Sequence"
+#         IndexField part 1 in Claim references Absorption (existential) in P_year of Year Nr in "Year has Year Nr"
+#         IndexField part 2 in Claim references Absorption (existential) in P_product of Product Code in "Product has Product Code"
+#         IndexField part 3 in Claim references Absorption (existential) in P_state of State Code in "State has State Code"
+#         IndexField part 4 in Claim references Absorption (existential) in Policy of P_serial in "Policy has Policy Serial"
 #     Foreign keys inbound
 #       Foreign Key from Contractor Appointment to Claim over Absorption (existential) in Contractor Appointment of Claim in "Contractor Appointment involves Claim"
 #       Foreign Key from Lost Item to Claim over Absorption (existential) in Lost Item of Incident in "Lost Item was lost in Incident"
@@ -104,23 +104,23 @@
 #     Columns
 #       Mapping (top) of Cover
 #         0: Absorption (existential) in Cover of Policy in "Cover involves Policy"
-#           0: Absorption (existential) in Policy of p_year in "Policy was issued in Year"
-#             0: Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
-#           1: Absorption (existential) in Policy of p_product in "Policy is for product having Product"
-#             0: Absorption (existential) in p_product of Product Code in "Product has Product Code"
-#           2: Absorption (existential) in Policy of p_state in "Policy issued in state having State"
-#             0: Absorption (existential) in p_state of State Code in "State has State Code"
-#           3: Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
+#           0: Absorption (existential) in Policy of P_year in "Policy was issued in Year"
+#             0: Absorption (existential) in P_year of Year Nr in "Year has Year Nr"
+#           1: Absorption (existential) in Policy of P_product in "Policy is for product having Product"
+#             0: Absorption (existential) in P_product of Product Code in "Product has Product Code"
+#           2: Absorption (existential) in Policy of P_state in "Policy issued in state having State"
+#             0: Absorption (existential) in P_state of State Code in "State has State Code"
+#           3: Absorption (existential) in Policy of P_serial in "Policy has Policy Serial"
 #         1: Absorption (existential) in Cover of Cover Type in "Cover involves Cover Type"
 #           0: Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
 #         2: Absorption (existential) in Cover of Asset in "Cover involves Asset"
 #           0: Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
 #     Indices
 #       Primary index to Cover over PresenceConstraint over (Policy, Cover-Type, Asset) occurs at most one time
-#         IndexField part 0 in Cover references Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
-#         IndexField part 1 in Cover references Absorption (existential) in p_product of Product Code in "Product has Product Code"
-#         IndexField part 2 in Cover references Absorption (existential) in p_state of State Code in "State has State Code"
-#         IndexField part 3 in Cover references Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
+#         IndexField part 0 in Cover references Absorption (existential) in P_year of Year Nr in "Year has Year Nr"
+#         IndexField part 1 in Cover references Absorption (existential) in P_product of Product Code in "Product has Product Code"
+#         IndexField part 2 in Cover references Absorption (existential) in P_state of State Code in "State has State Code"
+#         IndexField part 3 in Cover references Absorption (existential) in Policy of P_serial in "Policy has Policy Serial"
 #         IndexField part 4 in Cover references Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
 #         IndexField part 5 in Cover references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
 #     Foreign keys outbound
@@ -147,12 +147,12 @@
 #           0: Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
 #         1: Absorption (existential) in Cover Wording of Policy Wording in "Cover Wording involves Policy Wording"
 #           0: Absorption (existential) in Policy Wording of Policy Wording Text in "Policy Wording has Policy Wording Text"
-#         2: Absorption (existential) in Cover Wording of Date in "Cover Wording involves Date"
+#         2: Absorption (existential) in Cover Wording of Start Date in "Cover Wording involves Date"
 #     Indices
 #       Primary index to Cover Wording over PresenceConstraint over (Cover-Type, Policy-Wording, start-Date) occurs at most one time
 #         IndexField part 0 in Cover Wording references Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
 #         IndexField part 1 in Cover Wording references Absorption (existential) in Policy Wording of Policy Wording Text in "Policy Wording has Policy Wording Text"
-#         IndexField part 2 in Cover Wording references Absorption (existential) in Cover Wording of Date in "Cover Wording involves Date"
+#         IndexField part 2 in Cover Wording references Absorption (existential) in Cover Wording of Start Date in "Cover Wording involves Date"
 #     Foreign keys outbound
 #       Foreign Key from Cover Wording to Cover Type over Absorption (existential) in Cover Wording of Cover Type in "Cover Wording involves Cover Type"
 #   Composite Mapping (top) of Loss Type
@@ -259,13 +259,13 @@
 #   Composite Mapping (top) of Policy
 #     Columns
 #       Mapping (top) of Policy
-#         0: Absorption (existential) in Policy of p_year in "Policy was issued in Year"
-#           0: Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
-#         1: Absorption (existential) in Policy of p_product in "Policy is for product having Product"
-#           0: Absorption (existential) in p_product of Product Code in "Product has Product Code"
-#         2: Absorption (existential) in Policy of p_state in "Policy issued in state having State"
-#           0: Absorption (existential) in p_state of State Code in "State has State Code"
-#         3: Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
+#         0: Absorption (existential) in Policy of P_year in "Policy was issued in Year"
+#           0: Absorption (existential) in P_year of Year Nr in "Year has Year Nr"
+#         1: Absorption (existential) in Policy of P_product in "Policy is for product having Product"
+#           0: Absorption (existential) in P_product of Product Code in "Product has Product Code"
+#         2: Absorption (existential) in Policy of P_state in "Policy issued in state having State"
+#           0: Absorption (existential) in P_state of State Code in "State has State Code"
+#         3: Absorption (existential) in Policy of P_serial in "Policy has Policy Serial"
 #         4: Absorption (mandatory) in Policy of Application in "Policy has Application"
 #           0: Absorption (existential) in Application of Application Nr in "Application has Application Nr"
 #         5: Absorption (mandatory) in Policy of Insured in "Policy belongs to Insured"
@@ -280,16 +280,16 @@
 #           1: Absorption (subtype) in Motor Policy of Single Motor Policy in "Motor Policy is a Single Motor Policy"
 #     Indices
 #       Primary index to Policy over PresenceConstraint over (p_year, p_product, p_state, p_serial) occurs at most one time
-#         IndexField part 0 in Policy references Absorption (existential) in p_year of Year Nr in "Year has Year Nr"
-#         IndexField part 1 in Policy references Absorption (existential) in p_product of Product Code in "Product has Product Code"
-#         IndexField part 2 in Policy references Absorption (existential) in p_state of State Code in "State has State Code"
-#         IndexField part 3 in Policy references Absorption (existential) in Policy of p_serial in "Policy has Policy Serial"
+#         IndexField part 0 in Policy references Absorption (existential) in P_year of Year Nr in "Year has Year Nr"
+#         IndexField part 1 in Policy references Absorption (existential) in P_product of Product Code in "Product has Product Code"
+#         IndexField part 2 in Policy references Absorption (existential) in P_state of State Code in "State has State Code"
+#         IndexField part 3 in Policy references Absorption (existential) in Policy of P_serial in "Policy has Policy Serial"
 #     Foreign keys inbound
 #       Foreign Key from Claim to Policy over Absorption (mandatory) in Claim of Policy in "Claim is on Policy"
 #       Foreign Key from Cover to Policy over Absorption (existential) in Cover of Policy in "Cover involves Policy"
 #     Foreign keys outbound
-#       Foreign Key from Policy to Product over Absorption (existential) in Policy of p_product in "Policy is for product having Product"
-#       Foreign Key from Policy to State over Absorption (existential) in Policy of p_state in "Policy issued in state having State"
+#       Foreign Key from Policy to Product over Absorption (existential) in Policy of P_product in "Policy is for product having Product"
+#       Foreign Key from Policy to State over Absorption (existential) in Policy of P_state in "Policy issued in state having State"
 #       Foreign Key from Policy to Party over Absorption (mandatory) in Policy of Insured in "Policy belongs to Insured"
 #       Foreign Key from Policy to Party over Absorption (optional) in Policy of Authorised Rep in "Policy was sold by Authorised Rep"
 #   Composite Mapping (top) of Product
@@ -306,7 +306,7 @@
 #       Unique index to Product over PresenceConstraint over (Description) occurs at most one time
 #         IndexField part 0 in Product references Absorption (optional) in Product of Description in "Product has Description"
 #     Foreign keys inbound
-#       Foreign Key from Policy to Product over Absorption (existential) in Policy of p_product in "Policy is for product having Product"
+#       Foreign Key from Policy to Product over Absorption (existential) in Policy of P_product in "Policy is for product having Product"
 #   Composite Mapping (top) of Property Damage
 #     Columns
 #       Mapping (top) of Property Damage
@@ -346,7 +346,7 @@
 #       Foreign Key from Claim to State over Absorption (existential) in Address of State in "Address is in State"
 #       Foreign Key from Party to State over Absorption (existential) in Address of State in "Address is in State"
 #       Foreign Key from Party to State over Absorption (existential) in Postal Address of State in "Address is in State"
-#       Foreign Key from Policy to State over Absorption (existential) in Policy of p_state in "Policy issued in state having State"
+#       Foreign Key from Policy to State over Absorption (existential) in Policy of P_state in "Policy issued in state having State"
 #       Foreign Key from Property Damage to State over Absorption (existential) in Address of State in "Address is in State"
 #       Foreign Key from Witness to State over Absorption (existential) in Address of State in "Address is in State"
 #   Composite Mapping (top) of Third Party
@@ -357,7 +357,8 @@
 #             0: Absorption (existential) in Party of Party ID in "Party has Party ID"
 #         1: Absorption (existential) in Third Party of Vehicle Incident in "Third Party involves Vehicle Incident"
 #           0: Absorption (supertype) in Vehicle Incident of Incident in "Vehicle Incident is a kind of Incident"
-#             0: Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
+#             0: Absorption (existential) in Incident of Claim in "Incident is of Claim"
+#               0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
 #         2: Absorption (optional) in Third Party of Insurer in "Third Party is insured by Insurer"
 #           0: Absorption (supertype) in Insurer of Company in "Insurer is a kind of Company"
 #             0: Absorption (supertype) in Company of Party in "Company is a kind of Party"
@@ -373,7 +374,7 @@
 #     Indices
 #       Primary index to Third Party over PresenceConstraint over (Person, Vehicle-Incident) occurs at most one time
 #         IndexField part 0 in Third Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
-#         IndexField part 1 in Third Party references Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
+#         IndexField part 1 in Third Party references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
 #     Foreign keys outbound
 #       Foreign Key from Third Party to Party over Absorption (existential) in Third Party of Person in "Third Party involves Person"
 #       Foreign Key from Third Party to Vehicle Incident over Absorption (existential) in Third Party of Vehicle Incident in "Third Party involves Vehicle Incident"
@@ -383,13 +384,14 @@
 #       Mapping (top) of Underwriting Demerit
 #         0: Absorption (existential) in Underwriting Demerit of Vehicle Incident in "Underwriting Demerit preceded Vehicle Incident"
 #           0: Absorption (supertype) in Vehicle Incident of Incident in "Vehicle Incident is a kind of Incident"
-#             0: Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
+#             0: Absorption (existential) in Incident of Claim in "Incident is of Claim"
+#               0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
 #         1: Absorption (existential) in Underwriting Demerit of Underwriting Question in "Underwriting Demerit has Underwriting Question"
 #           0: Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
 #         2: Absorption (optional) in Underwriting Demerit of Occurrence Count in "Underwriting Demerit occurred occurrence-Count times"
 #     Indices
 #       Primary index to Underwriting Demerit over PresenceConstraint over (Vehicle-Incident, Underwriting-Question) occurs at most one time
-#         IndexField part 0 in Underwriting Demerit references Absorption (mandatory) in Incident of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Underwriting Demerit references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
 #         IndexField part 1 in Underwriting Demerit references Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
 #     Foreign keys outbound
 #       Foreign Key from Underwriting Demerit to Underwriting Question over Absorption (existential) in Underwriting Demerit of Underwriting Question in "Underwriting Demerit has Underwriting Question"
