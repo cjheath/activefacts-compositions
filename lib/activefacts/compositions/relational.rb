@@ -519,7 +519,7 @@ module ActiveFacts
 	  parent_role: absorption.child_role,
 	  child_role: absorption.parent_role,
 	  ordinal: 0,
-	  name: String::Words.new(absorption.parent_role.base_role.preferred_reference.role_name(nil)).capwords*' '
+	  name: role_name(absorption.parent_role)
 	)
       end
 

@@ -58,7 +58,7 @@ module ActiveFacts
 
 	  a = @constellation.Absorption(
 	      :new,
-	      name: String::Words.new(counterpart.base_role.preferred_reference.role_name(nil)).capwords*' ',
+	      name: role_name(counterpart),
 	      parent: parent,
 	      object_type: counterpart.object_type,
 	      parent_role: role,
@@ -119,6 +119,13 @@ module ActiveFacts
 	    end
 	  end
 	end
+      end
+
+      def role_name role
+#	if role.fact_type.is_a?(ActiveFacts::Metamodel::TypeInheritance) && role == role.fact_type.subtype_role
+#	  return "Is "+role.object_type.name
+#	end
+	String::Words.new(role.base_role.preferred_reference.role_name(nil)).capwords*' '
       end
 
       def role_type role

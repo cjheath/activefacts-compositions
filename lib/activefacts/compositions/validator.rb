@@ -39,7 +39,12 @@ module ActiveFacts
       end
 
       def validate_members mapping, &report
-	names = mapping.all_member.map(&:name).compact
+	# Names (except of subtype/supertype absorption) must be unique:
+	names = mapping.
+	  all_member.
+	  reject{|m| m.is_a?(MM::Absorption) && m.parent_role.fact_type.is_a?(MM::TypeInheritance)}.
+	  map(&:name).
+	  compact
 	duplicate_names = names.select{|name| names.count(name) > 1}.uniq
 	report.call(mapping, "Contains duplicated names #{duplicate_names.map(&:inspect)*', '}") unless duplicate_names.empty?
 
