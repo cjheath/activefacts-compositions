@@ -53,7 +53,7 @@ module ActiveFacts
 	  counterpart = role.counterpart
 	  rt = role_type(counterpart)
 	  if rt == :many_many
-	    raise "Can't absorb many-to-many (until we absorb derived fact types, or don't require explicit objectification)"
+	    raise "Fact type must be objectified: #{role.fact_type.default_reading}"
 	  end
 
 	  a = @constellation.Absorption(

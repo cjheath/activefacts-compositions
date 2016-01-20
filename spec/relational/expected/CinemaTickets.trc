@@ -12,6 +12,8 @@
 #         IndexField part 1 in AllocatableCinemaSection references Absorption (existential) in Section of Section Name in "Section has Section Name"
 #     Foreign keys outbound
 #       Foreign Key from AllocatableCinemaSection to Cinema over Absorption (existential) in AllocatableCinemaSection of Cinema in "AllocatableCinemaSection involves Cinema"
+#         ForeignKeyField part 0 in AllocatableCinemaSection is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         IndexField part 0 in Cinema references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
 #   Composite Mapping (top) of Booking
 #     Columns
 #       Mapping (top) of Booking
@@ -49,10 +51,28 @@
 #         IndexField part 6 in Booking references Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
 #     Foreign keys inbound
 #       Foreign Key from Places Paid to Booking over Absorption (existential) in Places Paid of Booking in "Places Paid involves Booking"
+#         ForeignKeyField part 0 in Places Paid is Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
+#         IndexField part 0 in Booking references Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
 #       Foreign Key from Seat Allocation to Booking over Absorption (existential) in Seat Allocation of Booking in "Seat Allocation involves Booking"
+#         ForeignKeyField part 0 in Seat Allocation is Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
+#         IndexField part 0 in Booking references Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
 #     Foreign keys outbound
 #       Foreign Key from Booking to Person over Absorption (mandatory) in Booking of Person in "Booking involves Person"
+#         ForeignKeyField part 0 in Booking is Absorption (existential) in Person of Person ID in "Person has Person ID"
+#         IndexField part 0 in Person references Absorption (existential) in Person of Person ID in "Person has Person ID"
 #       Foreign Key from Booking to Session over Absorption (mandatory) in Booking of Session in "Booking involves Session"
+#         ForeignKeyField part 0 in Booking is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         ForeignKeyField part 1 in Booking is Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#         ForeignKeyField part 2 in Booking is Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#         ForeignKeyField part 3 in Booking is Absorption (existential) in Session Time of Day in "Session Time is on Day"
+#         ForeignKeyField part 4 in Booking is Absorption (existential) in Session Time of Hour in "Session Time is at Hour"
+#         ForeignKeyField part 5 in Booking is Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
+#         IndexField part 0 in Session references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         IndexField part 1 in Session references Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#         IndexField part 2 in Session references Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#         IndexField part 3 in Session references Absorption (existential) in Session Time of Day in "Session Time is on Day"
+#         IndexField part 4 in Session references Absorption (existential) in Session Time of Hour in "Session Time is at Hour"
+#         IndexField part 5 in Session references Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
 #   Composite Mapping (top) of Cinema
 #     Columns
 #       Mapping (top) of Cinema
@@ -65,9 +85,17 @@
 #         IndexField part 0 in Cinema references Absorption (mandatory) in Cinema of Name in "Cinema has Name"
 #     Foreign keys inbound
 #       Foreign Key from AllocatableCinemaSection to Cinema over Absorption (existential) in AllocatableCinemaSection of Cinema in "AllocatableCinemaSection involves Cinema"
+#         ForeignKeyField part 0 in AllocatableCinemaSection is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         IndexField part 0 in Cinema references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
 #       Foreign Key from Seat to Cinema over Absorption (existential) in Row of Cinema in "Row is in Cinema"
+#         ForeignKeyField part 0 in Seat is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         IndexField part 0 in Cinema references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
 #       Foreign Key from Session to Cinema over Absorption (existential) in Session of Cinema in "Session involves Cinema"
+#         ForeignKeyField part 0 in Session is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         IndexField part 0 in Cinema references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
 #       Foreign Key from Ticket Pricing to Cinema over Absorption (existential) in Ticket Pricing of Cinema in "Ticket Pricing involves Cinema"
+#         ForeignKeyField part 0 in Ticket Pricing is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         IndexField part 0 in Cinema references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
 #   Composite Mapping (top) of Film
 #     Columns
 #       Mapping (top) of Film
@@ -83,6 +111,8 @@
 #         IndexField part 1 in Film references Absorption (existential) in Year of Year Nr in "Year has Year Nr"
 #     Foreign keys inbound
 #       Foreign Key from Session to Film over Absorption (mandatory) in Session of Film in "Session involves Film"
+#         ForeignKeyField part 0 in Session is Absorption (existential) in Film of Film ID in "Film has Film ID"
+#         IndexField part 0 in Film references Absorption (existential) in Film of Film ID in "Film has Film ID"
 #   Composite Mapping (top) of Person
 #     Columns
 #       Mapping (top) of Person
@@ -96,6 +126,8 @@
 #         IndexField part 0 in Person references Absorption (optional) in Person of Login Name in "Person has login-Name"
 #     Foreign keys inbound
 #       Foreign Key from Booking to Person over Absorption (mandatory) in Booking of Person in "Booking involves Person"
+#         ForeignKeyField part 0 in Booking is Absorption (existential) in Person of Person ID in "Person has Person ID"
+#         IndexField part 0 in Person references Absorption (existential) in Person of Person ID in "Person has Person ID"
 #   Composite Mapping (top) of Places Paid
 #     Columns
 #       Mapping (top) of Places Paid
@@ -110,6 +142,8 @@
 #         IndexField part 1 in Places Paid references Absorption (existential) in Payment Method of Payment Method Code in "Payment Method has Payment Method Code"
 #     Foreign keys outbound
 #       Foreign Key from Places Paid to Booking over Absorption (existential) in Places Paid of Booking in "Places Paid involves Booking"
+#         ForeignKeyField part 0 in Places Paid is Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
+#         IndexField part 0 in Booking references Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
 #   Composite Mapping (top) of Seat
 #     Columns
 #       Mapping (top) of Seat
@@ -127,8 +161,16 @@
 #         IndexField part 2 in Seat references Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
 #     Foreign keys inbound
 #       Foreign Key from Seat Allocation to Seat over Absorption (existential) in Seat Allocation of Allocated Seat in "Seat Allocation involves Seat"
+#         ForeignKeyField part 0 in Seat Allocation is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         ForeignKeyField part 1 in Seat Allocation is Absorption (existential) in Row of Row Nr in "Row has Row Nr"
+#         ForeignKeyField part 2 in Seat Allocation is Absorption (existential) in Allocated Seat of Seat Number in "Seat has Seat Number"
+#         IndexField part 0 in Seat references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         IndexField part 1 in Seat references Absorption (existential) in Row of Row Nr in "Row has Row Nr"
+#         IndexField part 2 in Seat references Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
 #     Foreign keys outbound
 #       Foreign Key from Seat to Cinema over Absorption (existential) in Row of Cinema in "Row is in Cinema"
+#         ForeignKeyField part 0 in Seat is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         IndexField part 0 in Cinema references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
 #   Composite Mapping (top) of Seat Allocation
 #     Columns
 #       Mapping (top) of Seat Allocation
@@ -148,7 +190,15 @@
 #         IndexField part 3 in Seat Allocation references Absorption (existential) in Allocated Seat of Seat Number in "Seat has Seat Number"
 #     Foreign keys outbound
 #       Foreign Key from Seat Allocation to Seat over Absorption (existential) in Seat Allocation of Allocated Seat in "Seat Allocation involves Seat"
+#         ForeignKeyField part 0 in Seat Allocation is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         ForeignKeyField part 1 in Seat Allocation is Absorption (existential) in Row of Row Nr in "Row has Row Nr"
+#         ForeignKeyField part 2 in Seat Allocation is Absorption (existential) in Allocated Seat of Seat Number in "Seat has Seat Number"
+#         IndexField part 0 in Seat references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         IndexField part 1 in Seat references Absorption (existential) in Row of Row Nr in "Row has Row Nr"
+#         IndexField part 2 in Seat references Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
 #       Foreign Key from Seat Allocation to Booking over Absorption (existential) in Seat Allocation of Booking in "Seat Allocation involves Booking"
+#         ForeignKeyField part 0 in Seat Allocation is Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
+#         IndexField part 0 in Booking references Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
 #   Composite Mapping (top) of Session
 #     Columns
 #       Mapping (top) of Session
@@ -176,9 +226,25 @@
 #         IndexField part 5 in Session references Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
 #     Foreign keys inbound
 #       Foreign Key from Booking to Session over Absorption (mandatory) in Booking of Session in "Booking involves Session"
+#         ForeignKeyField part 0 in Booking is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         ForeignKeyField part 1 in Booking is Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#         ForeignKeyField part 2 in Booking is Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#         ForeignKeyField part 3 in Booking is Absorption (existential) in Session Time of Day in "Session Time is on Day"
+#         ForeignKeyField part 4 in Booking is Absorption (existential) in Session Time of Hour in "Session Time is at Hour"
+#         ForeignKeyField part 5 in Booking is Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
+#         IndexField part 0 in Session references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         IndexField part 1 in Session references Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#         IndexField part 2 in Session references Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#         IndexField part 3 in Session references Absorption (existential) in Session Time of Day in "Session Time is on Day"
+#         IndexField part 4 in Session references Absorption (existential) in Session Time of Hour in "Session Time is at Hour"
+#         IndexField part 5 in Session references Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
 #     Foreign keys outbound
 #       Foreign Key from Session to Cinema over Absorption (existential) in Session of Cinema in "Session involves Cinema"
+#         ForeignKeyField part 0 in Session is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         IndexField part 0 in Cinema references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
 #       Foreign Key from Session to Film over Absorption (mandatory) in Session of Film in "Session involves Film"
+#         ForeignKeyField part 0 in Session is Absorption (existential) in Film of Film ID in "Film has Film ID"
+#         IndexField part 0 in Film references Absorption (existential) in Film of Film ID in "Film has Film ID"
 #   Composite Mapping (top) of Ticket Pricing
 #     Columns
 #       Mapping (top) of Ticket Pricing
@@ -208,3 +274,5 @@
 #         IndexField part 7 in Ticket Pricing references Absorption (existential) in Ticket Pricing of High Demand in "Ticket Pricing involves High Demand"
 #     Foreign keys outbound
 #       Foreign Key from Ticket Pricing to Cinema over Absorption (existential) in Ticket Pricing of Cinema in "Ticket Pricing involves Cinema"
+#         ForeignKeyField part 0 in Ticket Pricing is Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
+#         IndexField part 0 in Cinema references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"

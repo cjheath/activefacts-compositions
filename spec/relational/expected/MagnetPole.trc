@@ -8,6 +8,8 @@
 #         IndexField part 0 in Magnet references Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"
 #     Foreign keys inbound
 #       Foreign Key from MagnetPole to Magnet over Absorption (existential) in MagnetPole of Magnet in "MagnetPole belongs to Magnet"
+#         ForeignKeyField part 0 in MagnetPole is Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"
+#         IndexField part 0 in Magnet references Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"
 #   Composite Mapping (top) of MagnetPole
 #     Columns
 #       Mapping (top) of MagnetPole
@@ -20,3 +22,5 @@
 #         IndexField part 1 in MagnetPole references Indicator "MagnetPole is north"
 #     Foreign keys outbound
 #       Foreign Key from MagnetPole to Magnet over Absorption (existential) in MagnetPole of Magnet in "MagnetPole belongs to Magnet"
+#         ForeignKeyField part 0 in MagnetPole is Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"
+#         IndexField part 0 in Magnet references Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"

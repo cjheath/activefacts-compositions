@@ -10,6 +10,8 @@
 #         IndexField part 1 in Country references ValueField "Country Code"
 #     Foreign keys outbound
 #       Foreign Key from Country to Country Code over Absorption (existential) in Country of Country Code in "Country has Country Code"
+#         ForeignKeyField part 0 in Country is ValueField "Country Code"
+#         IndexField part 0 in Country Code references ValueField "Country Code"
 #   Composite Mapping (top) of Country Code
 #     Columns
 #       Mapping (top) of Country Code
@@ -19,3 +21,5 @@
 #         IndexField part 0 in Country Code references ValueField "Country Code"
 #     Foreign keys inbound
 #       Foreign Key from Country to Country Code over Absorption (existential) in Country of Country Code in "Country has Country Code"
+#         ForeignKeyField part 0 in Country is ValueField "Country Code"
+#         IndexField part 0 in Country Code references ValueField "Country Code"

@@ -41,6 +41,9 @@ module ActiveFacts
 	  # Traverse the absorbed objects to build the path to each required column, including foreign keys:
 	  absorb_all_columns
 
+	  # Populate the target fields of foreign keys
+	  complete_foreign_keys
+
 	  # Remove mappings for objects we have absorbed
 	  clean_unused_mappings
 	end
@@ -288,7 +291,7 @@ module ActiveFacts
 	child_mapping = @binary_mappings[child_object_type]
 	trace :relational_columns?, "Absorbing #{member.child_role.name} in #{member.inspect_reading}" do
 	  if table
-	    @constellation.ForeignKey(:new, source_composite: mapping.root, composite: child_mapping.composite, absorption: member)
+	    paths[member] = @constellation.ForeignKey(:new, source_composite: mapping.root, composite: child_mapping.composite, absorption: member)
 	    absorb_key member, child_mapping, paths
 	    return
 	  end
@@ -307,7 +310,7 @@ module ActiveFacts
 	    end while full_absorption = child_object_type.all_full_absorption[@composition]
 	    child_mapping = @binary_mappings[child_object_type]
 
-	    @constellation.ForeignKey(:new, source_composite: mapping.root, composite: child_mapping.composite, absorption: absorption)
+	    paths[absorption] = @constellation.ForeignKey(:new, source_composite: mapping.root, composite: child_mapping.composite, absorption: absorption)
 	    absorb_key member, child_mapping, paths
 	    return
 	  end
@@ -431,9 +434,9 @@ module ActiveFacts
 	end
 	pcs = non_absorption_pcs
 
-	trace :relational_index, "Uniqueness Constraints for #{mapping.object_type.name}" do
+	trace :relational_paths, "Uniqueness Constraints for #{mapping.object_type.name}" do
 	  pcs.each do |pc|
-	    trace :relational_index, "#{pc.describe.inspect}#{pc.is_preferred_identifier ? ' (PI)' : ''}"
+	    trace :relational_paths, "#{pc.describe.inspect}#{pc.is_preferred_identifier ? ' (PI)' : ''}"
 	  end
 	end
 
@@ -443,15 +446,14 @@ module ActiveFacts
       def make_new_paths mapping, existing_pcs, pcs
 	newpaths = {}
 	new_pcs = pcs-existing_pcs
-	trace :relational_index?, "Adding #{new_pcs.size} new indices for presence constraints on #{mapping.inspect}" do
+	trace :relational_paths?, "Adding #{new_pcs.size} new indices for presence constraints on #{mapping.inspect}" do
 	  new_pcs.each do |pc|
 	    newpaths[pc] = index = @constellation.Index(:new, composite: mapping.root, is_unique: true, presence_constraint: pc)
-	    if pc.is_preferred_identifier
-	      unless @composition.all_full_absorption[mapping.object_type]
-		index.composite_as_primary_index = mapping.root
-	      end
+	    if mapping.object_type.preferred_identifier == pc and
+		!@composition.all_full_absorption[mapping.object_type]
+	      index.composite_as_primary_index = mapping.root
 	    end
-	    trace :relational_index, "Added new index #{index.inspect} for #{pc.describe} on #{pc.role_sequence.all_role_ref.map(&:role).map(&:fact_type).map(&:default_reading).inspect}"
+	    trace :relational_paths, "Added new index #{index.inspect} for #{pc.describe} on #{pc.role_sequence.all_role_ref.map(&:role).map(&:fact_type).map(&:default_reading).inspect}"
 	  end
 	end
 	newpaths
@@ -484,21 +486,37 @@ module ActiveFacts
 	end
 
 	paths.each do |pc, path|
-	  @constellation.IndexField(
-	    access_path: path,
-	    ordinal: path.all_index_field.size,
-	    component: mapping
-	  )
+	  case path
+	  when MM::Index
+	    @constellation.IndexField(access_path: path, ordinal: path.all_index_field.size, component: mapping)
+	  when MM::ForeignKey
+	    @constellation.ForeignKeyField(foreign_key: path, ordinal: path.all_foreign_key_field.size, component: mapping)
+	  end
 	end
       end
 
-      # This function name is from FP lore, e.g. Haskell. Ruby has none built-in
-      def unfoldr arg, &b
-	result = []
-	begin
-	  result << arg
-	end while arg = b.call(arg)
-	result
+      def complete_foreign_keys
+	trace :relational_paths, "Completing foreign keys" do
+	  @composition.all_composite.each do |composite|
+	    composite.all_access_path.each do |path|
+	      next if MM::Index === path
+
+	      target_object_type = path.absorption.child_role.object_type
+	      while fa = target_object_type.all_full_absorption[@composition]
+		target_object_type = fa.absorption.parent_role.object_type
+	      end
+	      target = @composites[target_object_type]
+	      trace :relational_paths, "Completing #{path.inspect} to #{target.mapping.inspect}"
+	      if target.primary_index
+		target.primary_index.all_index_field.each do |index_field|
+		  @constellation.IndexField access_path: path, ordinal: index_field.ordinal, component: index_field.component
+		end
+	      else
+		$stderr.puts "Foreign key from #{path.source_composite.mapping.name} references target table #{target.mapping.name} which has no primary index"
+	      end
+	    end
+	  end
+	end
       end
 
       def fork_component_to_new_parent parent, component

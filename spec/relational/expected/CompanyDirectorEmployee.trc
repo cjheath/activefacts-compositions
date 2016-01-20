@@ -19,7 +19,17 @@
 #         IndexField part 4 in Attendance references Indicator "Meeting is board meeting"
 #     Foreign keys outbound
 #       Foreign Key from Attendance to Person over Absorption (existential) in Attendance of Attendee in "Attendance involves Person"
+#         ForeignKeyField part 0 in Attendance is Absorption (existential) in Attendee of Given Name in "Person has given-Name"
+#         ForeignKeyField part 1 in Attendance is Absorption (existential) in Attendee of Family Name in "Person is called family-Name"
+#         IndexField part 0 in Person references Absorption (existential) in Person of Given Name in "Person has given-Name"
+#         IndexField part 1 in Person references Absorption (existential) in Person of Family Name in "Person is called family-Name"
 #       Foreign Key from Attendance to Meeting over Absorption (existential) in Attendance of Meeting in "Attendance involves Meeting"
+#         ForeignKeyField part 0 in Attendance is Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#         ForeignKeyField part 1 in Attendance is Absorption (existential) in Meeting of Date in "Meeting is held on Date"
+#         ForeignKeyField part 2 in Attendance is Indicator "Meeting is board meeting"
+#         IndexField part 0 in Meeting references Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#         IndexField part 1 in Meeting references Absorption (existential) in Meeting of Date in "Meeting is held on Date"
+#         IndexField part 2 in Meeting references Indicator "Meeting is board meeting"
 #   Composite Mapping (top) of Company
 #     Columns
 #       Mapping (top) of Company
@@ -30,8 +40,14 @@
 #         IndexField part 0 in Company references Absorption (existential) in Company of Company Name in "Company is called Company Name"
 #     Foreign keys inbound
 #       Foreign Key from Directorship to Company over Absorption (existential) in Directorship of Company in "Directorship involves Company"
+#         ForeignKeyField part 0 in Directorship is Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#         IndexField part 0 in Company references Absorption (existential) in Company of Company Name in "Company is called Company Name"
 #       Foreign Key from Employee to Company over Absorption (mandatory) in Employee of Company in "Employee works at Company"
+#         ForeignKeyField part 0 in Employee is Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#         IndexField part 0 in Company references Absorption (existential) in Company of Company Name in "Company is called Company Name"
 #       Foreign Key from Meeting to Company over Absorption (existential) in Meeting of Company in "Meeting is held by Company"
+#         ForeignKeyField part 0 in Meeting is Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#         IndexField part 0 in Company references Absorption (existential) in Company of Company Name in "Company is called Company Name"
 #   Composite Mapping (top) of Directorship
 #     Columns
 #       Mapping (top) of Directorship
@@ -48,7 +64,13 @@
 #         IndexField part 2 in Directorship references Absorption (existential) in Company of Company Name in "Company is called Company Name"
 #     Foreign keys outbound
 #       Foreign Key from Directorship to Company over Absorption (existential) in Directorship of Company in "Directorship involves Company"
+#         ForeignKeyField part 0 in Directorship is Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#         IndexField part 0 in Company references Absorption (existential) in Company of Company Name in "Company is called Company Name"
 #       Foreign Key from Directorship to Person over Absorption (existential) in Directorship of Director in "Directorship involves Person"
+#         ForeignKeyField part 0 in Directorship is Absorption (existential) in Director of Given Name in "Person has given-Name"
+#         ForeignKeyField part 1 in Directorship is Absorption (existential) in Director of Family Name in "Person is called family-Name"
+#         IndexField part 0 in Person references Absorption (existential) in Person of Given Name in "Person has given-Name"
+#         IndexField part 1 in Person references Absorption (existential) in Person of Family Name in "Person is called family-Name"
 #   Composite Mapping (top) of Employee
 #     Columns
 #       Mapping (top) of Employee
@@ -65,10 +87,18 @@
 #         IndexField part 0 in Employee references Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
 #     Foreign keys inbound
 #       Foreign Key from Employee to Employee over Absorption (optional) in Employee of Manager in "Employee is supervised by Manager"
+#         ForeignKeyField part 0 in Employee is Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
+#         IndexField part 0 in Employee references Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
 #       Foreign Key from Employment to Employee over Absorption (existential) in Employment of Employee in "Employment involves Employee"
+#         ForeignKeyField part 0 in Employment is Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
+#         IndexField part 0 in Employee references Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
 #     Foreign keys outbound
 #       Foreign Key from Employee to Company over Absorption (mandatory) in Employee of Company in "Employee works at Company"
+#         ForeignKeyField part 0 in Employee is Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#         IndexField part 0 in Company references Absorption (existential) in Company of Company Name in "Company is called Company Name"
 #       Foreign Key from Employee to Employee over Absorption (optional) in Employee of Manager in "Employee is supervised by Manager"
+#         ForeignKeyField part 0 in Employee is Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
+#         IndexField part 0 in Employee references Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
 #   Composite Mapping (top) of Employment
 #     Columns
 #       Mapping (top) of Employment
@@ -84,7 +114,13 @@
 #         IndexField part 2 in Employment references Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
 #     Foreign keys outbound
 #       Foreign Key from Employment to Employee over Absorption (existential) in Employment of Employee in "Employment involves Employee"
+#         ForeignKeyField part 0 in Employment is Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
+#         IndexField part 0 in Employee references Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
 #       Foreign Key from Employment to Person over Absorption (existential) in Employment of Person in "Employment involves Person"
+#         ForeignKeyField part 0 in Employment is Absorption (existential) in Person of Given Name in "Person has given-Name"
+#         ForeignKeyField part 1 in Employment is Absorption (existential) in Person of Family Name in "Person is called family-Name"
+#         IndexField part 0 in Person references Absorption (existential) in Person of Given Name in "Person has given-Name"
+#         IndexField part 1 in Person references Absorption (existential) in Person of Family Name in "Person is called family-Name"
 #   Composite Mapping (top) of Meeting
 #     Columns
 #       Mapping (top) of Meeting
@@ -99,8 +135,16 @@
 #         IndexField part 2 in Meeting references Indicator "Meeting is board meeting"
 #     Foreign keys inbound
 #       Foreign Key from Attendance to Meeting over Absorption (existential) in Attendance of Meeting in "Attendance involves Meeting"
+#         ForeignKeyField part 0 in Attendance is Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#         ForeignKeyField part 1 in Attendance is Absorption (existential) in Meeting of Date in "Meeting is held on Date"
+#         ForeignKeyField part 2 in Attendance is Indicator "Meeting is board meeting"
+#         IndexField part 0 in Meeting references Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#         IndexField part 1 in Meeting references Absorption (existential) in Meeting of Date in "Meeting is held on Date"
+#         IndexField part 2 in Meeting references Indicator "Meeting is board meeting"
 #     Foreign keys outbound
 #       Foreign Key from Meeting to Company over Absorption (existential) in Meeting of Company in "Meeting is held by Company"
+#         ForeignKeyField part 0 in Meeting is Absorption (existential) in Company of Company Name in "Company is called Company Name"
+#         IndexField part 0 in Company references Absorption (existential) in Company of Company Name in "Company is called Company Name"
 #   Composite Mapping (top) of Person
 #     Columns
 #       Mapping (top) of Person
@@ -113,5 +157,17 @@
 #         IndexField part 1 in Person references Absorption (existential) in Person of Family Name in "Person is called family-Name"
 #     Foreign keys inbound
 #       Foreign Key from Attendance to Person over Absorption (existential) in Attendance of Attendee in "Attendance involves Person"
+#         ForeignKeyField part 0 in Attendance is Absorption (existential) in Attendee of Given Name in "Person has given-Name"
+#         ForeignKeyField part 1 in Attendance is Absorption (existential) in Attendee of Family Name in "Person is called family-Name"
+#         IndexField part 0 in Person references Absorption (existential) in Person of Given Name in "Person has given-Name"
+#         IndexField part 1 in Person references Absorption (existential) in Person of Family Name in "Person is called family-Name"
 #       Foreign Key from Directorship to Person over Absorption (existential) in Directorship of Director in "Directorship involves Person"
+#         ForeignKeyField part 0 in Directorship is Absorption (existential) in Director of Given Name in "Person has given-Name"
+#         ForeignKeyField part 1 in Directorship is Absorption (existential) in Director of Family Name in "Person is called family-Name"
+#         IndexField part 0 in Person references Absorption (existential) in Person of Given Name in "Person has given-Name"
+#         IndexField part 1 in Person references Absorption (existential) in Person of Family Name in "Person is called family-Name"
 #       Foreign Key from Employment to Person over Absorption (existential) in Employment of Person in "Employment involves Person"
+#         ForeignKeyField part 0 in Employment is Absorption (existential) in Person of Given Name in "Person has given-Name"
+#         ForeignKeyField part 1 in Employment is Absorption (existential) in Person of Family Name in "Person is called family-Name"
+#         IndexField part 0 in Person references Absorption (existential) in Person of Given Name in "Person has given-Name"
+#         IndexField part 1 in Person references Absorption (existential) in Person of Family Name in "Person is called family-Name"

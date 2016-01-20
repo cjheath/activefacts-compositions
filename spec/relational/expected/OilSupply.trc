@@ -14,7 +14,11 @@
 #         IndexField part 2 in Acceptable Substitution references Absorption (existential) in Acceptable Substitution of Season in "Acceptable Substitution involves Season"
 #     Foreign keys outbound
 #       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Alternate Product in "Acceptable Substitution involves Product"
+#         ForeignKeyField part 0 in Acceptable Substitution is Absorption (existential) in Alternate Product of Product Name in "Product has Product Name"
+#         IndexField part 0 in Product references Absorption (existential) in Product of Product Name in "Product has Product Name"
 #       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Product in "Acceptable Substitution involves Product"
+#         ForeignKeyField part 0 in Acceptable Substitution is Absorption (existential) in Product of Product Name in "Product has Product Name"
+#         IndexField part 0 in Product references Absorption (existential) in Product of Product Name in "Product has Product Name"
 #   Composite Mapping (top) of Month
 #     Columns
 #       Mapping (top) of Month
@@ -25,6 +29,8 @@
 #         IndexField part 0 in Month references Absorption (existential) in Month of Month Nr in "Month has Month Nr"
 #     Foreign keys inbound
 #       Foreign Key from Supply Period to Month over Absorption (existential) in Supply Period of Month in "Supply Period is in Month"
+#         ForeignKeyField part 0 in Supply Period is Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#         IndexField part 0 in Month references Absorption (existential) in Month of Month Nr in "Month has Month Nr"
 #   Composite Mapping (top) of Product
 #     Columns
 #       Mapping (top) of Product
@@ -34,9 +40,17 @@
 #         IndexField part 0 in Product references Absorption (existential) in Product of Product Name in "Product has Product Name"
 #     Foreign keys inbound
 #       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Alternate Product in "Acceptable Substitution involves Product"
+#         ForeignKeyField part 0 in Acceptable Substitution is Absorption (existential) in Alternate Product of Product Name in "Product has Product Name"
+#         IndexField part 0 in Product references Absorption (existential) in Product of Product Name in "Product has Product Name"
 #       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Product in "Acceptable Substitution involves Product"
+#         ForeignKeyField part 0 in Acceptable Substitution is Absorption (existential) in Product of Product Name in "Product has Product Name"
+#         IndexField part 0 in Product references Absorption (existential) in Product of Product Name in "Product has Product Name"
 #       Foreign Key from Production Forecast to Product over Absorption (existential) in Production Forecast of Product in "Production Forecast involves Product"
+#         ForeignKeyField part 0 in Production Forecast is Absorption (existential) in Product of Product Name in "Product has Product Name"
+#         IndexField part 0 in Product references Absorption (existential) in Product of Product Name in "Product has Product Name"
 #       Foreign Key from Regional Demand to Product over Absorption (existential) in Regional Demand of Product in "Regional Demand involves Product"
+#         ForeignKeyField part 0 in Regional Demand is Absorption (existential) in Product of Product Name in "Product has Product Name"
+#         IndexField part 0 in Product references Absorption (existential) in Product of Product Name in "Product has Product Name"
 #   Composite Mapping (top) of Production Forecast
 #     Columns
 #       Mapping (top) of Production Forecast
@@ -59,8 +73,16 @@
 #         IndexField part 3 in Production Forecast references Absorption (existential) in Product of Product Name in "Product has Product Name"
 #     Foreign keys outbound
 #       Foreign Key from Production Forecast to Product over Absorption (existential) in Production Forecast of Product in "Production Forecast involves Product"
+#         ForeignKeyField part 0 in Production Forecast is Absorption (existential) in Product of Product Name in "Product has Product Name"
+#         IndexField part 0 in Product references Absorption (existential) in Product of Product Name in "Product has Product Name"
 #       Foreign Key from Production Forecast to Refinery over Absorption (existential) in Production Forecast of Refinery in "Production Forecast involves Refinery"
+#         ForeignKeyField part 0 in Production Forecast is Absorption (existential) in Refinery of Refinery Name in "Refinery has Refinery Name"
+#         IndexField part 0 in Refinery references Absorption (existential) in Refinery of Refinery Name in "Refinery has Refinery Name"
 #       Foreign Key from Production Forecast to Supply Period over Absorption (existential) in Production Forecast of Supply Period in "Production Forecast involves Supply Period"
+#         ForeignKeyField part 0 in Production Forecast is Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#         ForeignKeyField part 1 in Production Forecast is Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#         IndexField part 0 in Supply Period references Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#         IndexField part 1 in Supply Period references Absorption (existential) in Month of Month Nr in "Month has Month Nr"
 #   Composite Mapping (top) of Refinery
 #     Columns
 #       Mapping (top) of Refinery
@@ -70,7 +92,11 @@
 #         IndexField part 0 in Refinery references Absorption (existential) in Refinery of Refinery Name in "Refinery has Refinery Name"
 #     Foreign keys inbound
 #       Foreign Key from Production Forecast to Refinery over Absorption (existential) in Production Forecast of Refinery in "Production Forecast involves Refinery"
+#         ForeignKeyField part 0 in Production Forecast is Absorption (existential) in Refinery of Refinery Name in "Refinery has Refinery Name"
+#         IndexField part 0 in Refinery references Absorption (existential) in Refinery of Refinery Name in "Refinery has Refinery Name"
 #       Foreign Key from Transport Route to Refinery over Absorption (existential) in Transport Route of Refinery in "Transport Route involves Refinery"
+#         ForeignKeyField part 0 in Transport Route is Absorption (existential) in Refinery of Refinery Name in "Refinery has Refinery Name"
+#         IndexField part 0 in Refinery references Absorption (existential) in Refinery of Refinery Name in "Refinery has Refinery Name"
 #   Composite Mapping (top) of Region
 #     Columns
 #       Mapping (top) of Region
@@ -80,7 +106,11 @@
 #         IndexField part 0 in Region references Absorption (existential) in Region of Region Name in "Region has Region Name"
 #     Foreign keys inbound
 #       Foreign Key from Regional Demand to Region over Absorption (existential) in Regional Demand of Region in "Regional Demand involves Region"
+#         ForeignKeyField part 0 in Regional Demand is Absorption (existential) in Region of Region Name in "Region has Region Name"
+#         IndexField part 0 in Region references Absorption (existential) in Region of Region Name in "Region has Region Name"
 #       Foreign Key from Transport Route to Region over Absorption (existential) in Transport Route of Region in "Transport Route involves Region"
+#         ForeignKeyField part 0 in Transport Route is Absorption (existential) in Region of Region Name in "Region has Region Name"
+#         IndexField part 0 in Region references Absorption (existential) in Region of Region Name in "Region has Region Name"
 #   Composite Mapping (top) of Regional Demand
 #     Columns
 #       Mapping (top) of Regional Demand
@@ -102,8 +132,16 @@
 #         IndexField part 3 in Regional Demand references Absorption (existential) in Product of Product Name in "Product has Product Name"
 #     Foreign keys outbound
 #       Foreign Key from Regional Demand to Product over Absorption (existential) in Regional Demand of Product in "Regional Demand involves Product"
+#         ForeignKeyField part 0 in Regional Demand is Absorption (existential) in Product of Product Name in "Product has Product Name"
+#         IndexField part 0 in Product references Absorption (existential) in Product of Product Name in "Product has Product Name"
 #       Foreign Key from Regional Demand to Region over Absorption (existential) in Regional Demand of Region in "Regional Demand involves Region"
+#         ForeignKeyField part 0 in Regional Demand is Absorption (existential) in Region of Region Name in "Region has Region Name"
+#         IndexField part 0 in Region references Absorption (existential) in Region of Region Name in "Region has Region Name"
 #       Foreign Key from Regional Demand to Supply Period over Absorption (existential) in Regional Demand of Supply Period in "Regional Demand involves Supply Period"
+#         ForeignKeyField part 0 in Regional Demand is Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#         ForeignKeyField part 1 in Regional Demand is Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#         IndexField part 0 in Supply Period references Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#         IndexField part 1 in Supply Period references Absorption (existential) in Month of Month Nr in "Month has Month Nr"
 #   Composite Mapping (top) of Supply Period
 #     Columns
 #       Mapping (top) of Supply Period
@@ -117,9 +155,19 @@
 #         IndexField part 1 in Supply Period references Absorption (existential) in Month of Month Nr in "Month has Month Nr"
 #     Foreign keys inbound
 #       Foreign Key from Production Forecast to Supply Period over Absorption (existential) in Production Forecast of Supply Period in "Production Forecast involves Supply Period"
+#         ForeignKeyField part 0 in Production Forecast is Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#         ForeignKeyField part 1 in Production Forecast is Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#         IndexField part 0 in Supply Period references Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#         IndexField part 1 in Supply Period references Absorption (existential) in Month of Month Nr in "Month has Month Nr"
 #       Foreign Key from Regional Demand to Supply Period over Absorption (existential) in Regional Demand of Supply Period in "Regional Demand involves Supply Period"
+#         ForeignKeyField part 0 in Regional Demand is Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#         ForeignKeyField part 1 in Regional Demand is Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#         IndexField part 0 in Supply Period references Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#         IndexField part 1 in Supply Period references Absorption (existential) in Month of Month Nr in "Month has Month Nr"
 #     Foreign keys outbound
 #       Foreign Key from Supply Period to Month over Absorption (existential) in Supply Period of Month in "Supply Period is in Month"
+#         ForeignKeyField part 0 in Supply Period is Absorption (existential) in Month of Month Nr in "Month has Month Nr"
+#         IndexField part 0 in Month references Absorption (existential) in Month of Month Nr in "Month has Month Nr"
 #   Composite Mapping (top) of Transport Route
 #     Columns
 #       Mapping (top) of Transport Route
@@ -136,4 +184,8 @@
 #         IndexField part 2 in Transport Route references Absorption (existential) in Region of Region Name in "Region has Region Name"
 #     Foreign keys outbound
 #       Foreign Key from Transport Route to Refinery over Absorption (existential) in Transport Route of Refinery in "Transport Route involves Refinery"
+#         ForeignKeyField part 0 in Transport Route is Absorption (existential) in Refinery of Refinery Name in "Refinery has Refinery Name"
+#         IndexField part 0 in Refinery references Absorption (existential) in Refinery of Refinery Name in "Refinery has Refinery Name"
 #       Foreign Key from Transport Route to Region over Absorption (existential) in Transport Route of Region in "Transport Route involves Region"
+#         ForeignKeyField part 0 in Transport Route is Absorption (existential) in Region of Region Name in "Region has Region Name"
+#         IndexField part 0 in Region references Absorption (existential) in Region of Region Name in "Region has Region Name"
