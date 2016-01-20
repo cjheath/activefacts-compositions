@@ -110,14 +110,17 @@ module ActiveFacts
 	composite.all_access_path.each do |access_path|
 	  next if MM::ForeignKey === access_path    # REVISIT: ForeignKeys are not finished
 	  report.call(access_path, "Must contain at least one IndexField") unless access_path.all_index_field.size > 0
+	  source_composite = MM::ForeignKey === access_path ? access_path.source_composite : composite
 	  access_path.all_index_field.each do |index_field|
 	    report.call(access_path, "#{index_field.inspect} must be an Indicator or played by a ValueType") unless index_field.component.is_a?(MM::Indicator) || index_field.component.object_type.is_a?(MM::ValueType)
+	    report.call(access_path, "#{index_field.inspect} must be within its composite") unless index_field.component.root == source_composite
 	  end
 	  if MM::ForeignKey === access_path
 	    if access_path.all_index_field.size == access_path.all_foreign_key_field.size
 	      access_path.all_index_field.to_a.zip(access_path.all_foreign_key_field.to_a).each do |index_field, foreign_key_field|
 		report.call(access_path, "#{index_field.inspect} must have matching target type") unless index_field.component.class == foreign_key_field.component.class
 		report.call(access_path, "#{index_field.inspect} must have matching target type") unless !index_field.component.is_a?(MM::Absorption) or index_field.component.object_type == foreign_key_field.component.object_type
+		report.call(access_path, "#{foreign_key_field.inspect} must be within the target composite") unless foreign_key_field.component.root == access_path.composite
 	      end
 	    else
 	      report.call(access_path, "Must contain a matching number of ForeignKeyField")
