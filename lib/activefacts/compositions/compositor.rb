@@ -58,7 +58,7 @@ module ActiveFacts
 
 	  a = @constellation.Absorption(
 	      :new,
-	      name: counterpart.name,
+	      name: String::Words.new(counterpart.base_role.preferred_reference.role_name(nil)).capwords*' ',
 	      parent: parent,
 	      object_type: counterpart.object_type,
 	      parent_role: role,
