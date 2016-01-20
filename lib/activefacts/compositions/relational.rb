@@ -368,6 +368,9 @@ module ActiveFacts
 	    end
 	  end
 	end
+	newpaths.each do |pc, path|
+	  path.retract if path.all_index_field.size == 0
+	end
 
 	# mapping.re_rank
       end

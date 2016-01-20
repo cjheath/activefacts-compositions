@@ -35,6 +35,7 @@ module ActiveFacts
 	  report.call(composite.mapping, "Should be the root of its mapping") if composite.mapping.root != composite
 
 	  validate_members composite.mapping, &report
+	  validate_access_paths composite, &report
 	end
       end
 
@@ -103,6 +104,26 @@ module ActiveFacts
 	# REVISIT: Nesting names must be unique
 	# REVISIT: Nesting roles must be played by...
 	# REVISIT: Nesting roles must be value types
+      end
+
+      def validate_access_paths composite, &report
+	composite.all_access_path.each do |access_path|
+	  next if MM::ForeignKey === access_path    # REVISIT: ForeignKeys are not finished
+	  report.call(access_path, "Must contain at least one IndexField") unless access_path.all_index_field.size > 0
+	  access_path.all_index_field.each do |index_field|
+	    report.call(access_path, "#{index_field.inspect} must be an Indicator or played by a ValueType") unless index_field.component.is_a?(MM::Indicator) || index_field.component.object_type.is_a?(MM::ValueType)
+	  end
+	  if MM::ForeignKey === access_path
+	    if access_path.all_index_field.size == access_path.all_foreign_key_field.size
+	      access_path.all_index_field.to_a.zip(access_path.all_foreign_key_field.to_a).each do |index_field, foreign_key_field|
+		report.call(access_path, "#{index_field.inspect} must have matching target type") unless index_field.component.class == foreign_key_field.component.class
+		report.call(access_path, "#{index_field.inspect} must have matching target type") unless !index_field.component.is_a?(MM::Absorption) or index_field.component.object_type == foreign_key_field.component.object_type
+	      end
+	    else
+	      report.call(access_path, "Must contain a matching number of ForeignKeyField")
+	    end
+	  end
+	end
       end
     end
   end
