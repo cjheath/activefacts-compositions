@@ -104,7 +104,8 @@ module ActiveFacts
 	    @binary_mappings[object_type]  # Ensure we create the top Mapping even if it has no references
 
 	    object_type.all_role.each do |role|
-	      next if role.mirror_role_as_base_role # Exclude base roles, just use link fact types
+	      # Exclude base roles in objectified fact types (unless unary); just use link fact types
+	      next if role.fact_type.entity_type && role.fact_type.all_role.size != 1
 	      next if role.variable_as_projection   # REVISIT: Continue to ignore roles in derived fact types?
 	      populate_reference object_type, role
 	    end
