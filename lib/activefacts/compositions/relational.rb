@@ -289,32 +289,36 @@ module ActiveFacts
 	child_object_type = member.child_role.object_type
 	table = @candidates[child_object_type]
 	child_mapping = @binary_mappings[child_object_type]
-	trace :relational_columns?, "Absorbing #{member.child_role.name} in #{member.inspect_reading}" do
-	  if table
+	if table
+	  trace :relational_columns?, "Absorbing FK to #{member.child_role.name} in #{member.inspect_reading}" do
 	    paths[member] = @constellation.ForeignKey(:new, source_composite: mapping.root, composite: child_mapping.composite, absorption: member)
 	    absorb_key member, child_mapping, paths
 	    return
 	  end
+	end
 
-	  # Is our target object_type fully absorbed (and not through this absorption)?
-	  full_absorption = child_object_type.all_full_absorption[@composition]
-	  # We can't use member.full_absorption here, as it's not populated on forked copies
-	  # if full_absorption && full_absorption != member.full_absorption
-	  if full_absorption && full_absorption.absorption.parent_role.fact_type != member.parent_role.fact_type
+	# Is our target object_type fully absorbed (and not through this absorption)?
+	full_absorption = child_object_type.all_full_absorption[@composition]
+	# We can't use member.full_absorption here, as it's not populated on forked copies
+	# if full_absorption && full_absorption != member.full_absorption
+	if full_absorption && full_absorption.absorption.parent_role.fact_type != member.parent_role.fact_type
 
-	    # REVISIT: This should be done by recursing to absorb_key, not using a loop
-	    absorption = member	# Retain this for the ForeignKey
-	    begin     # Follow transitive target absorption 
-	      member = mirror(full_absorption.absorption, member)
-	      child_object_type = full_absorption.absorption.parent_role.object_type
-	    end while full_absorption = child_object_type.all_full_absorption[@composition]
-	    child_mapping = @binary_mappings[child_object_type]
+	  # REVISIT: This should be done by recursing to absorb_key, not using a loop
+	  absorption = member	# Retain this for the ForeignKey
+	  begin     # Follow transitive target absorption
+	    member = mirror(full_absorption.absorption, member)
+	    child_object_type = full_absorption.absorption.parent_role.object_type
+	  end while full_absorption = child_object_type.all_full_absorption[@composition]
+	  child_mapping = @binary_mappings[child_object_type]
 
+	  trace :relational_columns?, "Absorbing FK to #{absorption.child_role.name} (fully absorbed into #{child_object_type.name}) in #{member.inspect_reading}" do
 	    paths[absorption] = @constellation.ForeignKey(:new, source_composite: mapping.root, composite: child_mapping.composite, absorption: absorption)
 	    absorb_key member, child_mapping, paths
-	    return
 	  end
+	  return
+	end
 
+	trace :relational_columns?, "Absorbing all of #{member.child_role.name} in #{member.inspect_reading}" do
 	  absorb_all member, child_mapping, paths
 	end
       end
@@ -324,15 +328,23 @@ module ActiveFacts
       def absorb_key mapping, target, paths
 	target.re_rank
 	target.all_member.sort_by(&:ordinal).each do |member|
-	  next unless member.rank_key[0] <= MM::Component::RANK_IDENT
+	  rank = member.rank_key[0]
+	  next unless rank <= MM::Component::RANK_IDENT
 	  member = fork_component_to_new_parent mapping, member
 	  augment_paths paths, member
 	  if member.is_a?(MM::Absorption)
 	    object_type = member.child_role.object_type
-	    if fa = @composition.all_full_absorption[member.child_role.object_type]
+	    fa = @composition.all_full_absorption[member.child_role.object_type]
+	    if fa
 	      # The target object is fully absorbed. Absorb a key to where it was absorbed
-	      member = mirror fa.absorption, member
-	      absorb_key member, fa.absorption.parent, paths
+	      # We can't recurse here, because we must descend supertype absorptions
+	      while fa
+		member = mirror fa.absorption, member
+		augment_paths paths, member
+		# This doesn't "feel" right, but it works right. Perhaps I'll understand why one day.
+		absorb_key member, fa.absorption.parent, paths
+		fa = @composition.all_full_absorption[member.child_role.object_type]
+	      end
 	    else
 	      absorb_key member, @binary_mappings[member.child_role.object_type], paths
 	    end
@@ -486,11 +498,13 @@ module ActiveFacts
 	end
 
 	paths.each do |pc, path|
-	  case path
-	  when MM::Index
-	    @constellation.IndexField(access_path: path, ordinal: path.all_index_field.size, component: mapping)
-	  when MM::ForeignKey
-	    @constellation.ForeignKeyField(foreign_key: path, ordinal: path.all_foreign_key_field.size, component: mapping)
+	  trace :relational_paths, "Adding #{mapping.inspect} to #{path.inspect}" do
+	    case path
+	    when MM::Index
+	      @constellation.IndexField(access_path: path, ordinal: path.all_index_field.size, component: mapping)
+	    when MM::ForeignKey
+	      @constellation.ForeignKeyField(foreign_key: path, ordinal: path.all_foreign_key_field.size, component: mapping)
+	    end
 	  end
 	end
       end

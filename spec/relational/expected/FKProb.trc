@@ -1,0 +1,66 @@
+# Full relational composition
+#   Composite Mapping (top) of OT
+#     Columns
+#       Mapping (top) of OT
+#         0: Absorption (existential) in OT of Name in "OT is called Name"
+#         1: Absorption (subtype) in OT of DOT (full) in "OT is a DOT"
+#           0: Absorption (subtype) in DOT of VT in "DOT is a VT"
+#     Indices
+#       Primary index to OT over PresenceConstraint over (Name) occurs at most one time
+#         IndexField part 0 in OT references Absorption (existential) in OT of Name in "OT is called Name"
+#     Foreign keys inbound
+#       Foreign Key from VTP to OT over Absorption (existential) in VTP of VT in "VTP involves VT"
+#         ForeignKeyField part 0 in VTP is Absorption (existential) in OT of Name in "OT is called Name"
+#         IndexField part 0 in OT references Absorption (existential) in OT of Name in "OT is called Name"
+#       Foreign Key from VTPRestriction to OT over Absorption (existential) in VTPRestriction of VT in "VTPRestriction involves VT"
+#         ForeignKeyField part 0 in VTPRestriction is Absorption (existential) in OT of Name in "OT is called Name"
+#         IndexField part 0 in OT references Absorption (existential) in OT of Name in "OT is called Name"
+#   Composite Mapping (top) of VTP
+#     Columns
+#       Mapping (top) of VTP
+#         0: Absorption (existential) in VTP of VT in "VTP involves VT"
+#           0: Absorption (supertype) in VT of DOT in "VT is a kind of DOT"
+#             0: Absorption (supertype) in DOT of OT in "DOT is a kind of OT"
+#               0: Absorption (existential) in OT of Name in "OT is called Name"
+#         1: Absorption (existential) in VTP of Name in "VTP involves Name"
+#     Indices
+#       Primary index to VTP over PresenceConstraint over (VT, Name) occurs at most one time
+#         IndexField part 0 in VTP references Absorption (existential) in OT of Name in "OT is called Name"
+#         IndexField part 1 in VTP references Absorption (existential) in VTP of Name in "VTP involves Name"
+#     Foreign keys inbound
+#       Foreign Key from VTPRestriction to VTP over Absorption (existential) in VTPRestriction of VTP in "VTPRestriction involves VTP"
+#         ForeignKeyField part 0 in VTPRestriction is Absorption (existential) in OT of Name in "OT is called Name"
+#         ForeignKeyField part 1 in VTPRestriction is Absorption (existential) in VTP of Name in "VTP involves Name"
+#         IndexField part 0 in VTP references Absorption (existential) in OT of Name in "OT is called Name"
+#         IndexField part 1 in VTP references Absorption (existential) in VTP of Name in "VTP involves Name"
+#     Foreign keys outbound
+#       Foreign Key from VTP to OT over Absorption (existential) in VTP of VT in "VTP involves VT"
+#         ForeignKeyField part 0 in VTP is Absorption (existential) in OT of Name in "OT is called Name"
+#         IndexField part 0 in OT references Absorption (existential) in OT of Name in "OT is called Name"
+#   Composite Mapping (top) of VTPRestriction
+#     Columns
+#       Mapping (top) of VTPRestriction
+#         0: Absorption (existential) in VTPRestriction of VT in "VTPRestriction involves VT"
+#           0: Absorption (supertype) in VT of DOT in "VT is a kind of DOT"
+#             0: Absorption (supertype) in DOT of OT in "DOT is a kind of OT"
+#               0: Absorption (existential) in OT of Name in "OT is called Name"
+#         1: Absorption (existential) in VTPRestriction of VTP in "VTPRestriction involves VTP"
+#           0: Absorption (existential) in VTP of VT in "VTP involves VT"
+#             0: Absorption (supertype) in VT of DOT in "VT is a kind of DOT"
+#               0: Absorption (supertype) in DOT of OT in "DOT is a kind of OT"
+#                 0: Absorption (existential) in OT of Name in "OT is called Name"
+#           1: Absorption (existential) in VTP of Name in "VTP involves Name"
+#     Indices
+#       Primary index to VTPRestriction over PresenceConstraint over (VT, VTP) occurs at most one time
+#         IndexField part 0 in VTPRestriction references Absorption (existential) in OT of Name in "OT is called Name"
+#         IndexField part 1 in VTPRestriction references Absorption (existential) in OT of Name in "OT is called Name"
+#         IndexField part 2 in VTPRestriction references Absorption (existential) in VTP of Name in "VTP involves Name"
+#     Foreign keys outbound
+#       Foreign Key from VTPRestriction to OT over Absorption (existential) in VTPRestriction of VT in "VTPRestriction involves VT"
+#         ForeignKeyField part 0 in VTPRestriction is Absorption (existential) in OT of Name in "OT is called Name"
+#         IndexField part 0 in OT references Absorption (existential) in OT of Name in "OT is called Name"
+#       Foreign Key from VTPRestriction to VTP over Absorption (existential) in VTPRestriction of VTP in "VTPRestriction involves VTP"
+#         ForeignKeyField part 0 in VTPRestriction is Absorption (existential) in OT of Name in "OT is called Name"
+#         ForeignKeyField part 1 in VTPRestriction is Absorption (existential) in VTP of Name in "VTP involves Name"
+#         IndexField part 0 in VTP references Absorption (existential) in OT of Name in "OT is called Name"
+#         IndexField part 1 in VTP references Absorption (existential) in VTP of Name in "VTP involves Name"
