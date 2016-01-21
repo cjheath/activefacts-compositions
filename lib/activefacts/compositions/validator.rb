@@ -25,7 +25,7 @@ module ActiveFacts
       MM = ActiveFacts::Metamodel
 
       def validate_composite composite, &report
-	trace :composition_validator, "Validating #{composite.inspect}" do
+	trace :composition_validator?, "Validating #{composite.inspect}" do
 	  report.call(composite, "Has no Mapping") unless composite.mapping
 	  report.call(composite, "Mapping is not a mapping") unless composite.mapping.class == MM::Mapping
 	  report.call(composite.mapping, "Has no ObjectType") unless composite.mapping.object_type
@@ -50,7 +50,7 @@ module ActiveFacts
 	report.call(mapping, "Contains duplicated names #{duplicate_names.map(&:inspect)*', '}") unless duplicate_names.empty?
 
 	mapping.all_member.each do |member|
-	  trace :composition_validator, "Validating #{member.inspect}" do
+	  trace :composition_validator?, "Validating #{member.inspect}" do
 	    report.call(member, "Requires a name") unless MM::Absorption === member && member.flattens or member.name && !member.name.empty?
 	    case member
 	    when MM::Absorption

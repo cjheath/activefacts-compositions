@@ -23,8 +23,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.3"
 
-  spec.add_runtime_dependency("activefacts-api", ">= 1.9.2", "~> 1")
-  spec.add_runtime_dependency("activefacts-metamodel", ">= 1.9.1", "~> 1")
-  spec.add_development_dependency "activefacts", ">= 1.8", "~> 1"
-  spec.add_development_dependency "activefacts-cql", ">= 1.8", "~> 1"
+  spec.add_runtime_dependency("activefacts-api", "~> 1", ">= 1.9.2")
+  spec.add_runtime_dependency("activefacts-metamodel", "~> 1", ">= 1.9.1")
+  spec.add_runtime_dependency "tracing", "~> 2", ">= 2.0.5"
+
+  spec.add_development_dependency "activefacts", "~> 1", ">= 1.8"
+  spec.add_development_dependency "activefacts-cql", "~> 1", ">= 1.8"
 end
