@@ -29,14 +29,17 @@ module ActiveFacts
 	  # Figure out how best to absorb things to reduce the number of tables
 	  optimise_absorption
 
-	  # Remove the un-used absorption paths
-	  delete_reverse_absorptions
-
 	  # Actually make a Composite object for each table:
 	  make_composites
 
 	  # If a value type has been mapped to a table, add a column to hold its value
 	  inject_value_fields
+
+	  # Inject surrogate keys if the options ask for that
+	  inject_surrogates if @options['surrogates']
+
+	  # Remove the un-used absorption paths
+	  delete_reverse_absorptions
 
 	  # Traverse the absorbed objects to build the path to each required column, including foreign keys:
 	  absorb_all_columns
@@ -260,6 +263,108 @@ module ActiveFacts
 	end
       end
 
+      def inject_surrogates
+	surrogate_type_name = [true, '', 'true', 'yes'].include?(t = @options['surrogates']) ? 'Auto Counter' : t
+	vocabulary = @composition.all_composite.to_a[0].mapping.object_type.vocabulary	# REVISIT: Crappy: choose the first (currently always single)
+	surrogate_type =
+	  @constellation.ValueType(
+	    vocabulary: vocabulary,
+	    name: surrogate_type_name,
+	    concept: [:new, :implication_rule => "surrogate injection"]
+	  )
+	@composition.all_composite.each do |composite|
+	  next unless needs_surrogate(composite)
+	  surrogate_component =
+	    @constellation.SurrogateKey(
+	      :new,
+	      parent: composite.mapping,
+	      name: composite.mapping.object_type.name+" ID",
+	      object_type: surrogate_type
+	    )
+	  index =
+	    @constellation.Index(
+	      :new,
+	      composite: composite.mapping.root,
+	      is_unique: true,
+	      presence_constraint: nil,				    # No PC exists
+	      composite_as_primary_index: composite.mapping.root    # Usurp the primary key
+	    )
+	  @constellation.IndexField(access_path: index, ordinal: 0, component: surrogate_component)
+	  composite.mapping.re_rank
+	end
+      end
+
+      def needs_surrogate(composite)
+	object_type = composite.mapping.object_type
+	if MM::ValueType === object_type
+	  trace :surrogates, "#{composite.inspect} is a ValueType that #{object_type.is_auto_assigned ? "is auto-assigned already" : "requires a surrogate" }"
+	  return !object_type.is_auto_assigned
+	end
+
+	non_key_members, key_members = composite.mapping.all_member.reject do |member|
+	  member.is_a?(MM::Absorption) and member.forward_absorption
+	end.partition do |member|
+	  member.rank_key[0] > MM::Component::RANK_IDENT
+	end
+
+	non_fk_surrogate =
+	  key_members.detect do |member|
+	    next true unless member.is_a?(MM::Absorption)
+	    next false if @composites[member.object_type] or @composition.all_full_absorption[member.object_type]	# It's a table or absorbed into one
+	  end
+
+	if key_members.size > 1
+	  # Multi-part identifiers are only allowed if:
+	  # * each part is a foreign key (i.e. it's a join table),
+	  # * there are no other columns (that might require updating) and
+	  # * the object is not the target of a foreign key:
+	  if non_fk_surrogate
+	    trace :surrogates, "#{composite.inspect} has non-FK identifiers so requires a surrogate"
+	    return true
+	  end
+
+	  if non_key_members.size > 0
+	    trace :surrogates, "#{composite.inspect} has non-identifying fields so requires a surrogate"
+	    return true
+	  end
+
+	  if @candidates[object_type].references_to.size > 0
+	    trace :surrogates, "#{composite.inspect} is the target of at least one foreign key so requires a surrogate"
+	    return true
+	  end
+
+	  trace :surrogates, "#{composite.inspect} is a join table that does NOT require a surrogate"
+	  return false
+	end
+
+	# A single-part PK is replaced by a surrogate unless the single part is a surrogate, an FK to a surrogate, or is an Absorbed auto-assigned VT
+
+	key_member = key_members[0]
+	if !non_fk_surrogate
+	  trace :surrogates, "#{composite.inspect} has an identifier that's an FK so does NOT require a surrogate"
+	  return false
+	end
+
+	if key_member.is_a?(MM::SurrogateKey)
+	  trace :surrogates, "#{composite.inspect} already has an injected SurrogateKey so does NOT require a surrogate"
+	  return false
+	end
+	unless key_member.is_a?(MM::Absorption)
+	  trace :surrogates, "#{composite.inspect} is identified by a non-Absorption so requires a surrogate"
+	  return true
+	end
+	if key_member.object_type.is_a?(MM::EntityType)
+	  trace :surrogates, "#{composite.inspect} is identified by another entity type so requires a surrogate"
+	  return true
+	end
+	if key_member.object_type.is_auto_assigned
+	  trace :surrogates, "#{composite.inspect} already has an auto-assigned key so does NOT require a surrogate"
+	  return false
+	end
+	trace :surrogates, "#{composite.inspect} requires a surrogate"
+	return true
+      end
+
       def clean_unused_mappings
 	@candidates.keys.to_a.each do |object_type|
 	  candidate = @candidates[object_type]
@@ -330,6 +435,7 @@ module ActiveFacts
 	target.all_member.sort_by(&:ordinal).each do |member|
 	  rank = member.rank_key[0]
 	  next unless rank <= MM::Component::RANK_IDENT
+	  #p member; debugger
 	  member = fork_component_to_new_parent mapping, member
 	  augment_paths paths, member
 	  if member.is_a?(MM::Absorption)
@@ -462,7 +568,8 @@ module ActiveFacts
 	  new_pcs.each do |pc|
 	    newpaths[pc] = index = @constellation.Index(:new, composite: mapping.root, is_unique: true, presence_constraint: pc)
 	    if mapping.object_type.preferred_identifier == pc and
-		!@composition.all_full_absorption[mapping.object_type]
+		!@composition.all_full_absorption[mapping.object_type] and
+		!mapping.root.primary_index
 	      index.composite_as_primary_index = mapping.root
 	    end
 	    trace :relational_paths, "Added new index #{index.inspect} for #{pc.describe} on #{pc.role_sequence.all_role_ref.map(&:role).map(&:fact_type).map(&:default_reading).inspect}"
@@ -494,7 +601,8 @@ module ActiveFacts
 
 	if MM::ValueField === mapping && mapping.parent.composite   # ValueType that's a composite (table) by itself
 	  # This AccessPath has exactly one field and no presence constraint, so just make the index.
-	  paths[nil] = @constellation.Index(:new, composite: mapping.root, is_unique: true, presence_constraint: nil, composite_as_primary_index: mapping.root)
+	  existing_pk = mapping.parent.composite.primary_index
+	  paths[nil] = @constellation.Index(:new, composite: mapping.root, is_unique: true, presence_constraint: nil, composite_as_primary_index: existing_pk ? nil : mapping.root)
 	end
 
 	paths.each do |pc, path|
@@ -521,12 +629,13 @@ module ActiveFacts
 	      end
 	      target = @composites[target_object_type]
 	      trace :relational_paths, "Completing #{path.inspect} to #{target.mapping.inspect}"
+#	      debugger if path.inspect =~ /Foreign Key from Set Comparison Roles to Constraint/
 	      if target.primary_index
 		target.primary_index.all_index_field.each do |index_field|
 		  @constellation.IndexField access_path: path, ordinal: index_field.ordinal, component: index_field.component
 		end
 	      else
-		$stderr.puts "Foreign key from #{path.source_composite.mapping.name} references target table #{target.mapping.name} which has no primary index"
+		raise "Foreign key from #{path.source_composite.mapping.name} references target table #{target.mapping.name} which has no primary index"
 	      end
 	    end
 	  end

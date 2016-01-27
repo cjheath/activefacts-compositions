@@ -71,6 +71,9 @@ module ActiveFacts
 	    when MM::ValueField
 	      # Nothing to check here
 
+	    when MM::SurrogateKey
+	      # Nothing to check here
+
 	    when MM::Injection
 	      report.call(member, "REVISIT: Unexpected and unchecked Injection")
 
@@ -117,7 +120,11 @@ module ActiveFacts
 	    if access_path.all_index_field.size == access_path.all_foreign_key_field.size
 	      access_path.all_index_field.to_a.zip(access_path.all_foreign_key_field.to_a).each do |index_field, foreign_key_field|
 		report.call(access_path, "#{index_field.inspect} must have matching target type") unless index_field.component.class == foreign_key_field.component.class
-		report.call(access_path, "#{index_field.inspect} must have matching target type") unless !index_field.component.is_a?(MM::Absorption) or index_field.component.object_type == foreign_key_field.component.object_type
+		unless index_field.component.class == foreign_key_field.component.class
+		  report.call(access_path, "#{index_field.inspect} must have component type matching #{foreign_key_field.inspect}")
+		else
+		  report.call(access_path, "#{index_field.inspect} must have matching target type") unless !index_field.component.is_a?(MM::Absorption) or index_field.component.object_type == foreign_key_field.component.object_type
+		end
 		report.call(access_path, "#{foreign_key_field.inspect} must be within the target composite") unless foreign_key_field.component.root == access_path.source_composite
 	      end
 	    else
