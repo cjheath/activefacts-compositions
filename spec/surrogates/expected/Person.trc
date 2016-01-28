@@ -1,0 +1,13 @@
+# Full relational composition
+#   Composite Mapping (top) of Person
+#     Columns
+#       Mapping (top) of Person
+#         0: SurrogateKey (surrogate) in Person of Person ID
+#         1: Absorption (existential) in Person of Family Name in "Person has family-Name"
+#         2: Absorption (existential) in Person of Given Name in "Person has given-Name"
+#     Indices
+#       Primary index to Person
+#         IndexField part 0 in Person references SurrogateKey (surrogate) in Person of Person ID
+#       Unique index to Person over PresenceConstraint over (Name, Name) occurs at most one time
+#         IndexField part 0 in Person references Absorption (existential) in Person of Family Name in "Person has family-Name"
+#         IndexField part 1 in Person references Absorption (existential) in Person of Given Name in "Person has given-Name"

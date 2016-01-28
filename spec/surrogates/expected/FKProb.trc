@@ -1,0 +1,63 @@
+# Full relational composition
+#   Composite Mapping (top) of OT
+#     Columns
+#       Mapping (top) of OT
+#         0: SurrogateKey (surrogate) in OT of OT ID
+#         1: Absorption (existential) in OT of Name in "OT is called Name"
+#         2: Absorption (subtype) in OT of DOT (full) in "OT is a DOT"
+#           0: Absorption (subtype) in DOT of VT in "DOT is a VT"
+#     Indices
+#       Primary index to OT
+#         IndexField part 0 in OT references SurrogateKey (surrogate) in OT of OT ID
+#       Unique index to OT over PresenceConstraint over (Name) occurs at most one time
+#         IndexField part 0 in OT references Absorption (existential) in OT of Name in "OT is called Name"
+#     Foreign keys inbound
+#       Foreign Key from VTP to OT over Absorption (existential) in VTP of VT in "VTP involves VT"
+#         ForeignKeyField part 0 in VTP is SurrogateKey (mandatory) in OT of OT ID
+#         IndexField part 0 in OT references SurrogateKey (surrogate) in OT of OT ID
+#       Foreign Key from VTPRestriction to OT over Absorption (existential) in VTPRestriction of VT in "VTPRestriction involves VT"
+#         ForeignKeyField part 0 in VTPRestriction is SurrogateKey (mandatory) in OT of OT ID
+#         IndexField part 0 in OT references SurrogateKey (surrogate) in OT of OT ID
+#   Composite Mapping (top) of VTP
+#     Columns
+#       Mapping (top) of VTP
+#         0: SurrogateKey (surrogate) in VTP of VTP ID
+#         1: Absorption (existential) in VTP of VT in "VTP involves VT"
+#           0: Absorption (supertype) in VT of DOT in "VT is a kind of DOT"
+#             0: Absorption (supertype) in DOT of OT in "DOT is a kind of OT"
+#               0: SurrogateKey (mandatory) in OT of OT ID
+#         2: Absorption (existential) in VTP of Name in "VTP involves Name"
+#     Indices
+#       Primary index to VTP
+#         IndexField part 0 in VTP references SurrogateKey (surrogate) in VTP of VTP ID
+#       Unique index to VTP over PresenceConstraint over (VT, Name) occurs at most one time
+#         IndexField part 0 in VTP references SurrogateKey (mandatory) in OT of OT ID
+#         IndexField part 1 in VTP references Absorption (existential) in VTP of Name in "VTP involves Name"
+#     Foreign keys inbound
+#       Foreign Key from VTPRestriction to VTP over Absorption (existential) in VTPRestriction of VTP in "VTPRestriction involves VTP"
+#         ForeignKeyField part 0 in VTPRestriction is SurrogateKey (mandatory) in VTP of VTP ID
+#         IndexField part 0 in VTP references SurrogateKey (surrogate) in VTP of VTP ID
+#     Foreign keys outbound
+#       Foreign Key from VTP to OT over Absorption (existential) in VTP of VT in "VTP involves VT"
+#         ForeignKeyField part 0 in VTP is SurrogateKey (mandatory) in OT of OT ID
+#         IndexField part 0 in OT references SurrogateKey (surrogate) in OT of OT ID
+#   Composite Mapping (top) of VTPRestriction
+#     Columns
+#       Mapping (top) of VTPRestriction
+#         0: Absorption (existential) in VTPRestriction of VT in "VTPRestriction involves VT"
+#           0: Absorption (supertype) in VT of DOT in "VT is a kind of DOT"
+#             0: Absorption (supertype) in DOT of OT in "DOT is a kind of OT"
+#               0: SurrogateKey (mandatory) in OT of OT ID
+#         1: Absorption (existential) in VTPRestriction of VTP in "VTPRestriction involves VTP"
+#           0: SurrogateKey (mandatory) in VTP of VTP ID
+#     Indices
+#       Primary index to VTPRestriction over PresenceConstraint over (VT, VTP) occurs at most one time
+#         IndexField part 0 in VTPRestriction references SurrogateKey (mandatory) in OT of OT ID
+#         IndexField part 1 in VTPRestriction references SurrogateKey (mandatory) in VTP of VTP ID
+#     Foreign keys outbound
+#       Foreign Key from VTPRestriction to OT over Absorption (existential) in VTPRestriction of VT in "VTPRestriction involves VT"
+#         ForeignKeyField part 0 in VTPRestriction is SurrogateKey (mandatory) in OT of OT ID
+#         IndexField part 0 in OT references SurrogateKey (surrogate) in OT of OT ID
+#       Foreign Key from VTPRestriction to VTP over Absorption (existential) in VTPRestriction of VTP in "VTPRestriction involves VTP"
+#         ForeignKeyField part 0 in VTPRestriction is SurrogateKey (mandatory) in VTP of VTP ID
+#         IndexField part 0 in VTP references SurrogateKey (surrogate) in VTP of VTP ID

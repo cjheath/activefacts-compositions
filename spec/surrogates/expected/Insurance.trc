@@ -1,0 +1,610 @@
+# Full relational composition
+#   Composite Mapping (top) of Asset
+#     Columns
+#       Mapping (top) of Asset
+#         0: Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#         1: Absorption (subtype) in Asset of Vehicle (full) in "Asset is a Vehicle"
+#           0: Absorption (existential) in Vehicle of VIN in "Vehicle has VIN"
+#           1: Indicator "Vehicle has commercial registration" (as "Has Commercial Registration")
+#           2: Absorption (mandatory) in Vehicle of Model Year in "Vehicle is of model-Year"
+#             0: Absorption (existential) in Model Year of Year Nr in "Year has Year Nr"
+#           3: Absorption (mandatory) in Vehicle of Registration in "Vehicle has Registration"
+#             0: Absorption (existential) in Registration of Registration Nr in "Registration has Registration Nr"
+#           4: Absorption (mandatory) in Vehicle of Vehicle Type in "Vehicle is of Vehicle Type"
+#             0: Absorption (existential) in Vehicle Type of Make in "Vehicle Type is of Make"
+#             1: Absorption (existential) in Vehicle Type of Model in "Vehicle Type is of Model"
+#             2: Absorption (existential) in Vehicle Type of Badge in "Vehicle Type has Badge"
+#           5: Absorption (optional) in Vehicle of Colour in "Vehicle is of Colour"
+#           6: Absorption (optional) in Vehicle of Dealer in "Vehicle was sold by Dealer"
+#             0: Absorption (supertype) in Dealer of Party in "Dealer is a kind of Party"
+#               0: Absorption (existential) in Party of Party ID in "Party has Party ID"
+#           7: Absorption (optional) in Vehicle of Engine Number in "Vehicle has Engine Number"
+#           8: Absorption (optional) in Vehicle of Finance Institution in "Vehicle is subject to finance with Finance Institution"
+#             0: Absorption (supertype) in Finance Institution of Company in "Finance Institution is a kind of Company"
+#               0: Absorption (supertype) in Company of Party in "Company is a kind of Party"
+#                 0: Absorption (existential) in Party of Party ID in "Party has Party ID"
+#     Indices
+#       Primary index to Asset over PresenceConstraint over (Asset-ID) occurs at most one time
+#         IndexField part 0 in Asset references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#       Unique index to Asset over PresenceConstraint over (VIN) occurs at most one time
+#         IndexField part 0 in Asset references Absorption (existential) in Vehicle of VIN in "Vehicle has VIN"
+#     Foreign keys inbound
+#       Foreign Key from Cover to Asset over Absorption (existential) in Cover of Asset in "Cover involves Asset"
+#         ForeignKeyField part 0 in Cover is Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#         IndexField part 0 in Asset references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#     Foreign keys outbound
+#       Foreign Key from Asset to Party over Absorption (optional) in Vehicle of Dealer in "Vehicle was sold by Dealer"
+#         ForeignKeyField part 0 in Asset is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Asset to Party over Absorption (optional) in Vehicle of Finance Institution in "Vehicle is subject to finance with Finance Institution"
+#         ForeignKeyField part 0 in Asset is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#   Composite Mapping (top) of Claim
+#     Columns
+#       Mapping (top) of Claim
+#         0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         1: Absorption (mandatory) in Claim of Lodgement (full) in "Lodgement involves Claim"
+#           0: Absorption (mandatory) in Lodgement of Person in "Lodgement involves Person"
+#             0: Absorption (supertype) in Person of Party in "Person is a kind of Party"
+#               0: Absorption (existential) in Party of Party ID in "Party has Party ID"
+#           1: Absorption (optional) in Lodgement of Date Time in "Lodgement was made at Date Time"
+#         2: Absorption (mandatory) in Claim of P_sequence in "Claim has Claim Sequence"
+#         3: Absorption (mandatory) in Claim of Policy in "Claim is on Policy"
+#           0: SurrogateKey (mandatory) in Policy of Policy ID
+#         4: Absorption (optional) in Claim of Incident (full) in "Claim concerns Incident"
+#           0: Absorption (mandatory) in Incident of Address in "Incident relates to loss at Address"
+#             0: Absorption (existential) in Address of Street in "Address is at Street"
+#             1: Absorption (existential) in Address of City in "Address is in City"
+#             2: Absorption (existential) in Address of Postcode in "Address is in Postcode"
+#             3: Absorption (existential) in Address of State in "Address is in State"
+#               0: SurrogateKey (mandatory) in State of State ID
+#           1: Absorption (mandatory) in Incident of Date Time in "Incident relates to loss on Date Time"
+#           2: Absorption (optional) in Incident of Police Report in "Incident is covered by Police Report"
+#             0: Absorption (optional) in Police Report of Officer Name in "Police Report was to officer-Name"
+#             1: Absorption (optional) in Police Report of Police Report Nr in "Police Report has police-Report Nr"
+#             2: Absorption (optional) in Police Report of Report Date Time in "Police Report was on report-Date Time"
+#             3: Absorption (optional) in Police Report of Reporter Name in "Police Report was by reporter-Name"
+#             4: Absorption (optional) in Police Report of Station Name in "Police Report was at station-Name"
+#     Indices
+#       Primary index to Claim over PresenceConstraint over (Claim-ID) occurs at most one time
+#         IndexField part 0 in Claim references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#       Unique index to Claim over PresenceConstraint over (Policy, p_sequence) occurs at most one time
+#         IndexField part 0 in Claim references Absorption (mandatory) in Claim of P_sequence in "Claim has Claim Sequence"
+#         IndexField part 1 in Claim references SurrogateKey (mandatory) in Policy of Policy ID
+#     Foreign keys inbound
+#       Foreign Key from Contractor Appointment to Claim over Absorption (existential) in Contractor Appointment of Claim in "Contractor Appointment involves Claim"
+#         ForeignKeyField part 0 in Contractor Appointment is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Claim references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#       Foreign Key from Lost Item to Claim over Absorption (existential) in Lost Item of Incident in "Lost Item was lost in Incident"
+#         ForeignKeyField part 0 in Lost Item is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Claim references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#       Foreign Key from Property Damage to Claim over Absorption (existential) in Property Damage of Incident in "Property Damage was damaged in Incident"
+#         ForeignKeyField part 0 in Property Damage is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Claim references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#       Foreign Key from Vehicle Incident to Claim over Absorption (supertype) in Vehicle Incident of Incident in "Vehicle Incident is a kind of Incident"
+#         ForeignKeyField part 0 in Vehicle Incident is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Claim references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#       Foreign Key from Witness to Claim over Absorption (existential) in Witness of Incident in "Witness saw Incident"
+#         ForeignKeyField part 0 in Witness is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Claim references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#     Foreign keys outbound
+#       Foreign Key from Claim to State over Absorption (existential) in Address of State in "Address is in State"
+#         ForeignKeyField part 0 in Claim is SurrogateKey (mandatory) in State of State ID
+#         IndexField part 0 in State references SurrogateKey (surrogate) in State of State ID
+#       Foreign Key from Claim to Policy over Absorption (mandatory) in Claim of Policy in "Claim is on Policy"
+#         ForeignKeyField part 0 in Claim is SurrogateKey (mandatory) in Policy of Policy ID
+#         IndexField part 0 in Policy references SurrogateKey (surrogate) in Policy of Policy ID
+#       Foreign Key from Claim to Party over Absorption (mandatory) in Lodgement of Person in "Lodgement involves Person"
+#         ForeignKeyField part 0 in Claim is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#   Composite Mapping (top) of Contractor Appointment
+#     Columns
+#       Mapping (top) of Contractor Appointment
+#         0: Absorption (existential) in Contractor Appointment of Claim in "Contractor Appointment involves Claim"
+#           0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         1: Absorption (existential) in Contractor Appointment of Contractor in "Contractor Appointment involves Contractor"
+#           0: Absorption (supertype) in Contractor of Company in "Contractor is a kind of Company"
+#             0: Absorption (supertype) in Company of Party in "Company is a kind of Party"
+#               0: Absorption (existential) in Party of Party ID in "Party has Party ID"
+#     Indices
+#       Primary index to Contractor Appointment over PresenceConstraint over (Claim, Contractor) occurs at most one time
+#         IndexField part 0 in Contractor Appointment references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 1 in Contractor Appointment references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#     Foreign keys outbound
+#       Foreign Key from Contractor Appointment to Claim over Absorption (existential) in Contractor Appointment of Claim in "Contractor Appointment involves Claim"
+#         ForeignKeyField part 0 in Contractor Appointment is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Claim references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#       Foreign Key from Contractor Appointment to Party over Absorption (existential) in Contractor Appointment of Contractor in "Contractor Appointment involves Contractor"
+#         ForeignKeyField part 0 in Contractor Appointment is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#   Composite Mapping (top) of Cover
+#     Columns
+#       Mapping (top) of Cover
+#         0: Absorption (existential) in Cover of Policy in "Cover involves Policy"
+#           0: SurrogateKey (mandatory) in Policy of Policy ID
+#         1: Absorption (existential) in Cover of Cover Type in "Cover involves Cover Type"
+#           0: SurrogateKey (mandatory) in Cover Type of Cover Type ID
+#         2: Absorption (existential) in Cover of Asset in "Cover involves Asset"
+#           0: Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#     Indices
+#       Primary index to Cover over PresenceConstraint over (Policy, Cover-Type, Asset) occurs at most one time
+#         IndexField part 0 in Cover references SurrogateKey (mandatory) in Policy of Policy ID
+#         IndexField part 1 in Cover references SurrogateKey (mandatory) in Cover Type of Cover Type ID
+#         IndexField part 2 in Cover references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#     Foreign keys outbound
+#       Foreign Key from Cover to Asset over Absorption (existential) in Cover of Asset in "Cover involves Asset"
+#         ForeignKeyField part 0 in Cover is Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#         IndexField part 0 in Asset references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#       Foreign Key from Cover to Cover Type over Absorption (existential) in Cover of Cover Type in "Cover involves Cover Type"
+#         ForeignKeyField part 0 in Cover is SurrogateKey (mandatory) in Cover Type of Cover Type ID
+#         IndexField part 0 in Cover Type references SurrogateKey (surrogate) in Cover Type of Cover Type ID
+#       Foreign Key from Cover to Policy over Absorption (existential) in Cover of Policy in "Cover involves Policy"
+#         ForeignKeyField part 0 in Cover is SurrogateKey (mandatory) in Policy of Policy ID
+#         IndexField part 0 in Policy references SurrogateKey (surrogate) in Policy of Policy ID
+#   Composite Mapping (top) of Cover Type
+#     Columns
+#       Mapping (top) of Cover Type
+#         0: SurrogateKey (surrogate) in Cover Type of Cover Type ID
+#         1: Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
+#         2: Absorption (mandatory) in Cover Type of Cover Type Name in "Cover Type has Cover Type Name"
+#     Indices
+#       Primary index to Cover Type
+#         IndexField part 0 in Cover Type references SurrogateKey (surrogate) in Cover Type of Cover Type ID
+#       Unique index to Cover Type over PresenceConstraint over (Cover-Type-Code) occurs at most one time
+#         IndexField part 0 in Cover Type references Absorption (existential) in Cover Type of Cover Type Code in "Cover Type has Cover Type Code"
+#       Unique index to Cover Type over PresenceConstraint over (Cover-Type-Name) occurs at most one time
+#         IndexField part 0 in Cover Type references Absorption (mandatory) in Cover Type of Cover Type Name in "Cover Type has Cover Type Name"
+#     Foreign keys inbound
+#       Foreign Key from Cover to Cover Type over Absorption (existential) in Cover of Cover Type in "Cover involves Cover Type"
+#         ForeignKeyField part 0 in Cover is SurrogateKey (mandatory) in Cover Type of Cover Type ID
+#         IndexField part 0 in Cover Type references SurrogateKey (surrogate) in Cover Type of Cover Type ID
+#       Foreign Key from Cover Wording to Cover Type over Absorption (existential) in Cover Wording of Cover Type in "Cover Wording involves Cover Type"
+#         ForeignKeyField part 0 in Cover Wording is SurrogateKey (mandatory) in Cover Type of Cover Type ID
+#         IndexField part 0 in Cover Type references SurrogateKey (surrogate) in Cover Type of Cover Type ID
+#   Composite Mapping (top) of Cover Wording
+#     Columns
+#       Mapping (top) of Cover Wording
+#         0: SurrogateKey (surrogate) in Cover Wording of Cover Wording ID
+#         1: Absorption (existential) in Cover Wording of Cover Type in "Cover Wording involves Cover Type"
+#           0: SurrogateKey (mandatory) in Cover Type of Cover Type ID
+#         2: Absorption (existential) in Cover Wording of Policy Wording in "Cover Wording involves Policy Wording"
+#           0: Absorption (existential) in Policy Wording of Policy Wording Text in "Policy Wording has Policy Wording Text"
+#         3: Absorption (existential) in Cover Wording of Start Date in "Cover Wording involves Date"
+#     Indices
+#       Primary index to Cover Wording
+#         IndexField part 0 in Cover Wording references SurrogateKey (surrogate) in Cover Wording of Cover Wording ID
+#       Unique index to Cover Wording over PresenceConstraint over (Cover-Type, Policy-Wording, start-Date) occurs at most one time
+#         IndexField part 0 in Cover Wording references SurrogateKey (mandatory) in Cover Type of Cover Type ID
+#         IndexField part 1 in Cover Wording references Absorption (existential) in Policy Wording of Policy Wording Text in "Policy Wording has Policy Wording Text"
+#         IndexField part 2 in Cover Wording references Absorption (existential) in Cover Wording of Start Date in "Cover Wording involves Date"
+#     Foreign keys outbound
+#       Foreign Key from Cover Wording to Cover Type over Absorption (existential) in Cover Wording of Cover Type in "Cover Wording involves Cover Type"
+#         ForeignKeyField part 0 in Cover Wording is SurrogateKey (mandatory) in Cover Type of Cover Type ID
+#         IndexField part 0 in Cover Type references SurrogateKey (surrogate) in Cover Type of Cover Type ID
+#   Composite Mapping (top) of Loss Type
+#     Columns
+#       Mapping (top) of Loss Type
+#         0: SurrogateKey (surrogate) in Loss Type of Loss Type ID
+#         1: Absorption (existential) in Loss Type of Loss Type Code in "Loss Type has Loss Type Code"
+#         2: Indicator "Loss Type involves driving" (as "Involves Driving")
+#         3: Indicator "Loss Type is single vehicle incident" (as "Is Single Vehicle Incident")
+#         4: Absorption (optional) in Loss Type of Liability in "Loss Type implies Liability"
+#           0: Absorption (existential) in Liability of Liability Code in "Liability has Liability Code"
+#     Indices
+#       Primary index to Loss Type
+#         IndexField part 0 in Loss Type references SurrogateKey (surrogate) in Loss Type of Loss Type ID
+#       Unique index to Loss Type over PresenceConstraint over (Loss-Type-Code) occurs at most one time
+#         IndexField part 0 in Loss Type references Absorption (existential) in Loss Type of Loss Type Code in "Loss Type has Loss Type Code"
+#     Foreign keys inbound
+#       Foreign Key from Vehicle Incident to Loss Type over Absorption (optional) in Vehicle Incident of Loss Type in "Vehicle Incident resulted from Loss Type"
+#         ForeignKeyField part 0 in Vehicle Incident is SurrogateKey (mandatory) in Loss Type of Loss Type ID
+#         IndexField part 0 in Loss Type references SurrogateKey (surrogate) in Loss Type of Loss Type ID
+#   Composite Mapping (top) of Lost Item
+#     Columns
+#       Mapping (top) of Lost Item
+#         0: SurrogateKey (surrogate) in Lost Item of Lost Item ID
+#         1: Absorption (existential) in Lost Item of Incident in "Lost Item was lost in Incident"
+#           0: Absorption (existential) in Incident of Claim in "Incident is of Claim"
+#             0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         2: Absorption (existential) in Lost Item of Lost Item Nr in "Lost Item has Lost Item Nr"
+#         3: Absorption (mandatory) in Lost Item of Description in "Lost Item has Description"
+#         4: Absorption (optional) in Lost Item of Purchase Date in "Lost Item was purchased on purchase-Date"
+#         5: Absorption (optional) in Lost Item of Purchase Place in "Lost Item was purchased at purchase-Place"
+#         6: Absorption (optional) in Lost Item of Purchase Price in "Lost Item was purchased for purchase-Price"
+#     Indices
+#       Primary index to Lost Item
+#         IndexField part 0 in Lost Item references SurrogateKey (surrogate) in Lost Item of Lost Item ID
+#       Unique index to Lost Item over PresenceConstraint over (Incident, Lost-Item-Nr) occurs at most one time
+#         IndexField part 0 in Lost Item references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 1 in Lost Item references Absorption (existential) in Lost Item of Lost Item Nr in "Lost Item has Lost Item Nr"
+#     Foreign keys outbound
+#       Foreign Key from Lost Item to Claim over Absorption (existential) in Lost Item of Incident in "Lost Item was lost in Incident"
+#         ForeignKeyField part 0 in Lost Item is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Claim references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#   Composite Mapping (top) of Party
+#     Columns
+#       Mapping (top) of Party
+#         0: Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         1: Indicator "Party is a company" (as "Is A Company")
+#         2: Absorption (optional) in Party of Postal Address in "Party has postal-Address"
+#           0: Absorption (existential) in Postal Address of Street in "Address is at Street"
+#           1: Absorption (existential) in Postal Address of City in "Address is in City"
+#           2: Absorption (existential) in Postal Address of Postcode in "Address is in Postcode"
+#           3: Absorption (existential) in Postal Address of State in "Address is in State"
+#             0: SurrogateKey (mandatory) in State of State ID
+#         3: Absorption (subtype) in Party of Authorised Rep (full) in "Party is an Authorised Rep"
+#         4: Absorption (subtype) in Party of Company (full) in "Party is a Company"
+#           0: Absorption (mandatory) in Company of Contact Person in "Company has contact-Person"
+#             0: Absorption (supertype) in Contact Person of Party in "Person is a kind of Party"
+#               0: Absorption (existential) in Party of Party ID in "Party has Party ID"
+#           1: Absorption (subtype) in Company of Contractor in "Company is a Contractor"
+#             0: Absorption (subtype) in Contractor of Assessor in "Contractor is an Assessor"
+#             1: Absorption (subtype) in Contractor of Investigator in "Contractor is an Investigator"
+#             2: Absorption (subtype) in Contractor of Repairer in "Contractor is a Repairer"
+#             3: Absorption (subtype) in Contractor of Solicitor in "Contractor is a Solicitor"
+#           2: Absorption (subtype) in Company of Finance Institution in "Company is a Finance Institution"
+#           3: Absorption (subtype) in Company of Insurer in "Company is an Insurer"
+#         5: Absorption (subtype) in Party of Dealer (full) in "Party is a Dealer"
+#         6: Absorption (subtype) in Party of Insured (full) in "Party is an Insured"
+#         7: Absorption (subtype) in Party of Person (full) in "Party is a Person"
+#           0: Absorption (mandatory) in Person of Contact Methods in "Person has Contact Methods"
+#             0: Absorption (optional) in Contact Methods of Business Phone in "Contact Methods includes business-Phone"
+#               0: Absorption (existential) in Business Phone of Phone Nr in "Phone has Phone Nr"
+#             1: Absorption (optional) in Contact Methods of Contact Time in "Contact Methods prefers contact-Time"
+#             2: Absorption (optional) in Contact Methods of Email in "Contact Methods includes Email"
+#             3: Absorption (optional) in Contact Methods of Home Phone in "Contact Methods includes home-Phone"
+#               0: Absorption (existential) in Home Phone of Phone Nr in "Phone has Phone Nr"
+#             4: Absorption (optional) in Contact Methods of Mobile Phone in "Contact Methods includes mobile-Phone"
+#               0: Absorption (existential) in Mobile Phone of Phone Nr in "Phone has Phone Nr"
+#             5: Absorption (optional) in Contact Methods of Preferred Contact Method in "Contact Methods has preferred-Contact Method"
+#           1: Absorption (mandatory) in Person of Family Name in "Person has family-Name"
+#           2: Absorption (mandatory) in Person of Given Name in "Person has given-Name"
+#           3: Absorption (mandatory) in Person of Title in "Person has Title"
+#           4: Absorption (optional) in Person of Address in "Person lives at Address"
+#             0: Absorption (existential) in Address of Street in "Address is at Street"
+#             1: Absorption (existential) in Address of City in "Address is in City"
+#             2: Absorption (existential) in Address of Postcode in "Address is in Postcode"
+#             3: Absorption (existential) in Address of State in "Address is in State"
+#               0: SurrogateKey (mandatory) in State of State ID
+#           5: Absorption (optional) in Person of Birth Date in "Person has birth-Date"
+#           6: Absorption (optional) in Person of License in "Person holds License"
+#             0: Indicator "License is international" (as "Is International")
+#             1: Absorption (mandatory) in License of License Number in "License has License Number"
+#             2: Absorption (mandatory) in License of License Type in "License is of License Type"
+#             3: Absorption (optional) in License of Year in "License was granted in Year"
+#               0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
+#           7: Absorption (optional) in Person of Occupation in "Person has Occupation"
+#     Indices
+#       Primary index to Party over PresenceConstraint over (Party-ID) occurs at most one time
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#     Foreign keys inbound
+#       Foreign Key from Asset to Party over Absorption (optional) in Vehicle of Dealer in "Vehicle was sold by Dealer"
+#         ForeignKeyField part 0 in Asset is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Asset to Party over Absorption (optional) in Vehicle of Finance Institution in "Vehicle is subject to finance with Finance Institution"
+#         ForeignKeyField part 0 in Asset is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Claim to Party over Absorption (mandatory) in Lodgement of Person in "Lodgement involves Person"
+#         ForeignKeyField part 0 in Claim is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Contractor Appointment to Party over Absorption (existential) in Contractor Appointment of Contractor in "Contractor Appointment involves Contractor"
+#         ForeignKeyField part 0 in Contractor Appointment is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Party to Party over Absorption (mandatory) in Company of Contact Person in "Company has contact-Person"
+#         ForeignKeyField part 0 in Party is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Policy to Party over Absorption (mandatory) in Policy of Insured in "Policy belongs to Insured"
+#         ForeignKeyField part 0 in Policy is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Policy to Party over Absorption (optional) in Policy of Authorised Rep in "Policy was sold by Authorised Rep"
+#         ForeignKeyField part 0 in Policy is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Third Party to Party over Absorption (existential) in Third Party of Person in "Third Party involves Person"
+#         ForeignKeyField part 0 in Third Party is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Third Party to Party over Absorption (optional) in Third Party of Insurer in "Third Party is insured by Insurer"
+#         ForeignKeyField part 0 in Third Party is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Vehicle Incident to Party over Absorption (mandatory) in Driving of Person in "Driving was by Person"
+#         ForeignKeyField part 0 in Vehicle Incident is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#     Foreign keys outbound
+#       Foreign Key from Party to State over Absorption (existential) in Address of State in "Address is in State"
+#         ForeignKeyField part 0 in Party is SurrogateKey (mandatory) in State of State ID
+#         IndexField part 0 in State references SurrogateKey (surrogate) in State of State ID
+#       Foreign Key from Party to State over Absorption (existential) in Postal Address of State in "Address is in State"
+#         ForeignKeyField part 0 in Party is SurrogateKey (mandatory) in State of State ID
+#         IndexField part 0 in State references SurrogateKey (surrogate) in State of State ID
+#       Foreign Key from Party to Party over Absorption (mandatory) in Company of Contact Person in "Company has contact-Person"
+#         ForeignKeyField part 0 in Party is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#   Composite Mapping (top) of Policy
+#     Columns
+#       Mapping (top) of Policy
+#         0: SurrogateKey (surrogate) in Policy of Policy ID
+#         1: Absorption (existential) in Policy of P_year in "Policy was issued in Year"
+#           0: Absorption (existential) in P_year of Year Nr in "Year has Year Nr"
+#         2: Absorption (existential) in Policy of P_product in "Policy is for product having Product"
+#           0: SurrogateKey (mandatory) in P_product of Product ID
+#         3: Absorption (existential) in Policy of P_state in "Policy issued in state having State"
+#           0: SurrogateKey (mandatory) in P_state of State ID
+#         4: Absorption (existential) in Policy of P_serial in "Policy has Policy Serial"
+#         5: Absorption (mandatory) in Policy of Application in "Policy has Application"
+#           0: Absorption (existential) in Application of Application Nr in "Application has Application Nr"
+#         6: Absorption (mandatory) in Policy of Insured in "Policy belongs to Insured"
+#           0: Absorption (supertype) in Insured of Party in "Insured is a kind of Party"
+#             0: Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         7: Absorption (optional) in Policy of Authorised Rep in "Policy was sold by Authorised Rep"
+#           0: Absorption (supertype) in Authorised Rep of Party in "Authorised Rep is a kind of Party"
+#             0: Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         8: Absorption (optional) in Policy of ITC Claimed in "Policy has ITC Claimed"
+#         9: Absorption (subtype) in Policy of Motor Policy (full) in "Policy is a Motor Policy"
+#           0: Absorption (subtype) in Motor Policy of Motor Fleet Policy in "Motor Policy is a Motor Fleet Policy"
+#           1: Absorption (subtype) in Motor Policy of Single Motor Policy in "Motor Policy is a Single Motor Policy"
+#     Indices
+#       Primary index to Policy
+#         IndexField part 0 in Policy references SurrogateKey (surrogate) in Policy of Policy ID
+#       Unique index to Policy over PresenceConstraint over (p_year, p_product, p_state, p_serial) occurs at most one time
+#         IndexField part 0 in Policy references Absorption (existential) in P_year of Year Nr in "Year has Year Nr"
+#         IndexField part 1 in Policy references SurrogateKey (mandatory) in P_product of Product ID
+#         IndexField part 2 in Policy references SurrogateKey (mandatory) in P_state of State ID
+#         IndexField part 3 in Policy references Absorption (existential) in Policy of P_serial in "Policy has Policy Serial"
+#     Foreign keys inbound
+#       Foreign Key from Claim to Policy over Absorption (mandatory) in Claim of Policy in "Claim is on Policy"
+#         ForeignKeyField part 0 in Claim is SurrogateKey (mandatory) in Policy of Policy ID
+#         IndexField part 0 in Policy references SurrogateKey (surrogate) in Policy of Policy ID
+#       Foreign Key from Cover to Policy over Absorption (existential) in Cover of Policy in "Cover involves Policy"
+#         ForeignKeyField part 0 in Cover is SurrogateKey (mandatory) in Policy of Policy ID
+#         IndexField part 0 in Policy references SurrogateKey (surrogate) in Policy of Policy ID
+#     Foreign keys outbound
+#       Foreign Key from Policy to Product over Absorption (existential) in Policy of P_product in "Policy is for product having Product"
+#         ForeignKeyField part 0 in Policy is SurrogateKey (mandatory) in P_product of Product ID
+#         IndexField part 0 in Product references SurrogateKey (surrogate) in Product of Product ID
+#       Foreign Key from Policy to State over Absorption (existential) in Policy of P_state in "Policy issued in state having State"
+#         ForeignKeyField part 0 in Policy is SurrogateKey (mandatory) in P_state of State ID
+#         IndexField part 0 in State references SurrogateKey (surrogate) in State of State ID
+#       Foreign Key from Policy to Party over Absorption (mandatory) in Policy of Insured in "Policy belongs to Insured"
+#         ForeignKeyField part 0 in Policy is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Policy to Party over Absorption (optional) in Policy of Authorised Rep in "Policy was sold by Authorised Rep"
+#         ForeignKeyField part 0 in Policy is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#   Composite Mapping (top) of Product
+#     Columns
+#       Mapping (top) of Product
+#         0: SurrogateKey (surrogate) in Product of Product ID
+#         1: Absorption (existential) in Product of Product Code in "Product has Product Code"
+#         2: Absorption (optional) in Product of Alias in "Product has Alias"
+#         3: Absorption (optional) in Product of Description in "Product has Description"
+#     Indices
+#       Primary index to Product
+#         IndexField part 0 in Product references SurrogateKey (surrogate) in Product of Product ID
+#       Unique index to Product over PresenceConstraint over (Product-Code) occurs at most one time
+#         IndexField part 0 in Product references Absorption (existential) in Product of Product Code in "Product has Product Code"
+#       Unique index to Product over PresenceConstraint over (Alias) occurs at most one time
+#         IndexField part 0 in Product references Absorption (optional) in Product of Alias in "Product has Alias"
+#       Unique index to Product over PresenceConstraint over (Description) occurs at most one time
+#         IndexField part 0 in Product references Absorption (optional) in Product of Description in "Product has Description"
+#     Foreign keys inbound
+#       Foreign Key from Policy to Product over Absorption (existential) in Policy of P_product in "Policy is for product having Product"
+#         ForeignKeyField part 0 in Policy is SurrogateKey (mandatory) in P_product of Product ID
+#         IndexField part 0 in Product references SurrogateKey (surrogate) in Product of Product ID
+#   Composite Mapping (top) of Property Damage
+#     Columns
+#       Mapping (top) of Property Damage
+#         0: SurrogateKey (surrogate) in Property Damage of Property Damage ID
+#         1: Absorption (existential) in Property Damage of Incident in "Property Damage was damaged in Incident"
+#           0: Absorption (existential) in Incident of Claim in "Incident is of Claim"
+#             0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         2: Absorption (existential) in Property Damage of Address in "Property Damage is at Address"
+#           0: Absorption (existential) in Address of Street in "Address is at Street"
+#           1: Absorption (existential) in Address of City in "Address is in City"
+#           2: Absorption (existential) in Address of Postcode in "Address is in Postcode"
+#           3: Absorption (existential) in Address of State in "Address is in State"
+#             0: SurrogateKey (mandatory) in State of State ID
+#         3: Absorption (optional) in Property Damage of Owner Name in "Property Damage belongs to owner-Name"
+#         4: Absorption (optional) in Property Damage of Phone in "Property Damage owner has contact Phone"
+#           0: Absorption (existential) in Phone of Phone Nr in "Phone has Phone Nr"
+#     Indices
+#       Primary index to Property Damage
+#         IndexField part 0 in Property Damage references SurrogateKey (surrogate) in Property Damage of Property Damage ID
+#       Unique index to Property Damage over PresenceConstraint over (Incident, Address) occurs at most one time
+#         IndexField part 0 in Property Damage references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 1 in Property Damage references Absorption (existential) in Address of Street in "Address is at Street"
+#         IndexField part 2 in Property Damage references Absorption (existential) in Address of City in "Address is in City"
+#         IndexField part 3 in Property Damage references Absorption (existential) in Address of Postcode in "Address is in Postcode"
+#         IndexField part 4 in Property Damage references SurrogateKey (mandatory) in State of State ID
+#     Foreign keys outbound
+#       Foreign Key from Property Damage to State over Absorption (existential) in Address of State in "Address is in State"
+#         ForeignKeyField part 0 in Property Damage is SurrogateKey (mandatory) in State of State ID
+#         IndexField part 0 in State references SurrogateKey (surrogate) in State of State ID
+#       Foreign Key from Property Damage to Claim over Absorption (existential) in Property Damage of Incident in "Property Damage was damaged in Incident"
+#         ForeignKeyField part 0 in Property Damage is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Claim references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#   Composite Mapping (top) of State
+#     Columns
+#       Mapping (top) of State
+#         0: SurrogateKey (surrogate) in State of State ID
+#         1: Absorption (existential) in State of State Code in "State has State Code"
+#         2: Absorption (optional) in State of State Name in "State has State Name"
+#     Indices
+#       Primary index to State
+#         IndexField part 0 in State references SurrogateKey (surrogate) in State of State ID
+#       Unique index to State over PresenceConstraint over (State-Code) occurs at most one time
+#         IndexField part 0 in State references Absorption (existential) in State of State Code in "State has State Code"
+#       Unique index to State over PresenceConstraint over (State-Name) occurs at most one time
+#         IndexField part 0 in State references Absorption (optional) in State of State Name in "State has State Name"
+#     Foreign keys inbound
+#       Foreign Key from Claim to State over Absorption (existential) in Address of State in "Address is in State"
+#         ForeignKeyField part 0 in Claim is SurrogateKey (mandatory) in State of State ID
+#         IndexField part 0 in State references SurrogateKey (surrogate) in State of State ID
+#       Foreign Key from Party to State over Absorption (existential) in Address of State in "Address is in State"
+#         ForeignKeyField part 0 in Party is SurrogateKey (mandatory) in State of State ID
+#         IndexField part 0 in State references SurrogateKey (surrogate) in State of State ID
+#       Foreign Key from Party to State over Absorption (existential) in Postal Address of State in "Address is in State"
+#         ForeignKeyField part 0 in Party is SurrogateKey (mandatory) in State of State ID
+#         IndexField part 0 in State references SurrogateKey (surrogate) in State of State ID
+#       Foreign Key from Policy to State over Absorption (existential) in Policy of P_state in "Policy issued in state having State"
+#         ForeignKeyField part 0 in Policy is SurrogateKey (mandatory) in P_state of State ID
+#         IndexField part 0 in State references SurrogateKey (surrogate) in State of State ID
+#       Foreign Key from Property Damage to State over Absorption (existential) in Address of State in "Address is in State"
+#         ForeignKeyField part 0 in Property Damage is SurrogateKey (mandatory) in State of State ID
+#         IndexField part 0 in State references SurrogateKey (surrogate) in State of State ID
+#       Foreign Key from Witness to State over Absorption (existential) in Address of State in "Address is in State"
+#         ForeignKeyField part 0 in Witness is SurrogateKey (mandatory) in State of State ID
+#         IndexField part 0 in State references SurrogateKey (surrogate) in State of State ID
+#   Composite Mapping (top) of Third Party
+#     Columns
+#       Mapping (top) of Third Party
+#         0: SurrogateKey (surrogate) in Third Party of Third Party ID
+#         1: Absorption (existential) in Third Party of Person in "Third Party involves Person"
+#           0: Absorption (supertype) in Person of Party in "Person is a kind of Party"
+#             0: Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         2: Absorption (existential) in Third Party of Vehicle Incident in "Third Party involves Vehicle Incident"
+#           0: Absorption (supertype) in Vehicle Incident of Incident in "Vehicle Incident is a kind of Incident"
+#             0: Absorption (existential) in Incident of Claim in "Incident is of Claim"
+#               0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         3: Absorption (optional) in Third Party of Insurer in "Third Party is insured by Insurer"
+#           0: Absorption (supertype) in Insurer of Company in "Insurer is a kind of Company"
+#             0: Absorption (supertype) in Company of Party in "Company is a kind of Party"
+#               0: Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         4: Absorption (optional) in Third Party of Model Year in "Third Party vehicle is of model-Year"
+#           0: Absorption (existential) in Model Year of Year Nr in "Year has Year Nr"
+#         5: Absorption (optional) in Third Party of Vehicle Registration in "Third Party drove vehicle-Registration"
+#           0: Absorption (existential) in Vehicle Registration of Registration Nr in "Registration has Registration Nr"
+#         6: Absorption (optional) in Third Party of Vehicle Type in "Third Party vehicle is of Vehicle Type"
+#           0: Absorption (existential) in Vehicle Type of Make in "Vehicle Type is of Make"
+#           1: Absorption (existential) in Vehicle Type of Model in "Vehicle Type is of Model"
+#           2: Absorption (existential) in Vehicle Type of Badge in "Vehicle Type has Badge"
+#     Indices
+#       Primary index to Third Party
+#         IndexField part 0 in Third Party references SurrogateKey (surrogate) in Third Party of Third Party ID
+#       Unique index to Third Party over PresenceConstraint over (Person, Vehicle-Incident) occurs at most one time
+#         IndexField part 0 in Third Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 1 in Third Party references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#     Foreign keys outbound
+#       Foreign Key from Third Party to Party over Absorption (existential) in Third Party of Person in "Third Party involves Person"
+#         ForeignKeyField part 0 in Third Party is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Third Party to Vehicle Incident over Absorption (existential) in Third Party of Vehicle Incident in "Third Party involves Vehicle Incident"
+#         ForeignKeyField part 0 in Third Party is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Vehicle Incident references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#       Foreign Key from Third Party to Party over Absorption (optional) in Third Party of Insurer in "Third Party is insured by Insurer"
+#         ForeignKeyField part 0 in Third Party is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#   Composite Mapping (top) of Underwriting Demerit
+#     Columns
+#       Mapping (top) of Underwriting Demerit
+#         0: SurrogateKey (surrogate) in Underwriting Demerit of Underwriting Demerit ID
+#         1: Absorption (existential) in Underwriting Demerit of Vehicle Incident in "Underwriting Demerit preceded Vehicle Incident"
+#           0: Absorption (supertype) in Vehicle Incident of Incident in "Vehicle Incident is a kind of Incident"
+#             0: Absorption (existential) in Incident of Claim in "Incident is of Claim"
+#               0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         2: Absorption (existential) in Underwriting Demerit of Underwriting Question in "Underwriting Demerit has Underwriting Question"
+#           0: Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
+#         3: Absorption (optional) in Underwriting Demerit of Occurrence Count in "Underwriting Demerit occurred occurrence-Count times"
+#     Indices
+#       Primary index to Underwriting Demerit
+#         IndexField part 0 in Underwriting Demerit references SurrogateKey (surrogate) in Underwriting Demerit of Underwriting Demerit ID
+#       Unique index to Underwriting Demerit over PresenceConstraint over (Vehicle-Incident, Underwriting-Question) occurs at most one time
+#         IndexField part 0 in Underwriting Demerit references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 1 in Underwriting Demerit references Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
+#     Foreign keys outbound
+#       Foreign Key from Underwriting Demerit to Underwriting Question over Absorption (existential) in Underwriting Demerit of Underwriting Question in "Underwriting Demerit has Underwriting Question"
+#         ForeignKeyField part 0 in Underwriting Demerit is Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
+#         IndexField part 0 in Underwriting Question references Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
+#       Foreign Key from Underwriting Demerit to Vehicle Incident over Absorption (existential) in Underwriting Demerit of Vehicle Incident in "Underwriting Demerit preceded Vehicle Incident"
+#         ForeignKeyField part 0 in Underwriting Demerit is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Vehicle Incident references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#   Composite Mapping (top) of Underwriting Question
+#     Columns
+#       Mapping (top) of Underwriting Question
+#         0: Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
+#         1: Absorption (mandatory) in Underwriting Question of Text in "Underwriting Question has Text"
+#     Indices
+#       Primary index to Underwriting Question over PresenceConstraint over (Underwriting-Question-ID) occurs at most one time
+#         IndexField part 0 in Underwriting Question references Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
+#       Unique index to Underwriting Question over PresenceConstraint over (Text) occurs at most one time
+#         IndexField part 0 in Underwriting Question references Absorption (mandatory) in Underwriting Question of Text in "Underwriting Question has Text"
+#     Foreign keys inbound
+#       Foreign Key from Underwriting Demerit to Underwriting Question over Absorption (existential) in Underwriting Demerit of Underwriting Question in "Underwriting Demerit has Underwriting Question"
+#         ForeignKeyField part 0 in Underwriting Demerit is Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
+#         IndexField part 0 in Underwriting Question references Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
+#   Composite Mapping (top) of Vehicle Incident
+#     Columns
+#       Mapping (top) of Vehicle Incident
+#         0: Absorption (supertype) in Vehicle Incident of Incident in "Vehicle Incident is a kind of Incident"
+#           0: Absorption (existential) in Incident of Claim in "Incident is of Claim"
+#             0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         1: Indicator "Vehicle Incident occurred while being driven" (as "Occurred While Being Driven")
+#         2: Absorption (optional) in Vehicle Incident of Description in "Vehicle Incident has Description"
+#         3: Absorption (optional) in Vehicle Incident of Driving (full) in "Driving involves Vehicle Incident"
+#           0: Absorption (mandatory) in Driving of Person in "Driving was by Person"
+#             0: Absorption (supertype) in Person of Party in "Person is a kind of Party"
+#               0: Absorption (existential) in Party of Party ID in "Party has Party ID"
+#           1: Absorption (optional) in Driving of Breath Test Result in "Driving resulted in breath-Test Result"
+#           2: Absorption (optional) in Driving of Driving Charge in "Driving Charge involves Driving"
+#             0: Indicator "Driving Charge is a warning" (as "Is A Warning")
+#             1: Absorption (mandatory) in Driving Charge of Charge in "Driving Charge involves Charge"
+#           3: Absorption (optional) in Driving of Hospitalization in "Hospitalization involves Driving"
+#             0: Absorption (mandatory) in Hospitalization of Hospital in "Hospitalization involves Hospital"
+#               0: Absorption (existential) in Hospital of Hospital Name in "Hospital has Hospital Name"
+#             1: Absorption (optional) in Hospitalization of Blood Test Result in "Hospitalization resulted in blood-Test Result"
+#           4: Absorption (optional) in Driving of Intoxication in "Driving followed Intoxication"
+#           5: Absorption (optional) in Driving of Nonconsent Reason in "Driving was without owners consent for nonconsent-Reason"
+#           6: Absorption (optional) in Driving of Unlicensed Reason in "Driving was unlicenced for unlicensed-Reason"
+#         4: Absorption (optional) in Vehicle Incident of Loss Type in "Vehicle Incident resulted from Loss Type"
+#           0: SurrogateKey (mandatory) in Loss Type of Loss Type ID
+#         5: Absorption (optional) in Vehicle Incident of Previous_damage Description in "Vehicle Incident involved previous_damage-Description"
+#         6: Absorption (optional) in Vehicle Incident of Reason in "Vehicle Incident was caused by Reason"
+#         7: Absorption (optional) in Vehicle Incident of Towed Location in "Vehicle Incident resulted in vehicle being towed to towed-Location"
+#         8: Absorption (optional) in Vehicle Incident of Weather Description in "Vehicle Incident occurred during weather-Description"
+#     Indices
+#       Primary index to Vehicle Incident over PresenceConstraint over (Incident) occurs at most one time
+#         IndexField part 0 in Vehicle Incident references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#     Foreign keys inbound
+#       Foreign Key from Third Party to Vehicle Incident over Absorption (existential) in Third Party of Vehicle Incident in "Third Party involves Vehicle Incident"
+#         ForeignKeyField part 0 in Third Party is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Vehicle Incident references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#       Foreign Key from Underwriting Demerit to Vehicle Incident over Absorption (existential) in Underwriting Demerit of Vehicle Incident in "Underwriting Demerit preceded Vehicle Incident"
+#         ForeignKeyField part 0 in Underwriting Demerit is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Vehicle Incident references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#     Foreign keys outbound
+#       Foreign Key from Vehicle Incident to Party over Absorption (mandatory) in Driving of Person in "Driving was by Person"
+#         ForeignKeyField part 0 in Vehicle Incident is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Vehicle Incident to Loss Type over Absorption (optional) in Vehicle Incident of Loss Type in "Vehicle Incident resulted from Loss Type"
+#         ForeignKeyField part 0 in Vehicle Incident is SurrogateKey (mandatory) in Loss Type of Loss Type ID
+#         IndexField part 0 in Loss Type references SurrogateKey (surrogate) in Loss Type of Loss Type ID
+#       Foreign Key from Vehicle Incident to Claim over Absorption (supertype) in Vehicle Incident of Incident in "Vehicle Incident is a kind of Incident"
+#         ForeignKeyField part 0 in Vehicle Incident is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Claim references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#   Composite Mapping (top) of Witness
+#     Columns
+#       Mapping (top) of Witness
+#         0: SurrogateKey (surrogate) in Witness of Witness ID
+#         1: Absorption (existential) in Witness of Incident in "Witness saw Incident"
+#           0: Absorption (existential) in Incident of Claim in "Incident is of Claim"
+#             0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         2: Absorption (existential) in Witness of Name in "Witness is called Name"
+#         3: Absorption (optional) in Witness of Address in "Witness lives at Address"
+#           0: Absorption (existential) in Address of Street in "Address is at Street"
+#           1: Absorption (existential) in Address of City in "Address is in City"
+#           2: Absorption (existential) in Address of Postcode in "Address is in Postcode"
+#           3: Absorption (existential) in Address of State in "Address is in State"
+#             0: SurrogateKey (mandatory) in State of State ID
+#         4: Absorption (optional) in Witness of Contact Phone in "Witness has contact-Phone"
+#           0: Absorption (existential) in Contact Phone of Phone Nr in "Phone has Phone Nr"
+#     Indices
+#       Primary index to Witness
+#         IndexField part 0 in Witness references SurrogateKey (surrogate) in Witness of Witness ID
+#       Unique index to Witness over PresenceConstraint over (Incident, Name) occurs at most one time
+#         IndexField part 0 in Witness references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 1 in Witness references Absorption (existential) in Witness of Name in "Witness is called Name"
+#     Foreign keys outbound
+#       Foreign Key from Witness to State over Absorption (existential) in Address of State in "Address is in State"
+#         ForeignKeyField part 0 in Witness is SurrogateKey (mandatory) in State of State ID
+#         IndexField part 0 in State references SurrogateKey (surrogate) in State of State ID
+#       Foreign Key from Witness to Claim over Absorption (existential) in Witness of Incident in "Witness saw Incident"
+#         ForeignKeyField part 0 in Witness is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
+#         IndexField part 0 in Claim references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"

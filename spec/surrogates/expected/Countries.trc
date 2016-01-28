@@ -1,0 +1,28 @@
+# Full relational composition
+#   Composite Mapping (top) of Country
+#     Columns
+#       Mapping (top) of Country
+#         0: Absorption (existential) in Country of Country Code in "Country has Country Code"
+#           0: SurrogateKey (mandatory) in Country Code of Country Code ID
+#     Indices
+#       Primary index to Country over PresenceConstraint over (Country-Code) occurs at most one time
+#         IndexField part 0 in Country references Absorption (existential) in Country of Country Code in "Country has Country Code"
+#         IndexField part 1 in Country references SurrogateKey (mandatory) in Country Code of Country Code ID
+#     Foreign keys outbound
+#       Foreign Key from Country to Country Code over Absorption (existential) in Country of Country Code in "Country has Country Code"
+#         ForeignKeyField part 0 in Country is SurrogateKey (mandatory) in Country Code of Country Code ID
+#         IndexField part 0 in Country Code references SurrogateKey (surrogate) in Country Code of Country Code ID
+#   Composite Mapping (top) of Country Code
+#     Columns
+#       Mapping (top) of Country Code
+#         0: SurrogateKey (surrogate) in Country Code of Country Code ID
+#         1: ValueField "Country Code" (as "Country Code Value")
+#     Indices
+#       Primary index to Country Code
+#         IndexField part 0 in Country Code references SurrogateKey (surrogate) in Country Code of Country Code ID
+#       Unique index to Country Code
+#         IndexField part 0 in Country Code references ValueField "Country Code"
+#     Foreign keys inbound
+#       Foreign Key from Country to Country Code over Absorption (existential) in Country of Country Code in "Country has Country Code"
+#         ForeignKeyField part 0 in Country is SurrogateKey (mandatory) in Country Code of Country Code ID
+#         IndexField part 0 in Country Code references SurrogateKey (surrogate) in Country Code of Country Code ID
