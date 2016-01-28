@@ -265,7 +265,9 @@ module ActiveFacts
 
       def inject_surrogates
 	surrogate_type_name = [true, '', 'true', 'yes'].include?(t = @options['surrogates']) ? 'Auto Counter' : t
-	vocabulary = @composition.all_composite.to_a[0].mapping.object_type.vocabulary	# REVISIT: Crappy: choose the first (currently always single)
+	composites = @composition.all_composite.to_a
+	return if composites.empty?
+	vocabulary = composites[0].mapping.object_type.vocabulary	# REVISIT: Crappy: choose the first (currently always single)
 	surrogate_type =
 	  @constellation.ValueType(
 	    vocabulary: vocabulary,
@@ -311,6 +313,7 @@ module ActiveFacts
 	  key_members.detect do |member|
 	    next true unless member.is_a?(MM::Absorption)
 	    next false if @composites[member.object_type] or @composition.all_full_absorption[member.object_type]	# It's a table or absorbed into one
+	    true
 	  end
 
 	if key_members.size > 1
@@ -435,10 +438,11 @@ module ActiveFacts
 	target.all_member.sort_by(&:ordinal).each do |member|
 	  rank = member.rank_key[0]
 	  next unless rank <= MM::Component::RANK_IDENT
-	  #p member; debugger
 	  member = fork_component_to_new_parent mapping, member
 	  augment_paths paths, member
-	  if member.is_a?(MM::Absorption)
+	  if member.is_a?(MM::SurrogateKey)
+	    break   # Will always be first (higher rank), and usurps others
+	  elsif member.is_a?(MM::Absorption)
 	    object_type = member.child_role.object_type
 	    fa = @composition.all_full_absorption[member.child_role.object_type]
 	    if fa
@@ -629,7 +633,6 @@ module ActiveFacts
 	      end
 	      target = @composites[target_object_type]
 	      trace :relational_paths, "Completing #{path.inspect} to #{target.mapping.inspect}"
-#	      debugger if path.inspect =~ /Foreign Key from Set Comparison Roles to Constraint/
 	      if target.primary_index
 		target.primary_index.all_index_field.each do |index_field|
 		  @constellation.IndexField access_path: path, ordinal: index_field.ordinal, component: index_field.component
