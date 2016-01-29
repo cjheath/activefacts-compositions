@@ -1,12 +1,17 @@
 # ActiveFacts::Compositions
 
-Create and represent composite schemas, schema transforms and data transforms over a fact-based model.
+Fact-based schemas are always in highly normalised or *elementary* form.
+Most other schemas are composite (object-oriented, relational, warehousing, analytical, messaging, APIs, etc).
+This gem provides the framework for *Compositions*, which are representations of the two-way mapping between an elementary schema and a composite schema.
+As such, it supports any-to-any mappings between different composite forms.
+
+It also provides automated generators for some types of composite schemas, especially relational and Data Vault schemas.
 
 This gem works with the Fact Modeling tools as part of ActiveFacts.
 
 ## Installation
 
-Install via the activefacts gem bundle, or add this line to your application's Gemfile:
+Install as part of activefacts, just "gem install" directly, or add this line to your application's Gemfile:
 
 ```ruby
 gem 'activefacts-compositions'
@@ -16,15 +21,16 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install activefacts-compositions
-
 ## Usage
 
-This gem adds schema manipulation tools (mappers, composers, transformations, generators) to the generator framework for activefacts. Refer to the afgen command-line tool for help:
+This gem adds schema manipulation tools (mappers, composers, transformations) to the generator framework for *activefacts*.
+Refer to the afgen command-line tool for help:
 
     $ afgen --help
+
+A stand-alone relational generator program is provided, mostly for exploratory purposes; use tracing to see what it is doing, e.g.:
+
+    $ TRACE=relational bin/schema_compositor --surrogate spec/relational/CompanyDirectorEmployee.cql
 
 ## Development
 
@@ -35,7 +41,6 @@ To install this gem onto your local machine, run `bundle exec rake install`.
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/cjheath/activefacts-compositions.
-
 
 ## License
 
