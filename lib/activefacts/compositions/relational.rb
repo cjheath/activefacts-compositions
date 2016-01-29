@@ -16,6 +16,12 @@ module ActiveFacts
     private
       MM = ActiveFacts::Metamodel
     public
+      def initialize constellation, name, options = {}
+	# Extract recognised options so our superclass doesn't complain:
+	@option_surrogates = options.delete('surrogates')
+	super constellation, name, options
+      end
+
       def generate
 	super
 
@@ -36,7 +42,7 @@ module ActiveFacts
 	  inject_value_fields
 
 	  # Inject surrogate keys if the options ask for that
-	  inject_surrogates if @options['surrogates']
+	  inject_surrogates if @option_surrogates
 
 	  # Remove the un-used absorption paths
 	  delete_reverse_absorptions
@@ -264,7 +270,7 @@ module ActiveFacts
       end
 
       def inject_surrogates
-	surrogate_type_name = [true, '', 'true', 'yes'].include?(t = @options['surrogates']) ? 'Auto Counter' : t
+	surrogate_type_name = [true, '', 'true', 'yes'].include?(t = @option_surrogates) ? 'Auto Counter' : t
 	composites = @composition.all_composite.to_a
 	return if composites.empty?
 	vocabulary = composites[0].mapping.object_type.vocabulary	# REVISIT: Crappy: choose the first (currently always single)
