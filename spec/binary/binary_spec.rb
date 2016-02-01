@@ -24,7 +24,10 @@ def generated_trace
   $trace_output = ''
   result
 end
-generated_trace
+
+def clean_traces
+  $trace_output = ''
+end
 
 RSpec::Matchers.define :be_like do |expected|
   match do |actual|
@@ -50,6 +53,7 @@ describe "Binary absorption from CQL" do
   files.each do |cql_file|
     it "produces the expected binary absorption for #{cql_file}" do
       trace.reinitialize
+      clean_traces
       trace.enable :composition
 
       expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, dir+'/expected/\2.trc')

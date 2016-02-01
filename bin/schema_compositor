@@ -12,6 +12,8 @@ require 'activefacts/metamodel'
 require 'activefacts/compositions/binary'
 require 'activefacts/compositions/relational'
 require 'activefacts/compositions/validator'
+require 'activefacts/compositions/names'
+require 'activefacts/compositions/summary'
 
 options = {}
 while arg = ARGV.shift and arg =~ /^-/
@@ -56,38 +58,7 @@ begin
     end
   end
 
-  if show
-    compositor.
-    composition.
-    all_composite.
-    sort_by{|composite| composite.mapping.name}.
-    each do |composite|
-      puts composite.mapping.name
-      indices = composite.all_indices_by_rank
-
-      composite.mapping.leaves.each do |leaf|
-	# Build a symbolic representation of the index participation of this leaf
-	pos = 0
-	indexing = indices.inject([]) do |a, index|
-	  pos += 1
-	  if part = index.position_in_index(leaf)
-	    a << "#{pos}.#{part}"
-	  end
-	  a
-	end
-
-	puts "\t#{leaf.path.map{|component|
-	    if component.is_a?(ActiveFacts::Metamodel::Absorption) && component.foreign_key
-	      "[#{component.name}]"
-	    else
-	      component.name
-	    end +
-	      (component.is_a?(ActiveFacts::Metamodel::Absorption) && !component.parent_role.is_mandatory ? '?' : '')
-	  }*'->'}" +
-	  (indexing.empty? ? '' : "[#{indexing*','}]")	# Show the indexing
-      end
-    end
-  end
+  puts(compositor.composition.summary) if show
 
 rescue => e
   $stderr.puts "#{e.message}"

@@ -43,15 +43,10 @@
 #     Columns
 #       Mapping (top) of Claim
 #         0: Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
-#         1: Absorption (mandatory) in Claim of Lodgement (full) in "Lodgement involves Claim"
-#           0: Absorption (mandatory) in Lodgement of Person in "Lodgement involves Person"
-#             0: Absorption (supertype) in Person of Party in "Person is a kind of Party"
-#               0: Absorption (existential) in Party of Party ID in "Party has Party ID"
-#           1: Absorption (optional) in Lodgement of Date Time in "Lodgement was made at Date Time"
-#         2: Absorption (mandatory) in Claim of P_sequence in "Claim has Claim Sequence"
-#         3: Absorption (mandatory) in Claim of Policy in "Claim is on Policy"
+#         1: Absorption (mandatory) in Claim of P_sequence in "Claim has Claim Sequence"
+#         2: Absorption (mandatory) in Claim of Policy in "Claim is on Policy"
 #           0: SurrogateKey (mandatory) in Policy of Policy ID
-#         4: Absorption (optional) in Claim of Incident (full) in "Claim concerns Incident"
+#         3: Absorption (optional) in Claim of Incident (full) in "Claim concerns Incident"
 #           0: Absorption (mandatory) in Incident of Address in "Incident relates to loss at Address"
 #             0: Absorption (existential) in Address of Street in "Address is at Street"
 #             1: Absorption (existential) in Address of City in "Address is in City"
@@ -65,6 +60,11 @@
 #             2: Absorption (optional) in Police Report of Report Date Time in "Police Report was on report-Date Time"
 #             3: Absorption (optional) in Police Report of Reporter Name in "Police Report was by reporter-Name"
 #             4: Absorption (optional) in Police Report of Station Name in "Police Report was at station-Name"
+#         4: Absorption (optional) in Claim of Lodgement (full) in "Lodgement involves Claim"
+#           0: Absorption (mandatory) in Lodgement of Person in "Lodgement involves Person"
+#             0: Absorption (supertype) in Person of Party in "Person is a kind of Party"
+#               0: Absorption (existential) in Party of Party ID in "Party has Party ID"
+#           1: Absorption (optional) in Lodgement of Date Time in "Lodgement was made at Date Time"
 #     Indices
 #       Primary index to Claim over PresenceConstraint over (Claim-ID) occurs at most one time
 #         IndexField part 0 in Claim references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"

@@ -25,7 +25,10 @@ def generated_trace
   $trace_output = ''
   result
 end
-generated_trace
+
+def clean_traces
+  $trace_output = ''
+end
 
 RSpec::Matchers.define :be_like do |expected|
   match do |actual|
@@ -39,7 +42,7 @@ RSpec::Matchers.define :be_like do |expected|
   diffable
 end
 
-describe "Relational absorption from CQL" do
+describe "Surrogate absorption from CQL" do
   dir = ENV['CQL_DIR'] || SURROGATE_CQL_DIR
   actual_dir = (ENV['CQL_DIR'] ? '' : SURROGATE_TEST_DIR+'/') + 'actual'
   expected_dir = (ENV['CQL_DIR'] ? '' : SURROGATE_TEST_DIR+'/') + 'expected'
@@ -51,6 +54,7 @@ describe "Relational absorption from CQL" do
   end
   files.each do |cql_file|
     it "produces the expected relational absorption for #{cql_file}" do
+      clean_traces
       trace.reinitialize
       trace.enable :relational
 

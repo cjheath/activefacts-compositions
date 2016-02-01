@@ -13,8 +13,6 @@ require "activefacts/compositions"
 module ActiveFacts
   module Compositions
     class Relational < Compositor
-    private
-      MM = ActiveFacts::Metamodel
     public
       def initialize constellation, name, options = {}
 	# Extract recognised options so our superclass doesn't complain:

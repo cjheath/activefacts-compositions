@@ -15,6 +15,8 @@ require "activefacts/metamodel"
 
 module ActiveFacts
   module Compositions
+    private
+      MM = ActiveFacts::Metamodel
     class Compositor
       attr_reader :options, :name, :composition
 
