@@ -12,7 +12,7 @@
 #           2: Absorption (existential) in Address of City in "Address is in City"
 #           3: Absorption (existential) in Address of Postcode in "Address is in Postcode"
 #     Indices
-#       Primary index to Company over PresenceConstraint over (Company-Name) occurs at most one time
+#       Primary index to Company over PresenceConstraint over (Company Name in "Company has Company Name") occurs at most one time
 #         IndexField part 0 in Company references Absorption (existential) in Company of Company Name in "Company has Company Name"
 #   Composite Mapping (top) of Person
 #     Columns
@@ -29,6 +29,6 @@
 #           2: Absorption (existential) in Address of City in "Address is in City"
 #           3: Absorption (existential) in Address of Postcode in "Address is in Postcode"
 #     Indices
-#       Primary index to Person over PresenceConstraint over (Family, Given-Names) occurs at most one time
+#       Primary index to Person over PresenceConstraint over (Family, Given Names in "Person is of Family", "Person has Given Names") occurs at most one time
 #         IndexField part 0 in Person references Absorption (existential) in Family of Family Name in "Family has Family Name"
 #         IndexField part 1 in Person references Absorption (existential) in Person of Given Names in "Person has Given Names"

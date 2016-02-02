@@ -5,7 +5,7 @@
 #         0: Absorption (existential) in Country of Country Code in "Country has Country Code"
 #           0: SurrogateKey (mandatory) in Country Code of Country Code ID
 #     Indices
-#       Primary index to Country over PresenceConstraint over (Country-Code) occurs at most one time
+#       Primary index to Country over PresenceConstraint over (Country Code in "Country has Country Code") occurs at most one time
 #         IndexField part 0 in Country references Absorption (existential) in Country of Country Code in "Country has Country Code"
 #         IndexField part 1 in Country references SurrogateKey (mandatory) in Country Code of Country Code ID
 #     Foreign keys outbound

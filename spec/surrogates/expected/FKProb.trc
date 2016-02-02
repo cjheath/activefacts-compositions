@@ -9,7 +9,7 @@
 #     Indices
 #       Primary index to OT
 #         IndexField part 0 in OT references SurrogateKey (surrogate) in OT of OT ID
-#       Unique index to OT over PresenceConstraint over (Name) occurs at most one time
+#       Unique index to OT over PresenceConstraint over (Name in "OT is called Name") occurs at most one time
 #         IndexField part 0 in OT references Absorption (existential) in OT of Name in "OT is called Name"
 #     Foreign keys inbound
 #       Foreign Key from VTP to OT over Absorption (existential) in VTP of VT in "VTP involves VT"
@@ -30,7 +30,7 @@
 #     Indices
 #       Primary index to VTP
 #         IndexField part 0 in VTP references SurrogateKey (surrogate) in VTP of VTP ID
-#       Unique index to VTP over PresenceConstraint over (VT, Name) occurs at most one time
+#       Unique index to VTP over PresenceConstraint over (VT, Name in "VT has facet called Name") occurs at most one time
 #         IndexField part 0 in VTP references SurrogateKey (mandatory) in OT of OT ID
 #         IndexField part 1 in VTP references Absorption (existential) in VTP of Name in "VTP involves Name"
 #     Foreign keys inbound
@@ -51,7 +51,7 @@
 #         1: Absorption (existential) in VTPRestriction of VTP in "VTPRestriction involves VTP"
 #           0: SurrogateKey (mandatory) in VTP of VTP ID
 #     Indices
-#       Primary index to VTPRestriction over PresenceConstraint over (VT, VTP) occurs at most one time
+#       Primary index to VTPRestriction over PresenceConstraint over (VT, VTP in "VT receives VTP") occurs at most one time
 #         IndexField part 0 in VTPRestriction references SurrogateKey (mandatory) in OT of OT ID
 #         IndexField part 1 in VTPRestriction references SurrogateKey (mandatory) in VTP of VTP ID
 #     Foreign keys outbound

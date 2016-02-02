@@ -7,7 +7,7 @@
 #         1: Absorption (existential) in Attendance of Meeting in "Attendance involves Meeting"
 #           0: SurrogateKey (mandatory) in Meeting of Meeting ID
 #     Indices
-#       Primary index to Attendance over PresenceConstraint over (Attendee, Meeting) occurs at most one time
+#       Primary index to Attendance over PresenceConstraint over (Attendee, Meeting in "Person attended Meeting") occurs at most one time
 #         IndexField part 0 in Attendance references SurrogateKey (mandatory) in Attendee of Person ID
 #         IndexField part 1 in Attendance references SurrogateKey (mandatory) in Meeting of Meeting ID
 #     Foreign keys outbound
@@ -26,7 +26,7 @@
 #     Indices
 #       Primary index to Company
 #         IndexField part 0 in Company references SurrogateKey (surrogate) in Company of Company ID
-#       Unique index to Company over PresenceConstraint over (Company-Name) occurs at most one time
+#       Unique index to Company over PresenceConstraint over (Company Name in "Company is called Company Name") occurs at most one time
 #         IndexField part 0 in Company references Absorption (existential) in Company of Company Name in "Company is called Company Name"
 #     Foreign keys inbound
 #       Foreign Key from Directorship to Company over Absorption (existential) in Directorship of Company in "Directorship involves Company"
@@ -50,7 +50,7 @@
 #     Indices
 #       Primary index to Directorship
 #         IndexField part 0 in Directorship references SurrogateKey (surrogate) in Directorship of Directorship ID
-#       Unique index to Directorship over PresenceConstraint over (Director, Company) occurs at most one time
+#       Unique index to Directorship over PresenceConstraint over (Director, Company in "Person directs Company") occurs at most one time
 #         IndexField part 0 in Directorship references SurrogateKey (mandatory) in Director of Person ID
 #         IndexField part 1 in Directorship references SurrogateKey (mandatory) in Company of Company ID
 #     Foreign keys outbound
@@ -75,7 +75,7 @@
 #     Indices
 #       Primary index to Employee
 #         IndexField part 0 in Employee references SurrogateKey (surrogate) in Employee of Employee ID
-#       Unique index to Employee over PresenceConstraint over (Employee-Nr) occurs at most one time
+#       Unique index to Employee over PresenceConstraint over (Employee Nr in "Employee has Employee Nr") occurs at most one time
 #         IndexField part 0 in Employee references Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
 #     Foreign keys inbound
 #       Foreign Key from Employee to Employee over Absorption (optional) in Employee of Manager in "Employee is supervised by Manager"
@@ -99,7 +99,7 @@
 #         1: Absorption (existential) in Employment of Employee in "Employment involves Employee"
 #           0: SurrogateKey (mandatory) in Employee of Employee ID
 #     Indices
-#       Primary index to Employment over PresenceConstraint over (Person, Employee) occurs at most one time
+#       Primary index to Employment over PresenceConstraint over (Person, Employee in "Person works as Employee") occurs at most one time
 #         IndexField part 0 in Employment references SurrogateKey (mandatory) in Person of Person ID
 #         IndexField part 1 in Employment references SurrogateKey (mandatory) in Employee of Employee ID
 #     Foreign keys outbound
@@ -120,7 +120,7 @@
 #     Indices
 #       Primary index to Meeting
 #         IndexField part 0 in Meeting references SurrogateKey (surrogate) in Meeting of Meeting ID
-#       Unique index to Meeting over PresenceConstraint over (Company, Date, is-board-meeting) occurs at most one time
+#       Unique index to Meeting over PresenceConstraint over (Company, Date, Is Board Meeting in "Meeting is held by Company", "Meeting is held on Date", "Meeting is board meeting") occurs at most one time
 #         IndexField part 0 in Meeting references SurrogateKey (mandatory) in Company of Company ID
 #         IndexField part 1 in Meeting references Absorption (existential) in Meeting of Date in "Meeting is held on Date"
 #         IndexField part 2 in Meeting references Indicator "Meeting is board meeting"
@@ -142,7 +142,7 @@
 #     Indices
 #       Primary index to Person
 #         IndexField part 0 in Person references SurrogateKey (surrogate) in Person of Person ID
-#       Unique index to Person over PresenceConstraint over (Name, Name) occurs at most one time
+#       Unique index to Person over PresenceConstraint over (Given Name, Family Name in "Person has given-Name", "family-Name is of Person") occurs at most one time
 #         IndexField part 0 in Person references Absorption (existential) in Person of Given Name in "Person has given-Name"
 #         IndexField part 1 in Person references Absorption (existential) in Person of Family Name in "Person is called family-Name"
 #     Foreign keys inbound

@@ -7,11 +7,11 @@
 #         2: Absorption (mandatory) in Country of ISO3166Code2 in "Country has ISO3166Code2"
 #         3: Absorption (mandatory) in Country of ISO3166Numeric3 in "Country has ISO3166Numeric3"
 #     Indices
-#       Primary index to Country over PresenceConstraint over (ISO3166Code3) occurs at most one time
+#       Primary index to Country over PresenceConstraint over (ISO3166Code3 in "Country has ISO3166Code3") occurs at most one time
 #         IndexField part 0 in Country references Absorption (existential) in Country of ISO3166Code3 in "Country has ISO3166Code3"
-#       Unique index to Country over PresenceConstraint over (Country-Name) occurs at most one time
+#       Unique index to Country over PresenceConstraint over (Country Name in "Country is called Country Name") occurs at most one time
 #         IndexField part 0 in Country references Absorption (mandatory) in Country of Country Name in "Country is called Country Name"
-#       Unique index to Country over PresenceConstraint over (ISO3166Code2) occurs one time
+#       Unique index to Country over PresenceConstraint over (ISO3166Code2 in "Country has ISO3166Code2") occurs one time
 #         IndexField part 0 in Country references Absorption (mandatory) in Country of ISO3166Code2 in "Country has ISO3166Code2"
-#       Unique index to Country over PresenceConstraint over (ISO3166Numeric3) occurs one time
+#       Unique index to Country over PresenceConstraint over (ISO3166Numeric3 in "Country has ISO3166Numeric3") occurs one time
 #         IndexField part 0 in Country references Absorption (mandatory) in Country of ISO3166Numeric3 in "Country has ISO3166Numeric3"

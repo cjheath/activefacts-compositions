@@ -4,7 +4,7 @@
 #       Mapping (top) of Magnet
 #         0: Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"
 #     Indices
-#       Primary index to Magnet over PresenceConstraint over (Magnet-AutoCounter) occurs at most one time
+#       Primary index to Magnet over PresenceConstraint over (Magnet AutoCounter in "Magnet has Magnet AutoCounter") occurs at most one time
 #         IndexField part 0 in Magnet references Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"
 #     Foreign keys inbound
 #       Foreign Key from MagnetPole to Magnet over Absorption (existential) in MagnetPole of Magnet in "MagnetPole belongs to Magnet"
@@ -17,7 +17,7 @@
 #           0: Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"
 #         1: Indicator "MagnetPole is north" (as "Is North")
 #     Indices
-#       Primary index to MagnetPole over PresenceConstraint over (Magnet, is-north) occurs at most one time
+#       Primary index to MagnetPole over PresenceConstraint over (Magnet, Is North in "MagnetPole belongs to Magnet", "MagnetPole is north") occurs at most one time
 #         IndexField part 0 in MagnetPole references Absorption (existential) in Magnet of Magnet AutoCounter in "Magnet has Magnet AutoCounter"
 #         IndexField part 1 in MagnetPole references Indicator "MagnetPole is north"
 #     Foreign keys outbound
