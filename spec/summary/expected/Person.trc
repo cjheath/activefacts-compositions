@@ -1,0 +1,3 @@
+Person
+	Person->Family Name[1.0] as "Family Name"
+	Person->Given Name[1.1] as "Given Name"

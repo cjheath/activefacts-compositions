@@ -1,0 +1,5 @@
+Magnet
+	Magnet->Magnet AutoCounter[1.0] as "Magnet Auto Counter"
+MagnetPole
+	MagnetPole->[Magnet]->Magnet AutoCounter[1.0] as "Magnet Auto Counter"
+	MagnetPole->Is North?[1.1] as "Is North"

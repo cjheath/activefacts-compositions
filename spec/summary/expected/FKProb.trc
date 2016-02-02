@@ -1,0 +1,10 @@
+OT
+	OT->Name[1.0] as "Name"
+	OT->DOT?->VT? as "VT"
+VTP
+	VTP->[VT]->DOT->OT->Name[1.0] as "VT Name"
+	VTP->Name[1.1] as "Name"
+VTPRestriction
+	VTPRestriction->[VT]->DOT->OT->Name[1.0] as "VT Name"
+	VTPRestriction->[VTP]->VT->DOT->OT->Name[1.1] as "VTP VT Name"
+	VTPRestriction->[VTP]->Name[1.2] as "VTP Name"

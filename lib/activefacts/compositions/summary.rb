@@ -5,11 +5,13 @@
 #
 require "activefacts/metamodel"
 require "activefacts/compositions/names"
+require "activefacts/compositions/constraints"
 
 module ActiveFacts
   module Metamodel
     class Composition
       def summary
+	classify_constraints
 	all_composite.
 	sort_by{|composite| composite.mapping.name}.
 	flat_map do |composite|
@@ -24,20 +26,22 @@ module ActiveFacts
 
 	(
 	  [mapping.name+"\n"] +
-	  mapping.leaves.flat_map do |leaf|
+	  mapping.
+	  leaves.
+	  flat_map do |leaf|
 
 	    # Build a display of the names in this absorption path, with FK and optional indicators
 	    path_names = leaf.path.map do |component|
 		is_mandatory = case component
-		  when ActiveFacts::Metamodel::Indicator
+		  when Indicator
 		    false
-		  when ActiveFacts::Metamodel::Absorption
+		  when Absorption
 		    component.parent_role.is_mandatory
 		  else
 		    true
 		  end
 
-		if component.is_a?(ActiveFacts::Metamodel::Absorption) && component.foreign_key
+		if component.is_a?(Absorption) && component.foreign_key
 		  "[#{component.name}]"
 		else
 		  component.name
@@ -61,8 +65,16 @@ module ActiveFacts
 	    end
 
 	    column_name = ActiveFacts::Compositions::Names.new(leaf).names.capwords*' '
-	    ["\t#{path_names}#{indexing} as #{column_name.inspect}\n"]
-	  end
+	    ["\t#{path_names}#{indexing} as #{column_name.inspect}\n"] +
+	    leaf.all_leaf_constraint.map{|leaf_constraint| "\t\t### #{leaf_constraint.leaf_constraint.describe}\n"}
+	  end +
+	  all_local_constraint.map do |local_constraint|
+	    "\t### #{local_constraint.local_constraint.describe}\n"
+	  end.sort +
+	  all_spanning_constraint.map do |spanning_constraint|
+	    "### #{spanning_constraint.spanning_constraint.describe}\n"
+	  end.sort
+
 	)*''
       end
     end
