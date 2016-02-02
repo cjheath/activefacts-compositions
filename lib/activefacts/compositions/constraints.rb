@@ -40,8 +40,7 @@ module ActiveFacts
 	    role.all_constraint.each do |constraint|
 	      if constraint.is_a?(PresenceConstraint)
 		# Exclude single-role mandatory constraints and all uniqueness constraints:
-		# REVISIT: This may removes some constraints erroneously, check it
-		if constraint.role_sequence.all_role_ref.size == 1 && constraint.min_frequency == 1 or
+		if constraint.role_sequence.all_role_ref.size == 1 && constraint.min_frequency == 1 && constraint.is_mandatory or
 		    constraint.max_frequency == 1
 		  next
 		end
@@ -61,7 +60,7 @@ module ActiveFacts
 	local_constraints = all_composite_constraints - spanning_constraints
 
 	spanning_constraints.each do |spanning_constraint|
-	  constellation.LocalConstraint(composite: composite, spanning_constraint: spanning_constraint)
+	  constellation.SpanningConstraint(composite: self, spanning_constraint: spanning_constraint)
 	end
 
 	leaves.each do |leaf|
