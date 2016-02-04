@@ -1,5 +1,5 @@
 #
-# ActiveFacts Compositions validator.
+# ActiveFacts Compositions validator (a facet of the Compositor).
 #
 # Quite a few constraints are not enforced during the construction of a composition.
 # This method does a post-validation to ensure that everything looks ok.
@@ -22,8 +22,6 @@ module ActiveFacts
       end
 
     private
-      MM = ActiveFacts::Metamodel
-
       def validate_composite composite, &report
 	trace :composition_validator?, "Validating #{composite.inspect}" do
 	  report.call(composite, "Has no Mapping") unless composite.mapping

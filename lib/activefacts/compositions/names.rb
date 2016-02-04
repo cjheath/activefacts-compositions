@@ -1,5 +1,5 @@
 #
-# ActiveFacts Compositions, Name builder
+# ActiveFacts Compositions, Metamodel aspect to build compacted column names for (leaf) Components
 #
 #	Compresses the names arising from absorption paths into usable column names
 #
@@ -8,24 +8,20 @@
 require "activefacts/compositions"
 
 module ActiveFacts
-  module Compositions
-    class Names
-      def initialize component
-	@component = component
-      end
-
-      def names
-	path = @component.path[1..-1]
+  module Metamodel
+    class Component
+      def column_name
+	column_path = path[1..-1]
 	prev_words = []
 	String::Words.new(
-	  path.
+	  column_path.
 	  inject([]) do |na, member|
-	    is_absorption = member.is_a?(MM::Absorption)
-	    is_type_inheritance = is_absorption && member.parent_role.fact_type.is_a?(MM::TypeInheritance)
+	    is_absorption = member.is_a?(Absorption)
+	    is_type_inheritance = is_absorption && member.parent_role.fact_type.is_a?(TypeInheritance)
 	    fact_type = is_absorption && member.parent_role.fact_type
 
 	    # If the parent object identifies the child via this absorption, skip it.
-	    if member != path.first and
+	    if member != column_path.first and
 		is_absorption and
 		!is_type_inheritance and
 		member.parent_role.base_role.is_identifying
@@ -44,7 +40,7 @@ module ActiveFacts
 	      trace :names, "Eliding supertype in #{member}"
 	      prev_words.size.times{na.pop}
 
-	    elsif member.parent && member != path.first && is_absorption && member.child_role.base_role.is_identifying
+	    elsif member.parent && member != column_path.first && is_absorption && member.child_role.base_role.is_identifying
 	      # When Xyz is followed by identifying XyzID (even if we skipped the Xyz), truncate that to just ID
 	      pnames = member.parent.name.words
 	      if pnames == words[0, pnames.size]
@@ -60,7 +56,7 @@ module ActiveFacts
 	    if na.size > 0 and
 		is_absorption and
 		member.child_role.base_role.is_identifying and
-		(et = member.object_type).is_a?(MM::EntityType) and
+		(et = member.object_type).is_a?(EntityType) and
 		et.preferred_identifier.role_sequence.all_role_ref.size == 0 and
 		et.name.downcase == words[0][0...et.name.size].downcase
 	      trace :columns, "truncating transitive identifying role #{words.inspect}"

@@ -1,5 +1,5 @@
 #
-# ActiveFacts Compositions, Produce a summary of a composition
+# ActiveFacts Compositions, Metamodel aspect to create a textual summary of a composition and its Composites
 # 
 # Copyright (c) 2015 Clifford Heath. Read the LICENSE file.
 #
@@ -64,7 +64,7 @@ module ActiveFacts
 	      indexing = "[#{indexing*','}]"
 	    end
 
-	    column_name = ActiveFacts::Compositions::Names.new(leaf).names.capwords*' '
+	    column_name = leaf.column_name.capwords*' '
 	    ["\t#{path_names}#{indexing} as #{column_name.inspect}\n"] +
 	    leaf.all_leaf_constraint.map{|leaf_constraint| "\t\t### #{leaf_constraint.leaf_constraint.describe}\n"}
 	  end +

@@ -1,5 +1,5 @@
 #
-# ActiveFacts Compositions, Constraints handling for compositions
+# ActiveFacts Compositions, Metamodel aspect for Constraint classification
 # 
 # Copyright (c) 2016 Clifford Heath. Read the LICENSE file.
 #
