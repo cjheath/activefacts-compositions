@@ -7,6 +7,7 @@ require 'digest/sha1'
 require 'activefacts/metamodel'
 require 'activefacts/registry'
 require 'activefacts/compositions'
+require 'activefacts/generators'
 
 module ActiveFacts
   module Generators
@@ -14,7 +15,7 @@ module ActiveFacts
     # * delay_fks Leave all foreign keys until the end, not just those that contain forward-references
     # * underscore 
     class SQL
-      def initialize composition, options
+      def initialize composition, options = {}
 	@composition = composition
 	@options = options
 	@delay_fks = options.include? "delay_fks"
@@ -30,7 +31,7 @@ module ActiveFacts
 	all_composite.
 	sort_by{|composite| composite.mapping.name}.
 	map{|composite| generate_table composite}*"\n" + "\n" +
-	@delayed_foreign_keys*"\n"
+	@delayed_foreign_keys.sort*"\n"
       end
 
       def table_name_max
@@ -84,7 +85,7 @@ module ActiveFacts
 	  end +
 	  composite.all_index.map do |index|
 	    generate_index index, delayed_indices
-	  end +
+	  end.compact.sort +
 	  composite.all_foreign_key_as_source_composite.map do |fk|
 	    fk_text = generate_foreign_key fk
 	    if !@delay_fks and @tables_emitted[fk.composite]
@@ -94,13 +95,13 @@ module ActiveFacts
 		go("ALTER TABLE #{safe_table_name fk.composite}\n\tADD " + fk_text)
 	      nil
 	    end
-	  end +
+	  end.compact.sort +
 	  composite.all_local_constraint.map do |constraint|
 	    '-- '+constraint.inspect	# REVISIT: Emit local constraints
 	  end
 	).compact.flat_map{|f| "\t#{f}" }*",\n"+"\n" +
 	go(")") +
-	delayed_indices.map do |delayed_index|
+	delayed_indices.sort.map do |delayed_index|
 	  go delayed_index
 	end*"\n"
       end
@@ -140,7 +141,7 @@ module ActiveFacts
 	case component
 	when MM::Indicator
 	  boolean_type
-	when MM::Absorption
+	when MM::ValueField, MM::Absorption
 	  object_type = component.object_type
 	  while object_type.is_a?(MM::EntityType)
 	    rr = object_type.preferred_identifier.role_sequence.all_role_ref.single
@@ -148,8 +149,12 @@ module ActiveFacts
 	    object_type = rr.role.object_type
 	  end
 	  raise "A column can only be produced from a ValueType" unless object_type.is_a?(MM::ValueType)
+
+	  if component.is_a?(MM::Absorption)
+	    value_constraint ||= component.child_role.role_value_constraint
+	  end
+
 	  supertype = object_type
-	  value_constraint ||= component.child_role.role_value_constraint
 	  begin
 	    object_type = supertype
 	    length ||= object_type.length
