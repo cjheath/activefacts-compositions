@@ -10,7 +10,7 @@ require 'activefacts/compositions/binary'
 require 'activefacts/generators/validate'
 require 'activefacts/input/cql'
 
-CQL_DIR = Pathname.new(__FILE__+'/../').relative_path_from(Pathname(Dir.pwd)).to_s
+BINARY_CQL_DIR = Pathname.new(__FILE__+'/../').relative_path_from(Pathname(Dir.pwd)).to_s
 
 # Hack into the tracing mechanism to save the output from the :composition key:
 class << trace
@@ -42,8 +42,8 @@ RSpec::Matchers.define :be_like do |expected|
 end
 
 describe "Binary absorption from CQL" do
-  dir = ENV['CQL_DIR'] || CQL_DIR
-  actual_dir = (ENV['CQL_DIR'] ? '' : CQL_DIR+'/') + 'actual'
+  dir = ENV['CQL_DIR'] || BINARY_CQL_DIR
+  actual_dir = (ENV['CQL_DIR'] ? '' : BINARY_CQL_DIR+'/') + 'actual'
   Dir.mkdir actual_dir unless Dir.exist? actual_dir
   if f = ENV['TEST_FILES']
     files = Dir[dir+"/#{f}*.cql"]

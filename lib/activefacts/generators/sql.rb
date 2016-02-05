@@ -137,10 +137,16 @@ module ActiveFacts
 	'BOOLEAN'
       end
 
+      def surrogate_type
+	'BIGINT IDENTITY NOT NULL'
+      end
+
       def component_type component, column_name
 	case component
 	when MM::Indicator
 	  boolean_type
+	when MM::SurrogateKey
+	  surrogate_type
 	when MM::ValueField, MM::Absorption
 	  object_type = component.object_type
 	  while object_type.is_a?(MM::EntityType)
