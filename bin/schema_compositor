@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 #
-#       ActiveFacts: Read a Vocabulary (from a NORMA, CQL or other file) and run a generator
+# ActiveFacts: Read a model (CQL, ORM, etc), run a compositor, then a generator
 #
 # Copyright (c) 2009 Clifford Heath. Read the LICENSE file.
 #
@@ -8,61 +8,94 @@ ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
 require 'bundler/setup' # Set up gems listed in the Gemfile.
 $:.unshift File.dirname(File.expand_path(__FILE__))+"/../lib"
 
+require 'activefacts/loadable'
 require 'activefacts/metamodel'
-require 'activefacts/compositions/binary'
-require 'activefacts/compositions/relational'
-require 'activefacts/compositions/validator'
-require 'activefacts/compositions/names'
-require 'activefacts/compositions/summary'
+require 'activefacts/compositions'
+require 'activefacts/generators'
 
+# Parse options into a hash:
 options = {}
-while arg = ARGV.shift and arg =~ /^-/
-  option, value = arg.split(/=/, 2)
+while ARGV[0] =~ /^-/
+  option, value = ARGV.shift.split(/=/, 2)
   options[option.sub(/^-*/,'')] = value =~ /,/ ? value.split(',') : (value || true)
 end
 
-validate = options.delete('validate')
-show = options.delete('show')
+# Load and enumerate all available compositors:
+compositions_path = "activefacts/compositions"
+Loadable.new(compositions_path).
+enumerate.
+select do |filename|
+  begin
+    require(compositions_path+"/"+filename)
+  rescue Exception
+  end
+end
 
-# Load the file type input method
-if arg
-  arg, input_options = *arg.split(/=/, 2)
-  extension = arg.sub(/\A.*\./,'').downcase
+# Load and enumerate all available generators
+generators_path = "activefacts/generators"
+Loadable.new(generators_path).
+enumerate.
+select do |filename|
+  begin
+    require(generators_path+"/"+filename)
+  rescue Exception
+  end
+end
+
+# Arrange the requested compositors and generators:
+compositors = []
+generators = []
+options.clone.each do |option, value|
+  if compositor = ActiveFacts::Compositions.compositors[option]
+    options.delete(option)
+    compositors << compositor
+  elsif generator = ActiveFacts::Generators.generators[option]
+    options.delete(option)
+    generators << generator
+  end
+end
+
+if options['help']
+  puts "Available compositors:\n\t#{ActiveFacts::Compositions.compositors.keys.sort*"\n\t"}\n\n"
+  puts "Available generators:\n\t#{ActiveFacts::Generators.generators.keys.sort*"\n\t"}\n\n"
+  exit
+end
+
+ARGV.each do |arg|
+  filename, input_options = *arg.split(/=/, 2)
+
+  # Load the correct file type input method
+  pathname, basename, extension = * /(?:(.*)[\/\\])?(.*)\.([^.]*)$/.match(filename).captures
   input_handler = "activefacts/input/#{extension}"
   require input_handler
 
   input_class = extension.upcase
   input_klass = ActiveFacts::Input.const_get(input_class.to_sym)
   raise "Expected #{input_handler} to define #{input_class}" unless input_klass
-end
 
-# Read the input file:
-begin
-  if input_klass
-    vocabulary = input_klass.readfile(arg, *input_options)
-  else
-    vocabulary = true
-  end
-
+  # Read the input file:
+  vocabulary =
+    if input_klass
+      begin
+	input_klass.readfile(filename, *input_options)
+      rescue => e
+	$stderr.puts "#{e.message}"
+	$stderr.puts "\t#{e.backtrace*"\n\t"}" if trace :exception
+	exit 1
+      end
+    end
   exit 0 unless vocabulary
-
   vocabulary.finalise unless vocabulary == true
 
-  compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, "test", options)
-  compositor.generate
+  # Run each compositor
+  compositors.each do |compositor_klass|
+    compositor = compositor_klass.new(vocabulary.constellation, basename, options)
+    compositor.generate
 
-  if validate
-    trace.enable 'composition_validator'
-    compositor.validate do |component, problem|
-      trace :composition_validator, "!!PROBLEM!! #{component.inspect}: #{problem}"
+    # Run each generator
+    generators.each do |generator|
+      output = generator.new(compositor.composition).generate
+      puts output if output
     end
   end
-
-  puts(compositor.composition.summary) if show
-
-rescue => e
-  $stderr.puts "#{e.message}"
-  # puts "\t#{e.backtrace*"\n\t"}"
-  $stderr.puts "\t#{e.backtrace*"\n\t"}" if trace :exception
-  exit 1
 end

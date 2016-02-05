@@ -1,4 +1,4 @@
-#
+### Composition
 # ActiveFacts Compositions, Binary Compositor.
 #
 #	Fans of RDF will like this one.
@@ -17,6 +17,7 @@ module ActiveFacts
 	  @binary_mappings.keys.sort_by(&:name).each do |object_type|
 	    mapping = @binary_mappings[object_type]
 	    mapping.re_rank
+	    composite = @constellation.Composite(mapping, composition: @composition)
 	  end
 	end
 
@@ -29,5 +30,6 @@ module ActiveFacts
 
       end
     end
+    publish_compositor(Binary)
   end
 end

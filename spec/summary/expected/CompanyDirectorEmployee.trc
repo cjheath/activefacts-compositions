@@ -1,3 +1,4 @@
+Summary of test
 Attendance
 	Attendance->[Attendee]->Given Name[1.0] as "Attendee Given Name"
 	Attendance->[Attendee]->Family Name?[1.1] as "Attendee Family Name"

@@ -1,3 +1,4 @@
+Summary of test
 Asset
 	Asset->Asset ID[1.0] as "Asset ID"
 	Asset->Vehicle?->VIN[2.0] as "Vehicle VIN"

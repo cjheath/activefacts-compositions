@@ -6,12 +6,14 @@
 require "activefacts/metamodel"
 require "activefacts/compositions/names"
 require "activefacts/compositions/constraints"
+require "activefacts/generators"
 
 module ActiveFacts
   module Metamodel
     class Composition
       def summary
 	classify_constraints
+	"Summary of #{name}\n" +
 	all_composite.
 	sort_by{|composite| composite.mapping.name}.
 	flat_map do |composite|
@@ -28,6 +30,7 @@ module ActiveFacts
 	  [mapping.name+"\n"] +
 	  mapping.
 	  leaves.
+	  reject{|leaf| leaf.is_a?(Absorption) && leaf.forward_absorption}.
 	  flat_map do |leaf|
 
 	    # Build a display of the names in this absorption path, with FK and optional indicators
@@ -78,5 +81,18 @@ module ActiveFacts
 	)*''
       end
     end
+  end
+
+  module Generators
+    class Summary
+      def initialize composition
+	@composition = composition
+      end
+
+      def generate
+	@composition.summary
+      end
+    end
+    publish_generator Summary
   end
 end

@@ -1,3 +1,4 @@
+Summary of test
 AllocatableCinemaSection
 	AllocatableCinemaSection->[Cinema]->Cinema ID[1.0] as "Cinema ID"
 	AllocatableCinemaSection->Section->Section Name[1.1] as "Section Name"

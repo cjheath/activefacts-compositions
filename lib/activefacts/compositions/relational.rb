@@ -800,5 +800,7 @@ module ActiveFacts
       end
 
     end
+
+    publish_compositor(Relational)
   end
 end
