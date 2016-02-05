@@ -7,7 +7,7 @@ require 'bundler/setup' # Set up gems listed in the Gemfile.
 
 # require 'spec_helper'
 require 'activefacts/compositions/relational'
-require 'activefacts/compositions/validator'
+require 'activefacts/generators/validate'
 require 'activefacts/generators/summary'
 require 'activefacts/input/cql'
 
@@ -60,7 +60,7 @@ describe "Summary of absorption from CQL" do
 	File.delete(actual) rescue nil
       end
 
-      compositor.validate do |component, problem|
+      ActiveFacts::Generators::Validate.new(compositor.composition).generate do |component, problem|
 	expect("#{component.inspect}: #{problem}").to be_nil
       end
 

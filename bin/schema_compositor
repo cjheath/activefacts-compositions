@@ -26,8 +26,10 @@ Loadable.new(compositions_path).
 enumerate.
 select do |filename|
   begin
-    require(compositions_path+"/"+filename)
-  rescue Exception
+    require(pathname = compositions_path+"/"+filename)
+  rescue LoadError => e
+  rescue Exception => e
+    puts "Can't load #{pathname}: #{e.class}: #{e.message}"
   end
 end
 
@@ -37,8 +39,10 @@ Loadable.new(generators_path).
 enumerate.
 select do |filename|
   begin
-    require(generators_path+"/"+filename)
-  rescue Exception
+    require(pathname = generators_path+"/"+filename)
+  rescue LoadError => e
+  rescue Exception => e
+    puts "Can't load #{pathname}: #{e.class}: #{e.message}"
   end
 end
 
@@ -61,6 +65,7 @@ if options['help']
   exit
 end
 
+# Process each input file:
 ARGV.each do |arg|
   filename, input_options = *arg.split(/=/, 2)
 
@@ -94,7 +99,7 @@ ARGV.each do |arg|
 
     # Run each generator
     generators.each do |generator|
-      output = generator.new(compositor.composition).generate
+      output = generator.new(compositor.composition, options).generate
       puts output if output
     end
   end
