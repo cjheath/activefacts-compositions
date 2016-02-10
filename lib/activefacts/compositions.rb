@@ -9,7 +9,7 @@ module ActiveFacts
     end
 
     def self.publish_compositor klass
-      compositors[klass.basename.downcase] = klass
+      compositors[klass.name.sub(/^ActiveFacts::Compositions::/,'').gsub(/::/, '/').downcase] = klass
     end
   end
 end

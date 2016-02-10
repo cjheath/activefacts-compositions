@@ -8,7 +8,7 @@ module ActiveFacts
     end
 
     def self.publish_generator klass
-      generators[klass.basename.downcase] = klass
+      generators[klass.name.sub(/^ActiveFacts::Generators::/,'').gsub(/::/, '/').downcase] = klass
     end
   end
 end
