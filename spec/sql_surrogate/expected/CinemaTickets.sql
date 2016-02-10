@@ -128,7 +128,7 @@ CREATE TABLE SeatAllocation (
 )
 GO
 
-CREATE TABLE Session (
+CREATE TABLE [Session] (
 	-- Session ID
 	SessionID                               BIGINT IDENTITY NOT NULL,
 	-- Session involves Cinema that has Cinema ID
@@ -195,6 +195,6 @@ ALTER TABLE Person
 	ADD FOREIGN KEY (PersonID) REFERENCES Person (PersonID)
 GO
 
-ALTER TABLE Session
-	ADD FOREIGN KEY (SessionID) REFERENCES Session (SessionID)
+ALTER TABLE [Session]
+	ADD FOREIGN KEY (SessionID) REFERENCES [Session] (SessionID)
 GO

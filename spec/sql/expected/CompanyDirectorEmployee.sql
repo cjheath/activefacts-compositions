@@ -72,11 +72,11 @@ CREATE TABLE Meeting (
 	-- Meeting is held by Company that is called Company Name
 	CompanyName                             varchar(48) NULL,
 	-- Meeting is held on Date
-	Date                                    datetime NULL,
+	[Date]                                  datetime NULL,
 	-- Is Board Meeting
 	IsBoardMeeting                          BOOLEAN,
 	-- Primary index to Meeting over PresenceConstraint over (Company, Date, Is Board Meeting in "Meeting is held by Company", "Meeting is held on Date", "Meeting is board meeting") occurs at most one time
-	PRIMARY KEY CLUSTERED(CompanyName, Date, IsBoardMeeting),
+	PRIMARY KEY CLUSTERED(CompanyName, [Date], IsBoardMeeting),
 	FOREIGN KEY (CompanyName) REFERENCES Company (CompanyName)
 )
 GO
@@ -94,7 +94,7 @@ CREATE UNIQUE CLUSTERED INDEX PersonByGivenNameFamilyName ON (GivenName, FamilyN
 GO
 
 ALTER TABLE Meeting
-	ADD FOREIGN KEY (MeetingCompanyName, MeetingDate, MeetingIsBoardMeeting) REFERENCES Meeting (CompanyName, Date, IsBoardMeeting)
+	ADD FOREIGN KEY (MeetingCompanyName, MeetingDate, MeetingIsBoardMeeting) REFERENCES Meeting (CompanyName, [Date], IsBoardMeeting)
 GO
 
 ALTER TABLE Person

@@ -14,7 +14,7 @@ CREATE TABLE AcceptableSubstitution (
 )
 GO
 
-CREATE TABLE Month (
+CREATE TABLE [Month] (
 	-- Month ID
 	MonthID                                 BIGINT IDENTITY NOT NULL,
 	-- Month has Month Nr
@@ -116,7 +116,7 @@ CREATE TABLE SupplyPeriod (
 	PRIMARY KEY CLUSTERED(SupplyPeriodID),
 	-- Unique index to Supply Period over PresenceConstraint over (Year, Month in "Supply Period is in Year", "Supply Period is in Month") occurs at most one time
 	UNIQUE NONCLUSTERED(YearNr, MonthID),
-	FOREIGN KEY (MonthID) REFERENCES Month (MonthID)
+	FOREIGN KEY (MonthID) REFERENCES [Month] (MonthID)
 )
 GO
 

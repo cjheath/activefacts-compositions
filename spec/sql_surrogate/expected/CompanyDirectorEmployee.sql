@@ -76,13 +76,13 @@ CREATE TABLE Meeting (
 	-- Company ID
 	CompanyID                               BIGINT IDENTITY NOT NULL,
 	-- Meeting is held on Date
-	Date                                    datetime NULL,
+	[Date]                                  datetime NULL,
 	-- Is Board Meeting
 	IsBoardMeeting                          BOOLEAN,
 	-- Primary index to Meeting
 	PRIMARY KEY CLUSTERED(MeetingID),
 	-- Unique index to Meeting over PresenceConstraint over (Company, Date, Is Board Meeting in "Meeting is held by Company", "Meeting is held on Date", "Meeting is board meeting") occurs at most one time
-	UNIQUE NONCLUSTERED(CompanyID, Date, IsBoardMeeting),
+	UNIQUE NONCLUSTERED(CompanyID, [Date], IsBoardMeeting),
 	FOREIGN KEY (CompanyID) REFERENCES Company (CompanyID)
 )
 GO

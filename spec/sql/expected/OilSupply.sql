@@ -10,7 +10,7 @@ CREATE TABLE AcceptableSubstitution (
 )
 GO
 
-CREATE TABLE Month (
+CREATE TABLE [Month] (
 	-- Month has Month Nr
 	MonthNr                                 int NULL CHECK((MonthNr >= 1 AND MonthNr <= 12)),
 	-- Month is in Season
@@ -88,7 +88,7 @@ CREATE TABLE SupplyPeriod (
 	MonthNr                                 int NULL CHECK((MonthNr >= 1 AND MonthNr <= 12)),
 	-- Primary index to Supply Period over PresenceConstraint over (Year, Month in "Supply Period is in Year", "Supply Period is in Month") occurs at most one time
 	PRIMARY KEY CLUSTERED(YearNr, MonthNr),
-	FOREIGN KEY (MonthNr) REFERENCES Month (MonthNr)
+	FOREIGN KEY (MonthNr) REFERENCES [Month] (MonthNr)
 )
 GO
 

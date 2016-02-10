@@ -126,7 +126,7 @@ CREATE TABLE SeatAllocation (
 )
 GO
 
-CREATE TABLE Session (
+CREATE TABLE [Session] (
 	-- Session involves Cinema that has Cinema ID
 	CinemaID                                int NULL,
 	-- Session involves Session Time that is in Year that has Year Nr
@@ -185,6 +185,6 @@ ALTER TABLE Person
 	ADD FOREIGN KEY (PersonID) REFERENCES Person (PersonID)
 GO
 
-ALTER TABLE Session
-	ADD FOREIGN KEY (SessionCinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute) REFERENCES Session (CinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute)
+ALTER TABLE [Session]
+	ADD FOREIGN KEY (SessionCinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute) REFERENCES [Session] (CinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute)
 GO

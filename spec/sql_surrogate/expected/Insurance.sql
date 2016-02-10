@@ -299,7 +299,7 @@ GO
 CREATE UNIQUE NONCLUSTERED INDEX PropertyDamageByIncidentClaimIDAddressStreetAddressCityAd0ba ON (IncidentClaimID, AddressStreet, AddressCity, AddressPostcode, AddressStateID) WHERE IncidentClaimID IS NOT NULL AND AddressPostcode IS NOT NULL
 GO
 
-CREATE TABLE State (
+CREATE TABLE [State] (
 	-- State ID
 	StateID                                 BIGINT IDENTITY NOT NULL,
 	-- State has State Code
@@ -312,7 +312,7 @@ CREATE TABLE State (
 	UNIQUE NONCLUSTERED(StateCode)
 )
 GO
-CREATE UNIQUE NONCLUSTERED INDEX StateByStateName ON (StateName) WHERE StateName IS NOT NULL
+CREATE UNIQUE NONCLUSTERED INDEX [[State]ByStateName] ON (StateName) WHERE StateName IS NOT NULL
 GO
 
 CREATE TABLE ThirdParty (
@@ -435,7 +435,7 @@ CREATE TABLE Witness (
 	PRIMARY KEY CLUSTERED(WitnessID),
 	-- Unique index to Witness over PresenceConstraint over (Incident, Name in "Incident was independently witnessed by Witness", "Witness is called Name") occurs at most one time
 	UNIQUE NONCLUSTERED(IncidentClaimID, Name),
-	FOREIGN KEY (AddressStateID) REFERENCES State (StateID),
+	FOREIGN KEY (AddressStateID) REFERENCES [State] (StateID),
 	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID)
 )
 GO
@@ -472,26 +472,6 @@ ALTER TABLE Product
 	ADD FOREIGN KEY (PProductID) REFERENCES Product (ProductID)
 GO
 
-ALTER TABLE State
-	ADD FOREIGN KEY (AddressStateID) REFERENCES State (StateID)
-GO
-
-ALTER TABLE State
-	ADD FOREIGN KEY (IncidentAddressStateID) REFERENCES State (StateID)
-GO
-
-ALTER TABLE State
-	ADD FOREIGN KEY (PStateID) REFERENCES State (StateID)
-GO
-
-ALTER TABLE State
-	ADD FOREIGN KEY (PersonAddressStateID) REFERENCES State (StateID)
-GO
-
-ALTER TABLE State
-	ADD FOREIGN KEY (PostalAddressStateID) REFERENCES State (StateID)
-GO
-
 ALTER TABLE UnderwritingQuestion
 	ADD FOREIGN KEY (UnderwritingQuestionID) REFERENCES UnderwritingQuestion (UnderwritingQuestionID)
 GO
@@ -502,4 +482,24 @@ GO
 
 ALTER TABLE VehicleIncident
 	ADD FOREIGN KEY (VehicleIncidentClaimID) REFERENCES VehicleIncident (IncidentClaimID)
+GO
+
+ALTER TABLE [State]
+	ADD FOREIGN KEY (AddressStateID) REFERENCES [State] (StateID)
+GO
+
+ALTER TABLE [State]
+	ADD FOREIGN KEY (IncidentAddressStateID) REFERENCES [State] (StateID)
+GO
+
+ALTER TABLE [State]
+	ADD FOREIGN KEY (PStateID) REFERENCES [State] (StateID)
+GO
+
+ALTER TABLE [State]
+	ADD FOREIGN KEY (PersonAddressStateID) REFERENCES [State] (StateID)
+GO
+
+ALTER TABLE [State]
+	ADD FOREIGN KEY (PostalAddressStateID) REFERENCES [State] (StateID)
 GO
