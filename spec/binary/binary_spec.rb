@@ -7,7 +7,7 @@ require 'bundler/setup' # Set up gems listed in the Gemfile.
 
 # require 'spec_helper'
 require 'activefacts/compositions/binary'
-require 'activefacts/generators/validate'
+require 'activefacts/generator/validate'
 require 'activefacts/input/cql'
 
 BINARY_CQL_DIR = Pathname.new(__FILE__+'/../').relative_path_from(Pathname(Dir.pwd)).to_s

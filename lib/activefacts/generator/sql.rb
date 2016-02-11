@@ -7,7 +7,7 @@ require 'digest/sha1'
 require 'activefacts/metamodel'
 require 'activefacts/registry'
 require 'activefacts/compositions'
-require 'activefacts/generators'
+require 'activefacts/generator'
 
 module ActiveFacts
   module Generators

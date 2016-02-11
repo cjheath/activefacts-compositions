@@ -6,7 +6,7 @@
 require "activefacts/metamodel"
 require "activefacts/compositions/names"
 require "activefacts/compositions/constraints"
-require "activefacts/generators"
+require "activefacts/generator"
 
 module ActiveFacts
   module Metamodel

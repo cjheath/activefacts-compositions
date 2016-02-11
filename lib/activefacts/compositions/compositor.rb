@@ -129,7 +129,8 @@ module ActiveFacts
 #	if role.fact_type.is_a?(ActiveFacts::Metamodel::TypeInheritance) && role == role.fact_type.subtype_role
 #	  return "Is "+role.object_type.name
 #	end
-	String::Words.new(role.base_role.preferred_reference.role_name(nil)).capwords*' '
+	role = role.base_role unless role.base_role.fact_type.all_role.size == 1
+	String::Words.new(role.preferred_reference.role_name(nil)).capwords*' '
       end
 
       def role_type role

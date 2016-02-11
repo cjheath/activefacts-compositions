@@ -8,7 +8,7 @@ require 'bundler/setup' # Set up gems listed in the Gemfile.
 # require 'spec_helper'
 require 'activefacts/compositions/relational'
 require 'activefacts/compositions/names'
-require 'activefacts/generators/sql'
+require 'activefacts/generator/sql'
 require 'activefacts/input/cql'
 
 SQL_CQL_DIR = Pathname.new(__FILE__+'/../../relational').relative_path_from(Pathname(Dir.pwd)).to_s

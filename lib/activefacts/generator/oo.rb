@@ -7,7 +7,7 @@ require 'digest/sha1'
 require 'activefacts/metamodel'
 require 'activefacts/registry'
 require 'activefacts/compositions'
-require 'activefacts/generators'
+require 'activefacts/generator'
 
 module ActiveFacts
   module Generators
@@ -93,8 +93,15 @@ module ActiveFacts
 	  supertype_definition += "\n" if supertype_definition
 	end
 
-	# Select the members that will be declared as Ruby roles:
-	members = mapping.all_member.reject{|m| m.is_a?(MM::Absorption) && m.forward_absorption}
+	# Select the members that will be declared as O-O roles:
+	mapping.re_rank
+	members = mapping.
+	  all_member.
+	  sort_by{|m| m.ordinal}.
+	  reject do |m|
+	    m.is_a?(MM::Absorption) and
+	      m.forward_absorption || m.child_role.fact_type.is_a?(MM::TypeInheritance)
+	  end
 
 	# For those roles that derive from Mappings, produce class definitions to avoid forward references:
 	forward_declarations =
@@ -113,9 +120,16 @@ module ActiveFacts
 	      inherited_identification
 	    else
 	      identifying_roles =
-		object_type.preferred_identifier.role_sequence.all_role_ref.map(&:role).
-		map do |role|
-		  members.detect{|m| m.all_role.include?(role)}
+		if object_type.fact_type && object_type.fact_type.is_unary
+		  # Objectified unary; find the absorption over the LinkFactType
+		  members.
+		    select{|m| m.is_a?(MM::Absorption) && m.child_role.base_role.fact_type.entity_type}.
+		    map{|m| m.child_role}
+		else
+		  object_type.preferred_identifier.role_sequence.all_role_ref.map(&:role).
+		  map do |role|
+		    members.detect{|m| m.all_role.include?(role)}
+		  end
 		end
 	      identified_by_roles identifying_roles
 	    end

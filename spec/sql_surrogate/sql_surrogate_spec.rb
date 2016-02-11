@@ -8,7 +8,7 @@ require 'bundler/setup' # Set up gems listed in the Gemfile.
 # require 'spec_helper'
 require 'activefacts/compositions/relational'
 require 'activefacts/compositions/names'
-require 'activefacts/generators/sql'
+require 'activefacts/generator/sql'
 require 'activefacts/input/cql'
 
 SQL_SURR_CQL_DIR = Pathname.new(__FILE__+'/../../relational').relative_path_from(Pathname(Dir.pwd)).to_s
@@ -37,7 +37,7 @@ describe "SQL schema with surrogates from CQL" do
     files = `git ls-files "#{dir}/*.cql"`.split(/\n/)
   end
   files.each do |cql_file|
-    it "produces the expected SQL_SURR for #{cql_file}" do
+    it "produces the expected SQL with surrogates for #{cql_file}" do
       expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, expected_dir+'/\2.sql')
       actual = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, actual_dir+'/\2.sql')
       begin

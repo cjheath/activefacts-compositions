@@ -8,7 +8,7 @@
 #
 require "activefacts/metamodel"
 require "activefacts/compositions/compositor"
-require "activefacts/generators"
+require "activefacts/generator"
 
 module ActiveFacts
   module Generators
