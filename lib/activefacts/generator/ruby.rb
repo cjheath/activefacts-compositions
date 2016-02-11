@@ -14,15 +14,24 @@ module ActiveFacts
     class Ruby < ObjectOriented
       def initialize composition, options = {}
 	super
+	@scope = options.delete('scope') || ''
+	@scope = @scope.split(/::/)
+	@scope_prefix = '  '*@scope.size
       end
 
       def prelude composition
-	"require 'activefacts/api'\n" +
-	  "\nmodule #{composition.name}\n"
+	"require 'activefacts/api'\n\n" +
+	(0...@scope.size).map{|i| '  '*i + "module #{@scope[i]}\n"}*'' +
+	"#{@scope_prefix}module #{composition.name}\n"
       end
 
       def finale
-	'end'
+	@scope.size.downto(0).map{|i| '  '*i+"end\n"}*''
+      end
+
+      def generate_classes composites
+	super(composites).
+	  gsub(/^/, '  '*@scope.size)
       end
 
       def identified_by_roles identifying_roles

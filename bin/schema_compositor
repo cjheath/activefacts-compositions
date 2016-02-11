@@ -13,11 +13,13 @@ require 'activefacts/metamodel'
 require 'activefacts/compositions'
 require 'activefacts/generator'
 
-# Parse options into a hash:
+# Parse options into a hash, and values for each option into a hash
 options = {}
 while ARGV[0] =~ /^-/
   option, value = ARGV.shift.split(/=/, 2)
-  options[option.sub(/^-*/,'')] = value =~ /,/ ? value.split(',') : (value || true)
+  options[option.sub(/^-*/,'')] =
+    (value =~ /,/ ? value.split(',') : Array(value)).
+    inject({}){|h,s| k, v = s.split(/=/, 2); h[k] = v || true; h }
 end
 
 # Load and enumerate all available compositors:
@@ -55,11 +57,7 @@ end
 # Arrange the requested compositors and generators:
 compositors = []
 generators = []
-options.clone.each do |option, value|
-  if value != true
-    mode = value.inject({}){|h,s| k, v = s.split(/=/, 2); v ||= true; h[k] = v; h }
-  end
-
+options.clone.each do |option, mode|
   if action = ActiveFacts::Compositions.compositors[option]
     options.delete(option)
     compositors << [action, mode]

@@ -24,16 +24,23 @@ module ActiveFacts
 
 	retract_intrinsic_types
 
+	composites =
+	  @composition.
+	  all_composite.
+	  sort_by{|composite| composite.mapping.name}
+
 	prelude(@composition) +
-	@composition.
-        all_composite.
-        sort_by{|composite| composite.mapping.name}.
+	generate_classes(composites) +
+	finale
+      end
+
+      def generate_classes composites
+	composites.
 	map do |composite|
 	  generate_class(composite)
 	end.
 	compact.
-	join("\n") +
-	finale
+	join("\n")
       end
 
       def composite_for object_type
