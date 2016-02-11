@@ -46,23 +46,30 @@ select do |filename|
   end
 end
 
-# Arrange the requested compositors and generators:
-compositors = []
-generators = []
-options.clone.each do |option, value|
-  if compositor = ActiveFacts::Compositions.compositors[option]
-    options.delete(option)
-    compositors << compositor
-  elsif generator = ActiveFacts::Generators.generators[option]
-    options.delete(option)
-    generators << generator
-  end
-end
-
 if options['help']
   puts "Available compositors:\n\t#{ActiveFacts::Compositions.compositors.keys.sort*"\n\t"}\n\n"
   puts "Available generators:\n\t#{ActiveFacts::Generators.generators.keys.sort*"\n\t"}\n\n"
   exit
+end
+
+# Arrange the requested compositors and generators:
+compositors = []
+generators = []
+options.clone.each do |option, value|
+  if value != true
+    mode = value.inject({}){|h,s| k, v = s.split(/=/, 2); v ||= true; h[k] = v; h }
+  end
+
+  if action = ActiveFacts::Compositions.compositors[option]
+    options.delete(option)
+    compositors << [action, mode]
+  elsif action = ActiveFacts::Generators.generators[option]
+    options.delete(option)
+    generators << [action, mode]
+  end
+  if mode && mode['help']
+    puts "REVISIT: Help for #{option} is not yet available"
+  end
 end
 
 # Process each input file:
@@ -97,13 +104,13 @@ ARGV.each do |arg|
   vocabulary.finalise unless vocabulary == true
 
   # Run each compositor
-  compositors.each do |compositor_klass|
-    compositor = compositor_klass.new(vocabulary.constellation, basename, options)
+  compositors.each do |compositor_klass, mode|
+    compositor = compositor_klass.new(vocabulary.constellation, basename, mode||{})
     compositor.generate
 
     # Run each generator
-    generators.each do |generator|
-      output = generator.new(compositor.composition, options).generate
+    generators.each do |generator, mode|
+      output = generator.new(compositor.composition, mode||{}).generate
       puts output if output
     end
   end

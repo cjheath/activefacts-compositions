@@ -1,0 +1,24 @@
+Summary of test
+Author
+	Author->Author Id[1.0] as "Author Id"
+	Author->Author Name[2.0] as "Author Name"
+Comment
+	Comment->Comment Id[1.0] as "Comment Id"
+	Comment->[Author]->Author Id as "Author Id"
+	Comment->Content->Style? as "Content Style"
+	Comment->Content->Text as "Content Text"
+	Comment->[Paragraph]->Post->Post Id as "Paragraph Post Id"
+	Comment->[Paragraph]->Ordinal as "Paragraph Ordinal"
+Paragraph
+	Paragraph->[Post]->Post Id[1.0] as "Post Id"
+	Paragraph->Ordinal[1.1] as "Ordinal"
+	Paragraph->Content->Style? as "Content Style"
+	Paragraph->Content->Text as "Content Text"
+Post
+	Post->Post Id[1.0] as "Post Id"
+	Post->[Author]->Author Id as "Author Id"
+	Post->[Topic]->Topic Id as "Topic Id"
+Topic
+	Topic->Topic Id[1.0] as "Topic Id"
+	Topic->Topic Name[2.0] as "Topic Name"
+	Topic->[Parent Topic]?->Topic Id as "Parent Topic Id"
