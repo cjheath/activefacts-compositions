@@ -50,7 +50,10 @@ module ActiveFacts
       # We don't need Composites for object types that are built-in to the Ruby API.
       def is_intrinsic_type composite
 	o = composite.mapping.object_type
-	o.name == "_ImplicitBooleanValueType" || !o.supertype
+	return true if o.name == "_ImplicitBooleanValueType"
+	return false if o.supertype
+	# A value type with no supertype must be emitted if it is the child in any absorption:
+	return !composite.mapping.all_member.detect{|m| m.forward_absorption}
       end
 
       def retract_intrinsic_types
