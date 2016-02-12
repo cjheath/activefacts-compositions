@@ -20,7 +20,7 @@ module CinemaTickets
 
   class Cinema
     identified_by   :cinema_id
-    one_to_one      :cinema_id, mandatory: true         # Cinema has Cinema ID, see CinemaID#cinema
+    one_to_one      :cinema_id, mandatory: true, class: CinemaID  # Cinema has Cinema ID, see CinemaID#cinema_as_cinema_id
     one_to_one      :name, mandatory: true              # Cinema has Name, see Name#cinema
   end
 
@@ -61,7 +61,7 @@ module CinemaTickets
 
   class Person
     identified_by   :person_id
-    one_to_one      :person_id, mandatory: true         # Person has Person ID, see PersonID#person
+    one_to_one      :person_id, mandatory: true, class: PersonID  # Person has Person ID, see PersonID#person_as_person_id
     has_one         :encrypted_password                 # Person has Encrypted Password, see EncryptedPassword#all_person
     one_to_one      :login_name, class: Name            # Person has login-Name, see Name#person_as_login_name
   end
@@ -81,7 +81,7 @@ module CinemaTickets
 
   class Film
     identified_by   :film_id
-    one_to_one      :film_id, mandatory: true           # Film has Film ID, see FilmID#film
+    one_to_one      :film_id, mandatory: true, class: FilmID  # Film has Film ID, see FilmID#film_as_film_id
     has_one         :name, mandatory: true              # Film has Name, see Name#all_film
     has_one         :year                               # Film was made in Year, see Year#all_film
   end

@@ -19,9 +19,9 @@ module Country
 
   class Country
     identified_by   :iso3166_code3
-    one_to_one      :iso3166_code3, mandatory: true     # Country has ISO3166Code3, see ISO3166Code3#country
+    one_to_one      :iso3166_code3, mandatory: true, class: ISO3166Code3  # Country has ISO3166Code3, see ISO3166Code3#country_as_iso3166_code3
     one_to_one      :country_name, mandatory: true      # Country is called Country Name, see CountryName#country
-    one_to_one      :iso3166_code2, mandatory: true     # Country has ISO3166Code2, see ISO3166Code2#country
-    one_to_one      :iso3166_numeric3, mandatory: true  # Country has ISO3166Numeric3, see ISO3166Numeric3#country
+    one_to_one      :iso3166_code2, mandatory: true, class: ISO3166Code2  # Country has ISO3166Code2, see ISO3166Code2#country_as_iso3166_code2
+    one_to_one      :iso3166_numeric3, mandatory: true, class: ISO3166Numeric3  # Country has ISO3166Numeric3, see ISO3166Numeric3#country_as_iso3166_numeric3
   end
 end

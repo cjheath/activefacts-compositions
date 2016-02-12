@@ -87,21 +87,21 @@ module ActiveFacts
 	"REVISIT: override class_finale\n"
       end
 
-      def generate_class composite
+      def generate_class composite, predefine_role_players = true
 	return nil if @composites_emitted[composite]
-	@composites_emitted[composite] = true
 
 	mapping = composite.mapping
 	object_type = mapping.object_type
 	is_entity_type = object_type.is_a?(MM::EntityType)
-	supertype = is_entity_type ? object_type.identifying_supertype : object_type.supertype
+	forward_declarations = []
 
 	# Emit supertypes before subtypes
-	if supertype and
-	    supertype_composite = composite_for(supertype)
-	  supertype_definition = generate_class(supertype_composite)
-	  supertype_definition += "\n" if supertype_definition
-	end
+	supertype_composites =
+	  object_type.all_supertype.map{|s| composite_for(s) }.compact
+	forward_declarations +=
+	  supertype_composites.map{|c| generate_class(c, false)}.compact
+
+	@composites_emitted[composite] = true
 
 	# Select the members that will be declared as O-O roles:
 	mapping.re_rank
@@ -113,20 +113,34 @@ module ActiveFacts
 	      m.forward_absorption || m.child_role.fact_type.is_a?(MM::TypeInheritance)
 	  end
 
-	# For those roles that derive from Mappings, produce class definitions to avoid forward references:
-	forward_declarations =
-	  members.
-	  select{ |m| m.is_a?(MM::Mapping) }.
-	  map{ |m| composite_for m.object_type }.
-	  compact.
-	  sort_by{|c| c.mapping.name}.
-	  map{|c| generate_class(c)}.
-	  compact * "\n"
-	forward_declarations += "\n" unless forward_declarations.empty?
+	if predefine_role_players
+	  # The idea was good, but we need to avoid triggering a forward reference problem.
+	  # We only do it when we're not dumping a supertype dependency.
+	  #
+	  # For those roles that derive from Mappings, produce class definitions to avoid forward references:
+	  forward_composites =
+	    members.
+	      select{ |m| m.is_a?(MM::Mapping) }.
+	      map{ |m| composite_for m.object_type }.
+	      compact.
+	      sort_by{|c| c.mapping.name}
+	  forward_declarations +=
+	    forward_composites.map{|c| generate_class(c)}.compact
+	end
+
+	forward_declarations = forward_declarations.map{|f| "#{f}\n"}*''
+
+	primary_supertype =
+	  if is_entity_type
+	    object_type.identifying_supertype ||
+	      object_type.supertypes[0]	# Hopefully there's only one!
+	  else
+	    object_type.supertype || object_type
+	  end
 
 	type_declaration =
 	  if is_entity_type
-	    if supertype and object_type.identification_is_inherited
+	    if primary_supertype and object_type.identification_is_inherited
 	      inherited_identification
 	    else
 	      identifying_roles =
@@ -148,8 +162,7 @@ module ActiveFacts
 	  end
 
 	forward_declarations +
-	"#{supertype_definition}" +
-	class_prelude(object_type, supertype) +
+	class_prelude(object_type, primary_supertype) +
 	  type_declaration +
 	  members.
 	  map do |component|

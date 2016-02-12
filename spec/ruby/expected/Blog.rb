@@ -23,10 +23,14 @@ module Blog
     value_type      length: 20
   end
 
+  class Text < ::Text
+    value_type
+  end
+
   class Content
     identified_by   :style, :text
     has_one         :style                              # Content is of Style, see Style#all_content
-    has_one         :text, mandatory: true              # Content has Text
+    has_one         :text, mandatory: true              # Content has Text, see Text#all_content
   end
 
   class Ordinal < UnsignedInteger

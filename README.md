@@ -2,16 +2,17 @@
 
 Fact-based schemas are always in highly normalised or *elementary* form.
 Most other schemas are composite (object-oriented, relational, warehousing, analytical, messaging, APIs, etc).
-This gem provides the framework for *Compositions*, which are representations of the two-way mapping between an elementary schema and a composite schema.
-As such, it supports any-to-any mappings between different composite forms.
 
-It also provides automated generators for some types of composite schemas, especially relational and Data Vault schemas.
+A *Composition* is a representation of the two-way mapping between an elementary schema and the composite schemas.
 
-This gem works with the Fact Modeling tools as part of ActiveFacts.
+This gem provides:
+* an API for compositions,
+* several compositors which create Compositions - O-O, Relational and Data Vault and
+* some generators which emit various kinds of output (Ruby, SQL) etc, for composed schemas.
+
+This gem builds on the Fact Modeling Metamodel and languages of ActiveFacts.
 
 ## Installation
-
-Install as part of activefacts, just "gem install" directly, or add this line to your application's Gemfile:
 
 ```ruby
 gem 'activefacts-compositions'
@@ -19,24 +20,18 @@ gem 'activefacts-compositions'
 
 And then execute:
 
-    $ bundle
+    $ schema_compositor --help
 
 ## Usage
 
-This gem adds schema manipulation tools (mappers, composers, transformations) to the generator framework for *activefacts*.
-Refer to the afgen command-line tool for help:
-
-    $ afgen --help
-
-A stand-alone relational generator program is provided, mostly for exploratory purposes; use tracing to see what it is doing, e.g.:
-
-    $ TRACE=relational bin/schema_compositor --surrogate spec/relational/CompanyDirectorEmployee.cql
+    $ bin/schema_compositor --relational --sql spec/relational/CompanyDirectorEmployee.cql
+    $ bin/schema_compositor --binary --ruby spec/relational/CompanyDirectorEmployee.cql
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake rspec` to run the tests.
+After checking out the repo, run `bundle` to install dependencies. Then, run `rake rspec` to run the tests.
 
-To install this gem onto your local machine, run `bundle exec rake install`.
+To install this gem onto your local machine from local source code, run `rake install`.
 
 ## Contributing
 

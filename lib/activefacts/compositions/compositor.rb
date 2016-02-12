@@ -109,7 +109,7 @@ module ActiveFacts
 	    object_type.all_role.each do |role|
 	      # Exclude base roles in objectified fact types (unless unary); just use link fact types
 	      next if role.fact_type.entity_type && role.fact_type.all_role.size != 1
-	      next if role.variable_as_projection   # REVISIT: Continue to ignore roles in derived fact types?
+	      next if role.variable   # REVISIT: Continue to ignore roles in derived fact types?
 	      populate_reference object_type, role
 	    end
 	    if object_type.is_a?(ActiveFacts::Metamodel::ValueType)

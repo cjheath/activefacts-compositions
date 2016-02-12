@@ -15,18 +15,19 @@ Gem::Specification.new do |spec|
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.bindir        = "bin"
+  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", ">= 1.10", "~> 1.10.6"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.3"
 
-  spec.add_runtime_dependency("activefacts-api", "~> 1", ">= 1.9.4")
-  spec.add_runtime_dependency("activefacts-metamodel", "~> 1", ">= 1.9.5")
+  spec.add_development_dependency "activefacts", "~> 1", ">= 1.8"
+
+  spec.add_runtime_dependency("activefacts-api", "~> 1", ">= 1.9.5")
+  spec.add_runtime_dependency("activefacts-metamodel", "~> 1", ">= 1.9.6")
   spec.add_runtime_dependency "tracing", "~> 2", ">= 2.0.6"
 
-  spec.add_development_dependency "activefacts", "~> 1", ">= 1.8"
-  spec.add_development_dependency "activefacts-cql", "~> 1", ">= 1.8"
+  spec.add_runtime_dependency "activefacts-cql", "~> 1", ">= 1.8"
 end

@@ -11,10 +11,14 @@ module CompanyDirectorEmployee
     maybe           :is_listed                          # Is Listed
   end
 
+  class Date < ::Date
+    value_type
+  end
+
   class Meeting
     identified_by   :company, :date, :is_board_meeting
     has_one         :company, mandatory: true           # Meeting is held by Company, see Company#all_meeting
-    has_one         :date, mandatory: true              # Meeting is held on Date
+    has_one         :date, mandatory: true              # Meeting is held on Date, see Date#all_meeting
     maybe           :is_board_meeting                   # Is Board Meeting
   end
 
@@ -26,7 +30,7 @@ module CompanyDirectorEmployee
     identified_by   :given_name, :family_name
     has_one         :given_name, mandatory: true, class: Name  # Person has given-Name, see Name#all_person_as_given_name
     has_one         :family_name, class: Name           # Person is called family-Name, see Name#all_person_as_family_name
-    has_one         :birth_date                         # Person was born on birth-Date
+    has_one         :birth_date, class: Date            # Person was born on birth-Date, see Date#all_person_as_birth_date
   end
 
   class Attendance
@@ -39,7 +43,7 @@ module CompanyDirectorEmployee
     identified_by   :director, :company
     has_one         :director, mandatory: true, class: Person  # Directorship involves Person, see Person#all_directorship_as_director
     has_one         :company, mandatory: true           # Directorship involves Company, see Company#all_directorship
-    has_one         :appointment_date, mandatory: true  # Directorship began on appointment-Date
+    has_one         :appointment_date, mandatory: true, class: Date  # Directorship began on appointment-Date, see Date#all_directorship_as_appointment_date
   end
 
   class EmployeeNr < SignedInteger

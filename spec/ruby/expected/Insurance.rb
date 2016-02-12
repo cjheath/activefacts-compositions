@@ -48,40 +48,15 @@ module Insurance
     one_to_one      :application_nr, mandatory: true    # Application has Application Nr, see ApplicationNr#application
   end
 
-  class Name < String
-    value_type      length: 256
-  end
-
-  class Occupation < String
-    value_type
-  end
-
-  class Title < String
-    value_type
-  end
-
-  class Person < Party
-    has_one         :family_name, mandatory: true, class: Name  # Person has family-Name, see Name#all_person_as_family_name
-    has_one         :given_name, mandatory: true, class: Name  # Person has given-Name, see Name#all_person_as_given_name
-    has_one         :title, mandatory: true             # Person has Title, see Title#all_person
-    has_one         :address                            # Person lives at Address, see Address#all_person
-    has_one         :birth_date                         # Person has birth-Date
-    has_one         :occupation                         # Person has Occupation, see Occupation#all_person
-  end
-
-  class PartyID < AutoCounter
-    value_type
-  end
-
   class Party
     identified_by   :party_id
-    one_to_one      :party_id, mandatory: true          # Party has Party ID, see PartyID#party
+    one_to_one      :party_id, mandatory: true, class: "PartyID"  # Party has Party ID, see PartyID#party_as_party_id
     maybe           :is_a_company                       # Is A Company
     has_one         :postal_address, class: Address     # Party has postal-Address, see Address#all_party_as_postal_address
   end
 
   class Company < Party
-    has_one         :contact_person, mandatory: true, class: Person  # Company has contact-Person, see Person#all_company_as_contact_person
+    has_one         :contact_person, mandatory: true, class: "Person"  # Company has contact-Person, see Person#all_company_as_contact_person
   end
 
   class Contractor < Company
@@ -96,7 +71,7 @@ module Insurance
 
   class Asset
     identified_by   :asset_id
-    one_to_one      :asset_id, mandatory: true          # Asset has Asset ID, see AssetID#asset
+    one_to_one      :asset_id, mandatory: true, class: AssetID  # Asset has Asset ID, see AssetID#asset_as_asset_id
   end
 
   class AuthorisedRep < Party
@@ -162,12 +137,12 @@ module Insurance
     has_one         :application, mandatory: true       # Policy has Application, see Application#all_policy
     has_one         :insured, mandatory: true           # Policy belongs to Insured, see Insured#all_policy
     has_one         :authorised_rep                     # Policy was sold by Authorised Rep, see AuthorisedRep#all_policy
-    has_one         :itc_claimed                        # Policy has ITC Claimed, see ITCClaimed#all_policy
+    has_one         :itc_claimed, class: ITCClaimed     # Policy has ITC Claimed, see ITCClaimed#all_policy_as_itc_claimed
   end
 
   class Claim
     identified_by   :claim_id
-    one_to_one      :claim_id, mandatory: true          # Claim has Claim ID, see ClaimID#claim
+    one_to_one      :claim_id, mandatory: true, class: ClaimID  # Claim has Claim ID, see ClaimID#claim_as_claim_id
     has_one         :p_sequence, mandatory: true, class: ClaimSequence  # Claim has p_sequence, see ClaimSequence#all_claim_as_p_sequence
     has_one         :policy, mandatory: true            # Claim is on Policy, see Policy#all_claim
   end
@@ -184,6 +159,31 @@ module Insurance
     value_type
   end
 
+  class Date < ::Date
+    value_type
+  end
+
+  class Name < String
+    value_type      length: 256
+  end
+
+  class Occupation < String
+    value_type
+  end
+
+  class Title < String
+    value_type
+  end
+
+  class Person < Party
+    has_one         :family_name, mandatory: true, class: Name  # Person has family-Name, see Name#all_person_as_family_name
+    has_one         :given_name, mandatory: true, class: Name  # Person has given-Name, see Name#all_person_as_given_name
+    has_one         :title, mandatory: true             # Person has Title, see Title#all_person
+    has_one         :address                            # Person lives at Address, see Address#all_person
+    has_one         :birth_date, class: Date            # Person has birth-Date, see Date#all_person_as_birth_date
+    has_one         :occupation                         # Person has Occupation, see Occupation#all_person
+  end
+
   class PhoneNr < String
     value_type
   end
@@ -193,11 +193,15 @@ module Insurance
     one_to_one      :phone_nr, mandatory: true          # Phone has Phone Nr, see PhoneNr#phone
   end
 
+  class Time < ::Time
+    value_type
+  end
+
   class ContactMethods
     identified_by   :person
     one_to_one      :person, mandatory: true            # Contact Methods are for Person, see Person#contact_methods
     has_one         :business_phone, class: Phone       # Contact Methods includes business-Phone, see Phone#all_contact_methods_as_business_phone
-    has_one         :contact_time                       # Contact Methods prefers contact-Time
+    has_one         :contact_time, class: Time          # Contact Methods prefers contact-Time, see Time#all_contact_methods_as_contact_time
     has_one         :email                              # Contact Methods includes Email, see Email#all_contact_methods
     has_one         :home_phone, class: Phone           # Contact Methods includes home-Phone, see Phone#all_contact_methods_as_home_phone
     has_one         :mobile_phone, class: Phone         # Contact Methods includes mobile-Phone, see Phone#all_contact_methods_as_mobile_phone
@@ -248,7 +252,11 @@ module Insurance
     identified_by   :cover_type, :policy_wording, :start_date
     has_one         :cover_type, mandatory: true        # Cover Wording involves Cover Type, see CoverType#all_cover_wording
     has_one         :policy_wording, mandatory: true    # Cover Wording involves Policy Wording, see PolicyWording#all_cover_wording
-    has_one         :start_date, mandatory: true        # Cover Wording involves Date
+    has_one         :start_date, mandatory: true, class: Date  # Cover Wording involves Date, see Date#all_cover_wording_as_start_date
+  end
+
+  class DateTime < ::DateTime
+    value_type
   end
 
   class Dealer < Party
@@ -264,6 +272,13 @@ module Insurance
 
   class TestResult < String
     value_type
+  end
+
+  class Incident
+    identified_by   :claim
+    one_to_one      :claim, mandatory: true             # Incident is of Claim, see Claim#incident
+    has_one         :address, mandatory: true           # Incident relates to loss at Address, see Address#all_incident
+    has_one         :date_time, mandatory: true         # Incident relates to loss on Date Time, see DateTime#all_incident
   end
 
   class Location < String
@@ -289,13 +304,6 @@ module Insurance
     maybe           :involves_driving                   # Involves Driving
     maybe           :is_single_vehicle_incident         # Is Single Vehicle Incident
     has_one         :liability                          # Loss Type implies Liability, see Liability#all_loss_type
-  end
-
-  class Incident
-    identified_by   :claim
-    one_to_one      :claim, mandatory: true             # Incident is of Claim, see Claim#incident
-    has_one         :address, mandatory: true           # Incident relates to loss at Address, see Address#all_incident
-    has_one         :date_time, mandatory: true         # Incident relates to loss on Date Time
   end
 
   class VehicleIncident < Incident
@@ -375,7 +383,7 @@ module Insurance
     identified_by   :claim
     one_to_one      :claim, mandatory: true             # Lodgement involves Claim, see Claim#lodgement
     has_one         :person, mandatory: true            # Lodgement involves Person, see Person#all_lodgement
-    has_one         :date_time                          # Lodgement was made at Date Time
+    has_one         :date_time                          # Lodgement was made at Date Time, see DateTime#all_lodgement
   end
 
   class LostItemNr < SignedInteger
@@ -395,7 +403,7 @@ module Insurance
     has_one         :incident, mandatory: true          # Lost Item was lost in Incident, see Incident#all_lost_item
     has_one         :lost_item_nr, mandatory: true      # Lost Item has Lost Item Nr, see LostItemNr#all_lost_item
     has_one         :description, mandatory: true       # Lost Item has Description, see Description#all_lost_item
-    has_one         :purchase_date                      # Lost Item was purchased on purchase-Date
+    has_one         :purchase_date, class: Date         # Lost Item was purchased on purchase-Date, see Date#all_lost_item_as_purchase_date
     has_one         :purchase_place, class: Place       # Lost Item was purchased at purchase-Place, see Place#all_lost_item_as_purchase_place
     has_one         :purchase_price, class: Price       # Lost Item was purchased for purchase-Price, see Price#all_lost_item_as_purchase_price
   end
@@ -414,6 +422,10 @@ module Insurance
   class MotorFleetPolicy < MotorPolicy
   end
 
+  class PartyID < AutoCounter
+    value_type
+  end
+
   class ReportNr < SignedInteger
     value_type      length: 32
   end
@@ -423,7 +435,7 @@ module Insurance
     one_to_one      :incident, mandatory: true          # Police Report covers Incident, see Incident#police_report
     has_one         :officer_name, class: Name          # Police Report was to officer-Name, see Name#all_police_report_as_officer_name
     has_one         :police_report_nr, class: ReportNr  # Police Report has police-Report Nr, see ReportNr#all_police_report_as_police_report_nr
-    has_one         :report_date_time                   # Police Report was on report-Date Time
+    has_one         :report_date_time, class: DateTime  # Police Report was on report-Date Time, see DateTime#all_police_report_as_report_date_time
     has_one         :reporter_name, class: Name         # Police Report was by reporter-Name, see Name#all_police_report_as_reporter_name
     has_one         :station_name, class: Name          # Police Report was at station-Name, see Name#all_police_report_as_station_name
   end
@@ -481,7 +493,7 @@ module Insurance
 
   class UnderwritingQuestion
     identified_by   :underwriting_question_id
-    one_to_one      :underwriting_question_id, mandatory: true  # Underwriting Question has Underwriting Question ID, see UnderwritingQuestionID#underwriting_question
+    one_to_one      :underwriting_question_id, mandatory: true, class: UnderwritingQuestionID  # Underwriting Question has Underwriting Question ID, see UnderwritingQuestionID#underwriting_question_as_underwriting_question_id
     one_to_one      :text, mandatory: true              # Underwriting Question has Text, see Text#underwriting_question
   end
 
@@ -496,9 +508,9 @@ module Insurance
     value_type      length: 32
   end
 
-  class Vehicle
+  class Vehicle < Asset
     identified_by   :vin
-    one_to_one      :vin, mandatory: true               # Vehicle has VIN, see VIN#vehicle
+    one_to_one      :vin, mandatory: true, class: VIN   # Vehicle has VIN, see VIN#vehicle_as_vin
     maybe           :has_commercial_registration        # Has Commercial Registration
     has_one         :model_year, mandatory: true, class: Year  # Vehicle is of model-Year, see Year#all_vehicle_as_model_year
     has_one         :registration, mandatory: true      # Vehicle has Registration, see Registration#all_vehicle
