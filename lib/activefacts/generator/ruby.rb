@@ -65,7 +65,7 @@ module ActiveFacts
 
 	  counterpart_class_name = ruby_class_name counterpart_composite
 	  counterpart_default_role = ruby_role_name counterpart_composite.mapping
-	  rolename_implies_class = role_name == counterpart_default_role
+	  rolename_implies_class = role_name.words.capcase == counterpart_class_name
 	  class_ref = counterpart_class_emitted ? counterpart_class_name : counterpart_class_name.inspect
 	  class_spec = rolename_implies_class ? '' : ", class: #{class_ref}"
 
