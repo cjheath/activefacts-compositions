@@ -13,6 +13,12 @@ module ActiveFacts
   module Generators
     # Options are comma or space separated:
     class ObjectOriented
+      def self.options
+	{
+	  comments: ['Boolean', "Preceed each role definition with a comment that describes it"]
+	}
+      end
+
       def initialize composition, options = {}
 	@composition = composition
 	@options = options

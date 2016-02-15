@@ -15,6 +15,12 @@ module ActiveFacts
     # * underscore 
     class SQL
       class Server < SQL
+	def self.options
+	  super.merge({
+	    # no: [String, "no new options defined here"]
+	  })
+	end
+
 	def boolean_type
 	  'BOOLEAN'
 	end

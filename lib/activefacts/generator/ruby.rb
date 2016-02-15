@@ -12,6 +12,15 @@ module ActiveFacts
   module Generators
     # Options are comma or space separated:
     class Ruby < ObjectOriented
+      def self.options
+	super.merge(
+	  {
+	    scope: [String, "Generate a Ruby module that's nested inside the module you name here"]
+	  }
+	)
+      end
+
+      
       def initialize composition, options = {}
 	super
 	@scope = options.delete('scope') || ''

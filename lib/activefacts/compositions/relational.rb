@@ -14,6 +14,12 @@ module ActiveFacts
   module Compositions
     class Relational < Compositor
     public
+      def self.options
+	{
+	  surrogates: ['Boolean', "Inject a surrogate key into each table whose primary key is not already suitable as a foreign key"]
+	}
+      end
+
       def initialize constellation, name, options = {}
 	# Extract recognised options so our superclass doesn't complain:
 	@option_surrogates = options.delete('surrogates')

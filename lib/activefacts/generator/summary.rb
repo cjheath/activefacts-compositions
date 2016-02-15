@@ -85,6 +85,11 @@ module ActiveFacts
 
   module Generators
     class Summary
+      def self.options
+	{
+	}
+      end
+
       def initialize composition
 	@composition = composition
       end

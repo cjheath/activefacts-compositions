@@ -15,11 +15,18 @@ module ActiveFacts
     # * delay_fks Leave all foreign keys until the end, not just those that contain forward-references
     # * underscore 
     class SQL
+      def self.options
+	{
+	  delay_fks: ['Boolean', "Delay emitting all foreign keys until the bottom of the file"],
+	  underscore: [String, "Use 'str' instead of underscore between words in table names"]
+	}
+      end
+
       def initialize composition, options = {}
 	@composition = composition
 	@options = options
-	@delay_fks = options.include? "delay_fks"
-	@underscore = options.include?("underscore") ? "_" : ""
+	@delay_fks = options.delete "delay_fks"
+	@underscore = options.delete("underscore") || '_'
       end
 
       def generate

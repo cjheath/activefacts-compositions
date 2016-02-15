@@ -13,6 +13,11 @@ require "activefacts/generator"
 module ActiveFacts
   module Generators
     class Validate
+      def self.options
+	{
+	}
+      end
+
       def initialize composition, options = {}
 	@composition = composition
 	@options = options

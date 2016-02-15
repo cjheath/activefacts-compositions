@@ -10,6 +10,10 @@ require "activefacts/compositions"
 module ActiveFacts
   module Compositions
     class Binary < Compositor
+      def self.options
+	{}
+      end
+
       def generate
 	super
 

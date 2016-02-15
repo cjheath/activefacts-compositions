@@ -20,11 +20,14 @@ module ActiveFacts
     class Compositor
       attr_reader :options, :name, :composition
 
+      def self.options
+	{}
+      end
+
       def initialize constellation, name, options = {}
 	@constellation = constellation
 	@name = name
 	@options = options
-	$stderr.puts "Unknown options: #{options.inspect}" unless options.empty?
       end
 
       # Generate all Mappings into @binary_mappings for a binary composition of all ObjectTypes in this constellation

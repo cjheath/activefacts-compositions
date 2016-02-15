@@ -5,111 +5,164 @@
 # Copyright (c) 2009 Clifford Heath. Read the LICENSE file.
 #
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
-require 'bundler/setup' # Set up gems listed in the Gemfile.
 $:.unshift File.dirname(File.expand_path(__FILE__))+"/../lib"
 
+require 'pathname'
 require 'activefacts/loadable'
 require 'activefacts/metamodel'
 require 'activefacts/compositions'
 require 'activefacts/generator'
 
-# Parse options into a hash, and values for each option into a hash
-options = {}
-while ARGV[0] =~ /^-/
-  option, value = ARGV.shift.split(/=/, 2)
-  options[option.sub(/^-*/,'')] =
-    (value =~ /,/ ? value.split(',') : Array(value)).
-    inject({}){|h,s| k, v = s.split(/=/, 2); h[k] = v || true; h }
-end
+class SchemaCompositor
+  attr_reader :options
+  attr_reader :compositors
+  attr_reader :generators
 
-# Load and enumerate all available compositors:
-compositions_path = "activefacts/compositions"
-Loadable.new(compositions_path).
-enumerate.
-select do |filename|
-  begin
-    require(pathname = compositions_path+"/"+filename)
-  rescue LoadError => e
-  rescue Exception => e
-    puts "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
+  # Parse options into a hash, and values for each option into a hash
+  def initialize argv
+    @options = {}
+    while argv[0] =~ /^-/
+      option, value = argv.shift.split(/=/, 2)
+      @options[option.sub(/^-*/,'')] =
+	(value =~ /,/ ? value.split(',') : Array(value)).
+	inject({}){|h,s| k, v = s.split(/=/, 2); h[k] = v || true; h }
+    end
+  end
+
+  # Load and enumerate all available modules in this path
+  def enumerate_available path
+    Loadable.new(path).
+    enumerate.
+    select do |filename|
+      begin
+	require(pathname = path+"/"+filename)
+      rescue LoadError => e
+      rescue Exception => e
+	puts "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
+      end
+    end
+  end
+
+  def arrange_actions
+    # Arrange the requested compositors and generators:
+    @compositors = []
+    @generators = []
+    @options.clone.each do |option, mode|
+      if action = ActiveFacts::Compositions.compositors[option]
+	options.delete(option)
+	check_options(action, mode)
+	@compositors << [action, mode]
+      elsif action = ActiveFacts::Generators.generators[option]
+	options.delete(option)
+	check_options(action, mode)
+	@generators << [action, mode]
+      else
+	puts "Action --#{option} is not recognised"
+	exit 1
+      end
+      if mode && mode['help']
+	puts "Help for #{option} is not yet available"
+      end
+    end
+  end
+
+  def process_files argv
+    # Process each input file:
+    argv.each do |arg|
+      filename, input_options = *arg.split(/=/, 2)
+
+      # Load the correct file type input method
+      pathname, basename, extension = * /(?:(.*)[\/\\])?(.*)\.([^.]*)$/.match(filename).captures
+      input_handler = "activefacts/input/#{extension}"
+      require input_handler
+
+      input_class = extension.upcase
+      input_klass = ActiveFacts::Input.const_get(input_class.to_sym)
+      raise "Expected #{input_handler} to define #{input_class}" unless input_klass
+
+      # Read the input file:
+      vocabulary =
+	if input_klass
+	  begin
+	    input_klass.readfile(filename, *input_options)
+	  rescue => e
+	    $stderr.puts "#{e.message}"
+	    if trace :exception
+	      $stderr.puts "\t#{e.backtrace*"\n\t"}"
+	    else
+	      $stderr.puts "\t#{e.backtrace[0]}"
+	    end
+	    exit 1
+	  end
+	end
+      exit 0 unless vocabulary
+      vocabulary.finalise unless vocabulary == true
+
+      # Run each compositor
+      @compositors.each do |compositor_klass, mode|
+	compositor = compositor_klass.new(vocabulary.constellation, basename, mode||{})
+	compositor.generate
+
+	# Run each generator
+	@generators.each do |generator, mode|
+	  output = generator.new(compositor.composition, mode||{}).generate
+	  puts output if output
+	end
+      end
+    end
+  end
+
+  def action_name action
+    action.name.sub(/ActiveFacts::[^:]+::/,'').gsub(/::/,'/').downcase
+  end
+
+  def display_options action
+    options = action.options
+    name = action.name.sub(/ActiveFacts::[^:]+::/,'').gsub(/::/,'/').downcase
+    if options.empty?
+      puts "There are no options for --#{action_name action_name}"
+    else
+      puts "Options for --#{name} (say e.g. --#{action_name action}=option1=value,option2)"
+      options.keys.sort.each do |key|
+	type, description = *options[key]
+	tag =
+	  key.to_s +
+	  case type
+	  when NilClass,'Boolean', TrueClass
+	    ''
+	  when Numeric
+	    ' num'
+	  when Pathname
+	    ' file'
+	  else
+	    ' str'
+	  end
+
+	puts "\t#{tag}#{' '*(24-tag.size)}#{description}"
+      end
+    end
+  end
+
+  # Ensure that the options provided are supported by the action
+  def check_options action, mode
+    display_options(action) and exit if mode['help']
+    options = action.options
+    unsupported = mode.keys.select{|k| !options.has_key?(k.to_sym)}
+    return if unsupported.empty?
+    puts "Action --#{action_name action} does not support #{unsupported.size >1 ? 'these options' : 'this option'}: #{unsupported*', '}"
+    display_options(action)
+    exit 1
   end
 end
 
-# Load and enumerate all available generators
-generators_path = "activefacts/generator"
-Loadable.new(generators_path).
-enumerate.
-select do |filename|
-  begin
-    require(pathname = generators_path+"/"+filename)
-  rescue LoadError => e
-  rescue Exception => e
-    puts "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
-  end
-end
-
-if options['help']
+sc = SchemaCompositor.new(ARGV)
+sc.enumerate_available('activefacts/compositions')
+sc.enumerate_available('activefacts/generator')
+if sc.options['help']
   puts "Available compositors:\n\t#{ActiveFacts::Compositions.compositors.keys.sort*"\n\t"}\n\n"
   puts "Available generators:\n\t#{ActiveFacts::Generators.generators.keys.sort*"\n\t"}\n\n"
   exit
 end
 
-# Arrange the requested compositors and generators:
-compositors = []
-generators = []
-options.clone.each do |option, mode|
-  if action = ActiveFacts::Compositions.compositors[option]
-    options.delete(option)
-    compositors << [action, mode]
-  elsif action = ActiveFacts::Generators.generators[option]
-    options.delete(option)
-    generators << [action, mode]
-  end
-  if mode && mode['help']
-    puts "REVISIT: Help for #{option} is not yet available"
-  end
-end
-
-# Process each input file:
-ARGV.each do |arg|
-  filename, input_options = *arg.split(/=/, 2)
-
-  # Load the correct file type input method
-  pathname, basename, extension = * /(?:(.*)[\/\\])?(.*)\.([^.]*)$/.match(filename).captures
-  input_handler = "activefacts/input/#{extension}"
-  require input_handler
-
-  input_class = extension.upcase
-  input_klass = ActiveFacts::Input.const_get(input_class.to_sym)
-  raise "Expected #{input_handler} to define #{input_class}" unless input_klass
-
-  # Read the input file:
-  vocabulary =
-    if input_klass
-      begin
-	input_klass.readfile(filename, *input_options)
-      rescue => e
-	$stderr.puts "#{e.message}"
-	if trace :exception
-	  $stderr.puts "\t#{e.backtrace*"\n\t"}"
-	else
-	  $stderr.puts "\t#{e.backtrace[0]}"
-	end
-	exit 1
-      end
-    end
-  exit 0 unless vocabulary
-  vocabulary.finalise unless vocabulary == true
-
-  # Run each compositor
-  compositors.each do |compositor_klass, mode|
-    compositor = compositor_klass.new(vocabulary.constellation, basename, mode||{})
-    compositor.generate
-
-    # Run each generator
-    generators.each do |generator, mode|
-      output = generator.new(compositor.composition, mode||{}).generate
-      puts output if output
-    end
-  end
-end
+sc.arrange_actions
+sc.process_files ARGV
