@@ -161,6 +161,7 @@ sc.enumerate_available('activefacts/generator')
 if sc.options['help']
   puts "Available compositors:\n\t#{ActiveFacts::Compositions.compositors.keys.sort*"\n\t"}\n\n"
   puts "Available generators:\n\t#{ActiveFacts::Generators.generators.keys.sort*"\n\t"}\n\n"
+  puts "To get help for a particular action, follow it by =help, e.g. --relational=help"
   exit
 end
 
