@@ -3,9 +3,6 @@
 #
 #	Computes an Optimal Normal Form (close to 5NF) relational schema.
 #
-# Options to the constructor:
-#   single_sequence: The database technology can only increment one sequence per table (MS-SQL)
-#
 # Copyright (c) 2015 Clifford Heath. Read the LICENSE file.
 #
 require "activefacts/compositions"
@@ -21,7 +18,7 @@ module ActiveFacts
       end
 
       def initialize constellation, name, options = {}
-	# Extract recognised options so our superclass doesn't complain:
+	# Extract recognised options:
 	@option_surrogates = options.delete('surrogates')
 	super constellation, name, options
       end
@@ -54,6 +51,8 @@ module ActiveFacts
 	  # Traverse the absorbed objects to build the path to each required column, including foreign keys:
 	  absorb_all_columns
 
+	  devolve_satellites
+
 	  # Populate the target fields of foreign keys
 	  complete_foreign_keys
 
@@ -61,7 +60,7 @@ module ActiveFacts
 	  clean_unused_mappings
 	end
 
-	trace :relational!, "Full relational composition" do
+	trace :relational!, "Full #{self.class.basename} composition" do
 	  @composition.all_composite.sort_by{|composite| composite.mapping.name}.each do |composite|
 	    composite.show_trace
 	  end
@@ -244,15 +243,19 @@ module ActiveFacts
 	@composites = {}
 	@candidates.keys.to_a.each do |object_type|
 	  candidate = @candidates[object_type]
-	  mapping = candidate.mapping
 
 	  if candidate.is_table
-	    composite = @constellation.Composite(mapping, composition: @composition)
-	    @composites[object_type] = composite
+	    make_composite candidate
 	  else
 	    @candidates.delete(object_type)
 	  end
 	end
+      end
+
+      def make_composite candidate
+	mapping = candidate.mapping
+	@composites[mapping.object_type] =
+	  @constellation.Composite(mapping, composition: @composition)
       end
 
       # Inject a ValueField for each value type that's a table:
@@ -397,6 +400,10 @@ module ActiveFacts
 	    end
 	  end
 	end
+      end
+
+      def devolve_satellites
+	# Data Vaults have satellites, not normal relational schemas.
       end
 
       # This member is an Absorption. Process it recursively, absorbing all its members or just a key
@@ -584,6 +591,7 @@ module ActiveFacts
 	    if mapping.object_type.preferred_identifier == pc and
 		!@composition.all_full_absorption[mapping.object_type] and
 		!mapping.root.primary_index
+	      index.composite_as_natural_index =
 	      index.composite_as_primary_index = mapping.root
 	    end
 	    trace :relational_paths, "Added new index #{index.inspect} for #{pc.describe} on #{pc.role_sequence.all_role_ref.map(&:role).map(&:fact_type).map(&:default_reading).inspect}"

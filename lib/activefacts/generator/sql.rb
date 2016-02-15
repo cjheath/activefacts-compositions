@@ -26,7 +26,7 @@ module ActiveFacts
 	@composition = composition
 	@options = options
 	@delay_fks = options.delete "delay_fks"
-	@underscore = options.delete("underscore") || '_'
+	@underscore = options.has_key?("underscore") ? (options['underscore'] || '_') : ''
       end
 
       def generate
