@@ -51,7 +51,7 @@ module ActiveFacts
 	  # Traverse the absorbed objects to build the path to each required column, including foreign keys:
 	  absorb_all_columns
 
-	  devolve_satellites
+	  devolve_all_satellites
 
 	  # Populate the target fields of foreign keys
 	  complete_foreign_keys
@@ -277,36 +277,42 @@ module ActiveFacts
       end
 
       def inject_surrogates
-	surrogate_type_name = [true, '', 'true', 'yes'].include?(t = @option_surrogates) ? 'Auto Counter' : t
 	composites = @composition.all_composite.to_a
 	return if composites.empty?
-	vocabulary = composites[0].mapping.object_type.vocabulary	# REVISIT: Crappy: choose the first (currently always single)
-	surrogate_type =
+
+	@composition.all_composite.each do |composite|
+	  next unless needs_surrogate(composite)
+	  inject_surrogate composite
+	end
+      end
+
+      def surrogate_type
+	@surrogate_type ||= begin
+	  surrogate_type_name = [true, '', 'true', 'yes', nil].include?(t = @option_surrogates) ? 'Auto Counter' : t
+	  # REVISIT: Crappy: choose the first (currently always single)
+	  vocabulary = @composition.all_composite.to_a[0].mapping.object_type.vocabulary
 	  @constellation.ValueType(
 	    vocabulary: vocabulary,
 	    name: surrogate_type_name,
 	    concept: [:new, :implication_rule => "surrogate injection"]
 	  )
-	@composition.all_composite.each do |composite|
-	  next unless needs_surrogate(composite)
-	  surrogate_component =
-	    @constellation.SurrogateKey(
-	      :new,
-	      parent: composite.mapping,
-	      name: composite.mapping.object_type.name+" ID",
-	      object_type: surrogate_type
-	    )
-	  index =
-	    @constellation.Index(
-	      :new,
-	      composite: composite.mapping.root,
-	      is_unique: true,
-	      presence_constraint: nil,				    # No PC exists
-	      composite_as_primary_index: composite.mapping.root    # Usurp the primary key
-	    )
-	  @constellation.IndexField(access_path: index, ordinal: 0, component: surrogate_component)
-	  composite.mapping.re_rank
 	end
+      end
+
+      def inject_surrogate composite
+	surrogate_component =
+	  @constellation.SurrogateKey(
+	    :new,
+	    parent: composite.mapping,
+	    name: composite.mapping.object_type.name+" ID",
+	    object_type: surrogate_type
+	  )
+	barf unless composite.mapping.root == composite
+	index =
+	  @constellation.Index(:new, composite: composite, is_unique: true,
+	    presence_constraint: nil, composite_as_primary_index: composite)
+	@constellation.IndexField(access_path: index, ordinal: 0, component: surrogate_component)
+	composite.mapping.re_rank
       end
 
       def needs_surrogate(composite)
@@ -391,6 +397,26 @@ module ActiveFacts
 	end
       end
 
+      def is_empty_inheritance mapping
+	mapping.all_member.detect do |member|
+	  next true unless member.is_a?(MM::Absorption) && member.parent_role.fact_type.is_a?(MM::TypeInheritance)
+	  !is_empty_inheritance member
+	end
+      end
+
+      # REVISIT: Don't use this; it doesn't seem to clean up foreign keys correctly. mandatory roles should ensure that.
+      def elide_empty_inheritance mapping
+	mapping.all_member.to_a.each do |member|
+	  if member.is_a?(MM::Absorption) && member.parent_role.fact_type.is_a?(MM::TypeInheritance)
+	    elide_empty_inheritance member
+	    if member.all_member.size == 0
+	      trace :relational, "Retracting empty inheritance #{member.inspect}"
+	      member.retract
+	    end
+	  end
+	end
+      end
+
       # Absorb all items which aren't tables (and keys to those which are) recursively
       def absorb_all_columns
 	trace :relational_columns!, "Computing contents of all tables" do
@@ -402,7 +428,7 @@ module ActiveFacts
 	end
       end
 
-      def devolve_satellites
+      def devolve_all_satellites
 	# Data Vaults have satellites, not normal relational schemas.
       end
 
