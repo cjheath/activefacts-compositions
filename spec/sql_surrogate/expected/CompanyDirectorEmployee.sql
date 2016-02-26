@@ -100,7 +100,7 @@ CREATE TABLE Person (
 	PRIMARY KEY CLUSTERED(PersonID)
 )
 GO
-CREATE UNIQUE NONCLUSTERED INDEX PersonByGivenNameFamilyName ON (GivenName, FamilyName) WHERE FamilyName IS NOT NULL
+CREATE UNIQUE NONCLUSTERED INDEX PersonByGivenNameFamilyName ON Person(GivenName, FamilyName) WHERE FamilyName IS NOT NULL
 GO
 
 ALTER TABLE Meeting

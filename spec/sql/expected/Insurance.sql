@@ -27,7 +27,7 @@ CREATE TABLE Asset (
 	PRIMARY KEY CLUSTERED(AssetID)
 )
 GO
-CREATE UNIQUE NONCLUSTERED INDEX AssetByVehicleVIN ON (VehicleVIN) WHERE VehicleVIN IS NOT NULL
+CREATE UNIQUE NONCLUSTERED INDEX AssetByVehicleVIN ON Asset(VehicleVIN) WHERE VehicleVIN IS NOT NULL
 GO
 
 CREATE TABLE Claim (
@@ -256,10 +256,10 @@ CREATE TABLE Product (
 	PRIMARY KEY CLUSTERED(ProductCode)
 )
 GO
-CREATE UNIQUE NONCLUSTERED INDEX ProductByAlias ON (Alias) WHERE Alias IS NOT NULL
+CREATE UNIQUE NONCLUSTERED INDEX ProductByAlias ON Product(Alias) WHERE Alias IS NOT NULL
 GO
 
-CREATE UNIQUE NONCLUSTERED INDEX ProductByDescription ON (Description) WHERE Description IS NOT NULL
+CREATE UNIQUE NONCLUSTERED INDEX ProductByDescription ON Product(Description) WHERE Description IS NOT NULL
 GO
 
 CREATE TABLE PropertyDamage (
@@ -280,7 +280,7 @@ CREATE TABLE PropertyDamage (
 	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID)
 )
 GO
-CREATE UNIQUE CLUSTERED INDEX PropertyDamageByIncidentClaimIDAddressStreetAddressCityAde19 ON (IncidentClaimID, AddressStreet, AddressCity, AddressPostcode, AddressStateCode) WHERE IncidentClaimID IS NOT NULL AND AddressPostcode IS NOT NULL AND AddressStateCode IS NOT NULL
+CREATE UNIQUE CLUSTERED INDEX PropertyDamageByIncidentClaimIDAddressStreetAddressCityAde19 ON PropertyDamage(IncidentClaimID, AddressStreet, AddressCity, AddressPostcode, AddressStateCode) WHERE IncidentClaimID IS NOT NULL AND AddressPostcode IS NOT NULL AND AddressStateCode IS NOT NULL
 GO
 
 CREATE TABLE [State] (
@@ -292,7 +292,7 @@ CREATE TABLE [State] (
 	PRIMARY KEY CLUSTERED(StateCode)
 )
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [[State]ByStateName] ON (StateName) WHERE StateName IS NOT NULL
+CREATE UNIQUE NONCLUSTERED INDEX StateByStateName ON [State](StateName) WHERE StateName IS NOT NULL
 GO
 
 CREATE TABLE ThirdParty (

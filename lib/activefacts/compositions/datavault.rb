@@ -13,15 +13,19 @@ module ActiveFacts
     public
       def self.options
 	{
-	  reference: ['Boolean', "Emit the reference (static) tables as well. Default is to omit them"]
+	  reference: ['Boolean', "Emit the reference (static) tables as well. Default is to omit them"],
+	  datestamp: ['String', "Use this data type for date stamps"]
 	}
       end
 
       def initialize constellation, name, options = {}
 	# Extract recognised options:
 	@option_reference = options.delete('reference')
-	@option_surrogates = true   # Always inject surrogates
+	@option_datestamp = options.delete('datestamp')
+
 	super constellation, name, options
+
+	@option_surrogates = true   # Always inject surrogates regardless of superclass
       end
 
       def composite_is_reference composite
@@ -63,7 +67,7 @@ module ActiveFacts
       # across from the Composite Mapping. For each new satellite, inject a
       # load date-time and a reference to the surrogate on the hub or link,
       # and add an index over those two fields.
-      def devolve_satellites composite
+      def devolve_satellites composite, lift_links = true
 	trace :datavault?, "Detecting satellite fields for #{composite.inspect}" do
 	  satellites = {}
 
@@ -84,7 +88,7 @@ module ActiveFacts
 	    # (which is all, since we removed FKs to reference tables)
 	    # must be converted to a Mapping for a new Entity Type that notionally
 	    # objectifies the absorbed fact type. This Mapping is a new link composite.
-	    if member.is_a?(MM::Absorption) && member.foreign_key
+	    if lift_links && member.is_a?(MM::Absorption) && member.foreign_key
 	      lift_absorption_to_link member
 	      next
 	    end
@@ -102,10 +106,28 @@ module ActiveFacts
 
 	    devolve_member_to_satellite satellite, member
 	  end
+	  composite.mapping.re_rank
 	  satellites.each do |satellite_name, satellite|
 	    trace :datavault, "REVISIT: Adding parent Keys to satellite #{satellite_name.inspect}"
 	    # trace :datavault, "REVISIT: Include this Foreign Key with the load DateTime injection in a primary key"
 	  end
+	end
+      end
+
+      def datestamp_type_name
+	@datestamp_type_name ||= begin
+	  [true, '', 'true', 'yes', nil].include?(t = @option_datestamp) ? 'DateTime' : t
+	end
+      end
+
+      def datestamp_type
+	@datestamp_type ||= begin
+	  vocabulary = @composition.all_composite.to_a[0].mapping.object_type.vocabulary
+	  @constellation.ValueType(
+	    vocabulary: vocabulary,
+	    name: datestamp_type_name,
+	    concept: [:new, :implication_rule => "datestamp injection"]
+	  )
 	end
       end
 
@@ -157,24 +179,44 @@ module ActiveFacts
       def lift_absorption_to_link absorption
 	trace :datavault, "Promote #{absorption.inspect} to a new Link" do
 	  link_name = absorption.root.mapping.name + absorption.child_role.name
+
+	  # A new composition that maps the same object type as this absorption's parent:
 	  mapping = @constellation.Mapping(:new, name: link_name, object_type: absorption.parent_role.object_type)
 	  link = @constellation.Composite(mapping, composition: @composition)
+
+	  # Move the absorption across to here
+	  parent_composite = absorption.parent.composite
 	  absorption.parent = mapping
 
-	  # REVISIT: Add a load DateTime value
-	  # load_field = @constellation.Absorption
+	  # Add a Surrogate foreign Key to the parent composite
+	  fk_target = parent_composite.primary_index.all_index_field.single
+
+	  fk_field =
+	    @constellation.SurrogateKey(
+	      :new,
+	      parent: parent_composite.mapping,
+	      name: fk_target.component.name,
+	      object_type: surrogate_type
+	    )
+
+	  # Add a load DateTime value
+	  date_field = @constellation.Injection(:new,
+	    parent: mapping,
+	    name: "Load"+datestamp_type_name,
+	    object_type: datestamp_type
+	  )
 
 	  # Add a natural key:
 	  natural_index =
 	    @constellation.Index(:new, composite: link, is_unique: true,
 	      presence_constraint: nil, composite_as_natural_index: link)
-	  @constellation.IndexField(access_path: natural_index, ordinal: 0, component: absorption)
-	  # REVISIT: @constellation.IndexField(access_path: natural_index, ordinal: 1, component: date_field)
+	  @constellation.IndexField(access_path: natural_index, ordinal: 0, component: fk_field)
+	  @constellation.IndexField(access_path: natural_index, ordinal: 1, component: date_field)
 
 	  # Add a surrogate key:
 	  inject_surrogate link
 
-	  devolve_satellites link
+	  devolve_satellites link, false
 	  @link_composites << link
 	end
       end

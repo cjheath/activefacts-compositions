@@ -21,3 +21,15 @@ task :bump do
     )
   end
 end
+
+desc "Display differences between expected and actual from the last test run"
+task :actual do
+  system <<-END
+    for actual in `find spec -type d -name actual`
+    do
+      base=`dirname "$actual"`
+      echo "=================================== $base ==================================="
+      diff -rub $base/expected/ $base/actual |grep -v '^Only in .*expected'
+    done
+  END
+end

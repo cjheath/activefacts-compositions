@@ -280,9 +280,11 @@ module ActiveFacts
 	composites = @composition.all_composite.to_a
 	return if composites.empty?
 
-	@composition.all_composite.each do |composite|
-	  next unless needs_surrogate(composite)
-	  inject_surrogate composite
+	trace :surrogates, "Injecting any required surrogates" do
+	  @composition.all_composite.each do |composite|
+	    next unless needs_surrogate(composite)
+	    inject_surrogate composite
+	  end
 	end
       end
 
@@ -398,6 +400,7 @@ module ActiveFacts
       end
 
       def is_empty_inheritance mapping
+	return false unless mapping.is_a?(MM::Mapping)
 	mapping.all_member.detect do |member|
 	  next true unless member.is_a?(MM::Absorption) && member.parent_role.fact_type.is_a?(MM::TypeInheritance)
 	  !is_empty_inheritance member
@@ -616,9 +619,9 @@ module ActiveFacts
 	    newpaths[pc] = index = @constellation.Index(:new, composite: mapping.root, is_unique: true, presence_constraint: pc)
 	    if mapping.object_type.preferred_identifier == pc and
 		!@composition.all_full_absorption[mapping.object_type] and
-		!mapping.root.primary_index
-	      index.composite_as_natural_index =
-	      index.composite_as_primary_index = mapping.root
+		!mapping.root.natural_index
+	      mapping.root.natural_index = index
+	      mapping.root.primary_index ||= index    # Not if we have a surrogate already
 	    end
 	    trace :relational_paths, "Added new index #{index.inspect} for #{pc.describe} on #{pc.role_sequence.all_role_ref.map(&:role).map(&:fact_type).map(&:default_reading).inspect}"
 	  end
@@ -649,8 +652,10 @@ module ActiveFacts
 
 	if MM::ValueField === mapping && mapping.parent.composite   # ValueType that's a composite (table) by itself
 	  # This AccessPath has exactly one field and no presence constraint, so just make the index.
-	  existing_pk = mapping.parent.composite.primary_index
-	  paths[nil] = @constellation.Index(:new, composite: mapping.root, is_unique: true, presence_constraint: nil, composite_as_primary_index: existing_pk ? nil : mapping.root)
+	  composite = mapping.parent.composite
+	  paths[nil] =
+	    index = @constellation.Index(:new, composite: mapping.root, is_unique: true, presence_constraint: nil, composite_as_natural_index: composite)
+	  composite.primary_index ||= index
 	end
 
 	paths.each do |pc, path|

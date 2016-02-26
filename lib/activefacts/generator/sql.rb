@@ -198,6 +198,8 @@ module ActiveFacts
 	  }#{
 	    value_constraint ? check_clause(column_name, value_constraint) : ''
 	  }"
+	when MM::Injection
+	  component.object_type.name
 	else
 	  raise "Can't make a column from #{component}"
 	end
@@ -219,10 +221,11 @@ module ActiveFacts
 	  (index.composite_as_primary_index ? ' CLUSTERED' : ' NONCLUSTERED')
 
 	if contains_nullable_columns
+	  table_name = safe_table_name(index.composite)
 	  delayed_indices <<
 	    'CREATE UNIQUE'+clustering+' INDEX '+
-	    escape("#{safe_table_name(index.composite)}By#{column_names*''}", index_name_max) +
-	    " ON ("+column_names.map{|n| escape(n, column_name_max)}*', ' +
+	    escape("#{table_name(index.composite)}By#{column_names*''}", index_name_max) +
+	    " ON #{table_name}("+column_names.map{|n| escape(n, column_name_max)}*', ' +
 	    ") WHERE #{
 	      nullable_columns.
 	      map{|ixf| safe_column_name ixf.component}.

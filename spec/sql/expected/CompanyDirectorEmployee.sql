@@ -11,7 +11,7 @@ CREATE TABLE Attendance (
 	MeetingIsBoardMeeting                   BOOLEAN
 )
 GO
-CREATE UNIQUE CLUSTERED INDEX AttendanceByAttendeeGivenNameAttendeeFamilyNameMeetingCo7611 ON (AttendeeGivenName, AttendeeFamilyName, MeetingCompanyName, MeetingDate, MeetingIsBoardMeeting) WHERE AttendeeFamilyName IS NOT NULL
+CREATE UNIQUE CLUSTERED INDEX AttendanceByAttendeeGivenNameAttendeeFamilyNameMeetingCo7611 ON Attendance(AttendeeGivenName, AttendeeFamilyName, MeetingCompanyName, MeetingDate, MeetingIsBoardMeeting) WHERE AttendeeFamilyName IS NOT NULL
 GO
 
 CREATE TABLE Company (
@@ -36,7 +36,7 @@ CREATE TABLE Directorship (
 	FOREIGN KEY (CompanyName) REFERENCES Company (CompanyName)
 )
 GO
-CREATE UNIQUE CLUSTERED INDEX DirectorshipByDirectorGivenNameDirectorFamilyNameCompanyName ON (DirectorGivenName, DirectorFamilyName, CompanyName) WHERE DirectorFamilyName IS NOT NULL
+CREATE UNIQUE CLUSTERED INDEX DirectorshipByDirectorGivenNameDirectorFamilyNameCompanyName ON Directorship(DirectorGivenName, DirectorFamilyName, CompanyName) WHERE DirectorFamilyName IS NOT NULL
 GO
 
 CREATE TABLE Employee (
@@ -65,7 +65,7 @@ CREATE TABLE Employment (
 	FOREIGN KEY (EmployeeNr) REFERENCES Employee (EmployeeNr)
 )
 GO
-CREATE UNIQUE CLUSTERED INDEX EmploymentByPersonGivenNamePersonFamilyNameEmployeeNr ON (PersonGivenName, PersonFamilyName, EmployeeNr) WHERE PersonFamilyName IS NOT NULL
+CREATE UNIQUE CLUSTERED INDEX EmploymentByPersonGivenNamePersonFamilyNameEmployeeNr ON Employment(PersonGivenName, PersonFamilyName, EmployeeNr) WHERE PersonFamilyName IS NOT NULL
 GO
 
 CREATE TABLE Meeting (
@@ -90,7 +90,7 @@ CREATE TABLE Person (
 	BirthDate                               datetime NOT NULL CHECK(BirthDate >= '1900/01/01')
 )
 GO
-CREATE UNIQUE CLUSTERED INDEX PersonByGivenNameFamilyName ON (GivenName, FamilyName) WHERE FamilyName IS NOT NULL
+CREATE UNIQUE CLUSTERED INDEX PersonByGivenNameFamilyName ON Person(GivenName, FamilyName) WHERE FamilyName IS NOT NULL
 GO
 
 ALTER TABLE Meeting
