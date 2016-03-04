@@ -10,7 +10,7 @@ CREATE TABLE CountryCode (
 	-- Country Code ID
 	CountryCodeID                           BIGINT IDENTITY NOT NULL,
 	-- Country Code Value
-	CountryCodeValue                        char(3) NULL,
+	CountryCodeValue                        CHARACTER(3) NOT NULL,
 	-- Primary index to Country Code
 	PRIMARY KEY CLUSTERED(CountryCodeID),
 	-- Unique index to Country Code

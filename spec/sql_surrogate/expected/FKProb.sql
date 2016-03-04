@@ -2,7 +2,7 @@ CREATE TABLE OT (
 	-- OT ID
 	OTID                                    BIGINT IDENTITY NOT NULL,
 	-- OT is called Name
-	Name                                    varchar NULL,
+	Name                                    VARCHAR NOT NULL,
 	-- Primary index to OT
 	PRIMARY KEY CLUSTERED(OTID),
 	-- Unique index to OT over PresenceConstraint over (Name in "OT is called Name") occurs at most one time
@@ -16,7 +16,7 @@ CREATE TABLE VTP (
 	-- OT ID
 	VTOTID                                  BIGINT IDENTITY NOT NULL,
 	-- VTP involves Name
-	Name                                    varchar NULL,
+	Name                                    VARCHAR NOT NULL,
 	-- Primary index to VTP
 	PRIMARY KEY CLUSTERED(VTPID),
 	-- Unique index to VTP over PresenceConstraint over (VT, Name in "VT has facet called Name") occurs at most one time

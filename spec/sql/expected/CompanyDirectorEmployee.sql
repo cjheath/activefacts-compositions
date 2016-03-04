@@ -1,12 +1,12 @@
 CREATE TABLE Attendance (
 	-- Attendance involves Person and Person has given-Name
-	AttendeeGivenName                       varchar(48) NULL,
+	AttendeeGivenName                       VARCHAR(48) NOT NULL,
 	-- Attendance involves Person and maybe Person is called family-Name
-	AttendeeFamilyName                      varchar(48) NOT NULL,
+	AttendeeFamilyName                      VARCHAR(48) NULL,
 	-- Attendance involves Meeting that is held by Company that is called Company Name
-	MeetingCompanyName                      varchar(48) NULL,
+	MeetingCompanyName                      VARCHAR(48) NOT NULL,
 	-- Attendance involves Meeting that is held on Date
-	MeetingDate                             datetime NULL,
+	MeetingDate                             DATE NOT NULL,
 	-- Is Board Meeting
 	MeetingIsBoardMeeting                   BOOLEAN
 )
@@ -16,7 +16,7 @@ GO
 
 CREATE TABLE Company (
 	-- Company is called Company Name
-	CompanyName                             varchar(48) NULL,
+	CompanyName                             VARCHAR(48) NOT NULL,
 	-- Is Listed
 	IsListed                                BOOLEAN,
 	-- Primary index to Company over PresenceConstraint over (Company Name in "Company is called Company Name") occurs at most one time
@@ -26,13 +26,13 @@ GO
 
 CREATE TABLE Directorship (
 	-- Directorship involves Person and Person has given-Name
-	DirectorGivenName                       varchar(48) NULL,
+	DirectorGivenName                       VARCHAR(48) NOT NULL,
 	-- Directorship involves Person and maybe Person is called family-Name
-	DirectorFamilyName                      varchar(48) NOT NULL,
+	DirectorFamilyName                      VARCHAR(48) NULL,
 	-- Directorship involves Company that is called Company Name
-	CompanyName                             varchar(48) NULL,
+	CompanyName                             VARCHAR(48) NOT NULL,
 	-- Directorship began on appointment-Date
-	AppointmentDate                         datetime NULL,
+	AppointmentDate                         DATE NOT NULL,
 	FOREIGN KEY (CompanyName) REFERENCES Company (CompanyName)
 )
 GO
@@ -41,11 +41,11 @@ GO
 
 CREATE TABLE Employee (
 	-- Employee has Employee Nr
-	EmployeeNr                              int NULL,
+	EmployeeNr                              INTEGER NOT NULL,
 	-- Employee works at Company that is called Company Name
-	CompanyName                             varchar(48) NULL,
+	CompanyName                             VARCHAR(48) NOT NULL,
 	-- maybe Employee is supervised by Manager that is a kind of Employee that has Employee Nr
-	ManagerNr                               int NOT NULL,
+	ManagerNr                               INTEGER NULL,
 	-- Is Ceo
 	ManagerIsCeo                            BOOLEAN,
 	-- Primary index to Employee over PresenceConstraint over (Employee Nr in "Employee has Employee Nr") occurs at most one time
@@ -57,11 +57,11 @@ GO
 
 CREATE TABLE Employment (
 	-- Employment involves Person that has given-Name
-	PersonGivenName                         varchar(48) NULL,
+	PersonGivenName                         VARCHAR(48) NOT NULL,
 	-- Employment involves Person that maybe is called family-Name
-	PersonFamilyName                        varchar(48) NOT NULL,
+	PersonFamilyName                        VARCHAR(48) NULL,
 	-- Employment involves Employee that has Employee Nr
-	EmployeeNr                              int NULL,
+	EmployeeNr                              INTEGER NOT NULL,
 	FOREIGN KEY (EmployeeNr) REFERENCES Employee (EmployeeNr)
 )
 GO
@@ -70,9 +70,9 @@ GO
 
 CREATE TABLE Meeting (
 	-- Meeting is held by Company that is called Company Name
-	CompanyName                             varchar(48) NULL,
+	CompanyName                             VARCHAR(48) NOT NULL,
 	-- Meeting is held on Date
-	[Date]                                  datetime NULL,
+	[Date]                                  DATE NOT NULL,
 	-- Is Board Meeting
 	IsBoardMeeting                          BOOLEAN,
 	-- Primary index to Meeting over PresenceConstraint over (Company, Date, Is Board Meeting in "Meeting is held by Company", "Meeting is held on Date", "Meeting is board meeting") occurs at most one time
@@ -83,11 +83,11 @@ GO
 
 CREATE TABLE Person (
 	-- Person has given-Name
-	GivenName                               varchar(48) NULL,
+	GivenName                               VARCHAR(48) NOT NULL,
 	-- maybe Person is called family-Name
-	FamilyName                              varchar(48) NOT NULL,
+	FamilyName                              VARCHAR(48) NULL,
 	-- maybe Person was born on birth-Date
-	BirthDate                               datetime NOT NULL CHECK(BirthDate >= '1900/01/01')
+	BirthDate                               DATE NULL CHECK(BirthDate >= '1900/01/01')
 )
 GO
 CREATE UNIQUE CLUSTERED INDEX PersonByGivenNameFamilyName ON Person(GivenName, FamilyName) WHERE FamilyName IS NOT NULL

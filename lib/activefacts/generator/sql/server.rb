@@ -22,11 +22,49 @@ module ActiveFacts
 	end
 
 	def boolean_type
-	  'BOOLEAN'
+	  'BIT'
 	end
 
-	def surrogate_type
-	  'BIGINT IDENTITY NOT NULL'
+	def default_char_type
+	  (@unicode ? 'N' : '') +
+	  'CHAR'
+	end
+
+	def default_varchar_type
+	  (@unicode ? 'N' : '') +
+	  'VARCHAR'
+	end
+
+	def date_time_type
+	  'DATETIME'
+	end
+
+	def integer_ranges
+	  [
+	    ['BIT', 0, 1],
+	    ['TINYINT', -2**7, 2**7-1],
+	  ] +
+	  super
+	end
+
+	def normalise_type(type_name, length, value_constraint)
+	  case type_name
+	  when /^Guid$/
+	    'UNIQUEIDENTIFIER'
+
+	  when /^Money$/
+	    'MONEY'	# Also SMALLMONEY; care factor?
+
+	  when /^Picture ?Raw ?Data$/,
+	      /^Image$/
+	    if length && length <= 8192
+	      super
+	    else
+	      'IMAGE'
+	    end
+	  else
+	    super
+	  end
 	end
 
 	def reserved_words

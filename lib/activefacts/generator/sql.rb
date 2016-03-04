@@ -18,7 +18,8 @@ module ActiveFacts
       def self.options
 	{
 	  delay_fks: ['Boolean', "Delay emitting all foreign keys until the bottom of the file"],
-	  underscore: [String, "Use 'str' instead of underscore between words in table names"]
+	  underscore: [String, "Use 'str' instead of underscore between words in table names"],
+	  unicode: ['Boolean', "Use Unicode for all text fields by default"],
 	}
       end
 
@@ -27,6 +28,7 @@ module ActiveFacts
 	@options = options
 	@delay_fks = options.delete "delay_fks"
 	@underscore = options.has_key?("underscore") ? (options['underscore'] || '_') : ''
+	@unicode = options.delete "unicode"
       end
 
       def generate
@@ -55,6 +57,53 @@ module ActiveFacts
 
       def schema_name_max
 	60
+      end
+
+      def default_char_type
+	(@unicode ? 'NATIONAL ' : '') +
+	'CHARACTER'
+      end
+
+      def default_varchar_type
+	(@unicode ? 'NATIONAL ' : '') +
+	'VARCHAR'
+      end
+
+      def char_default_length
+	nil
+      end
+
+      def varchar_default_length
+	nil
+      end
+
+      def date_time_type
+	'TIMESTAMP'
+      end
+
+      def boolean_type
+	'BOOLEAN'
+      end
+
+      def surrogate_type
+	choose_integer_type(0, 2**(default_surrogate_length-1)-1) +
+	  ' IDENTITY NOT NULL'
+      end
+
+      def default_surrogate_length
+	64
+      end
+
+      def default_text_type
+	default_varchar_type
+      end
+
+      def integer_ranges
+	[
+	  ['SMALLINT', -2**15, 2**15-1],  # The standard says -10^5..10^5 (less than 16 bits)
+	  ['INTEGER', -2**31, 2**31-1],	  # The standard says -10^10..10^10 (more than 32 bits!)
+	  ['BIGINT', -2**63, 2**63-1],	  # The standard says -10^19..10^19 (less than 64 bits)
+	]
       end
 
       def safe_table_name composite
@@ -140,14 +189,6 @@ module ActiveFacts
 	end
       end
 
-      def boolean_type
-	'BOOLEAN'
-      end
-
-      def surrogate_type
-	'BIGINT IDENTITY NOT NULL'
-      end
-
       def component_type component, column_name
 	case component
 	when MM::Indicator
@@ -177,7 +218,7 @@ module ActiveFacts
 	      value_constraint ||= object_type.value_constraint
 	    end
 	  end while supertype = object_type.supertype
-	  type, length = normalise_type(object_type.name, length)
+	  type, length = normalise_type(object_type.name, length, value_constraint)
 	  sql_type = "#{type}#{
 	    if !length
 	      ''
@@ -185,7 +226,7 @@ module ActiveFacts
 	      '(' + length.to_s + (scale ? ", #{scale}" : '') + ')'
 	    end
 	  }#{
-	    (component.path_mandatory ? '' : ' NOT') + ' NULL'
+	    (component.path_mandatory ? ' NOT' : '') + ' NULL'
 	  }#{
 	    # REVISIT: This is an SQL Server-ism. Replace with a standard SQL SEQUENCE/
 	    # Emit IDENTITY for columns auto-assigned on commit (except FKs)
@@ -347,64 +388,98 @@ module ActiveFacts
 	end
       end
 
+      def choose_integer_type min, max
+	best = integer_ranges.detect{|type_name, vmin, vmax| min >= vmin && max <= vmax}
+	best && best[0]
+      end
+
       # Return SQL type and (modified?) length for the passed base type
-      def normalise_type(type, length)
-	sql_type = case type
+      def normalise_type(type_name, length, value_constraint)
+	int_length = length ||
+	  case type_name
+	  when /([a-z ]|\b)Tiny([a-z ]|\b)/i
+	    8
+	  when /([a-z ]|\b)Small([a-z ]|\b)/i
+	    16
+	  when /([a-z ]|\b)Big([a-z ]|\b)/i,
+	    64
 	  when /^Auto ?Counter$/
-	    'int'
-
-	  when /^Unsigned ?Integer$/,
-	    /^Signed ?Integer$/,
-	    /^Unsigned ?Small ?Integer$/,
-	    /^Signed ?Small ?Integer$/,
-	    /^Unsigned ?Tiny ?Integer$/
-	    s = case
-	      when length == nil
-		'int'
-	      when length <= 8
-		'tinyint'
-	      when length <= 16
-		'smallint'
-	      when length <= 32
-		'int'
-	      else
-		'bigint'
-	      end
-	    length = nil
-	    s
-
-	  when /^Decimal$/
-	    'decimal'
-
-	  when /^Fixed ?Length ?Text$/, /^Char$/
-	    'char'
-	  when /^Variable ?Length ?Text$/, /^String$/
-	    'varchar'
-	  when /^Large ?Length ?Text$/, /^Text$/
-	    'text'
-
-	  when /^Date ?And ?Time$/, /^Date ?Time$/
-	    'datetime'
-	  when /^Date$/
-	    'datetime' # SQLSVR 2K5: 'date'
-	  when /^Time$/
-	    'datetime' # SQLSVR 2K5: 'time'
-	  when /^Auto ?Time ?Stamp$/
-	    'timestamp'
-
-	  when /^Guid$/
-	    'uniqueidentifier'
-	  when /^Money$/
-	    'decimal'
-	  when /^Picture ?Raw ?Data$/, /^Image$/
-	    'image'
-	  when /^Variable ?Length ?Raw ?Data$/, /^Blob$/
-	    'varbinary'
-	  when /^BIT$/
-	    'bit'
-	  else type # raise "SQL type unknown for standard type #{type}"
+	    default_surrogate_length
+	  else
+	    32
 	  end
-	[sql_type, length]
+
+	if int_length
+	  if value_constraint
+	    # Pick out the largest maximum and smallest minimum from the ValueConstraint:
+	    ranges = value_constraint.all_allowed_range_sorted.flat_map{|ar| ar.value_range}
+	    min = ranges.map(&:minimum_bound).compact.map{|minb| minb.is_inclusive ? minb.value : minb.value-1}.map{|v| v.literal.to_i}.sort[0]
+	    max = ranges.map(&:maximum_bound).compact.map{|maxb| maxb.is_inclusive ? maxb.value : maxb.value+1}.map{|v| v.literal.to_i}.sort[-1]
+	  end
+
+	  unsigned = type_name =~ /^unsigned/i
+	  int_min = unsigned ? 0 : -2**(int_length-1)+1
+	  min = int_min if !min || length && int_min < min
+	  # SQL does not have unsigned types.
+	  # Don't force the next largest type just because the app calls for unsigned:
+	  int_max = unsigned ? 2**(int_length-1) - 1 : 2**(int_length-1)-1
+	  max = int_max if !max || length && int_max < max
+	end
+
+	case type_name
+	when /^BIT$/i,
+	    /^boolean$/i,
+	  boolean_type
+
+	when /^Auto ?Counter$/,
+	    /[a-z]Int(eger)?$|\b[Ii]nt(eger)?$/
+	  choose_integer_type min, max
+
+	when /^Real$/
+	  length ||= 53	  # Mantissa bits. 1..24 is 7 digits, 25..53 is 15 digits
+	  [ 'FLOAT', length]  # No need to use either 'REAL' or 'DOUBLE PRECISION'
+
+	when /^Decimal$/
+	  'DECIMAL'
+
+	when /^Money$/
+	  'DECIMAL'
+
+	when /^Fixed ?Length ?Text$/, /^Char$/
+	  [default_char_type, length || char_default_length]
+
+	when /^Variable ?Length ?Text$/, /^String$/
+	  [default_varchar_type, length || varchar_default_length]
+
+	when /^Large ?Length ?Text$/, /^Text$/
+	  [default_text_type, length || 'MAX']
+
+	when /^Date ?And ?Time$/, /^Date ?Time$/
+	  date_time_type
+
+	when /^Date$/
+	  'DATE' # SQLSVR 2K5: 'date'
+
+	when /^Time$/
+	  'TIME' # SQLSVR 2K5: 'time'
+
+	when /^Auto ?Time ?Stamp$/
+	  'TIMESTAMP'
+
+	when /^Guid$/
+	  ['BINARY', 16]
+
+	when /^Picture ?Raw ?Data$/,
+	    /^Image$/
+	  ['VARBINARY', length]
+
+	when /^Variable ?Length ?Raw ?Data$/,
+	    /^Blob$/
+	  ['VARBINARY', length]
+
+	else
+	  type_name # raise "SQL type unknown for standard type #{type}"
+	end
       end
 
       def sql_value(value)

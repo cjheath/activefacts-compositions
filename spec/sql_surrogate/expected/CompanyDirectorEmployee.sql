@@ -12,7 +12,7 @@ CREATE TABLE Company (
 	-- Company ID
 	CompanyID                               BIGINT IDENTITY NOT NULL,
 	-- Company is called Company Name
-	CompanyName                             varchar(48) NULL,
+	CompanyName                             VARCHAR(48) NOT NULL,
 	-- Is Listed
 	IsListed                                BOOLEAN,
 	-- Primary index to Company
@@ -30,7 +30,7 @@ CREATE TABLE Directorship (
 	-- Company ID
 	CompanyID                               BIGINT IDENTITY NOT NULL,
 	-- Directorship began on appointment-Date
-	AppointmentDate                         datetime NULL,
+	AppointmentDate                         DATE NOT NULL,
 	-- Primary index to Directorship
 	PRIMARY KEY CLUSTERED(DirectorshipID),
 	-- Unique index to Directorship over PresenceConstraint over (Director, Company in "Person directs Company") occurs at most one time
@@ -43,7 +43,7 @@ CREATE TABLE Employee (
 	-- Employee ID
 	EmployeeID                              BIGINT IDENTITY NOT NULL,
 	-- Employee has Employee Nr
-	EmployeeNr                              int NULL,
+	EmployeeNr                              INTEGER NOT NULL,
 	-- Company ID
 	CompanyID                               BIGINT IDENTITY NOT NULL,
 	-- Employee ID
@@ -76,7 +76,7 @@ CREATE TABLE Meeting (
 	-- Company ID
 	CompanyID                               BIGINT IDENTITY NOT NULL,
 	-- Meeting is held on Date
-	[Date]                                  datetime NULL,
+	[Date]                                  DATE NOT NULL,
 	-- Is Board Meeting
 	IsBoardMeeting                          BOOLEAN,
 	-- Primary index to Meeting
@@ -91,11 +91,11 @@ CREATE TABLE Person (
 	-- Person ID
 	PersonID                                BIGINT IDENTITY NOT NULL,
 	-- Person has given-Name
-	GivenName                               varchar(48) NULL,
+	GivenName                               VARCHAR(48) NOT NULL,
 	-- maybe Person is called family-Name
-	FamilyName                              varchar(48) NOT NULL,
+	FamilyName                              VARCHAR(48) NULL,
 	-- maybe Person was born on birth-Date
-	BirthDate                               datetime NOT NULL CHECK(BirthDate >= '1900/01/01'),
+	BirthDate                               DATE NULL CHECK(BirthDate >= '1900/01/01'),
 	-- Primary index to Person
 	PRIMARY KEY CLUSTERED(PersonID)
 )

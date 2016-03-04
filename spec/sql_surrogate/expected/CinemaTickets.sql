@@ -2,9 +2,9 @@ CREATE TABLE AllocatableCinemaSection (
 	-- AllocatableCinemaSection ID
 	AllocatableCinemaSectionID              BIGINT IDENTITY NOT NULL,
 	-- AllocatableCinemaSection involves Cinema that has Cinema ID
-	CinemaID                                int NULL,
+	CinemaID                                BIGINT NOT NULL,
 	-- AllocatableCinemaSection involves Section that has Section Name
-	SectionName                             varchar NULL,
+	SectionName                             VARCHAR NOT NULL,
 	-- Primary index to AllocatableCinemaSection
 	PRIMARY KEY CLUSTERED(AllocatableCinemaSectionID),
 	-- Unique index to AllocatableCinemaSection over PresenceConstraint over (Cinema, Section in "Cinema provides allocated seating in Section") occurs at most one time
@@ -16,21 +16,21 @@ CREATE TABLE Booking (
 	-- Booking ID
 	BookingID                               BIGINT IDENTITY NOT NULL,
 	-- Booking has Booking Nr
-	BookingNr                               int NULL,
+	BookingNr                               INTEGER NOT NULL,
 	-- Tickets For Booking Have Been Issued
 	TicketsForBookingHaveBeenIssued         BOOLEAN,
 	-- Booking involves Number
-	Number                                  smallint NULL CHECK(Number >= 1),
+	Number                                  SMALLINT NOT NULL CHECK(Number >= 1),
 	-- Booking involves Person that has Person ID
-	PersonID                                int NULL,
+	PersonID                                BIGINT NOT NULL,
 	-- Session ID
 	SessionID                               BIGINT IDENTITY NOT NULL,
 	-- maybe tickets for Booking are being mailed to Address that has Address Text
-	AddressText                             text NOT NULL,
+	AddressText                             VARCHAR(MAX) NULL,
 	-- maybe Booking has Collection Code
-	CollectionCode                          int NOT NULL,
+	CollectionCode                          INTEGER NULL,
 	-- maybe Booking is for seats in Section that has Section Name
-	SectionName                             varchar NOT NULL,
+	SectionName                             VARCHAR NULL,
 	-- Primary index to Booking
 	PRIMARY KEY CLUSTERED(BookingID),
 	-- Unique index to Booking over PresenceConstraint over (Booking Nr in "Booking has Booking Nr") occurs at most one time
@@ -42,9 +42,9 @@ GO
 
 CREATE TABLE Cinema (
 	-- Cinema has Cinema ID
-	CinemaID                                int NULL IDENTITY,
+	CinemaID                                BIGINT NOT NULL IDENTITY,
 	-- Cinema has Name
-	Name                                    varchar NULL,
+	Name                                    VARCHAR NOT NULL,
 	-- Primary index to Cinema over PresenceConstraint over (Cinema ID in "Cinema has Cinema ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(CinemaID),
 	-- Unique index to Cinema over PresenceConstraint over (Name in "Cinema has Name") occurs at most one time
@@ -54,11 +54,11 @@ GO
 
 CREATE TABLE Film (
 	-- Film has Film ID
-	FilmID                                  int NULL IDENTITY,
+	FilmID                                  BIGINT NOT NULL IDENTITY,
 	-- Film has Name
-	Name                                    varchar NULL,
+	Name                                    VARCHAR NOT NULL,
 	-- maybe Film was made in Year that has Year Nr
-	YearNr                                  int NOT NULL CHECK((YearNr >= 1900 AND YearNr <= 9999)),
+	YearNr                                  INTEGER NULL CHECK((YearNr >= 1900 AND YearNr <= 9999)),
 	-- Primary index to Film over PresenceConstraint over (Film ID in "Film has Film ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(FilmID)
 )
@@ -68,11 +68,11 @@ GO
 
 CREATE TABLE Person (
 	-- Person has Person ID
-	PersonID                                int NULL IDENTITY,
+	PersonID                                BIGINT NOT NULL IDENTITY,
 	-- maybe Person has Encrypted Password
-	EncryptedPassword                       varchar NOT NULL,
+	EncryptedPassword                       VARCHAR NULL,
 	-- maybe Person has login-Name
-	LoginName                               varchar NOT NULL,
+	LoginName                               VARCHAR NULL,
 	-- Primary index to Person over PresenceConstraint over (Person ID in "Person has Person ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(PersonID)
 )
@@ -86,9 +86,9 @@ CREATE TABLE PlacesPaid (
 	-- Booking ID
 	BookingID                               BIGINT IDENTITY NOT NULL,
 	-- Places Paid involves Payment Method that has Payment Method Code
-	PaymentMethodCode                       varchar NULL CHECK(PaymentMethodCode = 'Card' OR PaymentMethodCode = 'Cash' OR PaymentMethodCode = 'Gift Voucher' OR PaymentMethodCode = 'Loyalty Voucher'),
+	PaymentMethodCode                       VARCHAR NOT NULL CHECK(PaymentMethodCode = 'Card' OR PaymentMethodCode = 'Cash' OR PaymentMethodCode = 'Gift Voucher' OR PaymentMethodCode = 'Loyalty Voucher'),
 	-- Places Paid involves Number
-	Number                                  smallint NULL CHECK(Number >= 1),
+	Number                                  SMALLINT NOT NULL CHECK(Number >= 1),
 	-- Primary index to Places Paid
 	PRIMARY KEY CLUSTERED(PlacesPaidID),
 	-- Unique index to Places Paid over PresenceConstraint over (Booking, Payment Method in "Number of places for Booking have been paid for by Payment Method") occurs one time
@@ -101,13 +101,13 @@ CREATE TABLE Seat (
 	-- Seat ID
 	SeatID                                  BIGINT IDENTITY NOT NULL,
 	-- Seat is in Row that is in Cinema that has Cinema ID
-	RowCinemaID                             int NULL,
+	RowCinemaID                             BIGINT NOT NULL,
 	-- Seat is in Row that has Row Nr
-	RowNr                                   char(2) NULL,
+	RowNr                                   CHARACTER(2) NOT NULL,
 	-- Seat has Seat Number
-	SeatNumber                              smallint NULL,
+	SeatNumber                              SMALLINT NOT NULL,
 	-- maybe Seat is in Section that has Section Name
-	SectionName                             varchar NOT NULL,
+	SectionName                             VARCHAR NULL,
 	-- Primary index to Seat
 	PRIMARY KEY CLUSTERED(SeatID),
 	-- Unique index to Seat over PresenceConstraint over (Row, Seat Number in "Seat is in Row", "Seat has Seat Number") occurs at most one time
@@ -132,23 +132,23 @@ CREATE TABLE [Session] (
 	-- Session ID
 	SessionID                               BIGINT IDENTITY NOT NULL,
 	-- Session involves Cinema that has Cinema ID
-	CinemaID                                int NULL,
+	CinemaID                                BIGINT NOT NULL,
 	-- Session involves Session Time that is in Year that has Year Nr
-	SessionTimeYearNr                       int NULL CHECK((SessionTimeYearNr >= 1900 AND SessionTimeYearNr <= 9999)),
+	SessionTimeYearNr                       INTEGER NOT NULL CHECK((SessionTimeYearNr >= 1900 AND SessionTimeYearNr <= 9999)),
 	-- Session involves Session Time that is in Month that has Month Nr
-	SessionTimeMonthNr                      int NULL CHECK((SessionTimeMonthNr >= 1 AND SessionTimeMonthNr <= 12)),
+	SessionTimeMonthNr                      INTEGER NOT NULL CHECK((SessionTimeMonthNr >= 1 AND SessionTimeMonthNr <= 12)),
 	-- Session involves Session Time that is on Day
-	SessionTimeDay                          int NULL CHECK((SessionTimeDay >= 1 AND SessionTimeDay <= 31)),
+	SessionTimeDay                          INTEGER NOT NULL CHECK((SessionTimeDay >= 1 AND SessionTimeDay <= 31)),
 	-- Session involves Session Time that is at Hour
-	SessionTimeHour                         int NULL CHECK((SessionTimeHour >= 0 AND SessionTimeHour <= 23)),
+	SessionTimeHour                         INTEGER NOT NULL CHECK((SessionTimeHour >= 0 AND SessionTimeHour <= 23)),
 	-- Session involves Session Time that is at Minute
-	SessionTimeMinute                       int NULL CHECK((SessionTimeMinute >= 0 AND SessionTimeMinute <= 59)),
+	SessionTimeMinute                       INTEGER NOT NULL CHECK((SessionTimeMinute >= 0 AND SessionTimeMinute <= 59)),
 	-- Is High Demand
 	IsHighDemand                            BOOLEAN,
 	-- Uses Allocated Seating
 	UsesAllocatedSeating                    BOOLEAN,
 	-- Session involves Film that has Film ID
-	FilmID                                  int NULL,
+	FilmID                                  BIGINT NOT NULL,
 	-- Primary index to Session
 	PRIMARY KEY CLUSTERED(SessionID),
 	-- Unique index to Session over PresenceConstraint over (Cinema, Session Time in "Cinema shows Film on Session Time") occurs one time
@@ -162,23 +162,23 @@ CREATE TABLE TicketPricing (
 	-- Ticket Pricing ID
 	TicketPricingID                         BIGINT IDENTITY NOT NULL,
 	-- Ticket Pricing involves Session Time that is in Year that has Year Nr
-	SessionTimeYearNr                       int NULL CHECK((SessionTimeYearNr >= 1900 AND SessionTimeYearNr <= 9999)),
+	SessionTimeYearNr                       INTEGER NOT NULL CHECK((SessionTimeYearNr >= 1900 AND SessionTimeYearNr <= 9999)),
 	-- Ticket Pricing involves Session Time that is in Month that has Month Nr
-	SessionTimeMonthNr                      int NULL CHECK((SessionTimeMonthNr >= 1 AND SessionTimeMonthNr <= 12)),
+	SessionTimeMonthNr                      INTEGER NOT NULL CHECK((SessionTimeMonthNr >= 1 AND SessionTimeMonthNr <= 12)),
 	-- Ticket Pricing involves Session Time that is on Day
-	SessionTimeDay                          int NULL CHECK((SessionTimeDay >= 1 AND SessionTimeDay <= 31)),
+	SessionTimeDay                          INTEGER NOT NULL CHECK((SessionTimeDay >= 1 AND SessionTimeDay <= 31)),
 	-- Ticket Pricing involves Session Time that is at Hour
-	SessionTimeHour                         int NULL CHECK((SessionTimeHour >= 0 AND SessionTimeHour <= 23)),
+	SessionTimeHour                         INTEGER NOT NULL CHECK((SessionTimeHour >= 0 AND SessionTimeHour <= 23)),
 	-- Ticket Pricing involves Session Time that is at Minute
-	SessionTimeMinute                       int NULL CHECK((SessionTimeMinute >= 0 AND SessionTimeMinute <= 59)),
+	SessionTimeMinute                       INTEGER NOT NULL CHECK((SessionTimeMinute >= 0 AND SessionTimeMinute <= 59)),
 	-- Ticket Pricing involves Cinema that has Cinema ID
-	CinemaID                                int NULL,
+	CinemaID                                BIGINT NOT NULL,
 	-- Ticket Pricing involves Section that has Section Name
-	SectionName                             varchar NULL,
+	SectionName                             VARCHAR NOT NULL,
 	-- Ticket Pricing involves High Demand
-	HighDemand                              Boolean NULL,
+	HighDemand                               NOT NULL,
 	-- Ticket Pricing involves Price
-	Price                                   decimal NULL,
+	Price                                   DECIMAL NOT NULL,
 	-- Primary index to Ticket Pricing
 	PRIMARY KEY CLUSTERED(TicketPricingID),
 	-- Unique index to Ticket Pricing over PresenceConstraint over (Session Time, Cinema, Section, High Demand in "tickets on Session Time at Cinema in Section for High Demand have Price") occurs one time
