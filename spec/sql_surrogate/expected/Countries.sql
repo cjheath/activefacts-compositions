@@ -18,6 +18,6 @@ CREATE TABLE CountryCode (
 )
 GO
 
-ALTER TABLE CountryCode
+ALTER TABLE Country
 	ADD FOREIGN KEY (CountryCodeID) REFERENCES CountryCode (CountryCodeID)
 GO

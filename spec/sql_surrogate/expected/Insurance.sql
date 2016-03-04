@@ -440,66 +440,66 @@ CREATE TABLE Witness (
 )
 GO
 
-ALTER TABLE CoverType
-	ADD FOREIGN KEY (CoverTypeID) REFERENCES CoverType (CoverTypeID)
-GO
-
-ALTER TABLE Party
-	ADD FOREIGN KEY (ContractorID) REFERENCES Party (PartyID)
-GO
-
-ALTER TABLE Party
-	ADD FOREIGN KEY (LodgementPersonID) REFERENCES Party (PartyID)
-GO
-
-ALTER TABLE Party
+ALTER TABLE Asset
 	ADD FOREIGN KEY (VehicleDealerID) REFERENCES Party (PartyID)
 GO
 
-ALTER TABLE Party
+ALTER TABLE Asset
 	ADD FOREIGN KEY (VehicleFinanceInstitutionID) REFERENCES Party (PartyID)
 GO
 
-ALTER TABLE Policy
-	ADD FOREIGN KEY (PolicyID) REFERENCES Policy (PolicyID)
-GO
-
-ALTER TABLE Policy
-	ADD FOREIGN KEY (PolicyID) REFERENCES Policy (PolicyID)
-GO
-
-ALTER TABLE Product
-	ADD FOREIGN KEY (PProductID) REFERENCES Product (ProductID)
-GO
-
-ALTER TABLE UnderwritingQuestion
-	ADD FOREIGN KEY (UnderwritingQuestionID) REFERENCES UnderwritingQuestion (UnderwritingQuestionID)
-GO
-
-ALTER TABLE VehicleIncident
-	ADD FOREIGN KEY (VehicleIncidentClaimID) REFERENCES VehicleIncident (IncidentClaimID)
-GO
-
-ALTER TABLE VehicleIncident
-	ADD FOREIGN KEY (VehicleIncidentClaimID) REFERENCES VehicleIncident (IncidentClaimID)
-GO
-
-ALTER TABLE [State]
-	ADD FOREIGN KEY (AddressStateID) REFERENCES [State] (StateID)
-GO
-
-ALTER TABLE [State]
+ALTER TABLE Claim
 	ADD FOREIGN KEY (IncidentAddressStateID) REFERENCES [State] (StateID)
 GO
 
-ALTER TABLE [State]
-	ADD FOREIGN KEY (PStateID) REFERENCES [State] (StateID)
+ALTER TABLE Claim
+	ADD FOREIGN KEY (LodgementPersonID) REFERENCES Party (PartyID)
 GO
 
-ALTER TABLE [State]
+ALTER TABLE Claim
+	ADD FOREIGN KEY (PolicyID) REFERENCES Policy (PolicyID)
+GO
+
+ALTER TABLE ContractorAppointment
+	ADD FOREIGN KEY (ContractorID) REFERENCES Party (PartyID)
+GO
+
+ALTER TABLE Cover
+	ADD FOREIGN KEY (CoverTypeID) REFERENCES CoverType (CoverTypeID)
+GO
+
+ALTER TABLE Cover
+	ADD FOREIGN KEY (PolicyID) REFERENCES Policy (PolicyID)
+GO
+
+ALTER TABLE Party
 	ADD FOREIGN KEY (PersonAddressStateID) REFERENCES [State] (StateID)
 GO
 
-ALTER TABLE [State]
+ALTER TABLE Party
 	ADD FOREIGN KEY (PostalAddressStateID) REFERENCES [State] (StateID)
+GO
+
+ALTER TABLE Policy
+	ADD FOREIGN KEY (PProductID) REFERENCES Product (ProductID)
+GO
+
+ALTER TABLE Policy
+	ADD FOREIGN KEY (PStateID) REFERENCES [State] (StateID)
+GO
+
+ALTER TABLE PropertyDamage
+	ADD FOREIGN KEY (AddressStateID) REFERENCES [State] (StateID)
+GO
+
+ALTER TABLE ThirdParty
+	ADD FOREIGN KEY (VehicleIncidentClaimID) REFERENCES VehicleIncident (IncidentClaimID)
+GO
+
+ALTER TABLE UnderwritingDemerit
+	ADD FOREIGN KEY (UnderwritingQuestionID) REFERENCES UnderwritingQuestion (UnderwritingQuestionID)
+GO
+
+ALTER TABLE UnderwritingDemerit
+	ADD FOREIGN KEY (VehicleIncidentClaimID) REFERENCES VehicleIncident (IncidentClaimID)
 GO

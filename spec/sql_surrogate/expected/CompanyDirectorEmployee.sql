@@ -103,18 +103,18 @@ GO
 CREATE UNIQUE NONCLUSTERED INDEX PersonByGivenNameFamilyName ON Person(GivenName, FamilyName) WHERE FamilyName IS NOT NULL
 GO
 
-ALTER TABLE Meeting
-	ADD FOREIGN KEY (MeetingID) REFERENCES Meeting (MeetingID)
-GO
-
-ALTER TABLE Person
+ALTER TABLE Attendance
 	ADD FOREIGN KEY (AttendeePersonID) REFERENCES Person (PersonID)
 GO
 
-ALTER TABLE Person
+ALTER TABLE Attendance
+	ADD FOREIGN KEY (MeetingID) REFERENCES Meeting (MeetingID)
+GO
+
+ALTER TABLE Directorship
 	ADD FOREIGN KEY (DirectorPersonID) REFERENCES Person (PersonID)
 GO
 
-ALTER TABLE Person
+ALTER TABLE Employment
 	ADD FOREIGN KEY (PersonID) REFERENCES Person (PersonID)
 GO

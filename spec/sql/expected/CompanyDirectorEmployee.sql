@@ -93,18 +93,18 @@ GO
 CREATE UNIQUE CLUSTERED INDEX PersonByGivenNameFamilyName ON Person(GivenName, FamilyName) WHERE FamilyName IS NOT NULL
 GO
 
-ALTER TABLE Meeting
-	ADD FOREIGN KEY (MeetingCompanyName, MeetingDate, MeetingIsBoardMeeting) REFERENCES Meeting (CompanyName, [Date], IsBoardMeeting)
-GO
-
-ALTER TABLE Person
+ALTER TABLE Attendance
 	ADD FOREIGN KEY (AttendeeGivenName, AttendeeFamilyName) REFERENCES Person (GivenName, FamilyName)
 GO
 
-ALTER TABLE Person
+ALTER TABLE Attendance
+	ADD FOREIGN KEY (MeetingCompanyName, MeetingDate, MeetingIsBoardMeeting) REFERENCES Meeting (CompanyName, [Date], IsBoardMeeting)
+GO
+
+ALTER TABLE Directorship
 	ADD FOREIGN KEY (DirectorGivenName, DirectorFamilyName) REFERENCES Person (GivenName, FamilyName)
 GO
 
-ALTER TABLE Person
+ALTER TABLE Employment
 	ADD FOREIGN KEY (PersonGivenName, PersonFamilyName) REFERENCES Person (GivenName, FamilyName)
 GO

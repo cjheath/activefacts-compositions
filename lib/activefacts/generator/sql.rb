@@ -148,7 +148,7 @@ module ActiveFacts
 	      fk_text
 	    else
 	      @delayed_foreign_keys <<
-		go("ALTER TABLE #{safe_table_name fk.composite}\n\tADD " + fk_text)
+		go("ALTER TABLE #{safe_table_name fk.source_composite}\n\tADD " + fk_text)
 	      nil
 	    end
 	  end.compact.sort +

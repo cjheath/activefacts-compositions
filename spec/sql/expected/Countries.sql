@@ -14,6 +14,6 @@ CREATE TABLE CountryCode (
 )
 GO
 
-ALTER TABLE CountryCode
+ALTER TABLE Country
 	ADD FOREIGN KEY (CountryCode) REFERENCES CountryCode (CountryCodeValue)
 GO

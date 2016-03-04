@@ -169,50 +169,50 @@ CREATE TABLE Warehouse (
 )
 GO
 
-ALTER TABLE Product
-	ADD FOREIGN KEY (ProductID) REFERENCES Product (ProductID)
-GO
-
-ALTER TABLE Product
-	ADD FOREIGN KEY (ProductID) REFERENCES Product (ProductID)
-GO
-
-ALTER TABLE PurchaseOrderItem
+ALTER TABLE BackOrderAllocation
 	ADD FOREIGN KEY (PurchaseOrderItemID) REFERENCES PurchaseOrderItem (PurchaseOrderItemID)
 GO
 
-ALTER TABLE SalesOrderItem
+ALTER TABLE BackOrderAllocation
 	ADD FOREIGN KEY (SalesOrderItemID) REFERENCES SalesOrderItem (SalesOrderItemID)
 GO
 
-ALTER TABLE SalesOrderItem
+ALTER TABLE Bin
+	ADD FOREIGN KEY (ProductID) REFERENCES Product (ProductID)
+GO
+
+ALTER TABLE Bin
+	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID)
+GO
+
+ALTER TABLE DispatchItem
+	ADD FOREIGN KEY (ProductID) REFERENCES Product (ProductID)
+GO
+
+ALTER TABLE DispatchItem
 	ADD FOREIGN KEY (SalesOrderItemID) REFERENCES SalesOrderItem (SalesOrderItemID)
 GO
 
-ALTER TABLE TransferRequest
+ALTER TABLE DispatchItem
 	ADD FOREIGN KEY (TransferRequestID) REFERENCES TransferRequest (TransferRequestID)
 GO
 
-ALTER TABLE TransferRequest
+ALTER TABLE PurchaseOrder
+	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID)
+GO
+
+ALTER TABLE ReceivedItem
 	ADD FOREIGN KEY (TransferRequestID) REFERENCES TransferRequest (TransferRequestID)
 GO
 
-ALTER TABLE Warehouse
+ALTER TABLE SalesOrder
+	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID)
+GO
+
+ALTER TABLE TransferRequest
 	ADD FOREIGN KEY (FromWarehouseID) REFERENCES Warehouse (WarehouseID)
 GO
 
-ALTER TABLE Warehouse
+ALTER TABLE TransferRequest
 	ADD FOREIGN KEY (ToWarehouseID) REFERENCES Warehouse (WarehouseID)
-GO
-
-ALTER TABLE Warehouse
-	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID)
-GO
-
-ALTER TABLE Warehouse
-	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID)
-GO
-
-ALTER TABLE Warehouse
-	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID)
 GO

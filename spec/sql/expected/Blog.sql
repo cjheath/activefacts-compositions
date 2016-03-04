@@ -71,14 +71,14 @@ CREATE TABLE Topic (
 )
 GO
 
-ALTER TABLE Paragraph
+ALTER TABLE Comment
 	ADD FOREIGN KEY (ParagraphPostId, ParagraphOrdinal) REFERENCES Paragraph (PostId, Ordinal)
 GO
 
-ALTER TABLE Post
+ALTER TABLE Paragraph
 	ADD FOREIGN KEY (PostId) REFERENCES Post (PostId)
 GO
 
-ALTER TABLE Topic
+ALTER TABLE Post
 	ADD FOREIGN KEY (TopicId) REFERENCES Topic (TopicId)
 GO

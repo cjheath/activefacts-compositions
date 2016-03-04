@@ -408,66 +408,66 @@ CREATE TABLE Witness (
 )
 GO
 
-ALTER TABLE CoverType
-	ADD FOREIGN KEY (CoverTypeCode) REFERENCES CoverType (CoverTypeCode)
-GO
-
-ALTER TABLE Party
-	ADD FOREIGN KEY (ContractorID) REFERENCES Party (PartyID)
-GO
-
-ALTER TABLE Party
-	ADD FOREIGN KEY (LodgementPersonID) REFERENCES Party (PartyID)
-GO
-
-ALTER TABLE Party
+ALTER TABLE Asset
 	ADD FOREIGN KEY (VehicleDealerID) REFERENCES Party (PartyID)
 GO
 
-ALTER TABLE Party
+ALTER TABLE Asset
 	ADD FOREIGN KEY (VehicleFinanceInstitutionID) REFERENCES Party (PartyID)
 GO
 
-ALTER TABLE Policy
-	ADD FOREIGN KEY (PolicyPYearNr, PolicyPProductCode, PolicyPStateCode, PolicyPSerial) REFERENCES Policy (PYearNr, PProductCode, PStateCode, PSerial)
-GO
-
-ALTER TABLE Policy
-	ADD FOREIGN KEY (PolicyPYearNr, PolicyPProductCode, PolicyPStateCode, PolicyPSerial) REFERENCES Policy (PYearNr, PProductCode, PStateCode, PSerial)
-GO
-
-ALTER TABLE Product
-	ADD FOREIGN KEY (PProductCode) REFERENCES Product (ProductCode)
-GO
-
-ALTER TABLE UnderwritingQuestion
-	ADD FOREIGN KEY (UnderwritingQuestionID) REFERENCES UnderwritingQuestion (UnderwritingQuestionID)
-GO
-
-ALTER TABLE VehicleIncident
-	ADD FOREIGN KEY (VehicleIncidentClaimID) REFERENCES VehicleIncident (IncidentClaimID)
-GO
-
-ALTER TABLE VehicleIncident
-	ADD FOREIGN KEY (VehicleIncidentClaimID) REFERENCES VehicleIncident (IncidentClaimID)
-GO
-
-ALTER TABLE [State]
-	ADD FOREIGN KEY (AddressStateCode) REFERENCES [State] (StateCode)
-GO
-
-ALTER TABLE [State]
+ALTER TABLE Claim
 	ADD FOREIGN KEY (IncidentAddressStateCode) REFERENCES [State] (StateCode)
 GO
 
-ALTER TABLE [State]
-	ADD FOREIGN KEY (PStateCode) REFERENCES [State] (StateCode)
+ALTER TABLE Claim
+	ADD FOREIGN KEY (LodgementPersonID) REFERENCES Party (PartyID)
 GO
 
-ALTER TABLE [State]
+ALTER TABLE Claim
+	ADD FOREIGN KEY (PolicyPYearNr, PolicyPProductCode, PolicyPStateCode, PolicyPSerial) REFERENCES Policy (PYearNr, PProductCode, PStateCode, PSerial)
+GO
+
+ALTER TABLE ContractorAppointment
+	ADD FOREIGN KEY (ContractorID) REFERENCES Party (PartyID)
+GO
+
+ALTER TABLE Cover
+	ADD FOREIGN KEY (CoverTypeCode) REFERENCES CoverType (CoverTypeCode)
+GO
+
+ALTER TABLE Cover
+	ADD FOREIGN KEY (PolicyPYearNr, PolicyPProductCode, PolicyPStateCode, PolicyPSerial) REFERENCES Policy (PYearNr, PProductCode, PStateCode, PSerial)
+GO
+
+ALTER TABLE Party
 	ADD FOREIGN KEY (PersonAddressStateCode) REFERENCES [State] (StateCode)
 GO
 
-ALTER TABLE [State]
+ALTER TABLE Party
 	ADD FOREIGN KEY (PostalAddressStateCode) REFERENCES [State] (StateCode)
+GO
+
+ALTER TABLE Policy
+	ADD FOREIGN KEY (PProductCode) REFERENCES Product (ProductCode)
+GO
+
+ALTER TABLE Policy
+	ADD FOREIGN KEY (PStateCode) REFERENCES [State] (StateCode)
+GO
+
+ALTER TABLE PropertyDamage
+	ADD FOREIGN KEY (AddressStateCode) REFERENCES [State] (StateCode)
+GO
+
+ALTER TABLE ThirdParty
+	ADD FOREIGN KEY (VehicleIncidentClaimID) REFERENCES VehicleIncident (IncidentClaimID)
+GO
+
+ALTER TABLE UnderwritingDemerit
+	ADD FOREIGN KEY (UnderwritingQuestionID) REFERENCES UnderwritingQuestion (UnderwritingQuestionID)
+GO
+
+ALTER TABLE UnderwritingDemerit
+	ADD FOREIGN KEY (VehicleIncidentClaimID) REFERENCES VehicleIncident (IncidentClaimID)
 GO

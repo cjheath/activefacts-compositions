@@ -140,22 +140,22 @@ CREATE TABLE TransportRoute (
 )
 GO
 
-ALTER TABLE Product
+ALTER TABLE AcceptableSubstitution
 	ADD FOREIGN KEY (AlternateProductID) REFERENCES Product (ProductID)
 GO
 
-ALTER TABLE Product
+ALTER TABLE AcceptableSubstitution
 	ADD FOREIGN KEY (ProductID) REFERENCES Product (ProductID)
 GO
 
-ALTER TABLE Refinery
+ALTER TABLE ProductionForecast
 	ADD FOREIGN KEY (RefineryID) REFERENCES Refinery (RefineryID)
 GO
 
-ALTER TABLE SupplyPeriod
+ALTER TABLE ProductionForecast
 	ADD FOREIGN KEY (SupplyPeriodID) REFERENCES SupplyPeriod (SupplyPeriodID)
 GO
 
-ALTER TABLE SupplyPeriod
+ALTER TABLE RegionalDemand
 	ADD FOREIGN KEY (SupplyPeriodID) REFERENCES SupplyPeriod (SupplyPeriodID)
 GO

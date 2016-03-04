@@ -177,14 +177,14 @@ CREATE TABLE TicketPricing (
 )
 GO
 
-ALTER TABLE Cinema
+ALTER TABLE AllocatableCinemaSection
 	ADD FOREIGN KEY (CinemaID) REFERENCES Cinema (CinemaID)
 GO
 
-ALTER TABLE Person
+ALTER TABLE Booking
 	ADD FOREIGN KEY (PersonID) REFERENCES Person (PersonID)
 GO
 
-ALTER TABLE [Session]
+ALTER TABLE Booking
 	ADD FOREIGN KEY (SessionCinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute) REFERENCES [Session] (CinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute)
 GO
