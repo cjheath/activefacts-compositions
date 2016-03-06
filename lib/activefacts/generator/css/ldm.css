@@ -1,0 +1,37 @@
+a:link, a:visited {
+  color: #8A0092; text-decoration: underline;
+}
+
+span {
+  font-family: "Frutiger", sans-serif;
+}
+
+.keyword {
+  color: #0000CC;
+}
+.term, .concept {
+  /* Xcolor: #6A0072;   The color used by NORMA */
+  color: #8A0092;
+}
+.vocabulary, .object_type {
+  /* Xcolor: #6A0072;   The color used by NORMA */
+  color: #8A0092;
+}
+.linking, .copula {
+  color: #0E5400;
+}
+.literal, .value {
+  color: #FF990E;
+}
+
+.glossary-objectification .glossary-reading {
+  margin-left:  30px;
+}
+
+.definition {
+  font-weight: bold;
+}
+
+.row-bordered {
+  border: 1px solid #ddd;
+}
