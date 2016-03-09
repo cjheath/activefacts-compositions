@@ -108,8 +108,48 @@ module ActiveFacts
 	  end
 	  composite.mapping.re_rank
 	  satellites.each do |satellite_name, satellite|
-	    trace :datavault, "REVISIT: Adding parent Keys to satellite #{satellite_name.inspect}"
-	    # trace :datavault, "REVISIT: Include this Foreign Key with the load DateTime injection in a primary key"
+	    trace :datavault, "Adding parent key and load time to satellite #{satellite_name.inspect}" do
+
+	      # Add a Surrogate foreign Key to the parent composite
+	      fk_target = composite.primary_index.all_index_field.single
+	      fk_field =
+		@constellation.Injection(
+		  :new,
+		  parent: satellite.mapping,
+		  name: fk_target.component.name,
+		  object_type: surrogate_type
+		)
+
+	      # Add a load DateTime value
+	      date_field = @constellation.Injection(
+		:new,
+		parent: satellite.mapping,
+		name: "Load"+datestamp_type_name,
+		object_type: datestamp_type
+	      )
+
+	      # Add a natural key:
+	      natural_index =
+		@constellation.Index(:new, composite: satellite, is_unique: true,
+		  presence_constraint: nil, composite_as_natural_index: satellite)
+	      @constellation.IndexField(access_path: natural_index, ordinal: 0, component: fk_field)
+	      @constellation.IndexField(access_path: natural_index, ordinal: 1, component: date_field)
+
+	      # REVISIT: re-ranking members without a preferred_identifier does not rank the PK fields in order.
+	      satellite.mapping.re_rank
+
+	      # Add a foreign key to the hub
+	      fk = @constellation.ForeignKey(
+		  :new,
+		  source_composite: satellite,
+		  composite: composite,
+		  absorption: nil	    # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+		)
+	      @constellation.ForeignKeyField(foreign_key: fk, ordinal: 0, component: fk_field)
+	      # REVISIT: This should be filled in by complete_foreign_keys, but it has no Absorption
+	      @constellation.IndexField(access_path: fk, ordinal: 0, component: fk_target.component)
+
+	    end
 	  end
 	end
       end
@@ -175,48 +215,90 @@ module ActiveFacts
 	trace :datavault, "Satellite #{satellite.mapping.name.inspect} field #{member.inspect}"
       end
 
-      # This absorption reflects a time-varying fact type, which becomes a new link:
+      # This absorption reflects a time-varying fact type that involves another Hub, which becomes a new link:
       def lift_absorption_to_link absorption
 	trace :datavault, "Promote #{absorption.inspect} to a new Link" do
 	  link_name = absorption.root.mapping.name + absorption.child_role.name
+
+	  link_from = absorption.parent.composite
+	  link_to = absorption.foreign_key.composite
 
 	  # A new composition that maps the same object type as this absorption's parent:
 	  mapping = @constellation.Mapping(:new, name: link_name, object_type: absorption.parent_role.object_type)
 	  link = @constellation.Composite(mapping, composition: @composition)
 
 	  # Move the absorption across to here
-	  parent_composite = absorption.parent.composite
 	  absorption.parent = mapping
 
-	  # Add a Surrogate foreign Key to the parent composite
-	  fk_target = parent_composite.primary_index.all_index_field.single
-
-	  fk_field =
+	  # Add a Surrogate foreign Key to the link_from composite
+	  fk1_target = link_from.primary_index.all_index_field.single
+	  debugger
+	  fk1_field =
 	    @constellation.SurrogateKey(
 	      :new,
-	      parent: parent_composite.mapping,
-	      name: fk_target.component.name,
-	      object_type: surrogate_type
+	      parent: mapping,
+	      name: fk1_target.component.name,
+	      object_type: fk1_target.component.object_type
 	    )
 
-	  # Add a load DateTime value
-	  date_field = @constellation.Injection(:new,
-	    parent: mapping,
-	    name: "Load"+datestamp_type_name,
-	    object_type: datestamp_type
-	  )
+	  # Add a Surrogate foreign Key to the link_to composite
+	  fk2_target = link_to.primary_index.all_index_field.single
+	  fk2_field =
+	    @constellation.SurrogateKey(
+	      :new,
+	      parent: mapping,
+	      name: fk2_target.component.name,
+	      object_type: fk2_target.component.object_type
+	    )
 
 	  # Add a natural key:
 	  natural_index =
 	    @constellation.Index(:new, composite: link, is_unique: true,
 	      presence_constraint: nil, composite_as_natural_index: link)
-	  @constellation.IndexField(access_path: natural_index, ordinal: 0, component: fk_field)
-	  @constellation.IndexField(access_path: natural_index, ordinal: 1, component: date_field)
+	  @constellation.IndexField(access_path: natural_index, ordinal: 0, component: fk1_field)
+	  @constellation.IndexField(access_path: natural_index, ordinal: 1, component: fk2_field)
+
+	  # Add ForeignKeys
+	  fk1 = @constellation.ForeignKey(
+	      :new,
+	      source_composite: link,
+	      composite: link_from,
+	      absorption: nil	    # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+	    )
+	  @constellation.ForeignKeyField(foreign_key: fk1, ordinal: 0, component: fk1_field)
+	  # REVISIT: This should be filled in by complete_foreign_keys, but it has no Absorption
+	  @constellation.IndexField(access_path: fk1, ordinal: 0, component: fk1_target.component)
+	  fk2 = @constellation.ForeignKey(
+	      :new,
+	      source_composite: link,
+	      composite: link_to,
+	      absorption: nil	    # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+	    )
+	  @constellation.ForeignKeyField(foreign_key: fk2, ordinal: 0, component: fk2_field)
+	  # REVISIT: This should be filled in by complete_foreign_keys, but it has no Absorption
+	  @constellation.IndexField(access_path: fk2, ordinal: 0, component: fk2_target.component)
+
+=begin
+	  issues = 0
+	  link.validate do |object, problem|
+	    $stderr.puts "#{object.inspect}: #{problem}"
+	    issues += 1
+	  end
+	  debugger if issues > 0
+=end
+
+	  # Add a load DateTime value
+	  date_field = @constellation.Injection(:new,
+	    parent: mapping,
+	    name: "FirstLoad"+datestamp_type_name,
+	    object_type: datestamp_type
+	  )
+	  mapping.re_rank
 
 	  # Add a surrogate key:
-	  inject_surrogate link
+	  inject_surrogate link, ' LINKID'
 
-	  devolve_satellites link, false
+	  # devolve_satellites link, false
 	  @link_composites << link
 	end
       end
@@ -251,7 +333,7 @@ module ActiveFacts
 		    !fk.all_foreign_key_field.detect{|fkf| !natural_index_components.include?(fkf.component)}
 		end
 	      fk_target_names = fks_enclosed_by_pk.map{|fk| fk.composite.mapping.name}
-	      trace :datavault, "Natural index for #{composite.mapping.name} encloses foreign keys to #{fk_target_names*', '}"
+	      trace :datavault, "Natural index for #{composite.mapping.name} encloses foreign keys to #{fk_target_names*', '}" if fks_enclosed_by_pk.size > 0
 	      fks_enclosed_by_pk.size > 1
 	    end
 	  end

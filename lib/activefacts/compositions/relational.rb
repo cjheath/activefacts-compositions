@@ -301,12 +301,12 @@ module ActiveFacts
 	end
       end
 
-      def inject_surrogate composite
+      def inject_surrogate composite, extension = ' ID'
 	surrogate_component =
 	  @constellation.SurrogateKey(
 	    :new,
 	    parent: composite.mapping,
-	    name: composite.mapping.object_type.name+" ID",
+	    name: composite.mapping.name+extension,
 	    object_type: surrogate_type
 	  )
 	barf unless composite.mapping.root == composite
@@ -401,8 +401,13 @@ module ActiveFacts
 
       def is_empty_inheritance mapping
 	return false unless mapping.is_a?(MM::Mapping)
-	mapping.all_member.detect do |member|
+	# If this mapping contains anything that's not an Absorption,
+	# or an Absorption that's not a TypeInheritance,
+	# or a TypeInheritance that's not empty,
+	# then it is not empty
+	!mapping.all_member.detect do |member|
 	  next true unless member.is_a?(MM::Absorption) && member.parent_role.fact_type.is_a?(MM::TypeInheritance)
+	  next true unless member.parent_role.fact_type.is_a?(MM::TypeInheritance)
 	  !is_empty_inheritance member
 	end
       end
@@ -676,6 +681,7 @@ module ActiveFacts
 	    composite.all_access_path.each do |path|
 	      next if MM::Index === path
 
+	      next if path.all_foreign_key_field.size == path.all_index_field.size
 	      target_object_type = path.absorption.child_role.object_type
 	      while fa = target_object_type.all_full_absorption[@composition]
 		target_object_type = fa.absorption.parent_role.object_type
