@@ -59,7 +59,7 @@ describe "Relational absorption from CQL" do
       expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, dir+'/expected/\2.trc')
       actual = actual_dir + cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, '/\2.trc')
       begin
-	expected_text = File.read(expected)
+        expected_text = File.read(expected)
       rescue Errno::ENOENT => exception
       end
 
@@ -71,20 +71,20 @@ describe "Relational absorption from CQL" do
 
       # Save or delete the actual output file:
       if expected_text != output
-	File.write(actual, output)
+        File.write(actual, output)
       else
-	File.delete(actual) rescue nil
+        File.delete(actual) rescue nil
       end
 
       ActiveFacts::Generators::Validate.new(compositor.composition).generate do |component, problem|
-	expect("#{component.inspect}: #{problem}").to be_nil
+        expect("#{component.inspect}: #{problem}").to be_nil
       end
 
       if expected_text
-	expect(output).to be_like(expected_text), "Output #{actual} doesn't match expected #{expected}"
+        expect(output).to be_like(expected_text), "Output #{actual} doesn't match expected #{expected}"
       else
-	pending "Actual output in #{actual} can't be compared with missing expected file #{expected}"
-	expect(expected_text).to_not be_nil, "I don't know what to expect"
+        pending "Actual output in #{actual} can't be compared with missing expected file #{expected}"
+        expect(expected_text).to_not be_nil, "I don't know what to expect"
       end
     end
   end
