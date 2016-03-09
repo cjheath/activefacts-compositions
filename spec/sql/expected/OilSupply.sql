@@ -7,8 +7,8 @@ CREATE TABLE AcceptableSubstitution (
 	Season                                  VARCHAR(6) NOT NULL CHECK(Season = 'Autumn' OR Season = 'Spring' OR Season = 'Summer' OR Season = 'Winter'),
 	-- Primary index to Acceptable Substitution over PresenceConstraint over (Product, Alternate Product, Season in "Product may be substituted by alternate-Product in Season") occurs at most one time
 	PRIMARY KEY CLUSTERED(ProductName, AlternateProductName, Season)
-)
-GO
+);
+
 
 CREATE TABLE [Month] (
 	-- Month has Month Nr
@@ -17,16 +17,16 @@ CREATE TABLE [Month] (
 	Season                                  VARCHAR(6) NOT NULL CHECK(Season = 'Autumn' OR Season = 'Spring' OR Season = 'Summer' OR Season = 'Winter'),
 	-- Primary index to Month over PresenceConstraint over (Month Nr in "Month has Month Nr") occurs at most one time
 	PRIMARY KEY CLUSTERED(MonthNr)
-)
-GO
+);
+
 
 CREATE TABLE Product (
 	-- Product has Product Name
 	ProductName                             VARCHAR NOT NULL,
 	-- Primary index to Product over PresenceConstraint over (Product Name in "Product has Product Name") occurs at most one time
 	PRIMARY KEY CLUSTERED(ProductName)
-)
-GO
+);
+
 
 CREATE TABLE ProductionForecast (
 	-- Production Forecast involves Refinery that has Refinery Name
@@ -44,24 +44,24 @@ CREATE TABLE ProductionForecast (
 	-- Primary index to Production Forecast over PresenceConstraint over (Refinery, Supply Period, Product in "Refinery in Supply Period will make Product in Quantity") occurs one time
 	PRIMARY KEY CLUSTERED(RefineryName, SupplyPeriodYearNr, SupplyPeriodMonthNr, ProductName),
 	FOREIGN KEY (ProductName) REFERENCES Product (ProductName)
-)
-GO
+);
+
 
 CREATE TABLE Refinery (
 	-- Refinery has Refinery Name
 	RefineryName                            VARCHAR(80) NOT NULL,
 	-- Primary index to Refinery over PresenceConstraint over (Refinery Name in "Refinery has Refinery Name") occurs at most one time
 	PRIMARY KEY CLUSTERED(RefineryName)
-)
-GO
+);
+
 
 CREATE TABLE Region (
 	-- Region has Region Name
 	RegionName                              VARCHAR NOT NULL,
 	-- Primary index to Region over PresenceConstraint over (Region Name in "Region has Region Name") occurs at most one time
 	PRIMARY KEY CLUSTERED(RegionName)
-)
-GO
+);
+
 
 CREATE TABLE RegionalDemand (
 	-- Regional Demand involves Region that has Region Name
@@ -78,8 +78,8 @@ CREATE TABLE RegionalDemand (
 	PRIMARY KEY CLUSTERED(RegionName, SupplyPeriodYearNr, SupplyPeriodMonthNr, ProductName),
 	FOREIGN KEY (ProductName) REFERENCES Product (ProductName),
 	FOREIGN KEY (RegionName) REFERENCES Region (RegionName)
-)
-GO
+);
+
 
 CREATE TABLE SupplyPeriod (
 	-- Supply Period is in Year that has Year Nr
@@ -89,8 +89,8 @@ CREATE TABLE SupplyPeriod (
 	-- Primary index to Supply Period over PresenceConstraint over (Year, Month in "Supply Period is in Year", "Supply Period is in Month") occurs at most one time
 	PRIMARY KEY CLUSTERED(YearNr, MonthNr),
 	FOREIGN KEY (MonthNr) REFERENCES [Month] (MonthNr)
-)
-GO
+);
+
 
 CREATE TABLE TransportRoute (
 	-- Transport Route involves Transport Method
@@ -105,25 +105,25 @@ CREATE TABLE TransportRoute (
 	PRIMARY KEY CLUSTERED(TransportMethod, RefineryName, RegionName),
 	FOREIGN KEY (RefineryName) REFERENCES Refinery (RefineryName),
 	FOREIGN KEY (RegionName) REFERENCES Region (RegionName)
-)
-GO
+);
+
 
 ALTER TABLE AcceptableSubstitution
-	ADD FOREIGN KEY (AlternateProductName) REFERENCES Product (ProductName)
-GO
+	ADD FOREIGN KEY (AlternateProductName) REFERENCES Product (ProductName);
+
 
 ALTER TABLE AcceptableSubstitution
-	ADD FOREIGN KEY (ProductName) REFERENCES Product (ProductName)
-GO
+	ADD FOREIGN KEY (ProductName) REFERENCES Product (ProductName);
+
 
 ALTER TABLE ProductionForecast
-	ADD FOREIGN KEY (RefineryName) REFERENCES Refinery (RefineryName)
-GO
+	ADD FOREIGN KEY (RefineryName) REFERENCES Refinery (RefineryName);
+
 
 ALTER TABLE ProductionForecast
-	ADD FOREIGN KEY (SupplyPeriodYearNr, SupplyPeriodMonthNr) REFERENCES SupplyPeriod (YearNr, MonthNr)
-GO
+	ADD FOREIGN KEY (SupplyPeriodYearNr, SupplyPeriodMonthNr) REFERENCES SupplyPeriod (YearNr, MonthNr);
+
 
 ALTER TABLE RegionalDemand
-	ADD FOREIGN KEY (SupplyPeriodYearNr, SupplyPeriodMonthNr) REFERENCES SupplyPeriod (YearNr, MonthNr)
-GO
+	ADD FOREIGN KEY (SupplyPeriodYearNr, SupplyPeriodMonthNr) REFERENCES SupplyPeriod (YearNr, MonthNr);
+

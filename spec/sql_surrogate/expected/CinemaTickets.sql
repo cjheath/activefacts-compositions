@@ -9,8 +9,8 @@ CREATE TABLE AllocatableCinemaSection (
 	PRIMARY KEY CLUSTERED(AllocatableCinemaSectionID),
 	-- Unique index to AllocatableCinemaSection over PresenceConstraint over (Cinema, Section in "Cinema provides allocated seating in Section") occurs at most one time
 	UNIQUE NONCLUSTERED(CinemaID, SectionName)
-)
-GO
+);
+
 
 CREATE TABLE Booking (
 	-- Booking ID
@@ -37,8 +37,8 @@ CREATE TABLE Booking (
 	UNIQUE NONCLUSTERED(BookingNr),
 	-- Unique index to Booking over PresenceConstraint over (Person, Session in "Person booked Session for Number of places") occurs one time
 	UNIQUE NONCLUSTERED(PersonID, SessionID)
-)
-GO
+);
+
 
 CREATE TABLE Cinema (
 	-- Cinema has Cinema ID
@@ -49,8 +49,8 @@ CREATE TABLE Cinema (
 	PRIMARY KEY CLUSTERED(CinemaID),
 	-- Unique index to Cinema over PresenceConstraint over (Name in "Cinema has Name") occurs at most one time
 	UNIQUE NONCLUSTERED(Name)
-)
-GO
+);
+
 
 CREATE TABLE Film (
 	-- Film has Film ID
@@ -61,10 +61,10 @@ CREATE TABLE Film (
 	YearNr                                  INTEGER NULL CHECK((YearNr >= 1900 AND YearNr <= 9999)),
 	-- Primary index to Film over PresenceConstraint over (Film ID in "Film has Film ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(FilmID)
-)
-GO
-CREATE UNIQUE NONCLUSTERED INDEX FilmByNameYearNr ON Film(Name, YearNr) WHERE YearNr IS NOT NULL
-GO
+);
+
+CREATE UNIQUE NONCLUSTERED INDEX FilmByNameYearNr ON Film(Name, YearNr) WHERE YearNr IS NOT NULL;
+
 
 CREATE TABLE Person (
 	-- Person has Person ID
@@ -75,10 +75,10 @@ CREATE TABLE Person (
 	LoginName                               VARCHAR NULL,
 	-- Primary index to Person over PresenceConstraint over (Person ID in "Person has Person ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(PersonID)
-)
-GO
-CREATE UNIQUE NONCLUSTERED INDEX PersonByLoginName ON Person(LoginName) WHERE LoginName IS NOT NULL
-GO
+);
+
+CREATE UNIQUE NONCLUSTERED INDEX PersonByLoginName ON Person(LoginName) WHERE LoginName IS NOT NULL;
+
 
 CREATE TABLE PlacesPaid (
 	-- Places Paid ID
@@ -94,8 +94,8 @@ CREATE TABLE PlacesPaid (
 	-- Unique index to Places Paid over PresenceConstraint over (Booking, Payment Method in "Number of places for Booking have been paid for by Payment Method") occurs one time
 	UNIQUE NONCLUSTERED(BookingID, PaymentMethodCode),
 	FOREIGN KEY (BookingID) REFERENCES Booking (BookingID)
-)
-GO
+);
+
 
 CREATE TABLE Seat (
 	-- Seat ID
@@ -113,8 +113,8 @@ CREATE TABLE Seat (
 	-- Unique index to Seat over PresenceConstraint over (Row, Seat Number in "Seat is in Row", "Seat has Seat Number") occurs at most one time
 	UNIQUE NONCLUSTERED(RowCinemaID, RowNr, SeatNumber),
 	FOREIGN KEY (RowCinemaID) REFERENCES Cinema (CinemaID)
-)
-GO
+);
+
 
 CREATE TABLE SeatAllocation (
 	-- Booking ID
@@ -125,8 +125,8 @@ CREATE TABLE SeatAllocation (
 	PRIMARY KEY CLUSTERED(BookingID, AllocatedSeatID),
 	FOREIGN KEY (AllocatedSeatID) REFERENCES Seat (SeatID),
 	FOREIGN KEY (BookingID) REFERENCES Booking (BookingID)
-)
-GO
+);
+
 
 CREATE TABLE [Session] (
 	-- Session ID
@@ -155,8 +155,8 @@ CREATE TABLE [Session] (
 	UNIQUE NONCLUSTERED(CinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute),
 	FOREIGN KEY (CinemaID) REFERENCES Cinema (CinemaID),
 	FOREIGN KEY (FilmID) REFERENCES Film (FilmID)
-)
-GO
+);
+
 
 CREATE TABLE TicketPricing (
 	-- Ticket Pricing ID
@@ -184,17 +184,17 @@ CREATE TABLE TicketPricing (
 	-- Unique index to Ticket Pricing over PresenceConstraint over (Session Time, Cinema, Section, High Demand in "tickets on Session Time at Cinema in Section for High Demand have Price") occurs one time
 	UNIQUE NONCLUSTERED(SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute, CinemaID, SectionName, HighDemand),
 	FOREIGN KEY (CinemaID) REFERENCES Cinema (CinemaID)
-)
-GO
+);
+
 
 ALTER TABLE AllocatableCinemaSection
-	ADD FOREIGN KEY (CinemaID) REFERENCES Cinema (CinemaID)
-GO
+	ADD FOREIGN KEY (CinemaID) REFERENCES Cinema (CinemaID);
+
 
 ALTER TABLE Booking
-	ADD FOREIGN KEY (PersonID) REFERENCES Person (PersonID)
-GO
+	ADD FOREIGN KEY (PersonID) REFERENCES Person (PersonID);
+
 
 ALTER TABLE Booking
-	ADD FOREIGN KEY (SessionID) REFERENCES [Session] (SessionID)
-GO
+	ADD FOREIGN KEY (SessionID) REFERENCES [Session] (SessionID);
+

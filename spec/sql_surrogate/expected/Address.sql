@@ -19,8 +19,8 @@ CREATE TABLE Company (
 	PRIMARY KEY CLUSTERED(CompanyID),
 	-- Unique index to Company over PresenceConstraint over (Company Name in "Company has Company Name") occurs at most one time
 	UNIQUE NONCLUSTERED(CompanyName)
-)
-GO
+);
+
 
 CREATE TABLE Person (
 	-- Person ID
@@ -45,6 +45,6 @@ CREATE TABLE Person (
 	PRIMARY KEY CLUSTERED(PersonID),
 	-- Unique index to Person over PresenceConstraint over (Family, Given Names in "Person is of Family", "Person has Given Names") occurs at most one time
 	UNIQUE NONCLUSTERED(FamilyName, GivenNames)
-)
-GO
+);
+
 

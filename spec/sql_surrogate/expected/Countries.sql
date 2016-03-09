@@ -3,8 +3,8 @@ CREATE TABLE Country (
 	CountryCodeID                           BIGINT IDENTITY NOT NULL,
 	-- Primary index to Country over PresenceConstraint over (Country Code in "Country has Country Code") occurs at most one time
 	PRIMARY KEY CLUSTERED(CountryCode, CountryCodeID)
-)
-GO
+);
+
 
 CREATE TABLE CountryCode (
 	-- Country Code ID
@@ -15,9 +15,9 @@ CREATE TABLE CountryCode (
 	PRIMARY KEY CLUSTERED(CountryCodeID),
 	-- Unique index to Country Code
 	UNIQUE NONCLUSTERED(CountryCodeValue)
-)
-GO
+);
+
 
 ALTER TABLE Country
-	ADD FOREIGN KEY (CountryCodeID) REFERENCES CountryCode (CountryCodeID)
-GO
+	ADD FOREIGN KEY (CountryCodeID) REFERENCES CountryCode (CountryCodeID);
+

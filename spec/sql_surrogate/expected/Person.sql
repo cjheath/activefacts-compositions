@@ -9,6 +9,6 @@ CREATE TABLE Person (
 	PRIMARY KEY CLUSTERED(PersonID),
 	-- Unique index to Person over PresenceConstraint over (Family Name, Given Name in "Person has family-Name", "Person has given-Name") occurs at most one time
 	UNIQUE NONCLUSTERED(FamilyName, GivenName)
-)
-GO
+);
+
 

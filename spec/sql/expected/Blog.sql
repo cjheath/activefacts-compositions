@@ -7,8 +7,8 @@ CREATE TABLE Author (
 	PRIMARY KEY CLUSTERED(AuthorId),
 	-- Unique index to Author over PresenceConstraint over (Author Name in "author-Name is of Author") occurs at most one time
 	UNIQUE NONCLUSTERED(AuthorName)
-)
-GO
+);
+
 
 CREATE TABLE Comment (
 	-- Comment has Comment Id
@@ -26,8 +26,8 @@ CREATE TABLE Comment (
 	-- Primary index to Comment over PresenceConstraint over (Comment Id in "Comment has Comment Id") occurs at most one time
 	PRIMARY KEY CLUSTERED(CommentId),
 	FOREIGN KEY (AuthorId) REFERENCES Author (AuthorId)
-)
-GO
+);
+
 
 CREATE TABLE Paragraph (
 	-- Paragraph involves Post that has Post Id
@@ -40,8 +40,8 @@ CREATE TABLE Paragraph (
 	ContentText                             VARCHAR(MAX) NOT NULL,
 	-- Primary index to Paragraph over PresenceConstraint over (Post, Ordinal in "Post includes Ordinal paragraph") occurs at most one time
 	PRIMARY KEY CLUSTERED(PostId, Ordinal)
-)
-GO
+);
+
 
 CREATE TABLE Post (
 	-- Post has Post Id
@@ -53,8 +53,8 @@ CREATE TABLE Post (
 	-- Primary index to Post over PresenceConstraint over (Post Id in "Post has Post Id") occurs at most one time
 	PRIMARY KEY CLUSTERED(PostId),
 	FOREIGN KEY (AuthorId) REFERENCES Author (AuthorId)
-)
-GO
+);
+
 
 CREATE TABLE Topic (
 	-- Topic has Topic Id
@@ -68,17 +68,17 @@ CREATE TABLE Topic (
 	-- Unique index to Topic over PresenceConstraint over (Topic Name in "Topic is called topic-Name") occurs at most one time
 	UNIQUE NONCLUSTERED(TopicName),
 	FOREIGN KEY (ParentTopicId) REFERENCES Topic (TopicId)
-)
-GO
+);
+
 
 ALTER TABLE Comment
-	ADD FOREIGN KEY (ParagraphPostId, ParagraphOrdinal) REFERENCES Paragraph (PostId, Ordinal)
-GO
+	ADD FOREIGN KEY (ParagraphPostId, ParagraphOrdinal) REFERENCES Paragraph (PostId, Ordinal);
+
 
 ALTER TABLE Paragraph
-	ADD FOREIGN KEY (PostId) REFERENCES Post (PostId)
-GO
+	ADD FOREIGN KEY (PostId) REFERENCES Post (PostId);
+
 
 ALTER TABLE Post
-	ADD FOREIGN KEY (TopicId) REFERENCES Topic (TopicId)
-GO
+	ADD FOREIGN KEY (TopicId) REFERENCES Topic (TopicId);
+

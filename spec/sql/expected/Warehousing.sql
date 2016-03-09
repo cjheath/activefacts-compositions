@@ -11,8 +11,8 @@ CREATE TABLE BackOrderAllocation (
 	Quantity                                INTEGER NOT NULL,
 	-- Primary index to Back Order Allocation over PresenceConstraint over (Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item") occurs at most one time
 	PRIMARY KEY CLUSTERED(PurchaseOrderItemPurchaseOrderID, PurchaseOrderItemProductID, SalesOrderItemSalesOrderID, SalesOrderItemProductID)
-)
-GO
+);
+
 
 CREATE TABLE Bin (
 	-- Bin has Bin ID
@@ -25,8 +25,8 @@ CREATE TABLE Bin (
 	WarehouseID                             BIGINT NULL,
 	-- Primary index to Bin over PresenceConstraint over (Bin ID in "Bin has Bin ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(BinID)
-)
-GO
+);
+
 
 CREATE TABLE DispatchItem (
 	-- Dispatch Item has Dispatch Item ID
@@ -45,24 +45,24 @@ CREATE TABLE DispatchItem (
 	TransferRequestID                       BIGINT NULL,
 	-- Primary index to Dispatch Item over PresenceConstraint over (Dispatch Item ID in "Dispatch Item has Dispatch Item ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(DispatchItemID)
-)
-GO
+);
+
 
 CREATE TABLE Party (
 	-- Party has Party ID
 	PartyID                                 BIGINT NOT NULL IDENTITY,
 	-- Primary index to Party over PresenceConstraint over (Party ID in "Party has Party ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(PartyID)
-)
-GO
+);
+
 
 CREATE TABLE Product (
 	-- Product has Product ID
 	ProductID                               BIGINT NOT NULL IDENTITY,
 	-- Primary index to Product over PresenceConstraint over (Product ID in "Product has Product ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(ProductID)
-)
-GO
+);
+
 
 CREATE TABLE PurchaseOrder (
 	-- Purchase Order has Purchase Order ID
@@ -74,8 +74,8 @@ CREATE TABLE PurchaseOrder (
 	-- Primary index to Purchase Order over PresenceConstraint over (Purchase Order ID in "Purchase Order has Purchase Order ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(PurchaseOrderID),
 	FOREIGN KEY (SupplierID) REFERENCES Party (PartyID)
-)
-GO
+);
+
 
 CREATE TABLE PurchaseOrderItem (
 	-- Purchase Order Item is part of Purchase Order that has Purchase Order ID
@@ -88,8 +88,8 @@ CREATE TABLE PurchaseOrderItem (
 	PRIMARY KEY CLUSTERED(PurchaseOrderID, ProductID),
 	FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
 	FOREIGN KEY (PurchaseOrderID) REFERENCES PurchaseOrder (PurchaseOrderID)
-)
-GO
+);
+
 
 CREATE TABLE ReceivedItem (
 	-- Received Item has Received Item ID
@@ -110,8 +110,8 @@ CREATE TABLE ReceivedItem (
 	PRIMARY KEY CLUSTERED(ReceivedItemID),
 	FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
 	FOREIGN KEY (PurchaseOrderItemPurchaseOrderID, PurchaseOrderItemProductID) REFERENCES PurchaseOrderItem (PurchaseOrderID, ProductID)
-)
-GO
+);
+
 
 CREATE TABLE SalesOrder (
 	-- Sales Order has Sales Order ID
@@ -123,8 +123,8 @@ CREATE TABLE SalesOrder (
 	-- Primary index to Sales Order over PresenceConstraint over (Sales Order ID in "Sales Order has Sales Order ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(SalesOrderID),
 	FOREIGN KEY (CustomerID) REFERENCES Party (PartyID)
-)
-GO
+);
+
 
 CREATE TABLE SalesOrderItem (
 	-- Sales Order Item is part of Sales Order that has Sales Order ID
@@ -137,8 +137,8 @@ CREATE TABLE SalesOrderItem (
 	PRIMARY KEY CLUSTERED(SalesOrderID, ProductID),
 	FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
 	FOREIGN KEY (SalesOrderID) REFERENCES SalesOrder (SalesOrderID)
-)
-GO
+);
+
 
 CREATE TABLE TransferRequest (
 	-- Transfer Request has Transfer Request ID
@@ -154,61 +154,61 @@ CREATE TABLE TransferRequest (
 	-- Primary index to Transfer Request over PresenceConstraint over (Transfer Request ID in "Transfer Request has Transfer Request ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(TransferRequestID),
 	FOREIGN KEY (ProductID) REFERENCES Product (ProductID)
-)
-GO
+);
+
 
 CREATE TABLE Warehouse (
 	-- Warehouse has Warehouse ID
 	WarehouseID                             BIGINT NOT NULL IDENTITY,
 	-- Primary index to Warehouse over PresenceConstraint over (Warehouse ID in "Warehouse has Warehouse ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(WarehouseID)
-)
-GO
+);
+
 
 ALTER TABLE BackOrderAllocation
-	ADD FOREIGN KEY (PurchaseOrderItemPurchaseOrderID, PurchaseOrderItemProductID) REFERENCES PurchaseOrderItem (PurchaseOrderID, ProductID)
-GO
+	ADD FOREIGN KEY (PurchaseOrderItemPurchaseOrderID, PurchaseOrderItemProductID) REFERENCES PurchaseOrderItem (PurchaseOrderID, ProductID);
+
 
 ALTER TABLE BackOrderAllocation
-	ADD FOREIGN KEY (SalesOrderItemSalesOrderID, SalesOrderItemProductID) REFERENCES SalesOrderItem (SalesOrderID, ProductID)
-GO
+	ADD FOREIGN KEY (SalesOrderItemSalesOrderID, SalesOrderItemProductID) REFERENCES SalesOrderItem (SalesOrderID, ProductID);
+
 
 ALTER TABLE Bin
-	ADD FOREIGN KEY (ProductID) REFERENCES Product (ProductID)
-GO
+	ADD FOREIGN KEY (ProductID) REFERENCES Product (ProductID);
+
 
 ALTER TABLE Bin
-	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID)
-GO
+	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID);
+
 
 ALTER TABLE DispatchItem
-	ADD FOREIGN KEY (ProductID) REFERENCES Product (ProductID)
-GO
+	ADD FOREIGN KEY (ProductID) REFERENCES Product (ProductID);
+
 
 ALTER TABLE DispatchItem
-	ADD FOREIGN KEY (SalesOrderItemSalesOrderID, SalesOrderItemProductID) REFERENCES SalesOrderItem (SalesOrderID, ProductID)
-GO
+	ADD FOREIGN KEY (SalesOrderItemSalesOrderID, SalesOrderItemProductID) REFERENCES SalesOrderItem (SalesOrderID, ProductID);
+
 
 ALTER TABLE DispatchItem
-	ADD FOREIGN KEY (TransferRequestID) REFERENCES TransferRequest (TransferRequestID)
-GO
+	ADD FOREIGN KEY (TransferRequestID) REFERENCES TransferRequest (TransferRequestID);
+
 
 ALTER TABLE PurchaseOrder
-	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID)
-GO
+	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID);
+
 
 ALTER TABLE ReceivedItem
-	ADD FOREIGN KEY (TransferRequestID) REFERENCES TransferRequest (TransferRequestID)
-GO
+	ADD FOREIGN KEY (TransferRequestID) REFERENCES TransferRequest (TransferRequestID);
+
 
 ALTER TABLE SalesOrder
-	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID)
-GO
+	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID);
+
 
 ALTER TABLE TransferRequest
-	ADD FOREIGN KEY (FromWarehouseID) REFERENCES Warehouse (WarehouseID)
-GO
+	ADD FOREIGN KEY (FromWarehouseID) REFERENCES Warehouse (WarehouseID);
+
 
 ALTER TABLE TransferRequest
-	ADD FOREIGN KEY (ToWarehouseID) REFERENCES Warehouse (WarehouseID)
-GO
+	ADD FOREIGN KEY (ToWarehouseID) REFERENCES Warehouse (WarehouseID);
+

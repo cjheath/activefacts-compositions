@@ -15,6 +15,6 @@ CREATE TABLE Country (
 	UNIQUE NONCLUSTERED(ISO3166Code2),
 	-- Unique index to Country over PresenceConstraint over (ISO3166Numeric3 in "Country has ISO3166Numeric3") occurs one time
 	UNIQUE NONCLUSTERED(ISO3166Numeric3)
-)
-GO
+);
+
 

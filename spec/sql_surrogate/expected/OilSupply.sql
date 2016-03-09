@@ -11,8 +11,8 @@ CREATE TABLE AcceptableSubstitution (
 	PRIMARY KEY CLUSTERED(AcceptableSubstitutionID),
 	-- Unique index to Acceptable Substitution over PresenceConstraint over (Product, Alternate Product, Season in "Product may be substituted by alternate-Product in Season") occurs at most one time
 	UNIQUE NONCLUSTERED(ProductID, AlternateProductID, Season)
-)
-GO
+);
+
 
 CREATE TABLE [Month] (
 	-- Month ID
@@ -25,8 +25,8 @@ CREATE TABLE [Month] (
 	PRIMARY KEY CLUSTERED(MonthID),
 	-- Unique index to Month over PresenceConstraint over (Month Nr in "Month has Month Nr") occurs at most one time
 	UNIQUE NONCLUSTERED(MonthNr)
-)
-GO
+);
+
 
 CREATE TABLE Product (
 	-- Product ID
@@ -37,8 +37,8 @@ CREATE TABLE Product (
 	PRIMARY KEY CLUSTERED(ProductID),
 	-- Unique index to Product over PresenceConstraint over (Product Name in "Product has Product Name") occurs at most one time
 	UNIQUE NONCLUSTERED(ProductName)
-)
-GO
+);
+
 
 CREATE TABLE ProductionForecast (
 	-- Production Forecast ID
@@ -58,8 +58,8 @@ CREATE TABLE ProductionForecast (
 	-- Unique index to Production Forecast over PresenceConstraint over (Refinery, Supply Period, Product in "Refinery in Supply Period will make Product in Quantity") occurs one time
 	UNIQUE NONCLUSTERED(RefineryID, SupplyPeriodID, ProductID),
 	FOREIGN KEY (ProductID) REFERENCES Product (ProductID)
-)
-GO
+);
+
 
 CREATE TABLE Refinery (
 	-- Refinery ID
@@ -70,8 +70,8 @@ CREATE TABLE Refinery (
 	PRIMARY KEY CLUSTERED(RefineryID),
 	-- Unique index to Refinery over PresenceConstraint over (Refinery Name in "Refinery has Refinery Name") occurs at most one time
 	UNIQUE NONCLUSTERED(RefineryName)
-)
-GO
+);
+
 
 CREATE TABLE Region (
 	-- Region ID
@@ -82,8 +82,8 @@ CREATE TABLE Region (
 	PRIMARY KEY CLUSTERED(RegionID),
 	-- Unique index to Region over PresenceConstraint over (Region Name in "Region has Region Name") occurs at most one time
 	UNIQUE NONCLUSTERED(RegionName)
-)
-GO
+);
+
 
 CREATE TABLE RegionalDemand (
 	-- Regional Demand ID
@@ -102,8 +102,8 @@ CREATE TABLE RegionalDemand (
 	UNIQUE NONCLUSTERED(RegionID, SupplyPeriodID, ProductID),
 	FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
 	FOREIGN KEY (RegionID) REFERENCES Region (RegionID)
-)
-GO
+);
+
 
 CREATE TABLE SupplyPeriod (
 	-- Supply Period ID
@@ -117,8 +117,8 @@ CREATE TABLE SupplyPeriod (
 	-- Unique index to Supply Period over PresenceConstraint over (Year, Month in "Supply Period is in Year", "Supply Period is in Month") occurs at most one time
 	UNIQUE NONCLUSTERED(YearNr, MonthID),
 	FOREIGN KEY (MonthID) REFERENCES [Month] (MonthID)
-)
-GO
+);
+
 
 CREATE TABLE TransportRoute (
 	-- Transport Route ID
@@ -137,25 +137,25 @@ CREATE TABLE TransportRoute (
 	UNIQUE NONCLUSTERED(TransportMethod, RefineryID, RegionID),
 	FOREIGN KEY (RefineryID) REFERENCES Refinery (RefineryID),
 	FOREIGN KEY (RegionID) REFERENCES Region (RegionID)
-)
-GO
+);
+
 
 ALTER TABLE AcceptableSubstitution
-	ADD FOREIGN KEY (AlternateProductID) REFERENCES Product (ProductID)
-GO
+	ADD FOREIGN KEY (AlternateProductID) REFERENCES Product (ProductID);
+
 
 ALTER TABLE AcceptableSubstitution
-	ADD FOREIGN KEY (ProductID) REFERENCES Product (ProductID)
-GO
+	ADD FOREIGN KEY (ProductID) REFERENCES Product (ProductID);
+
 
 ALTER TABLE ProductionForecast
-	ADD FOREIGN KEY (RefineryID) REFERENCES Refinery (RefineryID)
-GO
+	ADD FOREIGN KEY (RefineryID) REFERENCES Refinery (RefineryID);
+
 
 ALTER TABLE ProductionForecast
-	ADD FOREIGN KEY (SupplyPeriodID) REFERENCES SupplyPeriod (SupplyPeriodID)
-GO
+	ADD FOREIGN KEY (SupplyPeriodID) REFERENCES SupplyPeriod (SupplyPeriodID);
+
 
 ALTER TABLE RegionalDemand
-	ADD FOREIGN KEY (SupplyPeriodID) REFERENCES SupplyPeriod (SupplyPeriodID)
-GO
+	ADD FOREIGN KEY (SupplyPeriodID) REFERENCES SupplyPeriod (SupplyPeriodID);
+

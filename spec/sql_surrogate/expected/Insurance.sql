@@ -25,10 +25,10 @@ CREATE TABLE Asset (
 	VehicleFinanceInstitutionID             BIGINT NULL,
 	-- Primary index to Asset over PresenceConstraint over (Asset ID in "Asset has Asset ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(AssetID)
-)
-GO
-CREATE UNIQUE NONCLUSTERED INDEX AssetByVehicleVIN ON Asset(VehicleVIN) WHERE VehicleVIN IS NOT NULL
-GO
+);
+
+CREATE UNIQUE NONCLUSTERED INDEX AssetByVehicleVIN ON Asset(VehicleVIN) WHERE VehicleVIN IS NOT NULL;
+
 
 CREATE TABLE Claim (
 	-- Claim has Claim ID
@@ -65,8 +65,8 @@ CREATE TABLE Claim (
 	PRIMARY KEY CLUSTERED(ClaimID),
 	-- Unique index to Claim over PresenceConstraint over (Policy, p_sequence in "Claim is on Policy", "Claim has Claim Sequence") occurs at most one time
 	UNIQUE NONCLUSTERED(PSequence, PolicyID)
-)
-GO
+);
+
 
 CREATE TABLE ContractorAppointment (
 	-- Contractor Appointment involves Claim that has Claim ID
@@ -76,8 +76,8 @@ CREATE TABLE ContractorAppointment (
 	-- Primary index to Contractor Appointment over PresenceConstraint over (Claim, Contractor in "Claim involves Contractor") occurs at most one time
 	PRIMARY KEY CLUSTERED(ClaimID, ContractorID),
 	FOREIGN KEY (ClaimID) REFERENCES Claim (ClaimID)
-)
-GO
+);
+
 
 CREATE TABLE Cover (
 	-- Policy ID
@@ -89,8 +89,8 @@ CREATE TABLE Cover (
 	-- Primary index to Cover over PresenceConstraint over (Policy, Cover Type, Asset in "Policy provides Cover Type over Asset") occurs at most one time
 	PRIMARY KEY CLUSTERED(PolicyID, CoverTypeID, AssetID),
 	FOREIGN KEY (AssetID) REFERENCES Asset (AssetID)
-)
-GO
+);
+
 
 CREATE TABLE CoverType (
 	-- Cover Type ID
@@ -105,8 +105,8 @@ CREATE TABLE CoverType (
 	UNIQUE NONCLUSTERED(CoverTypeCode),
 	-- Unique index to Cover Type over PresenceConstraint over (Cover Type Name in "Cover Type has Cover Type Name") occurs at most one time
 	UNIQUE NONCLUSTERED(CoverTypeName)
-)
-GO
+);
+
 
 CREATE TABLE CoverWording (
 	-- Cover Wording ID
@@ -122,8 +122,8 @@ CREATE TABLE CoverWording (
 	-- Unique index to Cover Wording over PresenceConstraint over (Cover Type, Policy Wording, Start Date in "Cover Type used Policy Wording from start-Date") occurs at most one time
 	UNIQUE NONCLUSTERED(CoverTypeID, PolicyWordingText, StartDate),
 	FOREIGN KEY (CoverTypeID) REFERENCES CoverType (CoverTypeID)
-)
-GO
+);
+
 
 CREATE TABLE LossType (
 	-- Loss Type ID
@@ -140,8 +140,8 @@ CREATE TABLE LossType (
 	PRIMARY KEY CLUSTERED(LossTypeID),
 	-- Unique index to Loss Type over PresenceConstraint over (Loss Type Code in "Loss Type has Loss Type Code") occurs at most one time
 	UNIQUE NONCLUSTERED(LossTypeCode)
-)
-GO
+);
+
 
 CREATE TABLE LostItem (
 	-- Lost Item ID
@@ -163,8 +163,8 @@ CREATE TABLE LostItem (
 	-- Unique index to Lost Item over PresenceConstraint over (Incident, Lost Item Nr in "Lost Item was lost in Incident", "Lost Item has Lost Item Nr") occurs at most one time
 	UNIQUE NONCLUSTERED(IncidentClaimID, LostItemNr),
 	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID)
-)
-GO
+);
+
 
 CREATE TABLE Party (
 	-- Party has Party ID
@@ -222,8 +222,8 @@ CREATE TABLE Party (
 	-- Primary index to Party over PresenceConstraint over (Party ID in "Party has Party ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(PartyID),
 	FOREIGN KEY (CompanyContactPersonID) REFERENCES Party (PartyID)
-)
-GO
+);
+
 
 CREATE TABLE Policy (
 	-- Policy ID
@@ -250,8 +250,8 @@ CREATE TABLE Policy (
 	UNIQUE NONCLUSTERED(PYearNr, PProductID, PStateID, PSerial),
 	FOREIGN KEY (AuthorisedRepID) REFERENCES Party (PartyID),
 	FOREIGN KEY (InsuredID) REFERENCES Party (PartyID)
-)
-GO
+);
+
 
 CREATE TABLE Product (
 	-- Product ID
@@ -266,13 +266,13 @@ CREATE TABLE Product (
 	PRIMARY KEY CLUSTERED(ProductID),
 	-- Unique index to Product over PresenceConstraint over (Product Code in "Product has Product Code") occurs at most one time
 	UNIQUE NONCLUSTERED(ProductCode)
-)
-GO
-CREATE UNIQUE NONCLUSTERED INDEX ProductByAlias ON Product(Alias) WHERE Alias IS NOT NULL
-GO
+);
 
-CREATE UNIQUE NONCLUSTERED INDEX ProductByDescription ON Product(Description) WHERE Description IS NOT NULL
-GO
+CREATE UNIQUE NONCLUSTERED INDEX ProductByAlias ON Product(Alias) WHERE Alias IS NOT NULL;
+
+
+CREATE UNIQUE NONCLUSTERED INDEX ProductByDescription ON Product(Description) WHERE Description IS NOT NULL;
+
 
 CREATE TABLE PropertyDamage (
 	-- Property Damage ID
@@ -294,10 +294,10 @@ CREATE TABLE PropertyDamage (
 	-- Primary index to Property Damage
 	PRIMARY KEY CLUSTERED(PropertyDamageID),
 	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID)
-)
-GO
-CREATE UNIQUE NONCLUSTERED INDEX PropertyDamageByIncidentClaimIDAddressStreetAddressCityAd0ba ON PropertyDamage(IncidentClaimID, AddressStreet, AddressCity, AddressPostcode, AddressStateID) WHERE IncidentClaimID IS NOT NULL AND AddressPostcode IS NOT NULL
-GO
+);
+
+CREATE UNIQUE NONCLUSTERED INDEX PropertyDamageByIncidentClaimIDAddressStreetAddressCityAd0ba ON PropertyDamage(IncidentClaimID, AddressStreet, AddressCity, AddressPostcode, AddressStateID) WHERE IncidentClaimID IS NOT NULL AND AddressPostcode IS NOT NULL;
+
 
 CREATE TABLE [State] (
 	-- State ID
@@ -310,10 +310,10 @@ CREATE TABLE [State] (
 	PRIMARY KEY CLUSTERED(StateID),
 	-- Unique index to State over PresenceConstraint over (State Code in "State has State Code") occurs at most one time
 	UNIQUE NONCLUSTERED(StateCode)
-)
-GO
-CREATE UNIQUE NONCLUSTERED INDEX StateByStateName ON [State](StateName) WHERE StateName IS NOT NULL
-GO
+);
+
+CREATE UNIQUE NONCLUSTERED INDEX StateByStateName ON [State](StateName) WHERE StateName IS NOT NULL;
+
 
 CREATE TABLE ThirdParty (
 	-- Third Party ID
@@ -340,8 +340,8 @@ CREATE TABLE ThirdParty (
 	UNIQUE NONCLUSTERED(PersonID, VehicleIncidentClaimID),
 	FOREIGN KEY (InsurerID) REFERENCES Party (PartyID),
 	FOREIGN KEY (PersonID) REFERENCES Party (PartyID)
-)
-GO
+);
+
 
 CREATE TABLE UnderwritingDemerit (
 	-- Underwriting Demerit ID
@@ -356,8 +356,8 @@ CREATE TABLE UnderwritingDemerit (
 	PRIMARY KEY CLUSTERED(UnderwritingDemeritID),
 	-- Unique index to Underwriting Demerit over PresenceConstraint over (Vehicle Incident, Underwriting Question in "Vehicle Incident occurred despite Underwriting Demerit", "Underwriting Demerit has Underwriting Question") occurs at most one time
 	UNIQUE NONCLUSTERED(VehicleIncidentClaimID, UnderwritingQuestionID)
-)
-GO
+);
+
 
 CREATE TABLE UnderwritingQuestion (
 	-- Underwriting Question has Underwriting Question ID
@@ -368,8 +368,8 @@ CREATE TABLE UnderwritingQuestion (
 	PRIMARY KEY CLUSTERED(UnderwritingQuestionID),
 	-- Unique index to Underwriting Question over PresenceConstraint over (Text in "Text is of Underwriting Question") occurs at most one time
 	UNIQUE NONCLUSTERED(Text)
-)
-GO
+);
+
 
 CREATE TABLE VehicleIncident (
 	-- Vehicle Incident is a kind of Incident that is of Claim that has Claim ID
@@ -411,8 +411,8 @@ CREATE TABLE VehicleIncident (
 	FOREIGN KEY (DrivingPersonID) REFERENCES Party (PartyID),
 	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID),
 	FOREIGN KEY (LossTypeID) REFERENCES LossType (LossTypeID)
-)
-GO
+);
+
 
 CREATE TABLE Witness (
 	-- Witness ID
@@ -437,69 +437,69 @@ CREATE TABLE Witness (
 	UNIQUE NONCLUSTERED(IncidentClaimID, Name),
 	FOREIGN KEY (AddressStateID) REFERENCES [State] (StateID),
 	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID)
-)
-GO
+);
+
 
 ALTER TABLE Asset
-	ADD FOREIGN KEY (VehicleDealerID) REFERENCES Party (PartyID)
-GO
+	ADD FOREIGN KEY (VehicleDealerID) REFERENCES Party (PartyID);
+
 
 ALTER TABLE Asset
-	ADD FOREIGN KEY (VehicleFinanceInstitutionID) REFERENCES Party (PartyID)
-GO
+	ADD FOREIGN KEY (VehicleFinanceInstitutionID) REFERENCES Party (PartyID);
+
 
 ALTER TABLE Claim
-	ADD FOREIGN KEY (IncidentAddressStateID) REFERENCES [State] (StateID)
-GO
+	ADD FOREIGN KEY (IncidentAddressStateID) REFERENCES [State] (StateID);
+
 
 ALTER TABLE Claim
-	ADD FOREIGN KEY (LodgementPersonID) REFERENCES Party (PartyID)
-GO
+	ADD FOREIGN KEY (LodgementPersonID) REFERENCES Party (PartyID);
+
 
 ALTER TABLE Claim
-	ADD FOREIGN KEY (PolicyID) REFERENCES Policy (PolicyID)
-GO
+	ADD FOREIGN KEY (PolicyID) REFERENCES Policy (PolicyID);
+
 
 ALTER TABLE ContractorAppointment
-	ADD FOREIGN KEY (ContractorID) REFERENCES Party (PartyID)
-GO
+	ADD FOREIGN KEY (ContractorID) REFERENCES Party (PartyID);
+
 
 ALTER TABLE Cover
-	ADD FOREIGN KEY (CoverTypeID) REFERENCES CoverType (CoverTypeID)
-GO
+	ADD FOREIGN KEY (CoverTypeID) REFERENCES CoverType (CoverTypeID);
+
 
 ALTER TABLE Cover
-	ADD FOREIGN KEY (PolicyID) REFERENCES Policy (PolicyID)
-GO
+	ADD FOREIGN KEY (PolicyID) REFERENCES Policy (PolicyID);
+
 
 ALTER TABLE Party
-	ADD FOREIGN KEY (PersonAddressStateID) REFERENCES [State] (StateID)
-GO
+	ADD FOREIGN KEY (PersonAddressStateID) REFERENCES [State] (StateID);
+
 
 ALTER TABLE Party
-	ADD FOREIGN KEY (PostalAddressStateID) REFERENCES [State] (StateID)
-GO
+	ADD FOREIGN KEY (PostalAddressStateID) REFERENCES [State] (StateID);
+
 
 ALTER TABLE Policy
-	ADD FOREIGN KEY (PProductID) REFERENCES Product (ProductID)
-GO
+	ADD FOREIGN KEY (PProductID) REFERENCES Product (ProductID);
+
 
 ALTER TABLE Policy
-	ADD FOREIGN KEY (PStateID) REFERENCES [State] (StateID)
-GO
+	ADD FOREIGN KEY (PStateID) REFERENCES [State] (StateID);
+
 
 ALTER TABLE PropertyDamage
-	ADD FOREIGN KEY (AddressStateID) REFERENCES [State] (StateID)
-GO
+	ADD FOREIGN KEY (AddressStateID) REFERENCES [State] (StateID);
+
 
 ALTER TABLE ThirdParty
-	ADD FOREIGN KEY (VehicleIncidentClaimID) REFERENCES VehicleIncident (IncidentClaimID)
-GO
+	ADD FOREIGN KEY (VehicleIncidentClaimID) REFERENCES VehicleIncident (IncidentClaimID);
+
 
 ALTER TABLE UnderwritingDemerit
-	ADD FOREIGN KEY (UnderwritingQuestionID) REFERENCES UnderwritingQuestion (UnderwritingQuestionID)
-GO
+	ADD FOREIGN KEY (UnderwritingQuestionID) REFERENCES UnderwritingQuestion (UnderwritingQuestionID);
+
 
 ALTER TABLE UnderwritingDemerit
-	ADD FOREIGN KEY (VehicleIncidentClaimID) REFERENCES VehicleIncident (IncidentClaimID)
-GO
+	ADD FOREIGN KEY (VehicleIncidentClaimID) REFERENCES VehicleIncident (IncidentClaimID);
+

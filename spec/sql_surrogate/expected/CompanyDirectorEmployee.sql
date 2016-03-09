@@ -5,8 +5,8 @@ CREATE TABLE Attendance (
 	MeetingID                               BIGINT IDENTITY NOT NULL,
 	-- Primary index to Attendance over PresenceConstraint over (Attendee, Meeting in "Person attended Meeting") occurs at most one time
 	PRIMARY KEY CLUSTERED(AttendeePersonID, MeetingID)
-)
-GO
+);
+
 
 CREATE TABLE Company (
 	-- Company ID
@@ -19,8 +19,8 @@ CREATE TABLE Company (
 	PRIMARY KEY CLUSTERED(CompanyID),
 	-- Unique index to Company over PresenceConstraint over (Company Name in "Company is called Company Name") occurs at most one time
 	UNIQUE NONCLUSTERED(CompanyName)
-)
-GO
+);
+
 
 CREATE TABLE Directorship (
 	-- Directorship ID
@@ -36,8 +36,8 @@ CREATE TABLE Directorship (
 	-- Unique index to Directorship over PresenceConstraint over (Director, Company in "Person directs Company") occurs at most one time
 	UNIQUE NONCLUSTERED(DirectorPersonID, CompanyID),
 	FOREIGN KEY (CompanyID) REFERENCES Company (CompanyID)
-)
-GO
+);
+
 
 CREATE TABLE Employee (
 	-- Employee ID
@@ -56,8 +56,8 @@ CREATE TABLE Employee (
 	UNIQUE NONCLUSTERED(EmployeeNr),
 	FOREIGN KEY (CompanyID) REFERENCES Company (CompanyID),
 	FOREIGN KEY (ManagerEmployeeID) REFERENCES Employee (EmployeeID)
-)
-GO
+);
+
 
 CREATE TABLE Employment (
 	-- Person ID
@@ -67,8 +67,8 @@ CREATE TABLE Employment (
 	-- Primary index to Employment over PresenceConstraint over (Person, Employee in "Person works as Employee") occurs at most one time
 	PRIMARY KEY CLUSTERED(PersonID, EmployeeID),
 	FOREIGN KEY (EmployeeID) REFERENCES Employee (EmployeeID)
-)
-GO
+);
+
 
 CREATE TABLE Meeting (
 	-- Meeting ID
@@ -84,8 +84,8 @@ CREATE TABLE Meeting (
 	-- Unique index to Meeting over PresenceConstraint over (Company, Date, Is Board Meeting in "Meeting is held by Company", "Meeting is held on Date", "Meeting is board meeting") occurs at most one time
 	UNIQUE NONCLUSTERED(CompanyID, [Date], IsBoardMeeting),
 	FOREIGN KEY (CompanyID) REFERENCES Company (CompanyID)
-)
-GO
+);
+
 
 CREATE TABLE Person (
 	-- Person ID
@@ -98,23 +98,23 @@ CREATE TABLE Person (
 	BirthDate                               DATE NULL CHECK(BirthDate >= '1900/01/01'),
 	-- Primary index to Person
 	PRIMARY KEY CLUSTERED(PersonID)
-)
-GO
-CREATE UNIQUE NONCLUSTERED INDEX PersonByGivenNameFamilyName ON Person(GivenName, FamilyName) WHERE FamilyName IS NOT NULL
-GO
+);
+
+CREATE UNIQUE NONCLUSTERED INDEX PersonByGivenNameFamilyName ON Person(GivenName, FamilyName) WHERE FamilyName IS NOT NULL;
+
 
 ALTER TABLE Attendance
-	ADD FOREIGN KEY (AttendeePersonID) REFERENCES Person (PersonID)
-GO
+	ADD FOREIGN KEY (AttendeePersonID) REFERENCES Person (PersonID);
+
 
 ALTER TABLE Attendance
-	ADD FOREIGN KEY (MeetingID) REFERENCES Meeting (MeetingID)
-GO
+	ADD FOREIGN KEY (MeetingID) REFERENCES Meeting (MeetingID);
+
 
 ALTER TABLE Directorship
-	ADD FOREIGN KEY (DirectorPersonID) REFERENCES Person (PersonID)
-GO
+	ADD FOREIGN KEY (DirectorPersonID) REFERENCES Person (PersonID);
+
 
 ALTER TABLE Employment
-	ADD FOREIGN KEY (PersonID) REFERENCES Person (PersonID)
-GO
+	ADD FOREIGN KEY (PersonID) REFERENCES Person (PersonID);
+

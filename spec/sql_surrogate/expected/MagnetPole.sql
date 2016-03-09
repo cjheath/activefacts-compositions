@@ -3,8 +3,8 @@ CREATE TABLE Magnet (
 	MagnetAutoCounter                       BIGINT NOT NULL IDENTITY,
 	-- Primary index to Magnet over PresenceConstraint over (Magnet AutoCounter in "Magnet has Magnet AutoCounter") occurs at most one time
 	PRIMARY KEY CLUSTERED(MagnetAutoCounter)
-)
-GO
+);
+
 
 CREATE TABLE MagnetPole (
 	-- MagnetPole ID
@@ -18,6 +18,6 @@ CREATE TABLE MagnetPole (
 	-- Unique index to MagnetPole over PresenceConstraint over (Magnet, Is North in "MagnetPole belongs to Magnet", "MagnetPole is north") occurs at most one time
 	UNIQUE NONCLUSTERED(MagnetAutoCounter, IsNorth),
 	FOREIGN KEY (MagnetAutoCounter) REFERENCES Magnet (MagnetAutoCounter)
-)
-GO
+);
+
 

@@ -28,8 +28,28 @@ task :actual do
     for actual in `find spec -type d -name actual`
     do
       base=`dirname "$actual"`
-      echo "=================================== $base ==================================="
-      diff -rub $base/expected/ $base/actual |grep -v '^Only in .*expected'
+      files="`ls $base/actual/* 2>/dev/null`"
+      if [ x"$files" != x"" ]
+      then
+	echo "=================================== $base ==================================="
+	diff -rub $base/expected/ $base/actual |grep -v '^Only in .*expected'
+      fi
+    done
+  END
+end
+
+desc "Accept the last actual test output, making it expected for the next test run"
+task :accept do
+  system <<-END
+    for actual in `find spec -type d -name actual`
+    do
+      base=`dirname "$actual"`
+      files="`ls $base/actual/* 2>/dev/null`"
+      if [ x"$files" != x"" ]
+      then
+	echo "Accepting $files"
+	mv $files $base/expected
+      fi
     done
   END
 end
