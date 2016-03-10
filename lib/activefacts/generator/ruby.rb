@@ -20,7 +20,6 @@ module ActiveFacts
         )
       end
 
-      
       def initialize composition, options = {}
         super
         @scope = options.delete('scope') || ''
