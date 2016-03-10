@@ -112,16 +112,10 @@ module ActiveFacts
 
               # Add a Surrogate foreign Key to the parent composite
               fk_target = composite.primary_index.all_index_field.single
-              fk_field =
-                @constellation.Injection(
-                  :new,
-                  parent: satellite.mapping,
-                  name: fk_target.component.name,
-                  object_type: surrogate_type
-                )
+              fk_field = fork_component_to_new_parent(satellite.mapping, fk_target.component)
 
               # Add a load DateTime value
-              date_field = @constellation.Injection(
+              date_field = @constellation.ValidFrom(
                 :new,
                 parent: satellite.mapping,
                 name: "Load"+datestamp_type_name,
@@ -237,24 +231,11 @@ module ActiveFacts
 
           # Add a Surrogate foreign Key to the link_from composite
           fk1_target = link_from.primary_index.all_index_field.single
-          # debugger
-          fk1_field =
-            @constellation.SurrogateKey(
-              :new,
-              parent: mapping,
-              name: fk1_target.component.name,
-              object_type: fk1_target.component.object_type
-            )
+          fk1_field = fork_component_to_new_parent(mapping, fk1_target.component)
 
           # Add a Surrogate foreign Key to the link_to composite
           fk2_target = link_to.primary_index.all_index_field.single
-          fk2_field =
-            @constellation.SurrogateKey(
-              :new,
-              parent: mapping,
-              name: fk2_target.component.name,
-              object_type: fk2_target.component.object_type
-            )
+          fk2_field = fork_component_to_new_parent(mapping, fk2_target.component)
 
           # Add a natural key:
           natural_index =
@@ -293,7 +274,7 @@ module ActiveFacts
 =end
 
           # Add a load DateTime value
-          date_field = @constellation.Injection(:new,
+          date_field = @constellation.ValidFrom(:new,
             parent: mapping,
             name: "FirstLoad"+datestamp_type_name,
             object_type: datestamp_type
