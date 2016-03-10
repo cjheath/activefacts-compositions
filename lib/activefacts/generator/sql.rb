@@ -81,6 +81,10 @@ module ActiveFacts
         'TIMESTAMP'
       end
 
+      def valid_from_type
+        date_time_type
+      end
+
       def boolean_type
         'BOOLEAN'
       end
@@ -195,6 +199,8 @@ module ActiveFacts
           boolean_type
         when MM::SurrogateKey
           surrogate_type
+        when MM::ValidFrom
+          valid_from_type
         when MM::ValueField, MM::Absorption
           object_type = component.object_type
           while object_type.is_a?(MM::EntityType)
