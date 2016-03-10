@@ -90,8 +90,9 @@ module ActiveFacts
         }
       end
 
-      def initialize composition
+      def initialize composition, options = {}
         @composition = composition
+        @options = options
       end
 
       def generate
