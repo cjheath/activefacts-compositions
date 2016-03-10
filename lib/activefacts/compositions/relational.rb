@@ -491,7 +491,7 @@ module ActiveFacts
           next unless rank <= MM::Component::RANK_IDENT
           member = fork_component_to_new_parent mapping, member
           augment_paths paths, member
-          if member.is_a?(MM::SurrogateKey)
+          if rank == MM::Component::RANK_SURROGATE
             break   # Will always be first (higher rank), and usurps others
           elsif member.is_a?(MM::Absorption)
             object_type = member.child_role.object_type
