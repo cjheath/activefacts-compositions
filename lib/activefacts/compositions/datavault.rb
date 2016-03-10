@@ -230,6 +230,11 @@ module ActiveFacts
           # Move the absorption across to here
           absorption.parent = mapping
 
+          if absorption.is_a?(MM::Absorption) && absorption.foreign_key
+            trace :datavault, "Setting new source composite for #{absorption.foreign_key.inspect}"
+            absorption.foreign_key.source_composite = link
+          end
+
           # Add a Surrogate foreign Key to the link_from composite
           fk1_target = link_from.primary_index.all_index_field.single
           # debugger
