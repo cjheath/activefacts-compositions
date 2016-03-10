@@ -35,9 +35,9 @@ module ActiveFacts
           all_composite.
           sort_by{|composite| composite.mapping.name}
 
-        prelude(@composition) +
+        (prelude(@composition) +
         generate_classes(composites) +
-        finale
+        finale).gsub(/[   ][  ]*$/, '')
       end
 
       def generate_classes composites
