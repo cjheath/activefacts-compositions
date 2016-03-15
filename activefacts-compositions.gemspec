@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "activefacts", "~> 1", ">= 1.8"
 
-  spec.add_runtime_dependency("activefacts-api", "~> 1", ">= 1.9.5")
+  spec.add_runtime_dependency("activefacts-api", "~> 1", ">= 1.9.6")
   spec.add_runtime_dependency("activefacts-metamodel", "~> 1", ">= 1.9.6")
   spec.add_runtime_dependency "tracing", "~> 2", ">= 2.0.6"
 

@@ -29,6 +29,8 @@ module ActiveFacts
           trace.enable 'composition_validator'
           report ||= proc do |component, problem|
             trace :composition_validator, "!!PROBLEM!! #{component.inspect}: #{problem}"
+            debugger if trace :composition_validator_debug
+            component
           end
         end
 

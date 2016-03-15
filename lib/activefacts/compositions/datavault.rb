@@ -59,8 +59,22 @@ module ActiveFacts
 
         rename_parents
 
-        # REVISIT: Retracting these leaves some ForeignKeys with no Composite. It's mandatory, so this shouldn't be possible. Find out why
-        # @reference_composites.each(&:retract)
+        unless @option_reference
+          if trace :reference_retraction
+            # Add a logger so we can trace the resultant retractions:
+            @constellation.loggers << proc do |*args|
+              trace :reference_retraction, args.inspect
+            end
+          end
+
+          @reference_composites.each do |rc|
+            trace :reference_retraction, "Retracting #{rc.inspect}" do
+              rc.retract
+            end
+          end
+
+          @constellation.loggers.pop if trace :reference_retraction
+        end
       end
 
       # Create a new composite for each satellite, and move the relevant Components
@@ -212,6 +226,17 @@ module ActiveFacts
       # This absorption reflects a time-varying fact type that involves another Hub, which becomes a new link:
       def lift_absorption_to_link absorption
         trace :datavault, "Promote #{absorption.inspect} to a new Link" do
+
+          #
+          # REVISIT: Here we need a new objectified fact type with the same two players and the same readings,
+          # complete with LinkFactTypes. Then we need two Absorptions, one for each LinkFactType, and with
+          # the same child role names as the role names in our original fact type.
+          #
+          # The current code tries to re-use the same fact type, but the absorptions cannot work for both as
+          # the parent object type can only be one of the two types. That's why this is currently failing its
+          # validation tests.
+          #
+
           link_name = absorption.root.mapping.name + absorption.child_role.name
 
           link_from = absorption.parent.composite
