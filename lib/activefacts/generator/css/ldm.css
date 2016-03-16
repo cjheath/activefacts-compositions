@@ -9,17 +9,21 @@ span {
 .keyword {
   color: #0000CC;
 }
+
 .term, .concept {
   /* Xcolor: #6A0072;   The color used by NORMA */
   color: #8A0092;
 }
+
 .vocabulary, .object_type {
   /* Xcolor: #6A0072;   The color used by NORMA */
   color: #8A0092;
 }
-.linking, .copula {
+
+.linking, .reading {
   color: #0E5400;
 }
+
 .literal, .value {
   color: #FF990E;
 }
@@ -30,6 +34,10 @@ span {
 
 .definition {
   font-weight: bold;
+}
+
+.details {
+  margin-left:  60px;
 }
 
 .row-bordered {
