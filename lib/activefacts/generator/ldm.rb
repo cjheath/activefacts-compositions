@@ -10,14 +10,14 @@ require 'activefacts/metamodel'
 require 'activefacts/registry'
 require 'activefacts/compositions'
 require 'activefacts/generator'
-require 'byebug'
+require 'activefacts/support'
 
 module ActiveFacts
   module Generators
     # Options are comma or space separated:
     # * delay_fks Leave all foreign keys until the end, not just those that contain forward-references
     # * underscore 
-    class LDM < GLOSSARY
+    class LDM # < GLOSSARY
       def self.options
         {
           underscore: [String, "Use 'str' instead of underscore between words in table names"]
@@ -35,6 +35,7 @@ module ActiveFacts
       end
 
       def generate
+        @definitions = {}
         @tables_emitted = {}
         @delayed_foreign_keys = []
         
@@ -114,33 +115,40 @@ module ActiveFacts
       end
 
       def generate_definitions
-        all_top_object_type =
-          @vocabulary.
-            all_object_type.
-            reject{|o| o.kind_of?(ActiveFacts::Metamodel::TypeInheritance)}.
-            reject{|o| o.kind_of?(ActiveFacts::Metamodel::ValueType)}.
-            select{|o| o.fact_type || o.supertypes.size == 0}.
-            sort_by{|o| o.name.gsub(/ /,'').downcase}
+        defns =
+          @composition.
+            all_composite.
+            reject {|c| c.mapping.object_type.is_a?(ActiveFacts::Metamodel::ValueType)}.
+            reject {|c| c.mapping.object_type.is_static}.
+            reject {|c| c.mapping.object_type.fact_type}.
+            map {|c| c.mapping.object_type}
+        
+        defns.each do |o|
+          @definitions[o] = true
+        end
+        
+        defns.each do |o| 
+          ftm = relevant_fact_types(o)
+          
+          # trace :ldm, "expanding #{o.name}"
+          ftm.each do |r, ft|
+            next if ft.is_a?(ActiveFacts::Metamodel::TypeInheritance)
+            ft.all_role.each do |ftr|
+              next if @definitions[ftr.object_type]
+              next if ftr.object_type.is_a?(ActiveFacts::Metamodel::ValueType)
+              
+              # trace :ldm, "adding #{ftr.object_type.name}"
+              
+              defns = defns << ftr.object_type
+              @definitions[ftr.object_type] = true
+            end
+          end
+        end
             
         "            <h2>Business Definitons and Relationships</h2>\n" +
-        # "<dl class=\"dl-horizontal\">\n" +
-        all_top_object_type.
-          map do |o|
-            
-            # byebug
-            
-            # REVISIT case statement was not matching ActiveFacts::Metamodel::ValueType
-            if o.kind_of?(ActiveFacts::Metamodel::TypeInheritance) then
-              ''
-            elsif o.kind_of?(ActiveFacts::Metamodel::ValueType) then
-              '' # @glossary.value_type_dump(o, false, false, false)
-            elsif o.fact_type
-              objectified_fact_type_dump(o)
-            else
-              entity_type_dump(o, 0)
-            end
-          end * "\n" + "\n"
-        # "</dl>\n"
+        defns.sort_by{|o| o.name.gsub(/ /, '').downcase}.map do |o|
+          entity_type_dump(o, 0)
+        end * "\n" + "\n"
       end 
       
       def generate_diagrams
@@ -152,7 +160,7 @@ module ActiveFacts
         @composition.
         all_composite.
         sort_by{|composite| composite.mapping.name}.
-        map{|composite| generate_table composite}*"\n" + "\n"
+        map{|composite| generate_table(composite)}*"\n" + "\n"
       end
       
       def generate_footer
@@ -168,81 +176,217 @@ module ActiveFacts
         "</html>\n"
       end
 
-      def objectified_fact_type_dump(o)
-        defn_term =
-          "              <div class=\"row row-bordered\">\n" +
-          "                <div class=\"col-md-3 definition\">\n" +
-          "                  #{termdef(o.name)}\n" +
-          "                </div>\n"
-
-        defn_detail =
-          "              <div class=\"col-md-9\">\n" +
-          # @glossary.fact_type_with_constraints(o.fact_type, false, nil, false) + "\n" +
-          fact_type_with_constraints(o.fact_type, false, nil, false) + "\n" +
-
-          # o.fact_type.all_role_in_order.map do |r|
-          #   n = r.object_type.name
-          #   div("#{termref(o.name)} involves #{span('one', 'keyword')} #{termref(r.role_name || n, n)}", "glossary-facttype")
-          # end * "\n" + "\n" +
-          # @glossary.relevant_facts_and_constraints(o, false, false, false) + "\n" +
-          relevant_facts_and_constraints(o, false, false, false) + "\n" +
-          "              </div>\n" +
-          "            </div>\n"
-
-          defn_term + defn_detail
+      def element(text, attrs, tag = 'span')
+        "<#{tag}#{attrs.empty? ? '' : attrs.map{|k,v| " #{k}='#{v}'"}*''}>#{text}</#{tag}>"
       end
+
+      def span(text, klass = nil)
+        element(text, klass ? {:class => klass} : {})
+      end
+
+      def div(text, klass = nil)
+        element(text, klass ? {:class => klass} : {}, 'div')
+      end
+
+      def h1(text, klass = nil)
+        element(text, klass ? {:class => klass} : {}, 'h1')
+      end
+
+      def dl(text, klass = nil)
+        element(text, klass ? {:class => klass} : {}, 'dl')
+      end
+
+      # A definition of a term
+      def termdef(name)
+        element(name, {:name => name, :class => 'object_type'}, 'a')
+      end
+
+      # A reference to a defined term (excluding role adjectives)
+      def termref(name, role_name = nil, o = nil)
+        if o && !@definitions[o]
+          element(name, :class=>:object_type)
+        else
+          role_name ||= name
+          element(role_name, {:href=>'#'+name, :class=>:object_type}, 'a')
+        end
+      end
+
+      # Text that should appear as part of a term (including role adjectives)
+      def term(name)
+        element(name, :class=>:object_type)
+      end
+      
+      def role_ref(rr, freq_con, l_adj, name, t_adj, role_name_def, literal)
+        term_parts = [l_adj, termref(name, nil, rr.role.object_type), t_adj].compact
+        [
+          freq_con ? element(freq_con, :class=>:keyword) : nil,
+          term_parts.size > 1 ? term([l_adj, termref(name, nil, rr.role.object_type), t_adj].compact*' ') : term_parts[0],
+          role_name_def,
+          literal
+        ]
+      end
+
+      def expand_reading(reading, include_rolenames = true, wrt = nil, wrt_qualifier = '')
+        role_refs = reading.role_sequence.all_role_ref.sort_by{|role_ref| role_ref.ordinal}
+        lrr = role_refs[role_refs.size - 1]
+        element(
+          # element(rr.role.is_unique ? "one" : "some", :class=>:keyword) +
+          reading.expand([], include_rolenames) do |rr, freq_con, l_adj, name, t_adj, role_name_def, literal|
+            if role_name_def
+              role_name_def = role_name_def.gsub(/\(as ([^)]+)\)/) {
+                span("(as #{ termref(rr.role.object_type.name, $1, rr.role.object_type) })", 'keyword')
+              }
+            end
+            # qualify the last role of the reading
+            quantifier = ''
+            if rr == lrr
+              uniq = true
+              (0 ... role_refs.size - 2).each{|i| uniq = uniq && role_refs[i].role.is_unique }
+              quantifier =  uniq ? "one" : "at least one"
+            end
+            role_ref(rr, quantifier, l_adj, name, t_adj, role_name_def, literal)
+          end,
+          {:class => 'reading'}
+        )
+      end
+      
+      # def objectified_fact_type_dump(o)
+      #   defn_term =
+      #     "              <div class=\"row row-bordered\">\n" +
+      #     "                <div class=\"col-md-3 definition\">\n" +
+      #     "                  #{termdef(o.name)}\n" +
+      #     "                </div>\n"
+      #
+      #   defn_detail =
+      #     "              <div class=\"col-md-9\">\n" +
+      #     fact_type_with_constraints(o.fact_type, false, nil, false) + "\n" +
+      #
+      #     # o.fact_type.all_role_in_order.map do |r|
+      #     #   n = r.object_type.name
+      #     #   div("#{termref(o.name)} involves #{span('one', 'keyword')} #{termref(r.role_name || n, n)}", "glossary-facttype")
+      #     # end * "\n" + "\n" +
+      #     relevant_facts_and_constraints(o, false, false, false) + "\n" +
+      #     "              </div>\n" +
+      #     "            </div>\n"
+      #
+      #     defn_term + defn_detail
+      # end
 
       def entity_type_dump(o, level)
         pi = o.preferred_identifier
         supers = o.supertypes
         if (supers.size > 0) # Ignore identification by a supertype:
-          pi = nil if pi && pi.role_sequence.all_role_ref.detect{|rr| rr.role.fact_type.is_a?(ActiveFacts::Metamodel::TypeInheritance) }
+          pi = nil if pi && pi.role_sequence.all_role_ref.detect{ |rr|
+              rr.role.fact_type.is_a?(ActiveFacts::Metamodel::TypeInheritance)
+             }
         end
 
+        cn_array = o.concept.all_context_note_as_relevant_concept.map{|cn| [cn.context_note_kind, cn.discussion] }
+        cn_hash = cn_array.inject({}) do |hash, value|
+	        hash[value.first] = value.last 
+	        hash
+	      end
+        
+        informal_defn = cn_hash["because"]
         defn_term =
-          "              <div class=\"row row-bordered\">\n" +
-          "                <div class=\"col-md-3 definition\" style=\"padding-left: #{level*30+15}px\">\n" +
-          "                  #{termdef(o.name)}\n" +
+          "              <div class=\"row\">\n" +
+          "                <div class=\"col-md-12 definition\">\n" +
+          "                  A #{termdef(o.name)} #{informal_defn ? 'is ' + informal_defn : ''}\n" +
+          "                </div>\n" +
           "              </div>\n"
 
         defn_detail =
-          "                <div class=\"col-md-9\">\n" +
-          (supers.size > 0 ? "#{span('is a kind of', 'keyword')} #{supers.map{|s| termref(s.name)}*', '}\n" : '') +
+          "              <div class=\"row\">\n" +
+          "                <div class=\"col-md-12 details\">\n" +
+          (supers.size > 0 ? 
+            "#{span('Each', 'keyword')} #{termref(o.name, nil, o)} #{span('is a kind of', 'keyword')} #{supers.map{|s| termref(s.name, nil, s)}*', '}\n" :
+            ''
+          ) +
           if pi
-            "#{span('is identified by', 'keyword')} " +
+            "#{span('Each', 'keyword')} #{termref(o.name, nil, o)} #{span('is identified by', 'keyword')} " +
             pi.role_sequence.all_role_ref_in_order.map do |rr|
               termref(
                 rr.role.object_type.name,
                 [ rr.leading_adjective,
                   rr.role.role_name || rr.role.object_type.name,
                   rr.trailing_adjective
-                ].compact * '-'
+                ].compact * '-',
+                rr.role.object_type
               )
             end * ", " + "\n"
           else
             ''
           end +
-          relevant_facts_and_constraints(o, false, false, false) + "\n" +
+          fact_types_dump(o, relevant_fact_types(o)) + "\n" +
           "                </div>\n" +
           "              </div>\n"
         
-        subtype_object_type =
-          @vocabulary.
-            all_object_type.
-            reject{|so| so.kind_of?(ActiveFacts::Metamodel::TypeInheritance)}.
-            reject{|so| so.kind_of?(ActiveFacts::Metamodel::ValueType)}.
-            reject{|so| so.fact_type}.
-            select{|so| so.supertypes.size > 0 && so.supertypes[0].name == o.name }.
-            sort_by{|so| so.name.gsub(/ /,'').downcase}
-                      
-        subtype_dump =
-          subtype_object_type.map { |o| entity_type_dump(o, level+1) } * "\n" + "\n"
-        
-        defn_term + defn_detail + subtype_dump
+        # subtype_object_type =
+        #   @vocabulary.
+        #     all_object_type.
+        #     reject{|so| so.kind_of?(ActiveFacts::Metamodel::TypeInheritance)}.
+        #     reject{|so| so.kind_of?(ActiveFacts::Metamodel::ValueType)}.
+        #     reject{|so| so.fact_type}.
+        #     select{|so| so.supertypes.size > 0 && so.supertypes[0].name == o.name }.
+        #     sort_by{|so| so.name.gsub(/ /,'').downcase}
+        #
+        # subtype_dump =
+        #   subtype_object_type.map { |o| entity_type_dump(o, level+1) } * "\n" + "\n"
+
+        defn_term + defn_detail # + subtype_dump
       end
 
+      def relevant_fact_types(o)
+          o.
+            all_role.
+            map{|r| [r, r.fact_type]}.
+            reject { |r, ft| ft.is_a?(ActiveFacts::Metamodel::LinkFactType) }.
+            select { |r, ft| ft.entity_type || has_another_nonstatic_role(ft, r) }
+      end
+      
+      def has_another_nonstatic_role(ft, r)
+        ft.all_role.detect do |rr|
+          rr != r &&
+          rr.object_type.is_a?(ActiveFacts::Metamodel::EntityType) &&
+          !rr.object_type.is_static
+        end
+      end
+      
+      def fact_types_dump(o, ftm)
+        ftm.
+            map { |r, ft| [ft, "    #{fact_type_dump(ft, o)}"] }.
+            sort_by{|ft, text| [ ft.is_a?(ActiveFacts::Metamodel::TypeInheritance) ? 0 : 1, text]}.
+            map{|ft, text| text} * "\n"
+      end
 
-      def generate_table composite
+      def fact_type_dump(ft, wrt = nil)
+        if ft.entity_type
+          div(
+            div(span('Each ', 'keyword') + termref(ft.entity_type.name, nil, ft.entity_type) + span(' is where ', 'keyword')) +
+            div(expand_fact_type(ft, wrt, true, 'some')),
+            'glossary-objectification'
+          )
+        else
+          fact_type_block(ft, wrt)
+        end
+      end
+      
+      def fact_type_block(ft, wrt = nil, include_rolenames = true)
+        div(expand_fact_type(ft, wrt, include_rolenames, ''), 'glossary-facttype')
+      end
+      
+      def expand_fact_type(ft, wrt = nil, include_rolenames = true, wrt_qualifier = '')
+        role = ft.all_role.detect{|r| r.object_type == wrt}
+        preferred_reading = ft.reading_preferably_starting_with_role(role)
+        alternate_readings = ft.all_reading.reject{|r| r == preferred_reading}
+
+        div(
+          expand_reading(preferred_reading, include_rolenames, wrt, wrt_qualifier),
+          'glossary-reading'
+        )
+      end
+      
+      def generate_table(composite)
         @tables_emitted[composite] = true
         delayed_indices = []
 
@@ -441,72 +585,7 @@ module ActiveFacts
       end
 
       def reserved_words
-        @sql_server_reserved_words ||= %w{
-          ADD ALL ALTER AND ANY AS ASC AUTHORIZATION BACKUP BEGIN
-          BETWEEN BREAK BROWSE BULK BY CASCADE CASE CHECK CHECKPOINT
-          CLOSE CLUSTERED COALESCE COLLATE COLUMN COMMIT COMPUTE
-          CONSTRAINT CONTAINS CONTAINSTABLE CONTINUE CONVERT CREATE
-          CROSS CURRENT CURRENT_DATE CURRENT_TIME CURRENT_TIMESTAMP
-          CURRENT_USER CURSOR DATABASE DBCC DEALLOCATE DECLARE
-          DEFAULT DELETE DENY DESC DISK DISTINCT DISTRIBUTED DOUBLE
-          DROP DUMMY DUMP ELSE END ERRLVL ESCAPE EXCEPT EXEC EXECUTE
-          EXISTS EXIT FETCH FILE FILLFACTOR FOR FOREIGN FREETEXT
-          FREETEXTTABLE FROM FULL FUNCTION GOTO GRANT GROUP HAVING
-          HOLDLOCK IDENTITY IDENTITYCOL IDENTITY_INSERT IF IN INDEX
-          INNER INSERT INTERSECT INTO IS JOIN KEY KILL LEFT LIKE
-          LINENO LOAD NATIONAL NOCHECK NONCLUSTERED NOT NULL NULLIF
-          OF OFF OFFSETS ON OPEN OPENDATASOURCE OPENQUERY OPENROWSET
-          OPENXML OPTION OR ORDER OUTER OVER PERCENT PLAN PRECISION
-          PRIMARY PRINT PROC PROCEDURE PUBLIC RAISERROR READ READTEXT
-          RECONFIGURE REFERENCES REPLICATION RESTORE RESTRICT RETURN
-          REVOKE RIGHT ROLLBACK ROWCOUNT ROWGUIDCOL RULE SAVE SCHEMA
-          SELECT SESSION_USER SET SETUSER SHUTDOWN SOME STATISTICS
-          SYSTEM_USER TABLE TEXTSIZE THEN TO TOP TRAN TRANSACTION
-          TRIGGER TRUNCATE TSEQUAL UNION UNIQUE UPDATE UPDATETEXT
-          USE USER VALUES VARYING VIEW WAITFOR WHEN WHERE WHILE
-          WITH WRITETEXT
-        }
-
-        @reserved_words ||= %w{
-          ABSOLUTE ACTION ADD AFTER ALL ALLOCATE ALTER AND ANY ARE
-          ARRAY AS ASC ASSERTION AT AUTHORIZATION BEFORE BEGIN
-          BETWEEN BINARY BIT BLOB BOOLEAN BOTH BREADTH BY CALL
-          CASCADE CASCADED CASE CAST CATALOG CHAR CHARACTER CHECK
-          CLOB CLOSE COLLATE COLLATION COLUMN COMMIT CONDITION
-          CONNECT CONNECTION CONSTRAINT CONSTRAINTS CONSTRUCTOR
-          CONTINUE CORRESPONDING CREATE CROSS CUBE CURRENT CURRENT_DATE
-          CURRENT_DEFAULT_TRANSFORM_GROUP CURRENT_TRANSFORM_GROUP_FOR_TYPE
-          CURRENT_PATH CURRENT_ROLE CURRENT_TIME CURRENT_TIMESTAMP
-          CURRENT_USER CURSOR CYCLE DATA DATE DAY DEALLOCATE DEC
-          DECIMAL DECLARE DEFAULT DEFERRABLE DEFERRED DELETE DEPTH
-          DEREF DESC DESCRIBE DESCRIPTOR DETERMINISTIC DIAGNOSTICS
-          DISCONNECT DISTINCT DO DOMAIN DOUBLE DROP DYNAMIC EACH
-          ELSE ELSEIF END EQUALS ESCAPE EXCEPT EXCEPTION EXEC EXECUTE
-          EXISTS EXIT EXTERNAL FALSE FETCH FIRST FLOAT FOR FOREIGN
-          FOUND FROM FREE FULL FUNCTION GENERAL GET GLOBAL GO GOTO
-          GRANT GROUP GROUPING HANDLE HAVING HOLD HOUR IDENTITY IF
-          IMMEDIATE IN INDICATOR INITIALLY INNER INOUT INPUT INSERT
-          INT INTEGER INTERSECT INTERVAL INTO IS ISOLATION JOIN KEY
-          LANGUAGE LARGE LAST LATERAL LEADING LEAVE LEFT LEVEL LIKE
-          LOCAL LOCALTIME LOCALTIMESTAMP LOCATOR LOOP MAP MATCH
-          METHOD MINUTE MODIFIES MODULE MONTH NAMES NATIONAL NATURAL
-          NCHAR NCLOB NESTING NEW NEXT NO NONE NOT NULL NUMERIC
-          OBJECT OF OLD ON ONLY OPEN OPTION OR ORDER ORDINALITY OUT
-          OUTER OUTPUT OVERLAPS PAD PARAMETER PARTIAL PATH PRECISION
-          PREPARE PRESERVE PRIMARY PRIOR PRIVILEGES PROCEDURE PUBLIC
-          READ READS REAL RECURSIVE REDO REF REFERENCES REFERENCING
-          RELATIVE RELEASE REPEAT RESIGNAL RESTRICT RESULT RETURN
-          RETURNS REVOKE RIGHT ROLE ROLLBACK ROLLUP ROUTINE ROW
-          ROWS SAVEPOINT SCHEMA SCROLL SEARCH SECOND SECTION SELECT
-          SESSION SESSION_USER SET SETS SIGNAL SIMILAR SIZE SMALLINT
-          SOME SPACE SPECIFIC SPECIFICTYPE SQL SQLEXCEPTION SQLSTATE
-          SQLWARNING START STATE STATIC SYSTEM_USER TABLE TEMPORARY
-          THEN TIME TIMESTAMP TIMEZONE_HOUR TIMEZONE_MINUTE TO
-          TRAILING TRANSACTION TRANSLATION TREAT TRIGGER TRUE UNDER
-          UNDO UNION UNIQUE UNKNOWN UNNEST UNTIL UPDATE USAGE USER
-          USING VALUE VALUES VARCHAR VARYING VIEW WHEN WHENEVER
-          WHERE WHILE WITH WITHOUT WORK WRITE YEAR ZONE
-        }
+        @reserved_words ||= %w{ }
       end
 
       def is_reserved_word w
