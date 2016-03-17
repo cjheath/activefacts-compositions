@@ -17,7 +17,7 @@ module ActiveFacts
     # Options are comma or space separated:
     # * delay_fks Leave all foreign keys until the end, not just those that contain forward-references
     # * underscore 
-    class LDM # < GLOSSARY
+    class LDM
       def self.options
         {
           underscore: [String, "Use 'str' instead of underscore between words in table names"]
@@ -35,11 +35,9 @@ module ActiveFacts
       end
 
       def generate
-        @definitions = {}
         @tables_emitted = {}
-        @delayed_foreign_keys = []
         
-        trace.enable 'ldm'
+        # trace.enable 'ldm'
 
         generate_header +
         generate_definitions +
@@ -93,7 +91,7 @@ module ActiveFacts
         "    <title>Logical Data Model for " + @composition.name + "</title>\n" + 
         "\n" +
         "    <!-- Bootstrap -->\n" +
-        "    <link href=\"css/bootstrap.min.css\" rel=\"stylesheet\">\n" +
+        "    <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\" integrity=\"sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7\" crossorigin=\"anonymous\">\n" +
         "\n" +
         "    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->\n" +
         "    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->\n" +
@@ -111,7 +109,7 @@ module ActiveFacts
         "    <div class=\"container\">\n" +
         "      <div class=\"row\">\n" +
         "        <div class=\"col-md-12\">\n" +
-        "          <h1>Logical Data Model for " + @composition.name + "</h2>\n"
+        h1("Logical Data Model for " + @composition.name)
       end
 
       def generate_definitions
@@ -123,6 +121,7 @@ module ActiveFacts
             reject {|c| c.mapping.object_type.fact_type}.
             map {|c| c.mapping.object_type}
         
+        @definitions = {}
         defns.each do |o|
           @definitions[o] = true
         end
@@ -130,14 +129,15 @@ module ActiveFacts
         defns.each do |o| 
           ftm = relevant_fact_types(o)
           
-          # trace :ldm, "expanding #{o.name}"
+          trace :ldm, "expanding #{o.name}"
+          
           ftm.each do |r, ft|
             next if ft.is_a?(ActiveFacts::Metamodel::TypeInheritance)
             ft.all_role.each do |ftr|
               next if @definitions[ftr.object_type]
               next if ftr.object_type.is_a?(ActiveFacts::Metamodel::ValueType)
               
-              # trace :ldm, "adding #{ftr.object_type.name}"
+              trace :ldm, "adding #{ftr.object_type.name}"
               
               defns = defns << ftr.object_type
               @definitions[ftr.object_type] = true
@@ -145,7 +145,7 @@ module ActiveFacts
           end
         end
             
-        "            <h2>Business Definitons and Relationships</h2>\n" +
+        "            <h2>Business Definitions and Relationships</h2>\n" +
         defns.sort_by{|o| o.name.gsub(/ /, '').downcase}.map do |o|
           entity_type_dump(o, 0)
         end * "\n" + "\n"
@@ -156,7 +156,7 @@ module ActiveFacts
       end
       
       def generate_details 
-        "              <h2>Logical Data Model Details</h2>\n" +
+        h2("Logical Data Model Details") +
         @composition.
         all_composite.
         sort_by{|composite| composite.mapping.name}.
@@ -170,12 +170,15 @@ module ActiveFacts
         "    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->\n" +
         "    <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>\n" +
         "    <!-- Include all compiled plugins (below), or include individual files as needed -->\n" +
-        "    <script src=\"js/bootstrap.min.js\"></script>\n" +
+        "    <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\" integrity=\"sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS\" crossorigin=\"anonymous\"></script>\n" +
         # @glossary.glossary_end +
         "  </body>\n" +
         "</html>\n"
       end
 
+      #
+      # Standard document elements
+      #
       def element(text, attrs, tag = 'span')
         "<#{tag}#{attrs.empty? ? '' : attrs.map{|k,v| " #{k}='#{v}'"}*''}>#{text}</#{tag}>"
       end
@@ -190,6 +193,14 @@ module ActiveFacts
 
       def h1(text, klass = nil)
         element(text, klass ? {:class => klass} : {}, 'h1')
+      end
+
+      def h2(text, klass = nil)
+        element(text, klass ? {:class => klass} : {}, 'h2')
+      end
+
+      def h3(text, klass = nil)
+        element(text, klass ? {:class => klass} : {}, 'h3')
       end
 
       def dl(text, klass = nil)
@@ -216,62 +227,9 @@ module ActiveFacts
         element(name, :class=>:object_type)
       end
       
-      def role_ref(rr, freq_con, l_adj, name, t_adj, role_name_def, literal)
-        term_parts = [l_adj, termref(name, nil, rr.role.object_type), t_adj].compact
-        [
-          freq_con ? element(freq_con, :class=>:keyword) : nil,
-          term_parts.size > 1 ? term([l_adj, termref(name, nil, rr.role.object_type), t_adj].compact*' ') : term_parts[0],
-          role_name_def,
-          literal
-        ]
-      end
-
-      def expand_reading(reading, include_rolenames = true, wrt = nil, wrt_qualifier = '')
-        role_refs = reading.role_sequence.all_role_ref.sort_by{|role_ref| role_ref.ordinal}
-        lrr = role_refs[role_refs.size - 1]
-        element(
-          # element(rr.role.is_unique ? "one" : "some", :class=>:keyword) +
-          reading.expand([], include_rolenames) do |rr, freq_con, l_adj, name, t_adj, role_name_def, literal|
-            if role_name_def
-              role_name_def = role_name_def.gsub(/\(as ([^)]+)\)/) {
-                span("(as #{ termref(rr.role.object_type.name, $1, rr.role.object_type) })", 'keyword')
-              }
-            end
-            # qualify the last role of the reading
-            quantifier = ''
-            if rr == lrr
-              uniq = true
-              (0 ... role_refs.size - 2).each{|i| uniq = uniq && role_refs[i].role.is_unique }
-              quantifier =  uniq ? "one" : "at least one"
-            end
-            role_ref(rr, quantifier, l_adj, name, t_adj, role_name_def, literal)
-          end,
-          {:class => 'reading'}
-        )
-      end
-      
-      # def objectified_fact_type_dump(o)
-      #   defn_term =
-      #     "              <div class=\"row row-bordered\">\n" +
-      #     "                <div class=\"col-md-3 definition\">\n" +
-      #     "                  #{termdef(o.name)}\n" +
-      #     "                </div>\n"
       #
-      #   defn_detail =
-      #     "              <div class=\"col-md-9\">\n" +
-      #     fact_type_with_constraints(o.fact_type, false, nil, false) + "\n" +
+      # Dump functions
       #
-      #     # o.fact_type.all_role_in_order.map do |r|
-      #     #   n = r.object_type.name
-      #     #   div("#{termref(o.name)} involves #{span('one', 'keyword')} #{termref(r.role_name || n, n)}", "glossary-facttype")
-      #     # end * "\n" + "\n" +
-      #     relevant_facts_and_constraints(o, false, false, false) + "\n" +
-      #     "              </div>\n" +
-      #     "            </div>\n"
-      #
-      #     defn_term + defn_detail
-      # end
-
       def entity_type_dump(o, level)
         pi = o.preferred_identifier
         supers = o.supertypes
@@ -321,19 +279,7 @@ module ActiveFacts
           "                </div>\n" +
           "              </div>\n"
         
-        # subtype_object_type =
-        #   @vocabulary.
-        #     all_object_type.
-        #     reject{|so| so.kind_of?(ActiveFacts::Metamodel::TypeInheritance)}.
-        #     reject{|so| so.kind_of?(ActiveFacts::Metamodel::ValueType)}.
-        #     reject{|so| so.fact_type}.
-        #     select{|so| so.supertypes.size > 0 && so.supertypes[0].name == o.name }.
-        #     sort_by{|so| so.name.gsub(/ /,'').downcase}
-        #
-        # subtype_dump =
-        #   subtype_object_type.map { |o| entity_type_dump(o, level+1) } * "\n" + "\n"
-
-        defn_term + defn_detail # + subtype_dump
+        defn_term + defn_detail
       end
 
       def relevant_fact_types(o)
@@ -386,6 +332,40 @@ module ActiveFacts
         )
       end
       
+      def role_ref(rr, freq_con, l_adj, name, t_adj, role_name_def, literal)
+        term_parts = [l_adj, termref(name, nil, rr.role.object_type), t_adj].compact
+        [
+          freq_con ? element(freq_con, :class=>:keyword) : nil,
+          term_parts.size > 1 ? term([l_adj, termref(name, nil, rr.role.object_type), t_adj].compact*' ') : term_parts[0],
+          role_name_def,
+          literal
+        ]
+      end
+
+      def expand_reading(reading, include_rolenames = true, wrt = nil, wrt_qualifier = '')
+        role_refs = reading.role_sequence.all_role_ref.sort_by{|role_ref| role_ref.ordinal}
+        lrr = role_refs[role_refs.size - 1]
+        element(
+          # element(rr.role.is_unique ? "one" : "some", :class=>:keyword) +
+          reading.expand([], include_rolenames) do |rr, freq_con, l_adj, name, t_adj, role_name_def, literal|
+            if role_name_def
+              role_name_def = role_name_def.gsub(/\(as ([^)]+)\)/) {
+                span("(as #{ termref(rr.role.object_type.name, $1, rr.role.object_type) })", 'keyword')
+              }
+            end
+            # qualify the last role of the reading
+            quantifier = ''
+            if rr == lrr
+              uniq = true
+              (0 ... role_refs.size - 2).each{|i| uniq = uniq && role_refs[i].role.is_unique }
+              quantifier =  uniq ? "one" : "at least one"
+            end
+            role_ref(rr, quantifier, l_adj, name, t_adj, role_name_def, literal)
+          end,
+          {:class => 'reading'}
+        )
+      end
+      
       def generate_table(composite)
         @tables_emitted[composite] = true
         delayed_indices = []
@@ -406,28 +386,6 @@ module ActiveFacts
             generate_column leaf, 11
           end
         ).compact.flat_map{|f| "#{f}" }*"\n"+"\n" +
-        # (
-      #     composite.all_index.map do |index|
-      #       generate_index index, delayed_indices
-      #     end.compact.sort +
-      #     composite.all_foreign_key_as_source_composite.map do |fk|
-      #       fk_text generate_foreign_key fk
-      #       if !@delay_fks and @tables_emitted[fk.composite]
-      #         fk_text
-      #       else
-      #         @delayed_foreign_keys <<
-      #           go("ALTER TABLE #{safe_table_name fk.composite}\n\tADD " + fk_text)
-      #         nil
-      #       end
-      #     end.compact.sort +
-      #     composite.all_local_constraint.map do |constraint|
-      #       '-- '+constraint.inspect    # REVISIT: Emit local constraints
-      #     end
-      #   ).compact.flat_map{|f| "\t#{f}" }*",\n"+"\n" +
-      #   go(")") +
-      #   delayed_indices.sort.map do |delayed_index|
-      #     go delayed_index
-        # end*"\n"
         "                    </tbody>\n" +
         "                  </table>\n" +
         (
