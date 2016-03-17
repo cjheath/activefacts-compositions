@@ -14,7 +14,12 @@ module ActiveFacts
       def self.options
         {
           reference: ['Boolean', "Emit the reference (static) tables as well. Default is to omit them"],
-          datestamp: ['String', "Use this data type for date stamps"]
+          datestamp: ['String', "Use this data type for date stamps"],
+          id: ['String', "Append this to data vault surrogate keys (default VID)"],
+          hubname: ['String', "Suffix or pattern for naming hub tables. Include a + to insert the name. Default 'HUB'"],
+          linkname: ['String', "Suffix or pattern for naming link tables. Include a + to insert the name. Default 'LINK'"],
+          satname: ['String', "Suffix or pattern for naming satellite tables. Include a + to insert the name. Default 'SAT'"],
+          refname: ['String', "Suffix or pattern for naming reference tables. Include a + to insert the name. Default '+'"],
         }
       end
 
@@ -22,10 +27,26 @@ module ActiveFacts
         # Extract recognised options:
         @option_reference = options.delete('reference')
         @option_datestamp = options.delete('datestamp')
+        @option_id = ' ' + (options.delete('id') || 'VID')
+        @option_hub_name = options.delete('hubname') || 'HUB'
+        @option_hub_name.sub!(/^/,'+ ') unless @option_hub_name =~ /\+/
+        @option_link_name = options.delete('linkname') || 'LINK'
+        @option_link_name.sub!(/^/,'+ ') unless @option_link_name =~ /\+/
+        @option_sat_name = options.delete('satname') || 'SAT'
+        @option_sat_name.sub!(/^/,'+ ') unless @option_sat_name =~ /\+/
+        @option_ref_name = options.delete('refname') || 'SAT'
+        @option_ref_name.sub!(/^/,'+ ') unless @option_ref_name =~ /\+/
 
         super constellation, name, options
 
         @option_surrogates = true   # Always inject surrogates regardless of superclass
+      end
+
+      # We need to find links that need surrogate keys before we inject the surrogates
+      def inject_surrogates
+        classify_composites
+
+        super
       end
 
       def composite_is_reference composite
@@ -37,24 +58,28 @@ module ActiveFacts
       # Data Vaults need a surrogate key on every Hub and Link.
       # Don't add a surrogate on a Reference table!
       def needs_surrogate(composite)
-        !composite_is_reference(composite) and
-          super
+        return false if composite_is_reference(composite)
+
+        # REVISIT: The following is debatable. If the natural primary key is an ok surrogate, should we inject another?
+        return true if @non_reference_composites.include?(composite)
+
+        super
       end
 
-      def devolve_all_satellites
-        classify_composites
+      # Change the default extension from our superclass':
+      def inject_surrogate composite, extension = @option_id
+        super
+      end
 
-        # Delete all foreign keys to reference tables
-        @reference_composites.each do |composite|
-          composite.all_foreign_key_as_target_composite.each(&:retract)
-        end
+      def devolve_all
+        delete_reference_table_foreign_keys
 
         # For each hub and link, move each non-identifying member
         # to a new satellite or promote it to a new link.
 
-        (@hub_composites + @link_composites).
+        @non_reference_composites.
         each do |composite|
-          devolve_satellites composite
+          devolve composite
         end
 
         rename_parents
@@ -72,19 +97,129 @@ module ActiveFacts
               rc.retract
             end
           end
+          @reference_composites = []
 
           @constellation.loggers.pop if trace :reference_retraction
         end
       end
 
-      # Create a new composite for each satellite, and move the relevant Components
-      # across from the Composite Mapping. For each new satellite, inject a
-      # load date-time and a reference to the surrogate on the hub or link,
-      # and add an index over those two fields.
-      def devolve_satellites composite, lift_links = true
-        trace :datavault?, "Detecting satellite fields for #{composite.inspect}" do
-          satellites = {}
+      def detect_reference_tables
+        initial_composites = @composition.all_composite.to_a
+        @reference_composites, @non_reference_composites =
+          initial_composites.partition { |composite| composite_is_reference(composite) }
+      end
 
+      def delete_reference_table_foreign_keys
+        trace :datavault, "Delete foreign keys to reference tables" do
+          # Delete all foreign keys to reference tables
+          @reference_composites.each do |composite|
+            composite.all_foreign_key_as_target_composite.each(&:retract)
+          end
+        end
+      end
+
+      def classify_composites
+        detect_reference_tables
+
+        trace :datavault, "Classify remaining tables into hub and link tables" do
+          # Make an initial determination, then adjust for references to links afterwards
+          @key_structure = {}
+          @link_composites, @hub_composites =
+            @non_reference_composites.
+            sort_by{|c| c.mapping.name}.
+            partition do |composite|
+              trace :datavault, "Decide whether #{composite.mapping.name} is a link or a hub" do
+                @key_structure[composite] =
+                  mapped_to =
+                  composite_key_structure composite
+
+                # It's a Link if the preferred identifier includes more than non_reference_composite.
+                mapped_to.compact.size > 1
+              end
+            end
+
+          # This leaves us with links to links, and hubs whose keys reference a link.
+          # Convert the target links to hubs.
+
+          @hub_composites.dup.each do |hub|
+            mapped_to = @key_structure[hub]
+            to_links = mapped_to.compact.select{|to| @link_composites.include?(to)}
+            if to_links.size > 0
+              trace :datavault_classify, "Hub #{hub.mapping.name} IS TO LINK(S) #{to_links.inspect} (and #{mapped_to.size-to_links.size} parts)"
+              to_links.each do |link|
+                @link_composites.delete(link) and @hub_composites << link and @non_reference_composites << link
+              end
+            end
+          end
+
+          @link_composites.dup.each do |link|
+            mapped_to = @key_structure[link]
+            to_links = mapped_to.compact.select{|to| @link_composites.include?(to)}
+            if to_links.size > 0
+              trace :datavault_classify, "Bad Link #{link.mapping.name} IS TO LINK(S) #{to_links.inspect} (and #{mapped_to.size-to_links.size} parts)"
+              to_links.each do |link|
+                @link_composites.delete(link) and @hub_composites << link and @non_reference_composites << link
+              end
+            end
+          end
+
+          # Note: We may still have # hubs whose identfiers contain foreign keys to one or more other hubs.
+          # These foreign keys will be deleted so these hubs stand alone, but re-instated as new links
+          # to the referenced hubs.
+        end
+
+        trace :datavault!, "Data Vault classification of composites:" do
+          trace :datavault, "Reference: #{@reference_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
+          trace :datavault, "Hub: #{@hub_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
+          trace :datavault, "Link: #{@link_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
+        end
+      end
+
+      def composite_key_structure composite
+        # We know that composite.mapping.object_type is an EntityType because all ValueType composites are reference tables
+
+        mapped_to =
+          composite.mapping.object_type.preferred_identifier.role_sequence.all_role_ref_in_order.map do |role_ref|
+            player = role_ref.role.object_type
+            candidate = @candidates[player]
+            next nil unless candidate
+            # Take care of full absorption
+            while candidate.full_absorption
+              candidate = candidate.full_absorption.composition
+            end
+            @non_reference_composites.include?(c = candidate.mapping.composite) ? c : nil
+          end
+
+        trace :datavault, "Preferred identifier for #{composite.mapping.name} encloses foreign keys to #{mapped_to.inspect}" unless mapped_to.compact.empty?
+
+        number_of_keys = mapped_to.compact.size
+        number_of_values = mapped_to.size-number_of_keys
+        trace :datavault_classify,
+          if number_of_keys > 1
+            # Links have more than one FK to a hub in their key
+            "Link #{composite.mapping.name} links #{mapped_to.compact.inspect} with #{number_of_values} values"
+          elsif number_of_keys == 1 && number_of_values > 0
+            # This is a new hub with a composite key - but we will have to eliminate the foreign key to the base hub
+            "Augmented Hub #{composite.mapping.name} has a hub link to #{mapped_to.compact[0].inspect} and #{number_of_values} values"
+          elsif number_of_keys == 1
+            # This is a new hub with a single-part key that references another hub.
+            "Dependent Hub #{composite.mapping.name} is identified by another hub: #{mapped_to.compact[0].inspect}"
+          else
+            "Hub #{composite.mapping.name} has #{mapped_to.size} parts in its key"
+          end
+
+        mapped_to
+      end
+
+      # For each member of this composite, decide whether to devolve it to a satellite
+      # or to a new link. If it goes to a link that's still part of this natural key,
+      # we need to leave that key intact, but remove the foreign key it entails.
+      #
+      # New links and satellites get new fields for the load date-time and a
+      # references to the surrogate(s) on the hub or link, and add an index over
+      # those two fields.
+      def devolve composite, devolve_links = true
+        trace :datavault?, "Devolving non-identifying fields for #{composite.inspect}" do
           # Find the members of this mapping that contain identifying leaves:
           pi = composite.primary_index
           ni = composite.natural_index
@@ -94,16 +229,19 @@ module ActiveFacts
             map{|ixf| ixf.component.path[1]}.
             uniq
 
+          satellites = {}
           composite.mapping.all_member.to_a.each do |member|
+
             # If this member is in the natural or surrogate key, leave it there
+            # REVISIT: But if it is an FK to another hub, devolve it to a link as well.
             next if identifiers.include?(member)
 
             # Any member that is the absorption of a foreign key to a hub or link
             # (which is all, since we removed FKs to reference tables)
             # must be converted to a Mapping for a new Entity Type that notionally
             # objectifies the absorbed fact type. This Mapping is a new link composite.
-            if lift_links && member.is_a?(MM::Absorption) && member.foreign_key
-              lift_absorption_to_link member
+            if devolve_links && member.is_a?(MM::Absorption) && member.foreign_key
+              devolve_absorption_to_link member, identifiers.include?(member)
               next
             end
 
@@ -121,44 +259,51 @@ module ActiveFacts
             devolve_member_to_satellite satellite, member
           end
           composite.mapping.re_rank
-          satellites.each do |satellite_name, satellite|
-            trace :datavault, "Adding parent key and load time to satellite #{satellite_name.inspect}" do
 
-              # Add a Surrogate foreign Key to the parent composite
-              fk_target = composite.primary_index.all_index_field.single
-              fk_field = fork_component_to_new_parent(satellite.mapping, fk_target.component)
-
-              # Add a load DateTime value
-              date_field = @constellation.ValidFrom(
-                :new,
-                parent: satellite.mapping,
-                name: "Load"+datestamp_type_name,
-                object_type: datestamp_type
-              )
-
-              # Add a natural key:
-              natural_index =
-                @constellation.Index(:new, composite: satellite, is_unique: true,
-                  presence_constraint: nil, composite_as_natural_index: satellite)
-              @constellation.IndexField(access_path: natural_index, ordinal: 0, component: fk_field)
-              @constellation.IndexField(access_path: natural_index, ordinal: 1, component: date_field)
-
-              # REVISIT: re-ranking members without a preferred_identifier does not rank the PK fields in order.
-              satellite.mapping.re_rank
-
-              # Add a foreign key to the hub
-              fk = @constellation.ForeignKey(
-                  :new,
-                  source_composite: satellite,
-                  composite: composite,
-                  absorption: nil           # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
-                )
-              @constellation.ForeignKeyField(foreign_key: fk, ordinal: 0, component: fk_field)
-              # REVISIT: This should be filled in by complete_foreign_keys, but it has no Absorption
-              @constellation.IndexField(access_path: fk, ordinal: 0, component: fk_target.component)
-
-            end
+          # Add the audit and identity fields for the satellite:
+          satellites.values.each do |satellite|
+            audit_satellite composite, satellite
           end
+        end
+      end
+
+      # Add the audit and foreign key fields to a satellite for this composite
+      def audit_satellite composite, satellite
+        trace :datavault, "Adding parent key and load time to satellite #{satellite.mapping.name.inspect}" do
+
+          # Add a Surrogate foreign Key to the parent composite
+          fk_target = composite.primary_index.all_index_field.single
+          fk_field = fork_component_to_new_parent(satellite.mapping, fk_target.component)
+
+          # Add a load DateTime value
+          date_field = @constellation.ValidFrom(
+            :new,
+            parent: satellite.mapping,
+            name: "Load"+datestamp_type_name,
+            object_type: datestamp_type
+          )
+
+          # Add a natural key:
+          natural_index =
+            @constellation.Index(:new, composite: satellite, is_unique: true,
+              presence_constraint: nil, composite_as_natural_index: satellite)
+          @constellation.IndexField(access_path: natural_index, ordinal: 0, component: fk_field)
+          @constellation.IndexField(access_path: natural_index, ordinal: 1, component: date_field)
+
+          # REVISIT: re-ranking members without a preferred_identifier does not rank the PK fields in order.
+          satellite.mapping.re_rank
+
+          # Add a foreign key to the hub
+          fk = @constellation.ForeignKey(
+              :new,
+              source_composite: satellite,
+              composite: composite,
+              absorption: nil           # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+            )
+          @constellation.ForeignKeyField(foreign_key: fk, ordinal: 0, component: fk_field)
+          # REVISIT: This should be filled in by complete_foreign_keys, but it has no Absorption
+          @constellation.IndexField(access_path: fk, ordinal: 0, component: fk_target.component)
+
         end
       end
 
@@ -171,11 +316,12 @@ module ActiveFacts
       def datestamp_type
         @datestamp_type ||= begin
           vocabulary = @composition.all_composite.to_a[0].mapping.object_type.vocabulary
-          @constellation.ValueType(
-            vocabulary: vocabulary,
-            name: datestamp_type_name,
-            concept: [:new, :implication_rule => "datestamp injection"]
-          )
+          @constellation.ObjectType[[[vocabulary.name], datestamp_type_name]] or
+            @constellation.ValueType(
+              vocabulary: vocabulary,
+              name: datestamp_type_name,
+              concept: [:new, :implication_rule => "datestamp injection"]
+            )
         end
       end
 
@@ -183,13 +329,13 @@ module ActiveFacts
       def name_satellite component
         satellite_name =
           if component.is_a?(MM::Absorption)
-            pc = component.parent_role.uniqueness_constraint and
+            pc = component.parent_role.base_role.uniqueness_constraint and
             pc.concept.all_concept_annotation.map{|ca| ca.mapping_annotation =~ /^satellite *(.*)/ && $1}.compact.uniq[0]
           # REVISIT: How do we name the satellite for an Indicator? Add a Concept Annotation on the fact type?
           end
         satellite_name = satellite_name.words.capcase if satellite_name
         satellite_name ||= component.root.mapping.name
-        satellite_name += ' SAT'
+        satellite_name = apply_name(@option_sat_name, satellite_name)
       end
 
       # Create a new satellite for the same object_type as thos composite
@@ -223,8 +369,9 @@ module ActiveFacts
         trace :datavault, "Satellite #{satellite.mapping.name.inspect} field #{member.inspect}"
       end
 
-      # This absorption reflects a time-varying fact type that involves another Hub, which becomes a new link:
-      def lift_absorption_to_link absorption
+      # This absorption reflects a time-varying fact type that involves another Hub, which becomes a new link.
+      # REVISIT: "keep" says that the original field must remain, because it's in its parent's natural key.
+      def devolve_absorption_to_link absorption, keep
         trace :datavault, "Promote #{absorption.inspect} to a new Link" do
 
           #
@@ -237,7 +384,13 @@ module ActiveFacts
           # validation tests.
           #
 
-          link_name = absorption.root.mapping.name + absorption.child_role.name
+          # link_name = absorption.root.mapping.name + ' ' + absorption.child_role.name
+          link_name =
+            absorption.
+            parent_role.
+            fact_type.
+            reading_preferably_starting_with_role(absorption.parent_role).
+            expand([], false).words.capwords*' '
 
           link_from = absorption.parent.composite
           link_to = absorption.foreign_key.composite
@@ -256,6 +409,11 @@ module ActiveFacts
 
           # Add a Surrogate foreign Key to the link_from composite
           fk1_target = link_from.primary_index.all_index_field.single
+          unless fk1_target
+            # This code is not working yet.
+            trace :datavault, "REVISIT: can't do this, #{link_from.inspect} doesn't have a single-part PK"
+            return
+          end
           fk1_field = fork_component_to_new_parent(mapping, fk1_target.component)
 
           # Add a Surrogate foreign Key to the link_to composite
@@ -307,53 +465,26 @@ module ActiveFacts
           mapping.re_rank
 
           # Add a surrogate key:
-          inject_surrogate link, ' LINKID'
+          inject_surrogate link
 
-          # devolve_satellites link, false
+          # devolve link, false
           @link_composites << link
         end
       end
 
-      def rename_parents
-        @link_composites.each do |composite|
-          composite.mapping.name += " LINK"
-        end
-        @hub_composites.each do |composite|
-          composite.mapping.name += " HUB"
-        end
-        @reference_composites.each do |composite|
-          composite.mapping.name += " REF"
-        end
+      def apply_name pattern, name
+        pattern.sub(/\+/, name)
       end
 
-      def classify_composites
-        trace :datavault, "Classify relational tables into reference, hub and link tables" do
-          initial_composites = @composition.all_composite.to_a
-          @reference_composites, non_reference_composites =
-            initial_composites.partition { |composite| composite_is_reference(composite) }
-
-          @link_composites, @hub_composites = non_reference_composites.partition do |composite|
-            # It's a Link if the natural index includes more than one foreign key.
-            # Note that at this stage, foreign key target fields are not populated, but source fields are.
-            trace :datavault, "Decide whether #{composite.mapping.name} is a link or a hub" do
-              natural_index_components = composite.natural_index.all_index_field.map(&:component)
-              fks_enclosed_by_pk =
-                composite.all_foreign_key_as_source_composite.select do |fk|
-                  !@reference_composites.include?(fk.composite) and
-                    # Are all foreign key fields in the natural index?
-                    !fk.all_foreign_key_field.detect{|fkf| !natural_index_components.include?(fkf.component)}
-                end
-              fk_target_names = fks_enclosed_by_pk.map{|fk| fk.composite.mapping.name}
-              trace :datavault, "Natural index for #{composite.mapping.name} encloses foreign keys to #{fk_target_names*', '}" if fks_enclosed_by_pk.size > 0
-              fks_enclosed_by_pk.size > 1
-            end
-          end
+      def rename_parents
+        @link_composites.each do |composite|
+          composite.mapping.name = apply_name(@option_link_name, composite.mapping.name)
         end
-
-        trace :datavault!, "Data Vault classification of composites:" do
-          trace :datavault, "Reference: #{@reference_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
-          trace :datavault, "Hub: #{@hub_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
-          trace :datavault, "Link: #{@link_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
+        @hub_composites.each do |composite|
+          composite.mapping.name = apply_name(@option_hub_name, composite.mapping.name)
+        end
+        @reference_composites.each do |composite|
+          composite.mapping.name = apply_name(@option_ref_name, composite.mapping.name)
         end
       end
 

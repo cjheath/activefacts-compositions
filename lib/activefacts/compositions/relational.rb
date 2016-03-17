@@ -51,7 +51,7 @@ module ActiveFacts
           # Traverse the absorbed objects to build the path to each required column, including foreign keys:
           absorb_all_columns
 
-          devolve_all_satellites
+          devolve_all
 
           # Populate the target fields of foreign keys
           complete_foreign_keys
@@ -309,7 +309,6 @@ module ActiveFacts
             name: composite.mapping.name+extension,
             object_type: surrogate_type
           )
-        barf unless composite.mapping.root == composite
         index =
           @constellation.Index(:new, composite: composite, is_unique: true,
             presence_constraint: nil, composite_as_primary_index: composite)
@@ -400,15 +399,12 @@ module ActiveFacts
       end
 
       def is_empty_inheritance mapping
-        return false unless mapping.is_a?(MM::Mapping)
-        # If this mapping contains anything that's not an Absorption,
-        # or an Absorption that's not a TypeInheritance,
-        # or a TypeInheritance that's not empty,
-        # then it is not empty
-        !mapping.all_member.detect do |member|
-          next true unless member.is_a?(MM::Absorption) && member.parent_role.fact_type.is_a?(MM::TypeInheritance)
-          next true unless member.parent_role.fact_type.is_a?(MM::TypeInheritance)
-          !is_empty_inheritance member
+        # Cannot be an empty inheritance unless it's an TypeInheritance absorption
+        return false if !mapping.is_a?(MM::Absorption) || !mapping.parent_role.fact_type.is_a?(MM::TypeInheritance)
+
+        # It's empty if it's a TypeInheritance which has no non-empty members
+        !mapping.all_member.to_a.any? do |member|
+          !is_empty_inheritance(member)
         end
       end
 
@@ -436,7 +432,7 @@ module ActiveFacts
         end
       end
 
-      def devolve_all_satellites
+      def devolve_all
         # Data Vaults have satellites, not normal relational schemas.
       end
 
