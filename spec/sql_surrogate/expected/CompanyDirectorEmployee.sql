@@ -1,8 +1,8 @@
 CREATE TABLE Attendance (
 	-- Person ID
-	AttendeePersonID                        BIGINT IDENTITY NOT NULL,
+	AttendeePersonID                        BIGINT NOT NULL,
 	-- Meeting ID
-	MeetingID                               BIGINT IDENTITY NOT NULL,
+	MeetingID                               BIGINT NOT NULL,
 	-- Primary index to Attendance over PresenceConstraint over (Attendee, Meeting in "Person attended Meeting") occurs at most one time
 	PRIMARY KEY CLUSTERED(AttendeePersonID, MeetingID)
 );
@@ -26,9 +26,9 @@ CREATE TABLE Directorship (
 	-- Directorship ID
 	DirectorshipID                          BIGINT IDENTITY NOT NULL,
 	-- Person ID
-	DirectorPersonID                        BIGINT IDENTITY NOT NULL,
+	DirectorPersonID                        BIGINT NOT NULL,
 	-- Company ID
-	CompanyID                               BIGINT IDENTITY NOT NULL,
+	CompanyID                               BIGINT NOT NULL,
 	-- Directorship began on appointment-Date
 	AppointmentDate                         DATE NOT NULL,
 	-- Primary index to Directorship
@@ -45,9 +45,9 @@ CREATE TABLE Employee (
 	-- Employee has Employee Nr
 	EmployeeNr                              INTEGER NOT NULL,
 	-- Company ID
-	CompanyID                               BIGINT IDENTITY NOT NULL,
+	CompanyID                               BIGINT NOT NULL,
 	-- Employee ID
-	ManagerEmployeeID                       BIGINT IDENTITY NOT NULL,
+	ManagerEmployeeID                       BIGINT NOT NULL,
 	-- Is Ceo
 	ManagerIsCeo                            BOOLEAN,
 	-- Primary index to Employee
@@ -61,9 +61,9 @@ CREATE TABLE Employee (
 
 CREATE TABLE Employment (
 	-- Person ID
-	PersonID                                BIGINT IDENTITY NOT NULL,
+	PersonID                                BIGINT NOT NULL,
 	-- Employee ID
-	EmployeeID                              BIGINT IDENTITY NOT NULL,
+	EmployeeID                              BIGINT NOT NULL,
 	-- Primary index to Employment over PresenceConstraint over (Person, Employee in "Person works as Employee") occurs at most one time
 	PRIMARY KEY CLUSTERED(PersonID, EmployeeID),
 	FOREIGN KEY (EmployeeID) REFERENCES Employee (EmployeeID)
@@ -74,7 +74,7 @@ CREATE TABLE Meeting (
 	-- Meeting ID
 	MeetingID                               BIGINT IDENTITY NOT NULL,
 	-- Company ID
-	CompanyID                               BIGINT IDENTITY NOT NULL,
+	CompanyID                               BIGINT NOT NULL,
 	-- Meeting is held on Date
 	[Date]                                  DATE NOT NULL,
 	-- Is Board Meeting
