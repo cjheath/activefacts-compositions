@@ -5,5 +5,5 @@ Magnet HUB
 MagnetPole HUB
 	MagnetPole HUB->MagnetPole VID[1.0] as "Magnet Pole VID"
 	!!! The next field should be duplicated by a Link, and should not be an FK.
-	MagnetPole HUB->[Magnet]->Magnet VID[2.0] as "Magnet VID"
+	MagnetPole HUB->{Magnet}->[Magnet VID][2.0] as "Magnet VID"
 	MagnetPole HUB->Is North?[2.1] as "Is North"

@@ -3,8 +3,7 @@ Company HUB
 	Company HUB->Company VID[1.0] as "Company VID"
 	Company HUB->Company Name[2.0] as "Company Name"
 Company SAT
-	!!! The next field should be a foreign key
-	Company SAT->Company VID[1.0] as "Company VID"
+	Company SAT->[Company VID][1.0] as "Company VID"
 	Company SAT->LoadDateTime[1.1] as "Load Date Time"
 	Company SAT->Address?->Street Number? as "Address Street Number"
 	Company SAT->Address?->Street->First Street Line as "Address Street First Street Line"
@@ -21,8 +20,7 @@ Person HUB
 	Person HUB->Family->Family Name[2.0] as "Family Name"
 	Person HUB->Given Names[2.1] as "Given Names"
 Person SAT
-	!!! The next field should be a foreign key
-	Person SAT->Person VID[1.0] as "Person VID"
+	Person SAT->[Person VID][1.0] as "Person VID"
 	Person SAT->LoadDateTime[1.1] as "Load Date Time"
 	Person SAT->Address?->Street Number? as "Address Street Number"
 	Person SAT->Address?->Street->First Street Line as "Address Street First Street Line"
