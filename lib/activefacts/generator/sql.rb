@@ -136,7 +136,7 @@ module ActiveFacts
 
         "CREATE TABLE #{safe_table_name composite} (\n" +
         (
-          composite.mapping.leaves.flat_map do |leaf|
+          composite.mapping.all_leaf.flat_map do |leaf|
             # Absorbed empty subtypes appear as leaves
             next if leaf.is_a?(MM::Absorption) && leaf.parent_role.fact_type.is_a?(MM::TypeInheritance)
 

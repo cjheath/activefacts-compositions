@@ -53,13 +53,13 @@ module ActiveFacts
       def retract_constraint_classifications
         all_spanning_constraint.to_a.each(&:retract)
         all_local_constraint.to_a.each(&:retract)
-        mapping.leaves.each do |component|
+        mapping.all_leaf.each do |component|
           component.all_leaf_constraint.to_a.each(&:retract)
         end
       end
 
       def classify_constraints
-        leaves = mapping.leaves
+        leaves = mapping.all_leaf
 
         # Categorise and index all constraints not already baked-in to the composition
         # We recurse down the hierarchy, stopping at any foreign keys

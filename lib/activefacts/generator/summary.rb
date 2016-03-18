@@ -29,7 +29,7 @@ module ActiveFacts
         (
           [mapping.name+"\n"] +
           mapping.
-          leaves.
+          all_leaf.
           reject{|leaf| leaf.is_a?(Absorption) && leaf.forward_absorption}.
           flat_map do |leaf|
 

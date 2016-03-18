@@ -75,8 +75,8 @@ END
               named_stack(
                 text(composite.mapping.name),
                 [columns(
-                  stack(composite.mapping.leaves.map{''}),
-                  stack(composite.mapping.leaves.map.with_index(1){|l, i| tagged_text("c#{i}:e", l.column_name.capcase)})
+                  stack(composite.mapping.all_leaf.map{''}),
+                  stack(composite.mapping.all_leaf.map.with_index(1){|l, i| tagged_text("c#{i}:e", l.column_name.capcase)})
                 )]
               )
             }}\", style=rounded]"
@@ -93,7 +93,7 @@ END
               target_num = composites.index(fk.composite)+1
               fkc = fk.all_foreign_key_field[0].component
               mandatory = fkc.path_mandatory
-              source_col_num = composite.mapping.leaves.index(fkc)+1
+              source_col_num = composite.mapping.all_leaf.index(fkc)+1
               "t#{target_num}:name:e -> t#{cnum}:c#{source_col_num}:w[arrowhead=invempty#{mandatory ? 'tee' : ''}; arrowsize=2;]"
               # Also, arrowtail. small circle is 
               # splineType=...
