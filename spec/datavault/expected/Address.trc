@@ -11,10 +11,6 @@ Company SAT
 	Company SAT->Address?->Street->Third Street Line? as "Address Street Third Street Line"
 	Company SAT->Address?->City as "Address City"
 	Company SAT->Address?->Postcode? as "Address Postcode"
-		!!! This constraint should be removed; no leaf constraints in satellites
-		### restricted to {1000..9999}
-	!!! This constraint should be removed; no local constraints in satellites
-	### SubsetConstraint((Street, Third Street Line in "Street includes third-Street Line") only if (Street, Second Street Line in "Street includes second-Street Line"))
 Person HUB
 	Person HUB->Person VID[1.0] as "Person VID"
 	Person HUB->Family->Family Name[2.0] as "Family Name"
@@ -28,7 +24,3 @@ Person SAT
 	Person SAT->Address?->Street->Third Street Line? as "Address Street Third Street Line"
 	Person SAT->Address?->City as "Address City"
 	Person SAT->Address?->Postcode? as "Address Postcode"
-		!!! This constraint should be removed; no leaf constraints in satellites
-		### restricted to {1000..9999}
-	!!! This constraint should be removed; no local constraints in satellites
-	### SubsetConstraint((Street, Third Street Line in "Street includes third-Street Line") only if (Street, Second Street Line in "Street includes second-Street Line"))

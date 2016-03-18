@@ -301,9 +301,12 @@ module ActiveFacts
               absorption: nil           # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
             )
           @constellation.ForeignKeyField(foreign_key: fk, ordinal: 0, component: fk_field)
-          # REVISIT: This should be filled in by complete_foreign_keys, but it has no Absorption
+          # This should be filled in by complete_foreign_keys, but there is no Absorption
           @constellation.IndexField(access_path: fk, ordinal: 0, component: fk_target.component)
 
+          satellite.classify_constraints
+          satellite.all_local_constraint.map(&:local_constraint).each(&:retract)
+          leaf_constraints = satellite.mapping.all_leaf.flat_map(&:all_leaf_constraint).map(&:leaf_constraint).each(&:retract)
         end
       end
 
