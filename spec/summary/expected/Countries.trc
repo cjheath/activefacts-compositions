@@ -1,5 +1,5 @@
 Summary of test
 Country
-	Country->[Country Code]->Country Code[1.1] as "Country Code"
+	Country->{Country Code}->[Country Code][1.1] as "Country Code"
 Country Code
 	Country Code->Country Code Value[1.0] as "Country Code Value"

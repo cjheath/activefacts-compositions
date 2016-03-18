@@ -44,8 +44,10 @@ module ActiveFacts
                     true
                   end
 
-                if component.is_a?(Absorption) && component.foreign_key
+                if component.all_foreign_key_field.size > 0
                   "[#{component.name}]"
+                elsif component.is_a?(Absorption) && component.foreign_key
+                  "{#{component.name}}"
                 else
                   component.name
                 end +
