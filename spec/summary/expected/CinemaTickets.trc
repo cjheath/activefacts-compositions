@@ -35,16 +35,20 @@ Places Paid
 	Places Paid->Payment Method->Payment Method Code[1.1] as "Payment Method Code"
 		### restricted to {'Card', 'Cash', 'Gift Voucher', 'Loyalty Voucher'}
 	Places Paid->Number as "Number"
+### SubsetConstraint((Booking in "Booking has allocated-Seat") only if (Booking in "Number of places for Booking have been paid for by Payment Method"))
 Seat
 	Seat->Row->[Cinema]->Cinema ID[1.0] as "Row Cinema ID"
 	Seat->Row->Row Nr[1.1] as "Row Nr"
 	Seat->Seat Number[1.2] as "Seat Number"
 	Seat->Section?->Section Name as "Section Name"
+### SubsetConstraint((Cinema, Allocated Seat in "Cinema shows Film on Session Time", "Booking has allocated-Seat") only if (Cinema, Seat in "Row is in Cinema", "Seat is in Row"))
 Seat Allocation
 	Seat Allocation->[Booking]->Booking Nr[1.0] as "Booking Nr"
 	Seat Allocation->[Allocated Seat]->Row->Cinema->Cinema ID[1.1] as "Allocated Seat Row Cinema ID"
 	Seat Allocation->[Allocated Seat]->Row->Row Nr[1.2] as "Allocated Seat Row Nr"
 	Seat Allocation->[Allocated Seat]->Seat Number[1.3] as "Allocated Seat Number"
+### SubsetConstraint((Booking in "Booking has allocated-Seat") only if (Booking in "Number of places for Booking have been paid for by Payment Method"))
+### SubsetConstraint((Cinema, Allocated Seat in "Cinema shows Film on Session Time", "Booking has allocated-Seat") only if (Cinema, Seat in "Row is in Cinema", "Seat is in Row"))
 Session
 	Session->[Cinema]->Cinema ID[1.0] as "Cinema ID"
 	Session->Session Time->Year->Year Nr[1.1] as "Session Time Year Nr"
@@ -55,6 +59,7 @@ Session
 	Session->Is High Demand? as "Is High Demand"
 	Session->Uses Allocated Seating? as "Uses Allocated Seating"
 	Session->[Film]->Film ID as "Film ID"
+### SubsetConstraint((Cinema, Allocated Seat in "Cinema shows Film on Session Time", "Booking has allocated-Seat") only if (Cinema, Seat in "Row is in Cinema", "Seat is in Row"))
 Ticket Pricing
 	Ticket Pricing->Session Time->Year->Year Nr[1.0] as "Session Time Year Nr"
 	Ticket Pricing->Session Time->Month->Month Nr[1.1] as "Session Time Month Nr"

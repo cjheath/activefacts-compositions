@@ -69,7 +69,7 @@ module ActiveFacts
 
             column_name = leaf.column_name.capwords*' '
             ["\t#{path_names}#{indexing} as #{column_name.inspect}\n"] +
-            leaf.all_leaf_constraint.map{|leaf_constraint| "\t\t### #{leaf_constraint.leaf_constraint.describe}\n"}
+            leaf.all_leaf_constraint.map{|leaf_constraint| "\t\t### #{leaf_constraint.leaf_constraint.describe}\n"}.sort
           end +
           all_local_constraint.map do |local_constraint|
             "\t### #{local_constraint.local_constraint.describe}\n"

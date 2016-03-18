@@ -17,6 +17,8 @@ Employee
 	Employee->Employee Nr[1.0] as "Employee Nr"
 	Employee->[Company]->Company Name as "Company Name"
 	Employee->[Manager]?->Employee->Employee Nr as "Manager Nr"
+		### RingConstraint(Acyclic: Employee, Manager in Employee is supervised by Manager)
+		### exactly one of (Employee in "Employee is supervised by Manager") or (Employee in "Manager is a kind of Employee")
 	Employee->Manager?->Is Ceo? as "Manager Is Ceo"
 Employment
 	Employment->[Person]->Given Name[1.0] as "Person Given Name"

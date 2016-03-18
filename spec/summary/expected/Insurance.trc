@@ -4,6 +4,7 @@ Asset
 	Asset->Vehicle?->VIN[2.0] as "Vehicle VIN"
 	Asset->Vehicle?->Has Commercial Registration? as "Vehicle Has Commercial Registration"
 	Asset->Vehicle?->Model Year->Year Nr as "Vehicle Model Year Nr"
+		### restricted to {1900..2100}
 	Asset->Vehicle?->Registration->Registration Nr as "Vehicle Registration Nr"
 	Asset->Vehicle?->Vehicle Type->Make as "Vehicle Type Make"
 	Asset->Vehicle?->Vehicle Type->Model as "Vehicle Type Model"
@@ -96,11 +97,13 @@ Party
 	Party->Person?->License?->License Number as "Person License Number"
 	Party->Person?->License?->License Type as "Person License Type"
 	Party->Person?->License?->Year?->Year Nr as "Person Year Nr"
+		### restricted to {1990..2100}
 	Party->Person?->Occupation? as "Person Occupation"
 	### (Party in "Company is a kind of Party") if and only if (Is A Company in "Party is a company")
 	### PresenceConstraint over (Contact Methods, Contact Methods, Contact Methods, Contact Methods in "Contact Methods includes mobile-Phone", "Contact Methods includes home-Phone", "Contact Methods includes business-Phone", "Contact Methods includes Email") occurs at least one time
 Policy
 	Policy->P_year->Year Nr[1.0] as "P Year Nr"
+		### restricted to {0..99}
 	Policy->[P_product]->Product Code[1.1] as "P Product Code"
 	Policy->[P_state]->State Code[1.2] as "P State Code"
 	Policy->P_serial[1.3] as "P Serial"
@@ -168,3 +171,4 @@ Witness
 	Witness->Address?->Postcode? as "Address Postcode"
 	Witness->Address?->[State]?->State Code as "Address State Code"
 	Witness->Contact Phone?->Phone Nr as "Contact Phone Nr"
+	### PresenceConstraint over (Witness, Witness in "Witness lives at Address", "Witness has contact-Phone") occurs at least one time
