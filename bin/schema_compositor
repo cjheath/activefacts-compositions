@@ -38,7 +38,7 @@ class SchemaCompositor
 	require(pathname = path+"/"+filename)
       rescue LoadError => e
       rescue Exception => e
-	puts "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
+	$stderr.puts "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
       end
     end
   end
@@ -57,7 +57,7 @@ class SchemaCompositor
 	check_options(action, mode)
 	@generators << [action, mode]
       else
-	puts "Action --#{option} is not recognised"
+	$stderr.puts "Action --#{option} is not recognised"
 	exit 1
       end
       if mode && mode['help']
@@ -116,13 +116,13 @@ class SchemaCompositor
     action.name.sub(/ActiveFacts::[^:]+::/,'').gsub(/::/,'/').downcase
   end
 
-  def display_options action
+  def display_options action, stream = $stdout
     options = action.options
     name = action.name.sub(/ActiveFacts::[^:]+::/,'').gsub(/::/,'/').downcase
     if options.empty?
-      puts "There are no options for --#{action_name action_name}"
+      stream.puts "There are no options for --#{action_name action_name}"
     else
-      puts "Options for --#{name} (say e.g. --#{action_name action}=option1=value,option2)"
+      stream.puts "Options for --#{name} (say e.g. --#{action_name action}=option1=value,option2)"
       options.keys.sort.each do |key|
 	type, description = *options[key]
 	tag =
@@ -138,7 +138,7 @@ class SchemaCompositor
 	    ' str'
 	  end
 
-	puts "\t#{tag}#{' '*(24-tag.size)}#{description}"
+	stream.puts "\t#{tag}#{' '*(24-tag.size)}#{description}"
       end
     end
   end
@@ -149,8 +149,8 @@ class SchemaCompositor
     options = action.options
     unsupported = mode.keys.select{|k| !options.has_key?(k.to_sym)}
     return if unsupported.empty?
-    puts "Action --#{action_name action} does not support #{unsupported.size >1 ? 'these options' : 'this option'}: #{unsupported*', '}"
-    display_options(action)
+    $stderr.puts "Action --#{action_name action} does not support #{unsupported.size >1 ? 'these options' : 'this option'}: #{unsupported*', '}"
+    display_options(action, $stderr)
     exit 1
   end
 end
