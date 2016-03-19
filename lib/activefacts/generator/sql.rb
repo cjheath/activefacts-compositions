@@ -90,8 +90,7 @@ module ActiveFacts
       end
 
       def surrogate_type
-        choose_integer_type(0, 2**(default_surrogate_length-1)-1) +
-          ' IDENTITY NOT NULL'
+        choose_integer_type(0, 2**(default_surrogate_length-1)-1)
       end
 
       def default_surrogate_length
@@ -137,7 +136,7 @@ module ActiveFacts
 
         "CREATE TABLE #{safe_table_name composite} (\n" +
         (
-          composite.mapping.leaves.flat_map do |leaf|
+          composite.mapping.all_leaf.flat_map do |leaf|
             # Absorbed empty subtypes appear as leaves
             next if leaf.is_a?(MM::Absorption) && leaf.parent_role.fact_type.is_a?(MM::TypeInheritance)
 
@@ -198,7 +197,15 @@ module ActiveFacts
         when MM::Indicator
           boolean_type
         when MM::SurrogateKey
-          surrogate_type
+          # REVISIT: This is an SQL Server-ism. Replace with a standard SQL SEQUENCE/
+          # Emit IDENTITY for columns auto-assigned on commit (except FKs)
+          surrogate_type +
+            if fk = component.all_foreign_key_field.detect{|fkf| fkf.foreign_key.source_composite == component.root}
+              ''
+            else
+              ' IDENTITY'
+            end +
+            (component.path_mandatory ? ' NOT' : '') + ' NULL'
         when MM::ValidFrom
           valid_from_type
         when MM::ValueField, MM::Absorption

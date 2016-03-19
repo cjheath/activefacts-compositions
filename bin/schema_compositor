@@ -120,7 +120,7 @@ class SchemaCompositor
     options = action.options
     name = action.name.sub(/ActiveFacts::[^:]+::/,'').gsub(/::/,'/').downcase
     if options.empty?
-      stream.puts "There are no options for --#{action_name action_name}"
+      stream.puts "There are no options for --#{action_name action}"
     else
       stream.puts "Options for --#{name} (say e.g. --#{action_name action}=option1=value,option2)"
       options.keys.sort.each do |key|
@@ -145,7 +145,10 @@ class SchemaCompositor
 
   # Ensure that the options provided are supported by the action
   def check_options action, mode
-    display_options(action) and exit if mode['help']
+    if mode['help']
+      display_options(action)
+      exit
+    end
     options = action.options
     unsupported = mode.keys.select{|k| !options.has_key?(k.to_sym)}
     return if unsupported.empty?

@@ -1,29 +1,31 @@
 Summary of test
 Attendance
-	Attendance->[Attendee]->Given Name[1.0] as "Attendee Given Name"
-	Attendance->[Attendee]->Family Name?[1.1] as "Attendee Family Name"
-	Attendance->[Meeting]->Company->Company Name[1.2] as "Meeting Company Name"
-	Attendance->[Meeting]->Date[1.3] as "Meeting Date"
-	Attendance->[Meeting]->Is Board Meeting?[1.4] as "Meeting Is Board Meeting"
+	Attendance->{Attendee}->[Given Name][1.0] as "Attendee Given Name"
+	Attendance->{Attendee}->[Family Name]?[1.1] as "Attendee Family Name"
+	Attendance->{Meeting}->Company->[Company Name][1.2] as "Meeting Company Name"
+	Attendance->{Meeting}->[Date][1.3] as "Meeting Date"
+	Attendance->{Meeting}->[Is Board Meeting]?[1.4] as "Meeting Is Board Meeting"
 Company
 	Company->Company Name[1.0] as "Company Name"
 	Company->Is Listed? as "Is Listed"
 Directorship
-	Directorship->[Director]->Given Name[1.0] as "Director Given Name"
-	Directorship->[Director]->Family Name?[1.1] as "Director Family Name"
-	Directorship->[Company]->Company Name[1.2] as "Company Name"
+	Directorship->{Director}->[Given Name][1.0] as "Director Given Name"
+	Directorship->{Director}->[Family Name]?[1.1] as "Director Family Name"
+	Directorship->{Company}->[Company Name][1.2] as "Company Name"
 	Directorship->Appointment Date as "Appointment Date"
 Employee
 	Employee->Employee Nr[1.0] as "Employee Nr"
-	Employee->[Company]->Company Name as "Company Name"
-	Employee->[Manager]?->Employee->Employee Nr as "Manager Nr"
+	Employee->{Company}->[Company Name] as "Company Name"
+	Employee->{Manager}?->Employee->[Employee Nr] as "Manager Nr"
+		### RingConstraint(Acyclic: Employee, Manager in Employee is supervised by Manager)
+		### exactly one of (Employee in "Employee is supervised by Manager") or (Employee in "Manager is a kind of Employee")
 	Employee->Manager?->Is Ceo? as "Manager Is Ceo"
 Employment
-	Employment->[Person]->Given Name[1.0] as "Person Given Name"
-	Employment->[Person]->Family Name?[1.1] as "Person Family Name"
-	Employment->[Employee]->Employee Nr[1.2] as "Employee Nr"
+	Employment->{Person}->[Given Name][1.0] as "Person Given Name"
+	Employment->{Person}->[Family Name]?[1.1] as "Person Family Name"
+	Employment->{Employee}->[Employee Nr][1.2] as "Employee Nr"
 Meeting
-	Meeting->[Company]->Company Name[1.0] as "Company Name"
+	Meeting->{Company}->[Company Name][1.0] as "Company Name"
 	Meeting->Date[1.1] as "Date"
 	Meeting->Is Board Meeting?[1.2] as "Is Board Meeting"
 Person

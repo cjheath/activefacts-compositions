@@ -29,7 +29,7 @@ module ActiveFacts
         (
           [mapping.name+"\n"] +
           mapping.
-          leaves.
+          all_leaf.
           reject{|leaf| leaf.is_a?(Absorption) && leaf.forward_absorption}.
           flat_map do |leaf|
 
@@ -44,8 +44,10 @@ module ActiveFacts
                     true
                   end
 
-                if component.is_a?(Absorption) && component.foreign_key
+                if component.all_foreign_key_field.size > 0
                   "[#{component.name}]"
+                elsif component.is_a?(Absorption) && component.foreign_key
+                  "{#{component.name}}"
                 else
                   component.name
                 end +
@@ -69,7 +71,7 @@ module ActiveFacts
 
             column_name = leaf.column_name.capwords*' '
             ["\t#{path_names}#{indexing} as #{column_name.inspect}\n"] +
-            leaf.all_leaf_constraint.map{|leaf_constraint| "\t\t### #{leaf_constraint.leaf_constraint.describe}\n"}
+            leaf.all_leaf_constraint.map{|leaf_constraint| "\t\t### #{leaf_constraint.leaf_constraint.describe}\n"}.sort
           end +
           all_local_constraint.map do |local_constraint|
             "\t### #{local_constraint.local_constraint.describe}\n"

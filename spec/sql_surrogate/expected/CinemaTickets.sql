@@ -24,7 +24,7 @@ CREATE TABLE Booking (
 	-- Booking involves Person that has Person ID
 	PersonID                                BIGINT NOT NULL,
 	-- Session ID
-	SessionID                               BIGINT IDENTITY NOT NULL,
+	SessionID                               BIGINT NOT NULL,
 	-- maybe tickets for Booking are being mailed to Address that has Address Text
 	AddressText                             VARCHAR(MAX) NULL,
 	-- maybe Booking has Collection Code
@@ -84,7 +84,7 @@ CREATE TABLE PlacesPaid (
 	-- Places Paid ID
 	PlacesPaidID                            BIGINT IDENTITY NOT NULL,
 	-- Booking ID
-	BookingID                               BIGINT IDENTITY NOT NULL,
+	BookingID                               BIGINT NOT NULL,
 	-- Places Paid involves Payment Method that has Payment Method Code
 	PaymentMethodCode                       VARCHAR NOT NULL CHECK(PaymentMethodCode = 'Card' OR PaymentMethodCode = 'Cash' OR PaymentMethodCode = 'Gift Voucher' OR PaymentMethodCode = 'Loyalty Voucher'),
 	-- Places Paid involves Number
@@ -118,9 +118,9 @@ CREATE TABLE Seat (
 
 CREATE TABLE SeatAllocation (
 	-- Booking ID
-	BookingID                               BIGINT IDENTITY NOT NULL,
+	BookingID                               BIGINT NOT NULL,
 	-- Seat ID
-	AllocatedSeatID                         BIGINT IDENTITY NOT NULL,
+	AllocatedSeatID                         BIGINT NOT NULL,
 	-- Primary index to Seat Allocation over PresenceConstraint over (Booking, Allocated Seat in "Booking has allocated-Seat") occurs at most one time
 	PRIMARY KEY CLUSTERED(BookingID, AllocatedSeatID),
 	FOREIGN KEY (AllocatedSeatID) REFERENCES Seat (SeatID),

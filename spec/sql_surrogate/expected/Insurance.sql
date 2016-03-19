@@ -36,7 +36,7 @@ CREATE TABLE Claim (
 	-- Claim has p_sequence
 	PSequence                               SMALLINT NOT NULL CHECK((PSequence >= 1 AND PSequence <= 999)),
 	-- Policy ID
-	PolicyID                                BIGINT IDENTITY NOT NULL,
+	PolicyID                                BIGINT NOT NULL,
 	-- maybe Claim concerns Incident that relates to loss at Address that is at Street
 	IncidentAddressStreet                   VARCHAR(256) NULL,
 	-- maybe Claim concerns Incident that relates to loss at Address that is in City
@@ -44,7 +44,7 @@ CREATE TABLE Claim (
 	-- maybe Claim concerns Incident that relates to loss at Address that maybe is in Postcode
 	IncidentAddressPostcode                 VARCHAR NULL,
 	-- State ID
-	IncidentAddressStateID                  BIGINT IDENTITY NOT NULL,
+	IncidentAddressStateID                  BIGINT NOT NULL,
 	-- maybe Claim concerns Incident that relates to loss on Date Time
 	IncidentDateTime                        TIMESTAMP NULL,
 	-- maybe Claim concerns Incident that maybe is covered by Police Report that maybe was to officer-Name
@@ -81,9 +81,9 @@ CREATE TABLE ContractorAppointment (
 
 CREATE TABLE Cover (
 	-- Policy ID
-	PolicyID                                BIGINT IDENTITY NOT NULL,
+	PolicyID                                BIGINT NOT NULL,
 	-- Cover Type ID
-	CoverTypeID                             BIGINT IDENTITY NOT NULL,
+	CoverTypeID                             BIGINT NOT NULL,
 	-- Cover involves Asset that has Asset ID
 	AssetID                                 BIGINT NOT NULL,
 	-- Primary index to Cover over PresenceConstraint over (Policy, Cover Type, Asset in "Policy provides Cover Type over Asset") occurs at most one time
@@ -112,7 +112,7 @@ CREATE TABLE CoverWording (
 	-- Cover Wording ID
 	CoverWordingID                          BIGINT IDENTITY NOT NULL,
 	-- Cover Type ID
-	CoverTypeID                             BIGINT IDENTITY NOT NULL,
+	CoverTypeID                             BIGINT NOT NULL,
 	-- Cover Wording involves Policy Wording that has Policy Wording Text
 	PolicyWordingText                       VARCHAR NOT NULL,
 	-- Cover Wording involves Date
@@ -178,7 +178,7 @@ CREATE TABLE Party (
 	-- maybe Party has postal-Address and maybe Address is in Postcode
 	PostalAddressPostcode                   VARCHAR NULL,
 	-- State ID
-	PostalAddressStateID                    BIGINT IDENTITY NOT NULL,
+	PostalAddressStateID                    BIGINT NOT NULL,
 	-- maybe Party is a Company that has contact-Person and Person is a kind of Party that has Party ID
 	CompanyContactPersonID                  BIGINT NULL,
 	-- maybe Party is a Person that has Contact Methods that maybe includes business-Phone and Phone has Phone Nr
@@ -206,7 +206,7 @@ CREATE TABLE Party (
 	-- maybe Party is a Person that maybe lives at Address that maybe is in Postcode
 	PersonAddressPostcode                   VARCHAR NULL,
 	-- State ID
-	PersonAddressStateID                    BIGINT IDENTITY NOT NULL,
+	PersonAddressStateID                    BIGINT NOT NULL,
 	-- maybe Party is a Person that maybe has birth-Date
 	PersonBirthDate                         DATE NULL,
 	-- Is International
@@ -231,9 +231,9 @@ CREATE TABLE Policy (
 	-- Policy was issued in p_year and Year has Year Nr
 	PYearNr                                 INTEGER NOT NULL,
 	-- Product ID
-	PProductID                              BIGINT IDENTITY NOT NULL,
+	PProductID                              BIGINT NOT NULL,
 	-- State ID
-	PStateID                                BIGINT IDENTITY NOT NULL,
+	PStateID                                BIGINT NOT NULL,
 	-- Policy has p_serial
 	PSerial                                 INTEGER NOT NULL CHECK((PSerial >= 1 AND PSerial <= 99999)),
 	-- Policy has Application that has Application Nr
@@ -286,7 +286,7 @@ CREATE TABLE PropertyDamage (
 	-- Property Damage is at Address that maybe is in Postcode
 	AddressPostcode                         VARCHAR NULL,
 	-- State ID
-	AddressStateID                          BIGINT IDENTITY NOT NULL,
+	AddressStateID                          BIGINT NOT NULL,
 	-- maybe Property Damage belongs to owner-Name
 	OwnerName                               VARCHAR(256) NULL,
 	-- maybe Property Damage owner has contact Phone that has Phone Nr
@@ -397,7 +397,7 @@ CREATE TABLE VehicleIncident (
 	-- maybe Driving involves Vehicle Incident and maybe Driving was unlicenced for unlicensed-Reason
 	DrivingUnlicensedReason                 VARCHAR NULL,
 	-- Loss Type ID
-	LossTypeID                              BIGINT IDENTITY NOT NULL,
+	LossTypeID                              BIGINT NOT NULL,
 	-- maybe Vehicle Incident involved previous_damage-Description
 	PreviousDamageDescription               VARCHAR(1024) NULL,
 	-- maybe Vehicle Incident was caused by Reason
@@ -428,7 +428,7 @@ CREATE TABLE Witness (
 	-- maybe Witness lives at Address that maybe is in Postcode
 	AddressPostcode                         VARCHAR NULL,
 	-- State ID
-	AddressStateID                          BIGINT IDENTITY NOT NULL,
+	AddressStateID                          BIGINT NOT NULL,
 	-- maybe Witness has contact-Phone and Phone has Phone Nr
 	ContactPhoneNr                          VARCHAR NULL,
 	-- Primary index to Witness

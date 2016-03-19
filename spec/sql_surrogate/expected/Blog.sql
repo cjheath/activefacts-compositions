@@ -20,7 +20,7 @@ CREATE TABLE Comment (
 	-- Comment consists of text-Content and Content has Text
 	ContentText                             VARCHAR(MAX) NOT NULL,
 	-- Paragraph ID
-	ParagraphID                             BIGINT IDENTITY NOT NULL,
+	ParagraphID                             BIGINT NOT NULL,
 	-- Primary index to Comment over PresenceConstraint over (Comment Id in "Comment has Comment Id") occurs at most one time
 	PRIMARY KEY CLUSTERED(CommentId),
 	FOREIGN KEY (AuthorId) REFERENCES Author (AuthorId)

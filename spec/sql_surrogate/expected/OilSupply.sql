@@ -2,9 +2,9 @@ CREATE TABLE AcceptableSubstitution (
 	-- Acceptable Substitution ID
 	AcceptableSubstitutionID                BIGINT IDENTITY NOT NULL,
 	-- Product ID
-	ProductID                               BIGINT IDENTITY NOT NULL,
+	ProductID                               BIGINT NOT NULL,
 	-- Product ID
-	AlternateProductID                      BIGINT IDENTITY NOT NULL,
+	AlternateProductID                      BIGINT NOT NULL,
 	-- Acceptable Substitution involves Season
 	Season                                  VARCHAR(6) NOT NULL CHECK(Season = 'Autumn' OR Season = 'Spring' OR Season = 'Summer' OR Season = 'Winter'),
 	-- Primary index to Acceptable Substitution
@@ -44,11 +44,11 @@ CREATE TABLE ProductionForecast (
 	-- Production Forecast ID
 	ProductionForecastID                    BIGINT IDENTITY NOT NULL,
 	-- Refinery ID
-	RefineryID                              BIGINT IDENTITY NOT NULL,
+	RefineryID                              BIGINT NOT NULL,
 	-- Supply Period ID
-	SupplyPeriodID                          BIGINT IDENTITY NOT NULL,
+	SupplyPeriodID                          BIGINT NOT NULL,
 	-- Product ID
-	ProductID                               BIGINT IDENTITY NOT NULL,
+	ProductID                               BIGINT NOT NULL,
 	-- Production Forecast involves Quantity
 	Quantity                                INTEGER NOT NULL,
 	-- maybe Production Forecast predicts Cost
@@ -89,11 +89,11 @@ CREATE TABLE RegionalDemand (
 	-- Regional Demand ID
 	RegionalDemandID                        BIGINT IDENTITY NOT NULL,
 	-- Region ID
-	RegionID                                BIGINT IDENTITY NOT NULL,
+	RegionID                                BIGINT NOT NULL,
 	-- Supply Period ID
-	SupplyPeriodID                          BIGINT IDENTITY NOT NULL,
+	SupplyPeriodID                          BIGINT NOT NULL,
 	-- Product ID
-	ProductID                               BIGINT IDENTITY NOT NULL,
+	ProductID                               BIGINT NOT NULL,
 	-- Regional Demand involves Quantity
 	Quantity                                INTEGER NOT NULL,
 	-- Primary index to Regional Demand
@@ -111,7 +111,7 @@ CREATE TABLE SupplyPeriod (
 	-- Supply Period is in Year that has Year Nr
 	YearNr                                  INTEGER NOT NULL,
 	-- Month ID
-	MonthID                                 BIGINT IDENTITY NOT NULL,
+	MonthID                                 BIGINT NOT NULL,
 	-- Primary index to Supply Period
 	PRIMARY KEY CLUSTERED(SupplyPeriodID),
 	-- Unique index to Supply Period over PresenceConstraint over (Year, Month in "Supply Period is in Year", "Supply Period is in Month") occurs at most one time
@@ -126,9 +126,9 @@ CREATE TABLE TransportRoute (
 	-- Transport Route involves Transport Method
 	TransportMethod                         VARCHAR NOT NULL CHECK(TransportMethod = 'Rail' OR TransportMethod = 'Road' OR TransportMethod = 'Sea'),
 	-- Refinery ID
-	RefineryID                              BIGINT IDENTITY NOT NULL,
+	RefineryID                              BIGINT NOT NULL,
 	-- Region ID
-	RegionID                                BIGINT IDENTITY NOT NULL,
+	RegionID                                BIGINT NOT NULL,
 	-- maybe Transport Route incurs Cost per kl
 	Cost                                    DECIMAL NULL,
 	-- Primary index to Transport Route

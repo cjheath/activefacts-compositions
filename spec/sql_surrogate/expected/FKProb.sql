@@ -14,7 +14,7 @@ CREATE TABLE VTP (
 	-- VTP ID
 	VTPID                                   BIGINT IDENTITY NOT NULL,
 	-- OT ID
-	VTOTID                                  BIGINT IDENTITY NOT NULL,
+	VTOTID                                  BIGINT NOT NULL,
 	-- VTP involves Name
 	Name                                    VARCHAR NOT NULL,
 	-- Primary index to VTP
@@ -27,9 +27,9 @@ CREATE TABLE VTP (
 
 CREATE TABLE VTPRestriction (
 	-- OT ID
-	VTOTID                                  BIGINT IDENTITY NOT NULL,
+	VTOTID                                  BIGINT NOT NULL,
 	-- VTP ID
-	VTPID                                   BIGINT IDENTITY NOT NULL,
+	VTPID                                   BIGINT NOT NULL,
 	-- Primary index to VTPRestriction over PresenceConstraint over (VT, VTP in "VT receives VTP") occurs at most one time
 	PRIMARY KEY CLUSTERED(VTOTID, VTPID),
 	FOREIGN KEY (VTOTID) REFERENCES OT (OTID),

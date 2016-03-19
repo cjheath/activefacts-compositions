@@ -1,0 +1,5 @@
+Summary of Person
+Person HUB
+	Person HUB->Person VID[1.0] as "Person VID"
+	Person HUB->Family Name[2.0] as "Family Name"
+	Person HUB->Given Name[2.1] as "Given Name"

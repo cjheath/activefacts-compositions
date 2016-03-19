@@ -1,0 +1,16 @@
+Summary of FKProb
+OT HUB
+	OT HUB->OT VID[1.0] as "OT VID"
+	OT HUB->Name[2.0] as "Name"
+	OT HUB->DOT?->VT? as "VT"
+VTP HUB
+	VTP HUB->VTP VID[1.0] as "VTP VID"
+	!!! The next field should be duplicated by a Link, and should not be an FK.
+	VTP HUB->{VT}->DOT->OT->[OT VID][2.0] as "VT OT VID"
+	VTP HUB->Name[2.1] as "Name"
+VTPRestriction HUB
+	VTPRestriction HUB->VTPRestriction VID[1.0] as "VTP Restriction VID"
+	!!! The next field should be duplicated by a Link, and should not be an FK.
+	VTPRestriction HUB->{VT}->DOT->OT->[OT VID][2.0] as "VT OT VID"
+	!!! The next field should be duplicated by a Link, and should not be an FK.
+	VTPRestriction HUB->{VTP}->[VTP VID][2.1] as "VTP VID"
