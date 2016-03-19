@@ -14,7 +14,7 @@ module ActiveFacts
     # * delay_fks Leave all foreign keys until the end, not just those that contain forward-references
     # * underscore 
     module Doc
-      class Graph
+      class Graphviz
         def self.options
           {
           }
@@ -125,7 +125,7 @@ END
       end
 
     end
-    publish_generator Doc::Graph
+    publish_generator Doc::Graphviz
   end
 end
 
