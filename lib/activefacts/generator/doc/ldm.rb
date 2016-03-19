@@ -372,7 +372,7 @@ module ActiveFacts
           "                  <table class=\"table table-bordered table-striped\">\n" +
           "                    <thead style=\"background-color: #aaa;\">\n" +
           "                      <tr>\n" +
-          "                        <th>Attribute</th><th>M/O</th><th>Description</th>\n" +
+          "                        <th>Attribute</th><th>Data Type</th><th>Man</th><th>Description</th>\n" +
           "                      </tr>\n" +
           "                    </thead>\n" +
           "                    <tbody>\n" +
@@ -406,7 +406,8 @@ module ActiveFacts
           
           "  " * indent + "<tr>\n" +
           "  " * indent + "  <td>#{column_name}\n" +
-          "  " * indent + "  <td>#{leaf.path_mandatory ? 'M' : 'O'}\n" +
+          "  " * indent + "  <td>#{component_type(leaf, column_name)}\n" +
+          "  " * indent + "  <td>#{leaf.path_mandatory ? 'Yes' : 'No'}\n" +
           "  " * indent + "  <td>#{column_comment leaf}\n" +
           "  " * indent + "</tr>" 
           # "-- #{column_comment leaf}\n\t#{column_name}#{padding}#{component_type leaf, column_name}#{identity}"
@@ -431,11 +432,11 @@ module ActiveFacts
         end
 
         def boolean_type
-          'BOOLEAN'
+          'boolean'
         end
 
         def surrogate_type
-          'BIGINT IDENTITY NOT NULL'
+          'bigint'
         end
 
         def component_type component, column_name
@@ -474,17 +475,17 @@ module ActiveFacts
               else
                 '(' + length.to_s + (scale ? ", #{scale}" : '') + ')'
               end
-            }#{
-              (component.path_mandatory ? '' : ' NOT') + ' NULL'
-            }#{
-              # REVISIT: This is an SQL Server-ism. Replace with a standard SQL SEQUENCE/
-              # Emit IDENTITY for columns auto-assigned on commit (except FKs)
-              if a = object_type.is_auto_assigned and a != 'assert' and
-                  !component.all_foreign_key_field.detect{|fkf| fkf.foreign_key.source_composite == component.root}
-                ' IDENTITY'
-              else
-                ''
-              end
+            # }#{
+            #   (component.path_mandatory ? '' : ' NOT') + ' NULL'
+            # }#{
+            #   # REVISIT: This is an SQL Server-ism. Replace with a standard SQL SEQUENCE/
+            #   # Emit IDENTITY for columns auto-assigned on commit (except FKs)
+            #   if a = object_type.is_auto_assigned and a != 'assert' and
+            #       !component.all_foreign_key_field.detect{|fkf| fkf.foreign_key.source_composite == component.root}
+            #     ' IDENTITY'
+            #   else
+            #     ''
+            #   end
             }#{
               value_constraint ? check_clause(column_name, value_constraint) : ''
             }"
@@ -627,6 +628,8 @@ module ActiveFacts
               'varbinary'
             when /^BIT$/
               'bit'
+            when /^BOOLEAN$/
+              'boolean'
             else type # raise "SQL type unknown for standard type #{type}"
             end
           [sql_type, length]
