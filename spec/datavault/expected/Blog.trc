@@ -1,0 +1,68 @@
+Summary of Blog
+Author HUB
+	Author HUB->Author VID[1.0] as "Author VID"
+	Author HUB->Author Id[2.0] as "Author Id"
+Author SAT
+	Author SAT->[Author VID][1.0] as "Author VID"
+	Author SAT->LoadDateTime[1.1] as "Load Date Time"
+	Author SAT->Author Name as "Author Name"
+Comment HUB
+	Comment HUB->Comment VID[1.0] as "Comment VID"
+	Comment HUB->Comment Id[2.0] as "Comment Id"
+Comment Is On Paragraph LINK
+	Comment Is On Paragraph LINK->Comment Is On Paragraph VID[1.0] as "Comment Is On Paragraph VID"
+	Comment Is On Paragraph LINK->FirstLoadDateTime as "First Load Date Time"
+	Comment Is On Paragraph LINK->[Comment VID][2.0] as "Comment VID"
+	Comment Is On Paragraph LINK->{Paragraph}->[Paragraph VID][2.1] as "Paragraph VID"
+Comment SAT
+	Comment SAT->[Comment VID][1.0] as "Comment VID"
+	Comment SAT->LoadDateTime[1.1] as "Load Date Time"
+	Comment SAT->Content->Style? as "Content Style"
+	Comment SAT->Content->Text as "Content Text"
+### exactly one of (Content in "Content provides text of Comment") or (Content in "Content is of Paragraph")
+Comment Was Written By Author LINK
+	Comment Was Written By Author LINK->Comment Was Written By Author VID[1.0] as "Comment Was Written By Author VID"
+	Comment Was Written By Author LINK->FirstLoadDateTime as "First Load Date Time"
+	Comment Was Written By Author LINK->{Author}->[Author VID][2.1] as "Author VID"
+	Comment Was Written By Author LINK->[Comment VID][2.0] as "Comment VID"
+Paragraph HUB
+	Paragraph HUB->Paragraph VID[1.0] as "Paragraph VID"
+	Paragraph HUB->{Post}->[Post VID][2.0] as "Post VID"
+	Paragraph HUB->Ordinal[2.1] as "Ordinal"
+Paragraph Involves Post LINK
+	Paragraph Involves Post LINK->Paragraph Involves Post VID[1.0] as "Paragraph Involves Post VID"
+	Paragraph Involves Post LINK->FirstLoadDateTime as "First Load Date Time"
+	Paragraph Involves Post LINK->[Paragraph VID][2.0] as "Paragraph VID"
+	Paragraph Involves Post LINK->[Post VID][2.1] as "Post VID"
+Paragraph SAT
+	Paragraph SAT->[Paragraph VID][1.0] as "Paragraph VID"
+	Paragraph SAT->LoadDateTime[1.1] as "Load Date Time"
+	Paragraph SAT->Content->Style? as "Content Style"
+	Paragraph SAT->Content->Text as "Content Text"
+### exactly one of (Content in "Content provides text of Comment") or (Content in "Content is of Paragraph")
+Post Belongs To Topic LINK
+	Post Belongs To Topic LINK->Post Belongs To Topic VID[1.0] as "Post Belongs To Topic VID"
+	Post Belongs To Topic LINK->FirstLoadDateTime as "First Load Date Time"
+	Post Belongs To Topic LINK->[Post VID][2.0] as "Post VID"
+	Post Belongs To Topic LINK->{Topic}->[Topic VID][2.1] as "Topic VID"
+Post HUB
+	Post HUB->Post VID[1.0] as "Post VID"
+	Post HUB->Post Id[2.0] as "Post Id"
+Post Was Written By Author LINK
+	Post Was Written By Author LINK->Post Was Written By Author VID[1.0] as "Post Was Written By Author VID"
+	Post Was Written By Author LINK->FirstLoadDateTime as "First Load Date Time"
+	Post Was Written By Author LINK->{Author}->[Author VID][2.1] as "Author VID"
+	Post Was Written By Author LINK->[Post VID][2.0] as "Post VID"
+Topic Belongs To Parent Topic LINK
+	Topic Belongs To Parent Topic LINK->Topic Belongs To Parent Topic VID[1.0] as "Topic Belongs To Parent Topic VID"
+	Topic Belongs To Parent Topic LINK->FirstLoadDateTime as "First Load Date Time"
+	Topic Belongs To Parent Topic LINK->[Topic VID][2.0] as "Topic VID"
+	Topic Belongs To Parent Topic LINK->{Parent Topic}?->[Topic VID][2.1] as "Parent Topic VID"
+		### RingConstraint(Acyclic: Topic, Topic in Topic belongs to parent-Topic)
+Topic HUB
+	Topic HUB->Topic VID[1.0] as "Topic VID"
+	Topic HUB->Topic Id[2.0] as "Topic Id"
+Topic SAT
+	Topic SAT->[Topic VID][1.0] as "Topic VID"
+	Topic SAT->LoadDateTime[1.1] as "Load Date Time"
+	Topic SAT->Topic Name as "Topic Name"

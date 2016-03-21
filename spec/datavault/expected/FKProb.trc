@@ -5,12 +5,24 @@ OT HUB
 	OT HUB->DOT?->VT? as "VT"
 VTP HUB
 	VTP HUB->VTP VID[1.0] as "VTP VID"
-	!!! The next field should be duplicated by a Link, and should not be an FK.
 	VTP HUB->{VT}->DOT->OT->[OT VID][2.0] as "VT OT VID"
 	VTP HUB->Name[2.1] as "Name"
+VTP Involves VT LINK
+	VTP Involves VT LINK->VTP Involves VT VID[1.0] as "VTP Involves VT VID"
+	VTP Involves VT LINK->FirstLoadDateTime as "First Load Date Time"
+	VTP Involves VT LINK->[OT VID][2.1] as "OT VID"
+	VTP Involves VT LINK->[VTP VID][2.0] as "VTP VID"
+VTP Restriction Involves VT LINK
+	VTP Restriction Involves VT LINK->VTP Restriction Involves VT VID[1.0] as "VTP Restriction Involves VT VID"
+	VTP Restriction Involves VT LINK->FirstLoadDateTime as "First Load Date Time"
+	VTP Restriction Involves VT LINK->[OT VID][2.1] as "OT VID"
+	VTP Restriction Involves VT LINK->[VTPRestriction VID][2.0] as "VTP Restriction VID"
+VTP Restriction Involves VTP LINK
+	VTP Restriction Involves VTP LINK->VTP Restriction Involves VTP VID[1.0] as "VTP Restriction Involves VTP VID"
+	VTP Restriction Involves VTP LINK->FirstLoadDateTime as "First Load Date Time"
+	VTP Restriction Involves VTP LINK->[VTP VID][2.1] as "VTP VID"
+	VTP Restriction Involves VTP LINK->[VTPRestriction VID][2.0] as "VTP Restriction VID"
 VTPRestriction HUB
 	VTPRestriction HUB->VTPRestriction VID[1.0] as "VTP Restriction VID"
-	!!! The next field should be duplicated by a Link, and should not be an FK.
 	VTPRestriction HUB->{VT}->DOT->OT->[OT VID][2.0] as "VT OT VID"
-	!!! The next field should be duplicated by a Link, and should not be an FK.
 	VTPRestriction HUB->{VTP}->[VTP VID][2.1] as "VTP VID"

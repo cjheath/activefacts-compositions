@@ -14,7 +14,7 @@ module ActiveFacts
     # * delay_fks Leave all foreign keys until the end, not just those that contain forward-references
     # * underscore 
     module Doc
-      class Graph
+      class Graphviz
         def self.options
           {
           }
@@ -90,7 +90,8 @@ END
         def fks composites
           composites.flat_map.with_index(1) do |composite, cnum|
             composite.all_foreign_key_as_source_composite.map do |fk|
-              target_num = composites.index(fk.composite)+1
+              target = fk.composite
+              target_num = composites.index(target)+1
               fkc = fk.all_foreign_key_field[0].component
               mandatory = fkc.path_mandatory
               source_col_num = composite.mapping.all_leaf.index(fkc)+1
@@ -98,7 +99,9 @@ END
               # Also, arrowtail. small circle is 
               # splineType=...
             end
-          end.map{|f| "  #{f};\n"}*''
+          end.
+          map{|f| f && "  #{f};\n"}.
+          compact*''
         end
 
         def stack items
@@ -110,7 +113,7 @@ END
         end
 
         def named_stack head, items
-          "{<name>#{head}|{#{stack items}}}"
+          "{<name>#{head}#{!items.empty? && "|{#{stack items}}" || ''}}"
         end
 
         def tagged_text tag, txt
@@ -125,7 +128,7 @@ END
       end
 
     end
-    publish_generator Doc::Graph
+    publish_generator Doc::Graphviz
   end
 end
 

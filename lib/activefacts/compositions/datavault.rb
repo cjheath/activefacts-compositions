@@ -138,34 +138,23 @@ module ActiveFacts
               end
             end
 
-          # This leaves us with links to links, and hubs whose keys reference a link.
-          # Convert the target links to hubs.
-
-          @hub_composites.dup.each do |hub|
-            mapped_to = @key_structure[hub]
+          # This leaves us with links and hubs whose key structure references other links.
+          # Each link that is the target of such a foreign key must become a hub.
+          (@hub_composites+@link_composites).each do |composite|
+            mapped_to = @key_structure[composite]
             to_links = mapped_to.compact.select{|to| @link_composites.include?(to)}
             if to_links.size > 0
-              trace :datavault_classify, "Hub #{hub.mapping.name} IS TO LINK(S) #{to_links.inspect} (and #{mapped_to.size-to_links.size} parts)"
-              to_links.each do |link|
-                @link_composites.delete(link) and @hub_composites << link and @non_reference_composites << link
+              trace :datavault_classify, "Hub/Link #{composite.mapping.name} IS TO LINK(S) #{to_links.inspect} (and #{mapped_to.size-to_links.size} parts)"
+              to_links.uniq.each do |composite|
+                @link_composites.delete(composite)
+                @hub_composites << composite
               end
             end
           end
 
-          @link_composites.dup.each do |link|
-            mapped_to = @key_structure[link]
-            to_links = mapped_to.compact.select{|to| @link_composites.include?(to)}
-            if to_links.size > 0
-              trace :datavault_classify, "Bad Link #{link.mapping.name} IS TO LINK(S) #{to_links.inspect} (and #{mapped_to.size-to_links.size} parts)"
-              to_links.each do |link|
-                @link_composites.delete(link) and @hub_composites << link and @non_reference_composites << link
-              end
-            end
-          end
-
-          # Note: We may still have # hubs whose identfiers contain foreign keys to one or more other hubs.
-          # These foreign keys will be deleted so these hubs stand alone, but re-instated as new links
-          # to the referenced hubs.
+          # Note: We may still have hubs whose identifiers contain foreign keys to one or more other hubs.
+          # REVISIT: These foreign keys will be deleted so these hubs stand alone,
+          # but have been re-instated as new links to the referenced hubs.
         end
 
         trace :datavault!, "Data Vault classification of composites:" do
@@ -232,10 +221,6 @@ module ActiveFacts
           satellites = {}
           composite.mapping.all_member.to_a.each do |member|
 
-            # If this member is in the natural or surrogate key, leave it there
-            # REVISIT: But if it is an FK to another hub, devolve it to a link as well.
-            next if identifiers.include?(member)
-
             # Any member that is the absorption of a foreign key to a hub or link
             # (which is all, since we removed FKs to reference tables)
             # must be converted to a Mapping for a new Entity Type that notionally
@@ -244,6 +229,10 @@ module ActiveFacts
               devolve_absorption_to_link member, identifiers.include?(member)
               next
             end
+
+            # If this member is in the natural or surrogate key, leave it there
+            # REVISIT: But if it is an FK to another hub, devolve it to a link as well.
+            next if identifiers.include?(member)
 
             # We may absorb a subtype that has no contents. There's no point moving these to a satellite.
             next if is_empty_inheritance member
@@ -373,8 +362,8 @@ module ActiveFacts
       end
 
       # This absorption reflects a time-varying fact type that involves another Hub, which becomes a new link.
-      # REVISIT: "keep" says that the original field must remain, because it's in its parent's natural key.
-      def devolve_absorption_to_link absorption, keep
+      # REVISIT: "make_copy" says that the original field must remain, because it's in its parent's natural key.
+      def devolve_absorption_to_link absorption, make_copy
         trace :datavault, "Promote #{absorption.inspect} to a new Link" do
 
           #
@@ -387,13 +376,14 @@ module ActiveFacts
           # validation tests.
           #
 
-          # link_name = absorption.root.mapping.name + ' ' + absorption.child_role.name
           link_name =
             absorption.
             parent_role.
             fact_type.
             reading_preferably_starting_with_role(absorption.parent_role).
             expand([], false).words.capwords*' '
+          # A simpler naming, not using the fact type reading
+          # link_name = absorption.root.mapping.name + ' ' + absorption.child_role.name
 
           link_from = absorption.parent.composite
           link_to = absorption.foreign_key.composite
@@ -402,33 +392,45 @@ module ActiveFacts
           mapping = @constellation.Mapping(:new, name: link_name, object_type: absorption.parent_role.object_type)
           link = @constellation.Composite(mapping, composition: @composition)
 
-          # Move the absorption across to here
-          absorption.parent = mapping
+          unless make_copy
+            # Move the absorption across to here
+            absorption.parent = mapping
 
-          if absorption.is_a?(MM::Absorption) && absorption.foreign_key
-            trace :datavault, "Setting new source composite for #{absorption.foreign_key.inspect}"
-            absorption.foreign_key.source_composite = link
+            if absorption.is_a?(MM::Absorption) && absorption.foreign_key
+              trace :datavault, "Setting new source composite for #{absorption.foreign_key.inspect}"
+              absorption.foreign_key.source_composite = link
+            end
           end
+
+          # Add a surrogate key:
+          inject_surrogate link
 
           # Add a Surrogate foreign Key to the link_from composite
           fk1_target = link_from.primary_index.all_index_field.single
-          unless fk1_target
-            # This code is not working yet.
-            trace :datavault, "REVISIT: can't do this, #{link_from.inspect} doesn't have a single-part PK"
-            return
-          end
-          fk1_field = fork_component_to_new_parent(mapping, fk1_target.component)
+          raise "Internal error: #{link_from.inspect} should have a surrogate key" unless fk1_target
+          # Here, we're jumping directly to the foreign key field.
+          # Normally we'd have the Absorption of the object type, containing the FK field.
+          # We have no fact type for this absorption; it should be the LinkFactType of the notional objectification
+          # This affects the absorption path comment on the related SQL coliumn, for example.
+          # REVISIT: Add the LinkFactType for the notional objectification, and use that.
+          fk1_component = fork_component_to_new_parent(mapping, fk1_target.component)
 
-          # Add a Surrogate foreign Key to the link_to composite
           fk2_target = link_to.primary_index.all_index_field.single
-          fk2_field = fork_component_to_new_parent(mapping, fk2_target.component)
+          if make_copy
+            # See the above comment for fk1_component; it aplies here also
+            fk2_component = fork_component_to_new_parent(mapping, fk2_target.component)
+          else
+            # We're using the component we moved across
+            fk2_component = absorption.foreign_key.all_foreign_key_field.single.component
+            # Add a Surrogate foreign Key to the link_to composite
+          end
 
           # Add a natural key:
           natural_index =
             @constellation.Index(:new, composite: link, is_unique: true,
               presence_constraint: nil, composite_as_natural_index: link)
-          @constellation.IndexField(access_path: natural_index, ordinal: 0, component: fk1_field)
-          @constellation.IndexField(access_path: natural_index, ordinal: 1, component: fk2_field)
+          @constellation.IndexField(access_path: natural_index, ordinal: 0, component: fk1_component)
+          @constellation.IndexField(access_path: natural_index, ordinal: 1, component: fk2_component)
 
           # Add ForeignKeys
           fk1 = @constellation.ForeignKey(
@@ -437,18 +439,21 @@ module ActiveFacts
               composite: link_from,
               absorption: nil       # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
             )
-          @constellation.ForeignKeyField(foreign_key: fk1, ordinal: 0, component: fk1_field)
+          @constellation.ForeignKeyField(foreign_key: fk1, ordinal: 0, component: fk1_component)
           # REVISIT: This should be filled in by complete_foreign_keys, but it has no Absorption
           @constellation.IndexField(access_path: fk1, ordinal: 0, component: fk1_target.component)
-          fk2 = @constellation.ForeignKey(
-              :new,
-              source_composite: link,
-              composite: link_to,
-              absorption: nil       # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
-            )
-          @constellation.ForeignKeyField(foreign_key: fk2, ordinal: 0, component: fk2_field)
-          # REVISIT: This should be filled in by complete_foreign_keys, but it has no Absorption
-          @constellation.IndexField(access_path: fk2, ordinal: 0, component: fk2_target.component)
+
+          if make_copy
+            fk2 = @constellation.ForeignKey(
+                :new,
+                source_composite: link,
+                composite: link_to,
+                absorption: nil       # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+              )
+            @constellation.ForeignKeyField(foreign_key: fk2, ordinal: 0, component: fk2_component)
+            # REVISIT: This should be filled in by complete_foreign_keys, but it has no Absorption
+            @constellation.IndexField(access_path: fk2, ordinal: 0, component: fk2_target.component)
+          end
 
 =begin
           issues = 0
@@ -467,8 +472,7 @@ module ActiveFacts
           )
           mapping.re_rank
 
-          # Add a surrogate key:
-          inject_surrogate link
+          #link.mapping.re_rank
 
           # devolve link, false
           @link_composites << link
