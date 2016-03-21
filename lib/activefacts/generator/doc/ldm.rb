@@ -368,11 +368,12 @@ module ActiveFacts
           @tables_emitted[composite] = true
           delayed_indices = []
 
+          table_defn =
           "                <h3 id=\"LDMD_#{table_name(composite)}\">#{composite.mapping.name}</h3>\n" +
           "                  <table class=\"table table-bordered table-striped\">\n" +
           "                    <thead style=\"background-color: #aaa;\">\n" +
           "                      <tr>\n" +
-          "                        <th>Attribute</th><th>M/O</th><th>Description</th>\n" +
+          "                        <th>Attribute</th><th>Data Type</th><th>Man</th><th>Description</th>\n" +
           "                      </tr>\n" +
           "                    </thead>\n" +
           "                    <tbody>\n" +
@@ -385,7 +386,9 @@ module ActiveFacts
             end
           ).compact.flat_map{|f| "#{f}" }*"\n"+"\n" +
           "                    </tbody>\n" +
-          "                  </table>\n" +
+          "                  </table>\n"
+          
+          table_keys =
           (
             composite.all_index.map do |index|
               generate_index index, delayed_indices, 9
@@ -395,6 +398,31 @@ module ActiveFacts
               generate_foreign_key fk, 9
             end.compact.sort
           ).compact.flat_map{|f| "#{f}" }*"<br>\n"+"\n"
+
+          table_values = 
+            if composite.mapping.object_type.all_instance.size > 0 then
+              table_values =
+              "                  <table class=\"table table-bordered table-striped\">\n" +
+              "                    <thead style=\"background-color: #aaa;\">\n" +
+              "                      <tr>\n" +
+              (
+                composite.mapping.all_leaf.flat_map do |leaf|
+                  # Absorbed empty subtypes appear as leaves
+                  next if leaf.is_a?(MM::Absorption) && leaf.parent_role.fact_type.is_a?(MM::TypeInheritance)
+                  column_name = safe_column_name(leaf)
+                  "  " * 11 + "  <th>#{column_name}\n"
+                end
+              ) * "\n" + "\n" +
+              "                      </tr>\n" +
+              "                    </thead>\n" +
+              "                    <tbody>\n" +
+              "                    </tbody>\n" +
+              "                  </table>\n"
+            else
+              ''
+            end
+            
+          table_defn + table_keys + table_values
         end
 
         def generate_column leaf, indent
@@ -406,7 +434,8 @@ module ActiveFacts
           
           "  " * indent + "<tr>\n" +
           "  " * indent + "  <td>#{column_name}\n" +
-          "  " * indent + "  <td>#{leaf.path_mandatory ? 'M' : 'O'}\n" +
+          "  " * indent + "  <td>#{component_type(leaf, column_name)}\n" +
+          "  " * indent + "  <td>#{leaf.path_mandatory ? 'Yes' : 'No'}\n" +
           "  " * indent + "  <td>#{column_comment leaf}\n" +
           "  " * indent + "</tr>" 
           # "-- #{column_comment leaf}\n\t#{column_name}#{padding}#{component_type leaf, column_name}#{identity}"
@@ -431,11 +460,11 @@ module ActiveFacts
         end
 
         def boolean_type
-          'BOOLEAN'
+          'boolean'
         end
 
         def surrogate_type
-          'BIGINT IDENTITY NOT NULL'
+          'bigint'
         end
 
         def component_type component, column_name
@@ -474,17 +503,17 @@ module ActiveFacts
               else
                 '(' + length.to_s + (scale ? ", #{scale}" : '') + ')'
               end
-            }#{
-              (component.path_mandatory ? '' : ' NOT') + ' NULL'
-            }#{
-              # REVISIT: This is an SQL Server-ism. Replace with a standard SQL SEQUENCE/
-              # Emit IDENTITY for columns auto-assigned on commit (except FKs)
-              if a = object_type.is_auto_assigned and a != 'assert' and
-                  !component.all_foreign_key_field.detect{|fkf| fkf.foreign_key.source_composite == component.root}
-                ' IDENTITY'
-              else
-                ''
-              end
+            # }#{
+            #   (component.path_mandatory ? '' : ' NOT') + ' NULL'
+            # }#{
+            #   # REVISIT: This is an SQL Server-ism. Replace with a standard SQL SEQUENCE/
+            #   # Emit IDENTITY for columns auto-assigned on commit (except FKs)
+            #   if a = object_type.is_auto_assigned and a != 'assert' and
+            #       !component.all_foreign_key_field.detect{|fkf| fkf.foreign_key.source_composite == component.root}
+            #     ' IDENTITY'
+            #   else
+            #     ''
+            #   end
             }#{
               value_constraint ? check_clause(column_name, value_constraint) : ''
             }"
@@ -627,6 +656,8 @@ module ActiveFacts
               'varbinary'
             when /^BIT$/
               'bit'
+            when /^BOOLEAN$/
+              'boolean'
             else type # raise "SQL type unknown for standard type #{type}"
             end
           [sql_type, length]
