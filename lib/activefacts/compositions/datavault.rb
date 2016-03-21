@@ -366,7 +366,6 @@ module ActiveFacts
       def devolve_absorption_to_link absorption, make_copy
         trace :datavault, "Promote #{absorption.inspect} to a new Link" do
 
-          #
           # REVISIT: Here we need a new objectified fact type with the same two players and the same readings,
           # complete with LinkFactTypes. Then we need two Absorptions, one for each LinkFactType, and with
           # the same child role names as the role names in our original fact type.
@@ -374,7 +373,6 @@ module ActiveFacts
           # The current code tries to re-use the same fact type, but the absorptions cannot work for both as
           # the parent object type can only be one of the two types. That's why this is currently failing its
           # validation tests.
-          #
 
           link_name =
             absorption.
@@ -396,9 +394,10 @@ module ActiveFacts
             # Move the absorption across to here
             absorption.parent = mapping
 
-            if absorption.is_a?(MM::Absorption) && absorption.foreign_key
+            if absorption.foreign_key
               trace :datavault, "Setting new source composite for #{absorption.foreign_key.inspect}"
               absorption.foreign_key.source_composite = link
+              fk2_component = absorption.foreign_key.all_foreign_key_field.single.component
             end
           end
 
@@ -420,9 +419,7 @@ module ActiveFacts
             # See the above comment for fk1_component; it aplies here also
             fk2_component = fork_component_to_new_parent(mapping, fk2_target.component)
           else
-            # We're using the component we moved across
-            fk2_component = absorption.foreign_key.all_foreign_key_field.single.component
-            # Add a Surrogate foreign Key to the link_to composite
+            # We're using the leaf component of the absorption we moved across
           end
 
           # Add a natural key:
@@ -453,6 +450,7 @@ module ActiveFacts
             @constellation.ForeignKeyField(foreign_key: fk2, ordinal: 0, component: fk2_component)
             # REVISIT: This should be filled in by complete_foreign_keys, but it has no Absorption
             @constellation.IndexField(access_path: fk2, ordinal: 0, component: fk2_target.component)
+            absorption.foreign_key.retract
           end
 
 =begin
