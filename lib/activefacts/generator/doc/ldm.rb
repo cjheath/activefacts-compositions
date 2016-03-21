@@ -368,6 +368,7 @@ module ActiveFacts
           @tables_emitted[composite] = true
           delayed_indices = []
 
+          table_defn =
           "                <h3 id=\"LDMD_#{table_name(composite)}\">#{composite.mapping.name}</h3>\n" +
           "                  <table class=\"table table-bordered table-striped\">\n" +
           "                    <thead style=\"background-color: #aaa;\">\n" +
@@ -385,7 +386,9 @@ module ActiveFacts
             end
           ).compact.flat_map{|f| "#{f}" }*"\n"+"\n" +
           "                    </tbody>\n" +
-          "                  </table>\n" +
+          "                  </table>\n"
+          
+          table_keys =
           (
             composite.all_index.map do |index|
               generate_index index, delayed_indices, 9
@@ -395,6 +398,31 @@ module ActiveFacts
               generate_foreign_key fk, 9
             end.compact.sort
           ).compact.flat_map{|f| "#{f}" }*"<br>\n"+"\n"
+
+          table_values = 
+            if composite.mapping.object_type.all_instance.size > 0 then
+              table_values =
+              "                  <table class=\"table table-bordered table-striped\">\n" +
+              "                    <thead style=\"background-color: #aaa;\">\n" +
+              "                      <tr>\n" +
+              (
+                composite.mapping.all_leaf.flat_map do |leaf|
+                  # Absorbed empty subtypes appear as leaves
+                  next if leaf.is_a?(MM::Absorption) && leaf.parent_role.fact_type.is_a?(MM::TypeInheritance)
+                  column_name = safe_column_name(leaf)
+                  "  " * 11 + "  <th>#{column_name}\n"
+                end
+              ) * "\n" + "\n" +
+              "                      </tr>\n" +
+              "                    </thead>\n" +
+              "                    <tbody>\n" +
+              "                    </tbody>\n" +
+              "                  </table>\n"
+            else
+              ''
+            end
+            
+          table_defn + table_keys + table_values
         end
 
         def generate_column leaf, indent
