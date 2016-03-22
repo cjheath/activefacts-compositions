@@ -1,11 +1,11 @@
 # Mapping (top) of Beer
 #   0: Absorption (existential) in Beer of Beer Name in "Beer has Beer Name" (forward)
-#   1: Absorption (multiple) in Beer of Beer Preference in "Beer Preference involves Beer" (reverse)
+#   1: Absorption (multiple) in Beer of Beer Preference in "Beer Preference involves favorite-Beer" (reverse)
 # Mapping (top) of Beer Name
 #   0: Absorption (optional) in Beer Name of Beer in "Beer Name is of Beer" (reverse)
 # Mapping (top) of Beer Preference
 #   0: Absorption (existential) in Beer Preference of Person in "Beer Preference involves Person" (forward)
-#   1: Absorption (mandatory) in Beer Preference of Favorite Beer in "Beer Preference involves Beer" (forward)
+#   1: Absorption (mandatory) in Beer Preference of Favorite Beer in "Beer Preference involves favorite-Beer" (forward)
 # Mapping (top) of Name
 # Mapping (top) of Person
 #   0: Absorption (existential) in Person of Person Name in "Person has Person Name" (forward)

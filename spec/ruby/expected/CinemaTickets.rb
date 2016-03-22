@@ -185,7 +185,7 @@ module CinemaTickets
   class SeatAllocation
     identified_by   :booking, :allocated_seat
     has_one         :booking, mandatory: true           # Seat Allocation involves Booking, see Booking#all_seat_allocation
-    has_one         :allocated_seat, mandatory: true, class: Seat  # Seat Allocation involves Seat, see Seat#all_seat_allocation_as_allocated_seat
+    has_one         :allocated_seat, mandatory: true, class: Seat  # Seat Allocation involves allocated-Seat, see Seat#all_seat_allocation_as_allocated_seat
   end
 
   class TicketPricing

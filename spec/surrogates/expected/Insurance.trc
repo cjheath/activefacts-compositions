@@ -169,14 +169,14 @@
 #           0: SurrogateKey (mandatory) in Cover Type of Cover Type ID
 #         2: Absorption (existential) in Cover Wording of Policy Wording in "Cover Wording involves Policy Wording"
 #           0: Absorption (existential) in Policy Wording of Policy Wording Text in "Policy Wording has Policy Wording Text"
-#         3: Absorption (existential) in Cover Wording of Start Date in "Cover Wording involves Date"
+#         3: Absorption (existential) in Cover Wording of Start Date in "Cover Wording involves start-Date"
 #     Indices
 #       Primary index to Cover Wording
 #         IndexField part 0 in Cover Wording references SurrogateKey (surrogate) in Cover Wording of Cover Wording ID
 #       Unique index to Cover Wording over PresenceConstraint over (Cover Type, Policy Wording, Start Date in "Cover Type used Policy Wording from start-Date") occurs at most one time
 #         IndexField part 0 in Cover Wording references SurrogateKey (mandatory) in Cover Type of Cover Type ID
 #         IndexField part 1 in Cover Wording references Absorption (existential) in Policy Wording of Policy Wording Text in "Policy Wording has Policy Wording Text"
-#         IndexField part 2 in Cover Wording references Absorption (existential) in Cover Wording of Start Date in "Cover Wording involves Date"
+#         IndexField part 2 in Cover Wording references Absorption (existential) in Cover Wording of Start Date in "Cover Wording involves start-Date"
 #     Foreign keys outbound
 #       Foreign Key from Cover Wording to Cover Type over Absorption (existential) in Cover Wording of Cover Type in "Cover Wording involves Cover Type"
 #         ForeignKeyField part 0 in Cover Wording is SurrogateKey (mandatory) in Cover Type of Cover Type ID

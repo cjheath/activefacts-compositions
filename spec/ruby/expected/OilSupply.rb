@@ -17,7 +17,7 @@ module OilSupply
   class AcceptableSubstitution
     identified_by   :product, :alternate_product, :season
     has_one         :product, mandatory: true           # Acceptable Substitution involves Product, see Product#all_acceptable_substitution
-    has_one         :alternate_product, mandatory: true, class: Product  # Acceptable Substitution involves Product, see Product#all_acceptable_substitution_as_alternate_product
+    has_one         :alternate_product, mandatory: true, class: Product  # Acceptable Substitution involves alternate-Product, see Product#all_acceptable_substitution_as_alternate_product
     has_one         :season, mandatory: true            # Acceptable Substitution involves Season, see Season#all_acceptable_substitution
   end
 

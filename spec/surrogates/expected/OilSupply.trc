@@ -5,7 +5,7 @@
 #         0: SurrogateKey (surrogate) in Acceptable Substitution of Acceptable Substitution ID
 #         1: Absorption (existential) in Acceptable Substitution of Product in "Acceptable Substitution involves Product"
 #           0: SurrogateKey (mandatory) in Product of Product ID
-#         2: Absorption (existential) in Acceptable Substitution of Alternate Product in "Acceptable Substitution involves Product"
+#         2: Absorption (existential) in Acceptable Substitution of Alternate Product in "Acceptable Substitution involves alternate-Product"
 #           0: SurrogateKey (mandatory) in Alternate Product of Product ID
 #         3: Absorption (existential) in Acceptable Substitution of Season in "Acceptable Substitution involves Season"
 #     Indices
@@ -16,7 +16,7 @@
 #         IndexField part 1 in Acceptable Substitution references SurrogateKey (mandatory) in Alternate Product of Product ID
 #         IndexField part 2 in Acceptable Substitution references Absorption (existential) in Acceptable Substitution of Season in "Acceptable Substitution involves Season"
 #     Foreign keys outbound
-#       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Alternate Product in "Acceptable Substitution involves Product"
+#       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Alternate Product in "Acceptable Substitution involves alternate-Product"
 #         ForeignKeyField part 0 in Acceptable Substitution is SurrogateKey (mandatory) in Alternate Product of Product ID
 #         IndexField part 0 in Product references SurrogateKey (surrogate) in Product of Product ID
 #       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Product in "Acceptable Substitution involves Product"
@@ -48,7 +48,7 @@
 #       Unique index to Product over PresenceConstraint over (Product Name in "Product has Product Name") occurs at most one time
 #         IndexField part 0 in Product references Absorption (existential) in Product of Product Name in "Product has Product Name"
 #     Foreign keys inbound
-#       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Alternate Product in "Acceptable Substitution involves Product"
+#       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Alternate Product in "Acceptable Substitution involves alternate-Product"
 #         ForeignKeyField part 0 in Acceptable Substitution is SurrogateKey (mandatory) in Alternate Product of Product ID
 #         IndexField part 0 in Product references SurrogateKey (surrogate) in Product of Product ID
 #       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Product in "Acceptable Substitution involves Product"

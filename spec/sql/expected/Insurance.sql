@@ -121,7 +121,7 @@ CREATE TABLE CoverWording (
 	CoverTypeCode                           CHARACTER NOT NULL,
 	-- Cover Wording involves Policy Wording that has Policy Wording Text
 	PolicyWordingText                       VARCHAR NOT NULL,
-	-- Cover Wording involves Date
+	-- Cover Wording involves start-Date
 	StartDate                               DATE NOT NULL,
 	-- Primary index to Cover Wording over PresenceConstraint over (Cover Type, Policy Wording, Start Date in "Cover Type used Policy Wording from start-Date") occurs at most one time
 	PRIMARY KEY CLUSTERED(CoverTypeCode, PolicyWordingText, StartDate),

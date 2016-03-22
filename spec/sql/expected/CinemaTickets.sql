@@ -113,11 +113,11 @@ CREATE TABLE Seat (
 CREATE TABLE SeatAllocation (
 	-- Seat Allocation involves Booking that has Booking Nr
 	BookingNr                               INTEGER NOT NULL,
-	-- Seat Allocation involves Seat and Seat is in Row that is in Cinema that has Cinema ID
+	-- Seat Allocation involves allocated-Seat and Seat is in Row that is in Cinema that has Cinema ID
 	AllocatedSeatRowCinemaID                BIGINT NOT NULL,
-	-- Seat Allocation involves Seat and Seat is in Row that has Row Nr
+	-- Seat Allocation involves allocated-Seat and Seat is in Row that has Row Nr
 	AllocatedSeatRowNr                      CHARACTER(2) NOT NULL,
-	-- Seat Allocation involves Seat and Seat has Seat Number
+	-- Seat Allocation involves allocated-Seat and Seat has Seat Number
 	AllocatedSeatNumber                     SMALLINT NOT NULL,
 	-- Primary index to Seat Allocation over PresenceConstraint over (Booking, Allocated Seat in "Booking has allocated-Seat") occurs at most one time
 	PRIMARY KEY CLUSTERED(BookingNr, AllocatedSeatRowCinemaID, AllocatedSeatRowNr, AllocatedSeatNumber),

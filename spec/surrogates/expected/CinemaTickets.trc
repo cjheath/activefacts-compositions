@@ -148,7 +148,7 @@
 #         IndexField part 1 in Seat references Absorption (existential) in Row of Row Nr in "Row has Row Nr"
 #         IndexField part 2 in Seat references Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
 #     Foreign keys inbound
-#       Foreign Key from Seat Allocation to Seat over Absorption (existential) in Seat Allocation of Allocated Seat in "Seat Allocation involves Seat"
+#       Foreign Key from Seat Allocation to Seat over Absorption (existential) in Seat Allocation of Allocated Seat in "Seat Allocation involves allocated-Seat"
 #         ForeignKeyField part 0 in Seat Allocation is SurrogateKey (mandatory) in Allocated Seat of Seat ID
 #         IndexField part 0 in Seat references SurrogateKey (surrogate) in Seat of Seat ID
 #     Foreign keys outbound
@@ -160,14 +160,14 @@
 #       Mapping (top) of Seat Allocation
 #         0: Absorption (existential) in Seat Allocation of Booking in "Seat Allocation involves Booking"
 #           0: SurrogateKey (mandatory) in Booking of Booking ID
-#         1: Absorption (existential) in Seat Allocation of Allocated Seat in "Seat Allocation involves Seat"
+#         1: Absorption (existential) in Seat Allocation of Allocated Seat in "Seat Allocation involves allocated-Seat"
 #           0: SurrogateKey (mandatory) in Allocated Seat of Seat ID
 #     Indices
 #       Primary index to Seat Allocation over PresenceConstraint over (Booking, Allocated Seat in "Booking has allocated-Seat") occurs at most one time
 #         IndexField part 0 in Seat Allocation references SurrogateKey (mandatory) in Booking of Booking ID
 #         IndexField part 1 in Seat Allocation references SurrogateKey (mandatory) in Allocated Seat of Seat ID
 #     Foreign keys outbound
-#       Foreign Key from Seat Allocation to Seat over Absorption (existential) in Seat Allocation of Allocated Seat in "Seat Allocation involves Seat"
+#       Foreign Key from Seat Allocation to Seat over Absorption (existential) in Seat Allocation of Allocated Seat in "Seat Allocation involves allocated-Seat"
 #         ForeignKeyField part 0 in Seat Allocation is SurrogateKey (mandatory) in Allocated Seat of Seat ID
 #         IndexField part 0 in Seat references SurrogateKey (surrogate) in Seat of Seat ID
 #       Foreign Key from Seat Allocation to Booking over Absorption (existential) in Seat Allocation of Booking in "Seat Allocation involves Booking"

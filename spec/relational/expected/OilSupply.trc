@@ -4,7 +4,7 @@
 #       Mapping (top) of Acceptable Substitution
 #         0: Absorption (existential) in Acceptable Substitution of Product in "Acceptable Substitution involves Product"
 #           0: Absorption (existential) in Product of Product Name in "Product has Product Name"
-#         1: Absorption (existential) in Acceptable Substitution of Alternate Product in "Acceptable Substitution involves Product"
+#         1: Absorption (existential) in Acceptable Substitution of Alternate Product in "Acceptable Substitution involves alternate-Product"
 #           0: Absorption (existential) in Alternate Product of Product Name in "Product has Product Name"
 #         2: Absorption (existential) in Acceptable Substitution of Season in "Acceptable Substitution involves Season"
 #     Indices
@@ -13,7 +13,7 @@
 #         IndexField part 1 in Acceptable Substitution references Absorption (existential) in Alternate Product of Product Name in "Product has Product Name"
 #         IndexField part 2 in Acceptable Substitution references Absorption (existential) in Acceptable Substitution of Season in "Acceptable Substitution involves Season"
 #     Foreign keys outbound
-#       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Alternate Product in "Acceptable Substitution involves Product"
+#       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Alternate Product in "Acceptable Substitution involves alternate-Product"
 #         ForeignKeyField part 0 in Acceptable Substitution is Absorption (existential) in Alternate Product of Product Name in "Product has Product Name"
 #         IndexField part 0 in Product references Absorption (existential) in Product of Product Name in "Product has Product Name"
 #       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Product in "Acceptable Substitution involves Product"
@@ -39,7 +39,7 @@
 #       Primary index to Product over PresenceConstraint over (Product Name in "Product has Product Name") occurs at most one time
 #         IndexField part 0 in Product references Absorption (existential) in Product of Product Name in "Product has Product Name"
 #     Foreign keys inbound
-#       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Alternate Product in "Acceptable Substitution involves Product"
+#       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Alternate Product in "Acceptable Substitution involves alternate-Product"
 #         ForeignKeyField part 0 in Acceptable Substitution is Absorption (existential) in Alternate Product of Product Name in "Product has Product Name"
 #         IndexField part 0 in Product references Absorption (existential) in Product of Product Name in "Product has Product Name"
 #       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Product in "Acceptable Substitution involves Product"

@@ -115,7 +115,7 @@ CREATE TABLE CoverWording (
 	CoverTypeID                             BIGINT NOT NULL,
 	-- Cover Wording involves Policy Wording that has Policy Wording Text
 	PolicyWordingText                       VARCHAR NOT NULL,
-	-- Cover Wording involves Date
+	-- Cover Wording involves start-Date
 	StartDate                               DATE NOT NULL,
 	-- Primary index to Cover Wording
 	PRIMARY KEY CLUSTERED(CoverWordingID),

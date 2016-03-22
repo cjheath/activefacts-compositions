@@ -35,13 +35,13 @@ module CompanyDirectorEmployee
 
   class Attendance
     identified_by   :attendee, :meeting
-    has_one         :attendee, mandatory: true, class: Person  # Attendance involves Person, see Person#all_attendance_as_attendee
+    has_one         :attendee, mandatory: true, class: Person  # Attendance involves Attendee, see Person#all_attendance_as_attendee
     has_one         :meeting, mandatory: true           # Attendance involves Meeting, see Meeting#all_attendance
   end
 
   class Directorship
     identified_by   :director, :company
-    has_one         :director, mandatory: true, class: Person  # Directorship involves Person, see Person#all_directorship_as_director
+    has_one         :director, mandatory: true, class: Person  # Directorship involves Director, see Person#all_directorship_as_director
     has_one         :company, mandatory: true           # Directorship involves Company, see Company#all_directorship
     has_one         :appointment_date, mandatory: true, class: Date  # Directorship began on appointment-Date, see Date#all_directorship_as_appointment_date
   end

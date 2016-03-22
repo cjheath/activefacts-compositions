@@ -1,7 +1,7 @@
 CREATE TABLE Attendance (
-	-- Attendance involves Person and Person has given-Name
+	-- Attendance involves Attendee and Person has given-Name
 	AttendeeGivenName                       VARCHAR(48) NOT NULL,
-	-- Attendance involves Person and maybe Person is called family-Name
+	-- Attendance involves Attendee and maybe Person is called family-Name
 	AttendeeFamilyName                      VARCHAR(48) NULL,
 	-- Attendance involves Meeting that is held by Company that is called Company Name
 	MeetingCompanyName                      VARCHAR(48) NOT NULL,
@@ -25,9 +25,9 @@ CREATE TABLE Company (
 
 
 CREATE TABLE Directorship (
-	-- Directorship involves Person and Person has given-Name
+	-- Directorship involves Director and Person has given-Name
 	DirectorGivenName                       VARCHAR(48) NOT NULL,
-	-- Directorship involves Person and maybe Person is called family-Name
+	-- Directorship involves Director and maybe Person is called family-Name
 	DirectorFamilyName                      VARCHAR(48) NULL,
 	-- Directorship involves Company that is called Company Name
 	CompanyName                             VARCHAR(48) NOT NULL,

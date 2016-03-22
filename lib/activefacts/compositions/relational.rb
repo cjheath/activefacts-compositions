@@ -110,7 +110,7 @@ module ActiveFacts
               absorbing_ref = absorbing_ref.flip!
               candidate.full_absorption =
                 @constellation.FullAbsorption(composition: @composition, absorption: absorbing_ref, object_type: object_type)
-              trace :relational_optimiser, "Absorb objectified unary #{object_type.name} into #{f.all_role.single.object_type.name}"
+              trace :relational_optimiser, "Fully absorb objectified unary #{object_type.name} into #{f.all_role.single.object_type.name}"
               candidate.definitely_not_table
               next object_type
             end
@@ -132,7 +132,7 @@ module ActiveFacts
               absorbing_ref = absorbing_ref.forward_absorption || absorbing_ref.flip!
               candidate.full_absorption =
                 @constellation.FullAbsorption(composition: @composition, absorption: absorbing_ref, object_type: object_type)
-              trace :relational_optimiser, "EntityType #{single_pi_role.object_type.name} identifies EntityType #{object_type.name}, so absorbs it"
+              trace :relational_optimiser, "EntityType #{single_pi_role.object_type.name} identifies EntityType #{object_type.name}, so fully absorbs it via #{absorbing_ref.inspect}"
               candidate.definitely_not_table
               next object_type
             end
@@ -408,7 +408,6 @@ module ActiveFacts
         end
       end
 
-      # REVISIT: Don't use this; it doesn't seem to clean up foreign keys correctly. mandatory roles should ensure that.
       def elide_empty_inheritance mapping
         mapping.all_member.to_a.each do |member|
           if member.is_a?(MM::Absorption) && member.parent_role.fact_type.is_a?(MM::TypeInheritance)
@@ -432,6 +431,49 @@ module ActiveFacts
         end
       end
 
+      # This method duplicates part of the absorb_all process,
+      # looking for foreign keys from this composite.
+      # This must be done in a Data Vault mapping before we decide
+      # what will be a hub and what will be a link, and that controls
+      # whether we will absorb a foreign key or a copy of the natural
+      # key while expanding a table's identifiers.
+      # Hub tables never absorb a surrogate FK, only natural keys.
+      def enumerate_foreign_keys mapping, from = nil, accumulator = []
+        from ||= mapping
+        #mapping.re_rank
+        ordered = from.all_member.sort_by(&:ordinal)
+        ordered.each do |member|
+          # Only consider foreward Absorptions:
+          next unless member.is_a?(MM::Absorption) && !member.forward_absorption
+
+          child_object_type = member.child_role.object_type
+          child_mapping = @binary_mappings[child_object_type]
+          if child_mapping.composite
+            trace :fks, "FK to #{member.child_role.name} in #{member.inspect_reading}" do
+              accumulator << child_mapping.composite
+              return accumulator
+            end
+          end
+
+          full_absorption = child_object_type.all_full_absorption[@composition]
+          if full_absorption && full_absorption.absorption.parent_role.fact_type != member.parent_role.fact_type
+            begin     # Follow transitive target absorption
+              child_object_type = full_absorption.absorption.parent_role.object_type
+            end while full_absorption = child_object_type.all_full_absorption[@composition]
+            child_mapping = @binary_mappings[child_object_type]
+            trace :fks, "FK to #{child_mapping.name} in #{member.inspect_reading} (for fully-absorbed #{member.child_role.name})" do
+              accumulator << child_mapping.composite
+            end
+            return accumulator
+          end
+
+          trace :fks, "Descending all of #{member.child_role.name} in #{member.inspect_reading}" do
+            enumerate_foreign_keys member, child_mapping, accumulator
+          end
+        end
+        accumulator
+      end
+
       def devolve_all
         # Data Vaults have satellites, not normal relational schemas.
       end
@@ -442,9 +484,8 @@ module ActiveFacts
         # Should we absorb a foreign key or the whole contents?
 
         child_object_type = member.child_role.object_type
-        table = @candidates[child_object_type]
         child_mapping = @binary_mappings[child_object_type]
-        if table
+        if child_mapping.composite
           trace :relational_columns?, "Absorbing FK to #{member.child_role.name} in #{member.inspect_reading}" do
             paths[member] = @constellation.ForeignKey(:new, source_composite: mapping.root, composite: child_mapping.composite, absorption: member)
             absorb_key member, child_mapping, paths
@@ -491,16 +532,18 @@ module ActiveFacts
             break   # Will always be first (higher rank), and usurps others
           elsif member.is_a?(MM::Absorption)
             object_type = member.child_role.object_type
-            fa = @composition.all_full_absorption[member.child_role.object_type]
-            if fa
+            full_absorption = @composition.all_full_absorption[member.child_role.object_type]
+            if full_absorption
               # The target object is fully absorbed. Absorb a key to where it was absorbed
               # We can't recurse here, because we must descend supertype absorptions
-              while fa
-                member = mirror fa.absorption, member
-                augment_paths paths, member
-                # This doesn't "feel" right, but it works right. Perhaps I'll understand why one day.
-                absorb_key member, fa.absorption.parent, paths
-                fa = @composition.all_full_absorption[member.child_role.object_type]
+              while full_absorption
+                trace :relational_columns?, "Absorbing key of fully absorbed #{member.child_role.name}" do
+                  member = mirror full_absorption.absorption, member
+                  augment_paths paths, member
+                  # Descend so the key fields get fully populated
+                  absorb_key member, full_absorption.absorption.parent, paths
+                  full_absorption = @composition.all_full_absorption[member.child_role.object_type]
+                end
               end
             else
               absorb_key member, @binary_mappings[member.child_role.object_type], paths
@@ -535,16 +578,12 @@ module ActiveFacts
             rel = paths.merge(relevant_paths(newpaths, member))
             augment_paths rel, member
 
-            if member.is_a?(MM::Absorption)
+            if member.is_a?(MM::Absorption) && !member.forward_absorption
+              # Only forward absorptions here please...
               absorb_nested mapping, member, rel
             end
           end
         end
-        newpaths.each do |pc, path|
-          path.retract if path.all_index_field.size == 0
-        end
-
-        # mapping.re_rank
       end
 
       # Find all PresenceConstraints to index the object in this Mapping
@@ -817,7 +856,7 @@ module ActiveFacts
               absorbing_ref = absorbing_ref.forward_absorption
               self.full_absorption =
                 o.constellation.FullAbsorption(composition: composition, absorption: absorbing_ref, object_type: o)
-              trace :relational_defaults, "Supertype #{fact_type.supertype_role.name} absorbs subtype #{o.name}"
+              trace :relational_defaults, "Supertype #{fact_type.supertype_role.name} fully absorbs subtype #{o.name} via #{absorbing_ref.inspect}"
               definitely_not_table
               return
             end # subtype

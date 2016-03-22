@@ -252,7 +252,7 @@ module Insurance
     identified_by   :cover_type, :policy_wording, :start_date
     has_one         :cover_type, mandatory: true        # Cover Wording involves Cover Type, see CoverType#all_cover_wording
     has_one         :policy_wording, mandatory: true    # Cover Wording involves Policy Wording, see PolicyWording#all_cover_wording
-    has_one         :start_date, mandatory: true, class: Date  # Cover Wording involves Date, see Date#all_cover_wording_as_start_date
+    has_one         :start_date, mandatory: true, class: Date  # Cover Wording involves start-Date, see Date#all_cover_wording_as_start_date
   end
 
   class DateTime < ::DateTime

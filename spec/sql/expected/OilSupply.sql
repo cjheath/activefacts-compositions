@@ -1,7 +1,7 @@
 CREATE TABLE AcceptableSubstitution (
 	-- Acceptable Substitution involves Product that has Product Name
 	ProductName                             VARCHAR NOT NULL,
-	-- Acceptable Substitution involves Product and Product has Product Name
+	-- Acceptable Substitution involves alternate-Product and Product has Product Name
 	AlternateProductName                    VARCHAR NOT NULL,
 	-- Acceptable Substitution involves Season
 	Season                                  VARCHAR(6) NOT NULL CHECK(Season = 'Autumn' OR Season = 'Spring' OR Season = 'Summer' OR Season = 'Winter'),
