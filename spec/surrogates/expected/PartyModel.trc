@@ -10,7 +10,6 @@
 #     Indices
 #       Primary index to Company over PresenceConstraint over (Party in "Company is a kind of Party") occurs at most one time
 #         IndexField part 0 in Company references Absorption (existential) in Party of Party ID in "Party has Party ID"
-#       Unique index to Company over PresenceConstraint over (Party ID in "Party has Party ID") occurs at most one time
 #     Foreign keys outbound
 #       Foreign Key from Company to Party over Absorption (supertype) in Company of Party in "Company is a kind of Party"
 #         ForeignKeyField part 0 in Company is Absorption (existential) in Party of Party ID in "Party has Party ID"
@@ -40,7 +39,6 @@
 #     Indices
 #       Primary index to Person over PresenceConstraint over (Party in "Person is a kind of Party") occurs at most one time
 #         IndexField part 0 in Person references Absorption (existential) in Party of Party ID in "Party has Party ID"
-#       Unique index to Person over PresenceConstraint over (Party ID in "Party has Party ID") occurs at most one time
 #     Foreign keys outbound
 #       Foreign Key from Person to Party over Absorption (supertype) in Person of Party in "Person is a kind of Party"
 #         ForeignKeyField part 0 in Person is Absorption (existential) in Party of Party ID in "Party has Party ID"

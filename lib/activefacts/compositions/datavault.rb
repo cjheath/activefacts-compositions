@@ -51,6 +51,7 @@ module ActiveFacts
 
       def composite_is_reference composite
         object_type = composite.mapping.object_type
+        # REVISIT: This seems to have some instability - or maybe the instability is elsewhere?
         object_type.concept.all_concept_annotation.detect{|ca| ca.mapping_annotation == 'static'} or
           !object_type.is_a?(ActiveFacts::Metamodel::EntityType)
       end

@@ -595,6 +595,8 @@ module ActiveFacts
             end
           end
         end
+
+        newpaths.values.select{|ix| ix.all_index_field.size == 0}.each(&:retract)
       end
 
       # Find all PresenceConstraints to index the object in this Mapping
