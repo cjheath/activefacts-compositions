@@ -172,6 +172,10 @@ module ActiveFacts
         end
       end
 
+      def prefer_natural_key building_natural_key, source_composite, target_composite
+        building_natural_key && @hub_composites.include?(target_composite)
+      end
+
       def composite_key_structure composite
         # We know that composite.mapping.object_type is an EntityType because all ValueType composites are reference tables
 
@@ -357,15 +361,23 @@ module ActiveFacts
         end
       end
 
+      def change_all_fk_source component, source_composite
+        if component.is_a?(MM::Absorption) && component.foreign_key
+          trace :datavault, "Setting new source composite for #{component.foreign_key.inspect}"
+          component.foreign_key.source_composite = source_composite
+        end
+
+        component.all_member.each do |member|
+          change_all_fk_source member, source_composite
+        end
+      end
+
       # Move this member from its current parent to the satellite
       def devolve_member_to_satellite satellite, member
         remove_indices member
 
         member.parent = satellite.mapping
-        if member.is_a?(MM::Absorption) && member.foreign_key
-          trace :datavault, "Setting new source composite for #{member.foreign_key.inspect}"
-          member.foreign_key.source_composite = satellite
-        end
+        change_all_fk_source member, satellite
         trace :datavault, "Satellite #{satellite.mapping.name.inspect} field #{member.inspect}"
       end
 
@@ -405,6 +417,7 @@ module ActiveFacts
             if absorption.foreign_key
               trace :datavault, "Setting new source composite for #{absorption.foreign_key.inspect}"
               absorption.foreign_key.source_composite = link
+              debugger unless absorption.foreign_key.all_foreign_key_field.single
               fk2_component = absorption.foreign_key.all_foreign_key_field.single.component
             end
           end

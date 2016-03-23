@@ -9,5 +9,5 @@ Magnet Pole Belongs To Magnet LINK
 	Magnet Pole Belongs To Magnet LINK->[MagnetPole VID][2.0] as "Magnet Pole VID"
 MagnetPole HUB
 	MagnetPole HUB->MagnetPole VID[1.0] as "Magnet Pole VID"
-	MagnetPole HUB->Magnet->Magnet VID[2.0] as "Magnet VID"
+	MagnetPole HUB->Magnet->Magnet AutoCounter[2.0] as "Magnet Auto Counter"
 	MagnetPole HUB->Is North?[2.1] as "Is North"

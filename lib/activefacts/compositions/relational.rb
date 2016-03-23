@@ -519,16 +519,27 @@ module ActiveFacts
         end
       end
 
+      # May be overridden in subclasses
+      def prefer_natural_key building_natural_key, source_composite, target_composite
+        false
+      end
+
       # Recursively add members to this component for the existential roles of
       # the composite mapping for the absorbed (child_role) object:
       def absorb_key mapping, target, paths
+        building_natural_key = paths.detect{|k,i| i.is_a?(MM::Index) && i.composite_as_natural_index}
+        prefer_natural = prefer_natural_key(building_natural_key, mapping.root, target.composite)
+        prefer_natural = false unless !target.composite || target.composite.primary_index != target.composite.natural_index
         target.re_rank
         target.all_member.sort_by(&:ordinal).each do |member|
           rank = member.rank_key[0]
           next unless rank <= MM::Component::RANK_IDENT
+          if rank == MM::Component::RANK_SURROGATE && prefer_natural
+            next
+          end
           member = fork_component_to_new_parent mapping, member
           augment_paths paths, member
-          if rank == MM::Component::RANK_SURROGATE
+          if rank == MM::Component::RANK_SURROGATE && !prefer_natural
             break   # Will always be first (higher rank), and usurps others
           elsif member.is_a?(MM::Absorption)
             object_type = member.child_role.object_type
@@ -722,9 +733,11 @@ module ActiveFacts
                 target_object_type = fa.absorption.parent_role.object_type
               end
               target = @composites[target_object_type]
+              prefer_natural = prefer_natural_key(false, composite, target)
               trace :relational_paths, "Completing #{path.inspect} to #{target.mapping.inspect}"
-              if target.primary_index
-                target.primary_index.all_index_field.each do |index_field|
+              index = (prefer_natural && target.natural_index) || target.primary_index
+              if index
+                index.all_index_field.each do |index_field|
                   @constellation.IndexField access_path: path, ordinal: index_field.ordinal, component: index_field.component
                 end
               else

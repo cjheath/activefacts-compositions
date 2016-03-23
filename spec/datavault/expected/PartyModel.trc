@@ -1,0 +1,33 @@
+Summary of PartyModel
+Company HUB
+	Company HUB->Company VID[1.0] as "Company VID"
+	Company HUB->Party->Party ID[2.0] as "Party ID"
+	Company HUB->Superannuation Company? as "Superannuation Company"
+	Company HUB->Teaching Institution?->RTO? as "RTO"
+### (Party in "Company is a kind of Party") if and only if (Party in "Party is of Party Type")
+### exactly one of (Party in "Person is a kind of Party") or (Party in "Company is a kind of Party")
+Company Is A Kind Of Party LINK
+	Company Is A Kind Of Party LINK->Company Is A Kind Of Party VID[1.0] as "Company Is A Kind Of Party VID"
+	Company Is A Kind Of Party LINK->FirstLoadDateTime as "First Load Date Time"
+	Company Is A Kind Of Party LINK->[Company VID][2.0] as "Company VID"
+	Company Is A Kind Of Party LINK->[Party VID][2.1] as "Party VID"
+Party HUB
+	Party HUB->Party VID[1.0] as "Party VID"
+	Party HUB->Party ID[2.0] as "Party ID"
+Party SAT
+	Party SAT->[Party VID][1.0] as "Party VID"
+	Party SAT->LoadDateTime[1.1] as "Load Date Time"
+	Party SAT->Party Type->Party Type Code as "Party Type Code"
+### (Party in "Company is a kind of Party") if and only if (Party in "Party is of Party Type")
+### (Party in "Person is a kind of Party") if and only if (Party in "Party is of Party Type")
+Person HUB
+	Person HUB->Person VID[1.0] as "Person VID"
+	Person HUB->Party->Party ID[2.0] as "Party ID"
+	Person HUB->User? as "User"
+### (Party in "Person is a kind of Party") if and only if (Party in "Party is of Party Type")
+### exactly one of (Party in "Person is a kind of Party") or (Party in "Company is a kind of Party")
+Person Is A Kind Of Party LINK
+	Person Is A Kind Of Party LINK->Person Is A Kind Of Party VID[1.0] as "Person Is A Kind Of Party VID"
+	Person Is A Kind Of Party LINK->FirstLoadDateTime as "First Load Date Time"
+	Person Is A Kind Of Party LINK->[Party VID][2.1] as "Party VID"
+	Person Is A Kind Of Party LINK->[Person VID][2.0] as "Person VID"

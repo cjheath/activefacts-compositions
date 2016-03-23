@@ -27,7 +27,7 @@ Comment Was Written By Author LINK
 	Comment Was Written By Author LINK->[Comment VID][2.0] as "Comment VID"
 Paragraph HUB
 	Paragraph HUB->Paragraph VID[1.0] as "Paragraph VID"
-	Paragraph HUB->Post->Post VID[2.0] as "Post VID"
+	Paragraph HUB->Post->Post Id[2.0] as "Post Id"
 	Paragraph HUB->Ordinal[2.1] as "Ordinal"
 Paragraph Involves Post LINK
 	Paragraph Involves Post LINK->Paragraph Involves Post VID[1.0] as "Paragraph Involves Post VID"
