@@ -51,7 +51,6 @@ module ActiveFacts
 
       def composite_is_reference composite
         object_type = composite.mapping.object_type
-        # REVISIT: This seems to have some instability - or maybe the instability is elsewhere?
         object_type.concept.all_concept_annotation.detect{|ca| ca.mapping_annotation == 'static'} or
           !object_type.is_a?(ActiveFacts::Metamodel::EntityType)
       end
@@ -142,23 +141,23 @@ module ActiveFacts
           trace :datavault, "Checking for foreign keys that reference links" do
             # Links may never be the target of a foreign key.
             # Any such links must be defined as hubs instead.
+            @links_as_hubs = {}
             @fk_dependencies = {}
             (@hub_composites+@link_composites).
             each do |composite|
               target_composites = enumerate_foreign_keys composite.mapping
-              next if target_composites.empty?
               target_composites.each do |target_composite|
                 (@fk_dependencies[target_composite] ||= []) << composite
               end
             end
-            (@link_composites-@fk_dependencies.keys).
-            each do |target_composite|
+
+            @fk_dependencies.keys.each do |target_composite|
               if @link_composites.delete(target_composite)
                 trace :datavault, "Link #{target_composite.inspect} must be a hub because foreign keys reference it"
                 @hub_composites << target_composite
+                @links_as_hubs[target_composite] = true
               end
             end
-            @link_composites -= @fk_dependencies.keys
           end
 
           # Note: We may still have hubs whose identifiers contain foreign keys to one or more other hubs.
@@ -166,7 +165,7 @@ module ActiveFacts
           # but have been re-instated as new links to the referenced hubs.
         end
 
-        trace :datavault!, "Data Vault classification of composites:" do
+        trace :datavault_classification!, "Data Vault classification of composites:" do
           trace :datavault, "Reference: #{@reference_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
           trace :datavault, "Hub: #{@hub_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
           trace :datavault, "Link: #{@link_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
@@ -174,15 +173,18 @@ module ActiveFacts
       end
 
       def prefer_natural_key building_natural_key, source_composite, target_composite
+        return false if building_natural_key && @link_composites.include?(source_composite)
         building_natural_key && @hub_composites.include?(target_composite)
       end
 
       def composite_key_structure composite
         # We know that composite.mapping.object_type is an EntityType because all ValueType composites are reference tables
 
+        object_type = composite.mapping.object_type
         mapped_to =
-          composite.mapping.object_type.preferred_identifier.role_sequence.all_role_ref_in_order.map do |role_ref|
+          object_type.preferred_identifier.role_sequence.all_role_ref_in_order.map do |role_ref|
             player = role_ref.role.object_type
+            next nil if player == object_type && role_ref.role.fact_type.all_role.size == 1 # Unaries.
             candidate = @candidates[player]
             next nil unless candidate
             # Take care of full absorption
@@ -232,6 +234,7 @@ module ActiveFacts
             uniq
 
           satellites = {}
+          is_link = @link_composites.include?(composite) || @links_as_hubs.include?(composite)
           composite.mapping.all_member.to_a.each do |member|
 
             # Any member that is the absorption of a foreign key to a hub or link
@@ -239,6 +242,7 @@ module ActiveFacts
             # must be converted to a Mapping for a new Entity Type that notionally
             # objectifies the absorbed fact type. This Mapping is a new link composite.
             if devolve_links && member.is_a?(MM::Absorption) && member.foreign_key
+              next if is_link
               devolve_absorption_to_link member, identifiers.include?(member)
               next
             end

@@ -302,18 +302,20 @@ module ActiveFacts
       end
 
       def inject_surrogate composite, extension = ' ID'
-        surrogate_component =
-          @constellation.SurrogateKey(
-            :new,
-            parent: composite.mapping,
-            name: composite.mapping.name+extension,
-            object_type: surrogate_type
-          )
-        index =
-          @constellation.Index(:new, composite: composite, is_unique: true,
-            presence_constraint: nil, composite_as_primary_index: composite)
-        @constellation.IndexField(access_path: index, ordinal: 0, component: surrogate_component)
-        composite.mapping.re_rank
+        trace :surrogates, "Injecting surrogate for #{composite.inspect}" do
+          surrogate_component =
+            @constellation.SurrogateKey(
+              :new,
+              parent: composite.mapping,
+              name: composite.mapping.name+extension,
+              object_type: surrogate_type
+            )
+          index =
+            @constellation.Index(:new, composite: composite, is_unique: true,
+              presence_constraint: nil, composite_as_primary_index: composite)
+          @constellation.IndexField(access_path: index, ordinal: 0, component: surrogate_component)
+          composite.mapping.re_rank
+        end
       end
 
       def needs_surrogate(composite)
@@ -438,20 +440,26 @@ module ActiveFacts
       # whether we will absorb a foreign key or a copy of the natural
       # key while expanding a table's identifiers.
       # Hub tables never absorb a surrogate FK, only natural keys.
-      def enumerate_foreign_keys mapping, from = nil, accumulator = []
+      def enumerate_foreign_keys mapping, from = nil, accumulator = [], path = []
+        return if path.include?(mapping)
+        path << mapping
         from ||= mapping
-        #mapping.re_rank
+
+        # REVISIT: This corrects some instability (should not actually be order-dependent) but doesn't fix the underlying problem
+        mapping.re_rank
         ordered = from.all_member.sort_by(&:ordinal)
+
         ordered.each do |member|
-          # Only consider foreward Absorptions:
-          next unless member.is_a?(MM::Absorption) && !member.forward_absorption
+          # Only consider forward Absorptions:
+          next if !member.is_a?(MM::Absorption)
+          next if member.forward_absorption
 
           child_object_type = member.child_role.object_type
           child_mapping = @binary_mappings[child_object_type]
           if child_mapping.composite
             trace :fks, "FK to #{member.child_role.name} in #{member.inspect_reading}" do
               accumulator << child_mapping.composite
-              return accumulator
+              next
             end
           end
 
@@ -464,11 +472,11 @@ module ActiveFacts
             trace :fks, "FK to #{child_mapping.name} in #{member.inspect_reading} (for fully-absorbed #{member.child_role.name})" do
               accumulator << child_mapping.composite
             end
-            return accumulator
+            next
           end
 
           trace :fks, "Descending all of #{member.child_role.name} in #{member.inspect_reading}" do
-            enumerate_foreign_keys member, child_mapping, accumulator
+            enumerate_foreign_keys member, child_mapping, accumulator, path
           end
         end
         accumulator
