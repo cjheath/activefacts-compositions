@@ -41,14 +41,15 @@ end
 desc "Accept the last actual test output, making it expected for the next test run"
 task :accept do
   system <<-END
-    for actual in `find spec -type d -name actual`
+    for actual_dir in `find spec -type d -name actual`
     do
-      base=`dirname "$actual"`
-      files="`ls $base/actual/* 2>/dev/null`"
-      if [ x"$files" != x"" ]
+      base=`dirname "$actual_dir"`
+      expected=`cd "$base/expected"; git ls-files`
+      actual=`cd "$base/actual"; ls $expected 2>/dev/null`
+      if [ x"$actual" != x"" ]
       then
-	echo "Accepting $files"
-	mv $files $base/expected
+	echo "Accepting $actual"
+	(cd "$base/actual"; mv $actual ../expected)
       fi
     done
   END
