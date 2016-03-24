@@ -5,7 +5,7 @@
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../../Gemfile', __FILE__)
 require 'bundler/setup' # Set up gems listed in the Gemfile.
 
-# require 'spec_helper'
+require 'spec_helper'
 require 'activefacts/compositions/binary'
 require 'activefacts/generator/validate'
 require 'activefacts/input/cql'
