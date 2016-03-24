@@ -21,6 +21,10 @@ module ActiveFacts
           })
         end
 
+        def table_name_max
+          128
+        end
+
         def boolean_type
           'BIT'
         end
