@@ -71,6 +71,83 @@ module ActiveFacts
         super
       end
 
+      def classify_composites
+        detect_reference_tables
+
+        trace :datavault, "Classify non-reference tables into hubs and links" do
+          # Make an initial determination, then adjust for foreign keys to links afterwards
+          @key_structure = {}
+          @link_composites, @hub_composites =
+            @non_reference_composites.
+            sort_by{|c| c.mapping.name}.
+            partition do |composite|
+              trace :datavault, "Decide whether #{composite.mapping.name} is a link or a hub" do
+                @key_structure[composite] =
+                  mapped_to =
+                  composite_key_structure composite
+
+                # It's a Link if the preferred identifier includes more than non_reference_composite.
+                mapped_to.compact.size > 1
+              end
+            end
+
+          trace :datavault, "Checking for foreign keys that reference links" do
+            # Links may never be the target of a foreign key.
+            # Any such links must be defined as hubs instead.
+            @links_as_hubs = {}
+            fk_dependencies_by_target = {}
+            fk_dependencies_by_source = {}
+            (@hub_composites+@link_composites).
+            each do |composite|
+              target_composites = enumerate_foreign_keys composite.mapping
+              target_composites.each do |target_composite|
+                next if @reference_composites.include?(target_composite)
+                (fk_dependencies_by_target[target_composite] ||= []) << composite
+                (fk_dependencies_by_source[composite] ||= []) << target_composite
+              end
+            end
+
+            fk_dependencies_by_target.keys.each do |target_composite|
+              if @link_composites.delete(target_composite)
+                trace :datavault, "Link #{target_composite.inspect} must be a hub because foreign keys reference it"
+                @hub_composites << target_composite
+                @links_as_hubs[target_composite] = true
+              end
+            end
+
+            begin
+              converted =
+                @link_composites.select do |composite|
+                  targets = fk_dependencies_by_source[composite]
+                  id_targets = composite_key_structure(composite).compact
+                  next if targets.size == id_targets.size
+                  trace :datavault, "Link #{composite.mapping.name} must be a hub because it has non-identifying FK references"
+                  @link_composites.delete(composite)
+                  @hub_composites << composite
+                  @links_as_hubs[composite] = true
+                end
+            end while converted.size > 0
+
+          end
+
+          # Note: We may still have hubs whose identifiers contain foreign keys to one or more other hubs.
+          # REVISIT: These foreign keys will be deleted so these hubs stand alone,
+          # but have been re-instated as new links to the referenced hubs.
+        end
+
+        trace :datavault_classification!, "Data Vault classification of composites:" do
+          trace :datavault, "Reference: #{@reference_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
+          trace :datavault, "Hub: #{@hub_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
+          trace :datavault, "Link: #{@link_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
+        end
+      end
+
+      def detect_reference_tables
+        initial_composites = @composition.all_composite.to_a
+        @reference_composites, @non_reference_composites =
+          initial_composites.partition { |composite| composite_is_reference(composite) }
+      end
+
       def devolve_all
         delete_reference_table_foreign_keys
 
@@ -103,72 +180,12 @@ module ActiveFacts
         end
       end
 
-      def detect_reference_tables
-        initial_composites = @composition.all_composite.to_a
-        @reference_composites, @non_reference_composites =
-          initial_composites.partition { |composite| composite_is_reference(composite) }
-      end
-
       def delete_reference_table_foreign_keys
         trace :datavault, "Delete foreign keys to reference tables" do
           # Delete all foreign keys to reference tables
           @reference_composites.each do |composite|
             composite.all_foreign_key_as_target_composite.each(&:retract)
           end
-        end
-      end
-
-      def classify_composites
-        detect_reference_tables
-
-        trace :datavault, "Classify remaining tables into hub and link tables" do
-          # Make an initial determination, then adjust for foreign keys to links afterwards
-          @key_structure = {}
-          @link_composites, @hub_composites =
-            @non_reference_composites.
-            sort_by{|c| c.mapping.name}.
-            partition do |composite|
-              trace :datavault, "Decide whether #{composite.mapping.name} is a link or a hub" do
-                @key_structure[composite] =
-                  mapped_to =
-                  composite_key_structure composite
-
-                # It's a Link if the preferred identifier includes more than non_reference_composite.
-                mapped_to.compact.size > 1
-              end
-            end
-
-          trace :datavault, "Checking for foreign keys that reference links" do
-            # Links may never be the target of a foreign key.
-            # Any such links must be defined as hubs instead.
-            @links_as_hubs = {}
-            @fk_dependencies = {}
-            (@hub_composites+@link_composites).
-            each do |composite|
-              target_composites = enumerate_foreign_keys composite.mapping
-              target_composites.each do |target_composite|
-                (@fk_dependencies[target_composite] ||= []) << composite
-              end
-            end
-
-            @fk_dependencies.keys.each do |target_composite|
-              if @link_composites.delete(target_composite)
-                trace :datavault, "Link #{target_composite.inspect} must be a hub because foreign keys reference it"
-                @hub_composites << target_composite
-                @links_as_hubs[target_composite] = true
-              end
-            end
-          end
-
-          # Note: We may still have hubs whose identifiers contain foreign keys to one or more other hubs.
-          # REVISIT: These foreign keys will be deleted so these hubs stand alone,
-          # but have been re-instated as new links to the referenced hubs.
-        end
-
-        trace :datavault_classification!, "Data Vault classification of composites:" do
-          trace :datavault, "Reference: #{@reference_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
-          trace :datavault, "Hub: #{@hub_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
-          trace :datavault, "Link: #{@link_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
         end
       end
 

@@ -457,10 +457,9 @@ module ActiveFacts
           child_object_type = member.child_role.object_type
           child_mapping = @binary_mappings[child_object_type]
           if child_mapping.composite
-            trace :fks, "FK to #{member.child_role.name} in #{member.inspect_reading}" do
-              accumulator << child_mapping.composite
-              next
-            end
+            trace :fks, "FK to #{member.child_role.name} in #{member.inspect_reading}"
+            accumulator << child_mapping.composite
+            next
           end
 
           full_absorption = child_object_type.all_full_absorption[@composition]
@@ -469,9 +468,8 @@ module ActiveFacts
               child_object_type = full_absorption.absorption.parent_role.object_type
             end while full_absorption = child_object_type.all_full_absorption[@composition]
             child_mapping = @binary_mappings[child_object_type]
-            trace :fks, "FK to #{child_mapping.name} in #{member.inspect_reading} (for fully-absorbed #{member.child_role.name})" do
-              accumulator << child_mapping.composite
-            end
+            trace :fks, "FK to #{child_mapping.name} in #{member.inspect_reading} (for fully-absorbed #{member.child_role.name})"
+            accumulator << child_mapping.composite
             next
           end
 
