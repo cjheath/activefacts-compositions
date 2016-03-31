@@ -369,7 +369,7 @@ module ActiveFacts
         satellite_name = apply_name(@option_sat_name, satellite_name)
       end
 
-      # Create a new satellite for the same object_type as thos composite
+      # Create a new satellite for the same object_type as this composite
       def create_satellite name, composite
         mapping = @constellation.Mapping(:new, name: name, object_type: composite.mapping.object_type)
         @constellation.Composite(mapping, composition: @composition)
@@ -377,15 +377,10 @@ module ActiveFacts
 
       # This component is being moved to a new composite, so any indexes that it or its
       # children contribute to, cannot now be used to search for the specified composite.
+      # A component being moved to a satellite or a hub cannot keep its indices.
       def remove_indices component
-        if component.is_a?(MM::Mapping)
-          component.all_member.each{|member| remove_indices member}
-        end
-        component.all_index_field.each do |ixf|
-          trace :datavault, "Removing #{ixf.access_path.inspect}" do
-            ixf.access_path.retract
-          end
-        end
+        component.all_index_field.map(&:access_path).uniq.each(&:retract)
+        component.all_member.each{|member| remove_indices member}
       end
 
       def change_all_fk_source component, source_composite
@@ -438,6 +433,8 @@ module ActiveFacts
           link = @constellation.Composite(mapping, composition: @composition)
 
           unless make_copy
+            remove_indices absorption
+
             # Move the absorption across to here
             absorption.parent = mapping
 

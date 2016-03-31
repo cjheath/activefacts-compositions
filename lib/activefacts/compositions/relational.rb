@@ -315,6 +315,7 @@ module ActiveFacts
               presence_constraint: nil, composite_as_primary_index: composite)
           @constellation.IndexField(access_path: index, ordinal: 0, component: surrogate_component)
           composite.mapping.re_rank
+          surrogate_component
         end
       end
 
