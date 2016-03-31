@@ -309,7 +309,7 @@ module ActiveFacts
           # Add a natural key:
           natural_index =
             @constellation.Index(:new, composite: satellite, is_unique: true,
-              presence_constraint: nil, composite_as_natural_index: satellite)
+              presence_constraint: nil, composite_as_natural_index: satellite, composite_as_primary_index: satellite)
           @constellation.IndexField(access_path: natural_index, ordinal: 0, component: fk_field)
           @constellation.IndexField(access_path: natural_index, ordinal: 1, component: date_field)
 
