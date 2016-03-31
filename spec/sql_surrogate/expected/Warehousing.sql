@@ -16,7 +16,7 @@ CREATE TABLE BackOrderAllocation (
 
 CREATE TABLE Bin (
 	-- Bin has Bin ID
-	BinID                                   BIGINT NOT NULL IDENTITY,
+	BinID                                   BIGINT IDENTITY NOT NULL,
 	-- Bin contains Quantity
 	Quantity                                INTEGER NOT NULL,
 	-- maybe Bin contains Product that has Product ID
@@ -30,13 +30,13 @@ CREATE TABLE Bin (
 
 CREATE TABLE DispatchItem (
 	-- Dispatch Item has Dispatch Item ID
-	DispatchItemID                          BIGINT NOT NULL IDENTITY,
+	DispatchItemID                          BIGINT IDENTITY NOT NULL,
 	-- Dispatch Item is Product that has Product ID
 	ProductID                               BIGINT NOT NULL,
 	-- Dispatch Item is in Quantity
 	Quantity                                INTEGER NOT NULL,
 	-- maybe Dispatch Item is for Dispatch that has Dispatch ID
-	DispatchID                              BIGINT NULL IDENTITY,
+	DispatchID                              BIGINT NULL,
 	-- Sales Order Item ID
 	SalesOrderItemID                        BIGINT NOT NULL,
 	-- maybe Dispatch Item is for Transfer Request that has Transfer Request ID
@@ -48,7 +48,7 @@ CREATE TABLE DispatchItem (
 
 CREATE TABLE Party (
 	-- Party has Party ID
-	PartyID                                 BIGINT NOT NULL IDENTITY,
+	PartyID                                 BIGINT IDENTITY NOT NULL,
 	-- Primary index to Party over PresenceConstraint over (Party ID in "Party has Party ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(PartyID)
 );
@@ -56,7 +56,7 @@ CREATE TABLE Party (
 
 CREATE TABLE Product (
 	-- Product has Product ID
-	ProductID                               BIGINT NOT NULL IDENTITY,
+	ProductID                               BIGINT IDENTITY NOT NULL,
 	-- Primary index to Product over PresenceConstraint over (Product ID in "Product has Product ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(ProductID)
 );
@@ -64,7 +64,7 @@ CREATE TABLE Product (
 
 CREATE TABLE PurchaseOrder (
 	-- Purchase Order has Purchase Order ID
-	PurchaseOrderID                         BIGINT NOT NULL IDENTITY,
+	PurchaseOrderID                         BIGINT IDENTITY NOT NULL,
 	-- Purchase Order is to Supplier that is a kind of Party that has Party ID
 	SupplierID                              BIGINT NOT NULL,
 	-- Purchase Order is to Warehouse that has Warehouse ID
@@ -95,7 +95,7 @@ CREATE TABLE PurchaseOrderItem (
 
 CREATE TABLE ReceivedItem (
 	-- Received Item has Received Item ID
-	ReceivedItemID                          BIGINT NOT NULL IDENTITY,
+	ReceivedItemID                          BIGINT IDENTITY NOT NULL,
 	-- Received Item is Product that has Product ID
 	ProductID                               BIGINT NOT NULL,
 	-- Received Item is in Quantity
@@ -103,7 +103,7 @@ CREATE TABLE ReceivedItem (
 	-- Purchase Order Item ID
 	PurchaseOrderItemID                     BIGINT NOT NULL,
 	-- maybe Received Item has Receipt that has Receipt ID
-	ReceiptID                               BIGINT NULL IDENTITY,
+	ReceiptID                               BIGINT NULL,
 	-- maybe Received Item is for Transfer Request that has Transfer Request ID
 	TransferRequestID                       BIGINT NULL,
 	-- Primary index to Received Item over PresenceConstraint over (Received Item ID in "Received Item has Received Item ID") occurs at most one time
@@ -115,7 +115,7 @@ CREATE TABLE ReceivedItem (
 
 CREATE TABLE SalesOrder (
 	-- Sales Order has Sales Order ID
-	SalesOrderID                            BIGINT NOT NULL IDENTITY,
+	SalesOrderID                            BIGINT IDENTITY NOT NULL,
 	-- Sales Order was made by Customer that is a kind of Party that has Party ID
 	CustomerID                              BIGINT NOT NULL,
 	-- Sales Order is from Warehouse that has Warehouse ID
@@ -146,7 +146,7 @@ CREATE TABLE SalesOrderItem (
 
 CREATE TABLE TransferRequest (
 	-- Transfer Request has Transfer Request ID
-	TransferRequestID                       BIGINT NOT NULL IDENTITY,
+	TransferRequestID                       BIGINT IDENTITY NOT NULL,
 	-- Transfer Request is from From Warehouse and Warehouse has Warehouse ID
 	FromWarehouseID                         BIGINT NOT NULL,
 	-- Transfer Request is for Product that has Product ID
@@ -163,7 +163,7 @@ CREATE TABLE TransferRequest (
 
 CREATE TABLE Warehouse (
 	-- Warehouse has Warehouse ID
-	WarehouseID                             BIGINT NOT NULL IDENTITY,
+	WarehouseID                             BIGINT IDENTITY NOT NULL,
 	-- Primary index to Warehouse over PresenceConstraint over (Warehouse ID in "Warehouse has Warehouse ID") occurs at most one time
 	PRIMARY KEY CLUSTERED(WarehouseID)
 );

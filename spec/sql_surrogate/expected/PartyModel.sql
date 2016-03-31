@@ -8,7 +8,7 @@ CREATE TABLE Company (
 
 CREATE TABLE Party (
 	-- Party has Party ID
-	PartyID                                 BIGINT NOT NULL IDENTITY,
+	PartyID                                 BIGINT IDENTITY NOT NULL,
 	-- Party is of Party Type that has Party Type Code
 	PartyTypeCode                           VARCHAR(16) NOT NULL CHECK(PartyTypeCode = 'Company' OR PartyTypeCode = 'Person'),
 	-- Primary index to Party over PresenceConstraint over (Party ID in "Party has Party ID") occurs at most one time

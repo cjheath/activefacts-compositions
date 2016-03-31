@@ -200,10 +200,11 @@ module ActiveFacts
           # REVISIT: This is an SQL Server-ism. Replace with a standard SQL SEQUENCE/
           # Emit IDENTITY for columns auto-assigned on commit (except FKs)
           surrogate_type +
-            if fk = component.all_foreign_key_field.detect{|fkf| fkf.foreign_key.source_composite == component.root}
-              ''
-            else
+            if component.root.primary_index.all_index_field.detect{|ixf| ixf.component == component} and
+              !component.all_foreign_key_field.detect{|fkf| fkf.foreign_key.source_composite == component.root}
               ' IDENTITY'
+            else
+              ''
             end +
             (component.path_mandatory ? ' NOT' : '') + ' NULL'
         when MM::ValidFrom
@@ -239,16 +240,17 @@ module ActiveFacts
               '(' + length.to_s + (scale ? ", #{scale}" : '') + ')'
             end
           }#{
-            (component.path_mandatory ? ' NOT' : '') + ' NULL'
-          }#{
             # REVISIT: This is an SQL Server-ism. Replace with a standard SQL SEQUENCE/
-            # Emit IDENTITY for columns auto-assigned on commit (except FKs)
+            # Emit IDENTITY for PK columns auto-assigned on commit (except FKs)
             if a = object_type.is_auto_assigned and a != 'assert' and
+                component.root.primary_index.all_index_field.detect{|ixf| ixf.component == component} and
                 !component.all_foreign_key_field.detect{|fkf| fkf.foreign_key.source_composite == component.root}
               ' IDENTITY'
             else
               ''
             end
+          }#{
+            (component.path_mandatory ? ' NOT' : '') + ' NULL'
           }#{
             value_constraint ? check_clause(column_name, value_constraint) : ''
           }"

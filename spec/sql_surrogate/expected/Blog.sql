@@ -1,6 +1,6 @@
 CREATE TABLE Author (
 	-- Author has Author Id
-	AuthorId                                BIGINT NOT NULL IDENTITY,
+	AuthorId                                BIGINT IDENTITY NOT NULL,
 	-- Author is called Name
 	AuthorName                              VARCHAR(64) NOT NULL,
 	-- Primary index to Author over PresenceConstraint over (Author Id in "Author has Author Id") occurs at most one time
@@ -12,7 +12,7 @@ CREATE TABLE Author (
 
 CREATE TABLE Comment (
 	-- Comment has Comment Id
-	CommentId                               BIGINT NOT NULL IDENTITY,
+	CommentId                               BIGINT IDENTITY NOT NULL,
 	-- Comment was written by Author that has Author Id
 	AuthorId                                BIGINT NOT NULL,
 	-- Comment consists of text-Content and maybe Content is of Style
@@ -47,7 +47,7 @@ CREATE TABLE Paragraph (
 
 CREATE TABLE Post (
 	-- Post has Post Id
-	PostId                                  BIGINT NOT NULL IDENTITY,
+	PostId                                  BIGINT IDENTITY NOT NULL,
 	-- Post was written by Author that has Author Id
 	AuthorId                                BIGINT NOT NULL,
 	-- Post belongs to Topic that has Topic Id
@@ -60,7 +60,7 @@ CREATE TABLE Post (
 
 CREATE TABLE Topic (
 	-- Topic has Topic Id
-	TopicId                                 BIGINT NOT NULL IDENTITY,
+	TopicId                                 BIGINT IDENTITY NOT NULL,
 	-- Topic is called topic-Name
 	TopicName                               VARCHAR(64) NOT NULL,
 	-- maybe Topic belongs to parent-Topic and Topic has Topic Id
