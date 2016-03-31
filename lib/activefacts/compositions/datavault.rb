@@ -283,6 +283,11 @@ module ActiveFacts
           end
           composite.mapping.re_rank
 
+          if @hub_composites.include?(composite)
+            # Links-as-hubs have foreign keys over natural indexes; these must be deleted.
+            composite.all_foreign_key_as_source_composite.to_a.each(&:retract)
+          end
+
           # Add the audit and identity fields for the satellite:
           satellites.values.each do |satellite|
             audit_satellite composite, satellite
