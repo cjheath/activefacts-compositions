@@ -1,6 +1,5 @@
 #
 #       ActiveFacts Rails Models Generator
-#       ActiveFacts Rails Schema Generator
 #
 # Copyright (c) 2009-2016 Clifford Heath. Read the LICENSE file.
 #

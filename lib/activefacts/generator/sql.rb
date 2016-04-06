@@ -214,6 +214,7 @@ module ActiveFacts
               value_constraint ||= object_type.value_constraint
             end
           end while supertype = object_type.supertype
+
           type, length = normalise_type(object_type.name, length, value_constraint)
           sql_type = "#{type}#{
             if !length
