@@ -24,6 +24,7 @@ module Booking
 
     # Places Paid involves Booking
     has_many :places_paids, :class_name => 'PlacesPaid', :foreign_key => :booking_id, :dependent => :destroy
+
     # Seat Allocation involves Booking
     has_many :seat_allocations, :class_name => 'SeatAllocation', :foreign_key => :booking_id, :dependent => :destroy
     has_many :seats, :through => :seat_allocations
@@ -43,10 +44,13 @@ module Cinema
 
     # AllocatableCinemaSection involves Cinema
     has_many :allocatable_cinema_sections, :class_name => 'AllocatableCinemaSection', :foreign_key => :cinema_id, :dependent => :destroy
+
     # Seat is in Row that is in Cinema
     has_many :seats, :class_name => 'Seat', :foreign_key => :row_cinema_id, :dependent => :destroy
+
     # Session involves Cinema
     has_many :sessions, :class_name => 'Session', :foreign_key => :cinema_id, :dependent => :destroy
+
     # Ticket Pricing involves Cinema
     has_many :ticket_pricings, :class_name => 'TicketPricing', :foreign_key => :cinema_id, :dependent => :destroy
 
@@ -73,6 +77,7 @@ module Person
 
     # Booking involves Person
     has_many :bookings, :class_name => 'Booking', :foreign_key => :person_id, :dependent => :destroy
+
   end
 end
 

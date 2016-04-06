@@ -17,6 +17,7 @@ module Party
 
     # Company is a kind of Party
     has_one :company, :class_name => 'Company', :foreign_key => :party_id, :dependent => :destroy
+
     # Person is a kind of Party
     has_one :person, :class_name => 'Person', :foreign_key => :party_id, :dependent => :destroy
 

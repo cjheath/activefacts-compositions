@@ -13,6 +13,7 @@ module Asset
     has_many :covers, :class_name => 'Cover', :foreign_key => :asset_id, :dependent => :destroy
     has_many :policies, :through => :covers
     has_many :cover_types, :through => :covers
+
   end
 end
 
@@ -33,12 +34,16 @@ module Claim
     # Contractor Appointment involves Claim
     has_many :contractor_appointments, :class_name => 'ContractorAppointment', :foreign_key => :claim_id, :dependent => :destroy
     has_many :parties, :through => :contractor_appointments
+
     # Lost Item was lost in Incident
     has_many :lost_items, :class_name => 'LostItem', :foreign_key => :incident_claim_id, :dependent => :destroy
+
     # maybe Property Damage was damaged in Incident
     has_many :property_damages, :class_name => 'PropertyDamage', :foreign_key => :incident_claim_id, :dependent => :destroy
+
     # Vehicle Incident is a kind of Incident
     has_one :vehicle_incident, :class_name => 'VehicleIncident', :foreign_key => :incident_claim_id, :dependent => :destroy
+
     # Witness saw Incident
     has_many :witnesses, :class_name => 'Witness', :foreign_key => :incident_claim_id, :dependent => :destroy
 
@@ -89,6 +94,7 @@ module CoverType
     has_many :covers, :class_name => 'Cover', :foreign_key => :cover_type_id, :dependent => :destroy
     has_many :policies, :through => :covers
     has_many :assets, :through => :covers
+
     # Cover Wording involves Cover Type
     has_many :cover_wordings, :class_name => 'CoverWording', :foreign_key => :cover_type_id, :dependent => :destroy
 
@@ -155,23 +161,32 @@ module Party
 
     # maybe Asset is a Vehicle that maybe was sold by Dealer
     has_many :assets, :class_name => 'Asset', :foreign_key => :vehicle_dealer_id, :dependent => :destroy
+
     # maybe Asset is a Vehicle that maybe is subject to finance with Finance Institution
     has_many :assets, :class_name => 'Asset', :foreign_key => :vehicle_finance_institution_id, :dependent => :destroy
+
     # maybe Lodgement involves Claim and Lodgement involves Person
     has_many :claims, :class_name => 'Claim', :foreign_key => :lodgement_person_id, :dependent => :destroy
+
     # Contractor Appointment involves Contractor
     has_many :contractor_appointments, :class_name => 'ContractorAppointment', :foreign_key => :contractor_id, :dependent => :destroy
     has_many :claims, :through => :contractor_appointments
+
     # maybe Party is a Company that has contact-Person
     has_many :parties, :class_name => 'Party', :foreign_key => :company_contact_person_id, :dependent => :destroy
+
     # Policy belongs to Insured
     has_many :policies, :class_name => 'Policy', :foreign_key => :insured_id, :dependent => :destroy
+
     # maybe Policy was sold by Authorised Rep
     has_many :policies, :class_name => 'Policy', :foreign_key => :authorised_rep_id, :dependent => :destroy
+
     # Third Party involves Person
     has_many :third_parties, :class_name => 'ThirdParty', :foreign_key => :person_id, :dependent => :destroy
+
     # maybe Third Party is insured by Insurer
     has_many :third_parties, :class_name => 'ThirdParty', :foreign_key => :insurer_id, :dependent => :destroy
+
     # maybe Driving involves Vehicle Incident and Driving was by Person
     has_many :vehicle_incidents, :class_name => 'VehicleIncident', :foreign_key => :driving_person_id, :dependent => :destroy
 
@@ -200,6 +215,7 @@ module Policy
 
     # Claim is on Policy
     has_many :claims, :class_name => 'Claim', :foreign_key => :policy_id, :dependent => :destroy
+
     # Cover involves Policy
     has_many :covers, :class_name => 'Cover', :foreign_key => :policy_id, :dependent => :destroy
     has_many :cover_types, :through => :covers
@@ -250,14 +266,19 @@ module State
 
     # maybe Claim concerns Incident that relates to loss at Address that maybe is in State
     has_many :claims, :class_name => 'Claim', :foreign_key => :incident_address_state_id, :dependent => :destroy
+
     # maybe Party has postal-Address and maybe Address is in State
     has_many :parties, :class_name => 'Party', :foreign_key => :postal_address_state_id, :dependent => :destroy
+
     # maybe Party is a Person that maybe lives at Address that maybe is in State
     has_many :parties, :class_name => 'Party', :foreign_key => :person_address_state_id, :dependent => :destroy
+
     # Policy issued in state having p_state
     has_many :policies, :class_name => 'Policy', :foreign_key => :p_state_id, :dependent => :destroy
+
     # Property Damage is at Address that maybe is in State
     has_many :property_damages, :class_name => 'PropertyDamage', :foreign_key => :address_state_id, :dependent => :destroy
+
     # maybe Witness lives at Address that maybe is in State
     has_many :witnesses, :class_name => 'Witness', :foreign_key => :address_state_id, :dependent => :destroy
 
@@ -328,6 +349,7 @@ module VehicleIncident
 
     # Third Party involves Vehicle Incident
     has_many :third_parties, :class_name => 'ThirdParty', :foreign_key => :vehicle_incident_claim_id, :dependent => :destroy
+
     # Underwriting Demerit preceded Vehicle Incident
     has_many :underwriting_demerits, :class_name => 'UnderwritingDemerit', :foreign_key => :vehicle_incident_claim_id, :dependent => :destroy
 

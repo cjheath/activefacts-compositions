@@ -5,6 +5,7 @@ module Magnet
 
     # MagnetPole belongs to Magnet
     has_many :magnet_poles, :class_name => 'MagnetPole', :foreign_key => :magnet_auto_counter, :dependent => :destroy
+
   end
 end
 

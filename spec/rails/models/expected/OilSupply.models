@@ -35,10 +35,13 @@ module Product
 
     # Acceptable Substitution involves Product
     has_many :acceptable_substitutions, :class_name => 'AcceptableSubstitution', :foreign_key => :product_id, :dependent => :destroy
+
     # Acceptable Substitution involves alternate-Product
     has_many :acceptable_substitutions, :class_name => 'AcceptableSubstitution', :foreign_key => :alternate_product_id, :dependent => :destroy
+
     # Production Forecast involves Product
     has_many :production_forecasts, :class_name => 'ProductionForecast', :foreign_key => :product_id, :dependent => :destroy
+
     # Regional Demand involves Product
     has_many :regional_demands, :class_name => 'RegionalDemand', :foreign_key => :product_id, :dependent => :destroy
 
@@ -74,6 +77,7 @@ module Refinery
 
     # Production Forecast involves Refinery
     has_many :production_forecasts, :class_name => 'ProductionForecast', :foreign_key => :refinery_id, :dependent => :destroy
+
     # Transport Route involves Refinery
     has_many :transport_routes, :class_name => 'TransportRoute', :foreign_key => :refinery_id, :dependent => :destroy
 
@@ -88,6 +92,7 @@ module Region
 
     # Regional Demand involves Region
     has_many :regional_demands, :class_name => 'RegionalDemand', :foreign_key => :region_id, :dependent => :destroy
+
     # Transport Route involves Region
     has_many :transport_routes, :class_name => 'TransportRoute', :foreign_key => :region_id, :dependent => :destroy
 
@@ -126,6 +131,7 @@ module SupplyPeriod
 
     # Production Forecast involves Supply Period
     has_many :production_forecasts, :class_name => 'ProductionForecast', :foreign_key => :supply_period_id, :dependent => :destroy
+
     # Regional Demand involves Supply Period
     has_many :regional_demands, :class_name => 'RegionalDemand', :foreign_key => :supply_period_id, :dependent => :destroy
 

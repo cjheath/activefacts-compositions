@@ -213,8 +213,9 @@ module ActiveFacts
               end.compact
             else
               []
-            end
-          end.compact
+            end +
+            [fk.absorption ? '' : nil]
+          end
         end
 
         def column_constraints composite

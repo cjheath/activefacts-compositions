@@ -19,8 +19,10 @@ module Company
 
     # Directorship involves Company
     has_many :directorships, :class_name => 'Directorship', :foreign_key => :company_id, :dependent => :destroy
+
     # Employee works at Company
     has_many :employees, :class_name => 'Employee', :foreign_key => :company_id, :dependent => :destroy
+
     # Meeting is held by Company
     has_many :meetings, :class_name => 'Meeting', :foreign_key => :company_id, :dependent => :destroy
 
@@ -59,6 +61,7 @@ module Employee
 
     # maybe Employee is supervised by Manager
     has_many :employees, :class_name => 'Employee', :foreign_key => :manager_employee_id, :dependent => :destroy
+
     # Employment involves Employee
     has_many :employments, :class_name => 'Employment', :foreign_key => :employee_id, :dependent => :destroy
     has_many :people, :through => :employments
@@ -109,8 +112,10 @@ module Person
     # Attendance involves Attendee
     has_many :attendances, :class_name => 'Attendance', :foreign_key => :attendee_person_id, :dependent => :destroy
     has_many :meetings, :through => :attendances
+
     # Directorship involves Director
     has_many :directorships, :class_name => 'Directorship', :foreign_key => :director_person_id, :dependent => :destroy
+
     # Employment involves Person
     has_many :employments, :class_name => 'Employment', :foreign_key => :person_id, :dependent => :destroy
     has_many :employees, :through => :employments

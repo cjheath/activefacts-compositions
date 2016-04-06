@@ -57,8 +57,10 @@ module Party
 
     # Purchase Order is to Supplier
     has_many :purchase_orders, :class_name => 'PurchaseOrder', :foreign_key => :supplier_id, :dependent => :destroy
+
     # Sales Order was made by Customer
     has_many :sales_orders, :class_name => 'SalesOrder', :foreign_key => :customer_id, :dependent => :destroy
+
   end
 end
 
@@ -69,16 +71,22 @@ module Product
 
     # maybe Bin contains Product
     has_many :bins, :class_name => 'Bin', :foreign_key => :product_id, :dependent => :destroy
+
     # Dispatch Item is Product
     has_many :dispatch_items, :class_name => 'DispatchItem', :foreign_key => :product_id, :dependent => :destroy
+
     # Purchase Order Item is for Product
     has_many :purchase_order_items, :class_name => 'PurchaseOrderItem', :foreign_key => :product_id, :dependent => :destroy
+
     # Received Item is Product
     has_many :received_items, :class_name => 'ReceivedItem', :foreign_key => :product_id, :dependent => :destroy
+
     # Sales Order Item is for Product
     has_many :sales_order_items, :class_name => 'SalesOrderItem', :foreign_key => :product_id, :dependent => :destroy
+
     # Transfer Request is for Product
     has_many :transfer_requests, :class_name => 'TransferRequest', :foreign_key => :product_id, :dependent => :destroy
+
   end
 end
 
@@ -114,6 +122,7 @@ module PurchaseOrderItem
 
     # Back Order Allocation involves Purchase Order Item
     has_many :back_order_allocations, :class_name => 'BackOrderAllocation', :foreign_key => :purchase_order_item_id, :dependent => :destroy
+
     # maybe Received Item is for Purchase Order Item
     has_many :received_items, :class_name => 'ReceivedItem', :foreign_key => :purchase_order_item_id, :dependent => :destroy
 
@@ -175,6 +184,7 @@ module SalesOrderItem
 
     # Back Order Allocation involves Sales Order Item
     has_many :back_order_allocations, :class_name => 'BackOrderAllocation', :foreign_key => :sales_order_item_id, :dependent => :destroy
+
     # maybe Dispatch Item is for Sales Order Item
     has_many :dispatch_items, :class_name => 'DispatchItem', :foreign_key => :sales_order_item_id, :dependent => :destroy
 
@@ -200,6 +210,7 @@ module TransferRequest
 
     # maybe Dispatch Item is for Transfer Request
     has_many :dispatch_items, :class_name => 'DispatchItem', :foreign_key => :transfer_request_id, :dependent => :destroy
+
     # maybe Received Item is for Transfer Request
     has_many :received_items, :class_name => 'ReceivedItem', :foreign_key => :transfer_request_id, :dependent => :destroy
 
@@ -217,13 +228,18 @@ module Warehouse
 
     # maybe Warehouse contains Bin
     has_many :bins, :class_name => 'Bin', :foreign_key => :warehouse_id, :dependent => :destroy
+
     # Purchase Order is to Warehouse
     has_many :purchase_orders, :class_name => 'PurchaseOrder', :foreign_key => :warehouse_id, :dependent => :destroy
+
     # Sales Order is from Warehouse
     has_many :sales_orders, :class_name => 'SalesOrder', :foreign_key => :warehouse_id, :dependent => :destroy
+
     # Transfer Request is from From Warehouse
     has_many :transfer_requests, :class_name => 'TransferRequest', :foreign_key => :from_warehouse_id, :dependent => :destroy
+
     # Transfer Request is to To Warehouse
     has_many :transfer_requests, :class_name => 'TransferRequest', :foreign_key => :to_warehouse_id, :dependent => :destroy
+
   end
 end

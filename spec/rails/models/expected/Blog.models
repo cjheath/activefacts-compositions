@@ -5,6 +5,7 @@ module Author
 
     # Comment was written by Author
     has_many :comments, :class_name => 'Comment', :foreign_key => :author_id, :dependent => :destroy
+
     # Post was written by Author
     has_many :posts, :class_name => 'Post', :foreign_key => :author_id, :dependent => :destroy
 
@@ -75,6 +76,7 @@ module Topic
 
     # Post belongs to Topic
     has_many :posts, :class_name => 'Post', :foreign_key => :topic_id, :dependent => :destroy
+
     # maybe Topic belongs to parent-Topic
     has_many :topics, :class_name => 'Topic', :foreign_key => :parent_topic_id, :dependent => :destroy
 

@@ -5,6 +5,7 @@ module OT
 
     # VTP involves VT
     has_many :vtps, :class_name => 'VTP', :foreign_key => :vt_ot_id, :dependent => :destroy
+
     # VTPRestriction involves VT
     has_many :vtp_restrictions, :class_name => 'VTPRestriction', :foreign_key => :vt_ot_id, :dependent => :destroy
     has_many :vtps, :through => :vtp_restrictions
