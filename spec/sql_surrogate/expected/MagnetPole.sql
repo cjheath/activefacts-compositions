@@ -7,11 +7,11 @@ CREATE TABLE Magnet (
 
 
 CREATE TABLE MagnetPole (
-	-- MagnetPole ID
+	-- MagnetPole surrogate key
 	MagnetPoleID                            BIGINT IDENTITY NOT NULL,
 	-- MagnetPole belongs to Magnet that has Magnet AutoCounter
 	MagnetAutoCounter                       BIGINT NOT NULL,
-	-- Is North
+	-- MagnetPole Is North
 	IsNorth                                 BOOLEAN,
 	-- Primary index to MagnetPole
 	PRIMARY KEY CLUSTERED(MagnetPoleID),

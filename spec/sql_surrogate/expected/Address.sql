@@ -1,5 +1,5 @@
 CREATE TABLE Company (
-	-- Company ID
+	-- Company surrogate key
 	CompanyID                               BIGINT IDENTITY NOT NULL,
 	-- Company has Company Name
 	CompanyName                             VARCHAR NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE Company (
 
 
 CREATE TABLE Person (
-	-- Person ID
+	-- Person surrogate key
 	PersonID                                BIGINT IDENTITY NOT NULL,
 	-- Person is of Family that has Family Name
 	FamilyName                              VARCHAR(20) NOT NULL,

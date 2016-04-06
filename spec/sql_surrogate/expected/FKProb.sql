@@ -1,5 +1,5 @@
 CREATE TABLE OT (
-	-- OT ID
+	-- OT surrogate key
 	OTID                                    BIGINT IDENTITY NOT NULL,
 	-- OT is called Name
 	Name                                    VARCHAR NOT NULL,
@@ -11,9 +11,9 @@ CREATE TABLE OT (
 
 
 CREATE TABLE VTP (
-	-- VTP ID
+	-- VTP surrogate key
 	VTPID                                   BIGINT IDENTITY NOT NULL,
-	-- OT ID
+	-- VTP involves VT that is a kind of DOT that is a kind of OT
 	VTOTID                                  BIGINT NOT NULL,
 	-- VTP involves Name
 	Name                                    VARCHAR NOT NULL,
@@ -26,9 +26,9 @@ CREATE TABLE VTP (
 
 
 CREATE TABLE VTPRestriction (
-	-- OT ID
+	-- VTPRestriction involves VT that is a kind of DOT that is a kind of OT
 	VTOTID                                  BIGINT NOT NULL,
-	-- VTP ID
+	-- VTPRestriction involves VTP
 	VTPID                                   BIGINT NOT NULL,
 	-- Primary index to VTPRestriction over PresenceConstraint over (VT, VTP in "VT receives VTP") occurs at most one time
 	PRIMARY KEY CLUSTERED(VTOTID, VTPID),

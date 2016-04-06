@@ -1,5 +1,5 @@
 CREATE TABLE AllocatableCinemaSection (
-	-- AllocatableCinemaSection ID
+	-- AllocatableCinemaSection surrogate key
 	AllocatableCinemaSectionID              BIGINT IDENTITY NOT NULL,
 	-- AllocatableCinemaSection involves Cinema that has Cinema ID
 	CinemaID                                BIGINT NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE AllocatableCinemaSection (
 
 
 CREATE TABLE Booking (
-	-- Booking ID
+	-- Booking surrogate key
 	BookingID                               BIGINT IDENTITY NOT NULL,
 	-- Booking has Booking Nr
 	BookingNr                               INTEGER NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE Booking (
 	Number                                  SMALLINT NOT NULL CHECK(Number >= 1),
 	-- Booking involves Person that has Person ID
 	PersonID                                BIGINT NOT NULL,
-	-- Session ID
+	-- Booking involves Session
 	SessionID                               BIGINT NOT NULL,
 	-- maybe tickets for Booking are being mailed to Address that has Address Text
 	AddressText                             VARCHAR(MAX) NULL,
@@ -81,9 +81,9 @@ CREATE UNIQUE NONCLUSTERED INDEX PersonByLoginName ON Person(LoginName) WHERE Lo
 
 
 CREATE TABLE PlacesPaid (
-	-- Places Paid ID
+	-- Places Paid surrogate key
 	PlacesPaidID                            BIGINT IDENTITY NOT NULL,
-	-- Booking ID
+	-- Places Paid involves Booking
 	BookingID                               BIGINT NOT NULL,
 	-- Places Paid involves Payment Method that has Payment Method Code
 	PaymentMethodCode                       VARCHAR NOT NULL CHECK(PaymentMethodCode = 'Card' OR PaymentMethodCode = 'Cash' OR PaymentMethodCode = 'Gift Voucher' OR PaymentMethodCode = 'Loyalty Voucher'),
@@ -98,7 +98,7 @@ CREATE TABLE PlacesPaid (
 
 
 CREATE TABLE Seat (
-	-- Seat ID
+	-- Seat surrogate key
 	SeatID                                  BIGINT IDENTITY NOT NULL,
 	-- Seat is in Row that is in Cinema that has Cinema ID
 	RowCinemaID                             BIGINT NOT NULL,
@@ -117,9 +117,9 @@ CREATE TABLE Seat (
 
 
 CREATE TABLE SeatAllocation (
-	-- Booking ID
+	-- Seat Allocation involves Booking
 	BookingID                               BIGINT NOT NULL,
-	-- Seat ID
+	-- Seat Allocation involves allocated-Seat
 	AllocatedSeatID                         BIGINT NOT NULL,
 	-- Primary index to Seat Allocation over PresenceConstraint over (Booking, Allocated Seat in "Booking has allocated-Seat") occurs at most one time
 	PRIMARY KEY CLUSTERED(BookingID, AllocatedSeatID),
@@ -129,7 +129,7 @@ CREATE TABLE SeatAllocation (
 
 
 CREATE TABLE [Session] (
-	-- Session ID
+	-- Session surrogate key
 	SessionID                               BIGINT IDENTITY NOT NULL,
 	-- Session involves Cinema that has Cinema ID
 	CinemaID                                BIGINT NOT NULL,
@@ -143,9 +143,9 @@ CREATE TABLE [Session] (
 	SessionTimeHour                         INTEGER NOT NULL CHECK((SessionTimeHour >= 0 AND SessionTimeHour <= 23)),
 	-- Session involves Session Time that is at Minute
 	SessionTimeMinute                       INTEGER NOT NULL CHECK((SessionTimeMinute >= 0 AND SessionTimeMinute <= 59)),
-	-- Is High Demand
+	-- Session Is High Demand
 	IsHighDemand                            BOOLEAN,
-	-- Uses Allocated Seating
+	-- Session Uses Allocated Seating
 	UsesAllocatedSeating                    BOOLEAN,
 	-- Session involves Film that has Film ID
 	FilmID                                  BIGINT NOT NULL,
@@ -159,7 +159,7 @@ CREATE TABLE [Session] (
 
 
 CREATE TABLE TicketPricing (
-	-- Ticket Pricing ID
+	-- Ticket Pricing surrogate key
 	TicketPricingID                         BIGINT IDENTITY NOT NULL,
 	-- Ticket Pricing involves Session Time that is in Year that has Year Nr
 	SessionTimeYearNr                       INTEGER NOT NULL CHECK((SessionTimeYearNr >= 1900 AND SessionTimeYearNr <= 9999)),

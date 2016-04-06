@@ -9,7 +9,7 @@ CREATE TABLE Magnet (
 CREATE TABLE MagnetPole (
 	-- MagnetPole belongs to Magnet that has Magnet AutoCounter
 	MagnetAutoCounter                       BIGINT NOT NULL,
-	-- Is North
+	-- MagnetPole Is North
 	IsNorth                                 BOOLEAN,
 	-- Primary index to MagnetPole over PresenceConstraint over (Magnet, Is North in "MagnetPole belongs to Magnet", "MagnetPole is north") occurs at most one time
 	PRIMARY KEY CLUSTERED(MagnetAutoCounter, IsNorth),

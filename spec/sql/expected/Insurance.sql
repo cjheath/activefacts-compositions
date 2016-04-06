@@ -3,7 +3,7 @@ CREATE TABLE Asset (
 	AssetID                                 BIGINT IDENTITY NOT NULL,
 	-- maybe Asset is a Vehicle that has VIN
 	VehicleVIN                              INTEGER NULL,
-	-- Has Commercial Registration
+	-- maybe Asset is a Vehicle that Has Commercial Registration
 	VehicleHasCommercialRegistration        BOOLEAN,
 	-- maybe Asset is a Vehicle that is of model-Year and Year has Year Nr
 	VehicleModelYearNr                      INTEGER NULL,
@@ -132,9 +132,9 @@ CREATE TABLE CoverWording (
 CREATE TABLE LossType (
 	-- Loss Type has Loss Type Code
 	LossTypeCode                            CHARACTER NOT NULL,
-	-- Involves Driving
+	-- Loss Type Involves Driving
 	InvolvesDriving                         BOOLEAN,
-	-- Is Single Vehicle Incident
+	-- Loss Type Is Single Vehicle Incident
 	IsSingleVehicleIncident                 BOOLEAN,
 	-- maybe Loss Type implies Liability that has Liability Code
 	LiabilityCode                           CHARACTER(1) NULL CHECK(LiabilityCode = 'D' OR LiabilityCode = 'L' OR LiabilityCode = 'R' OR LiabilityCode = 'U'),
@@ -165,7 +165,7 @@ CREATE TABLE LostItem (
 CREATE TABLE Party (
 	-- Party has Party ID
 	PartyID                                 BIGINT IDENTITY NOT NULL,
-	-- Is A Company
+	-- Party Is A Company
 	IsACompany                              BOOLEAN,
 	-- maybe Party has postal-Address and Address is at Street
 	PostalAddressStreet                     VARCHAR(256) NULL,
@@ -205,7 +205,7 @@ CREATE TABLE Party (
 	PersonAddressStateCode                  SMALLINT NULL,
 	-- maybe Party is a Person that maybe has birth-Date
 	PersonBirthDate                         DATE NULL,
-	-- Is International
+	-- maybe Party is a Person that maybe holds License that Is International
 	PersonIsInternational                   BOOLEAN,
 	-- maybe Party is a Person that maybe holds License that has License Number
 	PersonLicenseNumber                     VARCHAR NULL,
@@ -346,7 +346,7 @@ CREATE TABLE UnderwritingQuestion (
 CREATE TABLE VehicleIncident (
 	-- Vehicle Incident is a kind of Incident that is of Claim that has Claim ID
 	IncidentClaimID                         BIGINT NOT NULL,
-	-- Occurred While Being Driven
+	-- Vehicle Incident Occurred While Being Driven
 	OccurredWhileBeingDriven                BOOLEAN,
 	-- maybe Vehicle Incident has Description
 	Description                             VARCHAR(1024) NULL,
@@ -354,7 +354,7 @@ CREATE TABLE VehicleIncident (
 	DrivingPersonID                         BIGINT NULL,
 	-- maybe Driving involves Vehicle Incident and maybe Driving resulted in breath-Test Result
 	DrivingBreathTestResult                 VARCHAR NULL,
-	-- Is A Warning
+	-- maybe Driving involves Vehicle Incident and maybe Driving Charge involves Driving that Is A Warning
 	DrivingIsAWarning                       BOOLEAN,
 	-- maybe Driving involves Vehicle Incident and maybe Driving Charge involves Driving and Driving Charge involves Charge
 	DrivingCharge                           VARCHAR NULL,

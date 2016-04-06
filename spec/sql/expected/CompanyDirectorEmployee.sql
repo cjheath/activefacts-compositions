@@ -7,7 +7,7 @@ CREATE TABLE Attendance (
 	MeetingCompanyName                      VARCHAR(48) NOT NULL,
 	-- Attendance involves Meeting that is held on Date
 	MeetingDate                             DATE NOT NULL,
-	-- Is Board Meeting
+	-- Attendance involves Meeting that Is Board Meeting
 	MeetingIsBoardMeeting                   BOOLEAN
 );
 
@@ -17,7 +17,7 @@ CREATE UNIQUE CLUSTERED INDEX AttendanceByAttendeeGivenNameAttendeeFamilyNameMee
 CREATE TABLE Company (
 	-- Company is called Company Name
 	CompanyName                             VARCHAR(48) NOT NULL,
-	-- Is Listed
+	-- Company Is Listed
 	IsListed                                BOOLEAN,
 	-- Primary index to Company over PresenceConstraint over (Company Name in "Company is called Company Name") occurs at most one time
 	PRIMARY KEY CLUSTERED(CompanyName)
@@ -46,7 +46,7 @@ CREATE TABLE Employee (
 	CompanyName                             VARCHAR(48) NOT NULL,
 	-- maybe Employee is supervised by Manager that is a kind of Employee that has Employee Nr
 	ManagerNr                               INTEGER NULL,
-	-- Is Ceo
+	-- maybe Employee is a Manager that Is Ceo
 	ManagerIsCeo                            BOOLEAN,
 	-- Primary index to Employee over PresenceConstraint over (Employee Nr in "Employee has Employee Nr") occurs at most one time
 	PRIMARY KEY CLUSTERED(EmployeeNr),

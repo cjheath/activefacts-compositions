@@ -171,25 +171,7 @@ module ActiveFacts
         constraints = leaf.all_leaf_constraint
 
         identity = ''
-        "-- #{column_comment leaf}\n\t#{column_name}#{padding}#{component_type leaf, column_name}#{identity}"
-      end
-
-      def column_comment component
-        return '' unless cp = component.parent
-        prefix = column_comment(cp)
-        name = component.name
-        if component.is_a?(MM::Absorption)
-          reading = component.parent_role.fact_type.reading_preferably_starting_with_role(component.parent_role).expand([], false)
-          maybe = component.parent_role.is_mandatory ? '' : 'maybe '
-          cpname = cp.name
-          if prefix[(-cpname.size-1)..-1] == ' '+cpname && reading[0..cpname.size] == cpname+' '
-            prefix+' that ' + maybe + reading[cpname.size+1..-1]
-          else
-            (prefix.empty? ? '' : prefix+' and ') + maybe + reading
-          end
-        else
-          name
-        end
+        "-- #{leaf.comment}\n\t#{column_name}#{padding}#{component_type leaf, column_name}#{identity}"
       end
 
       def component_type component, column_name

@@ -1,7 +1,7 @@
 CREATE TABLE Attendance (
-	-- Person ID
+	-- Attendance involves Attendee
 	AttendeePersonID                        BIGINT NOT NULL,
-	-- Meeting ID
+	-- Attendance involves Meeting
 	MeetingID                               BIGINT NOT NULL,
 	-- Primary index to Attendance over PresenceConstraint over (Attendee, Meeting in "Person attended Meeting") occurs at most one time
 	PRIMARY KEY CLUSTERED(AttendeePersonID, MeetingID)
@@ -9,11 +9,11 @@ CREATE TABLE Attendance (
 
 
 CREATE TABLE Company (
-	-- Company ID
+	-- Company surrogate key
 	CompanyID                               BIGINT IDENTITY NOT NULL,
 	-- Company is called Company Name
 	CompanyName                             VARCHAR(48) NOT NULL,
-	-- Is Listed
+	-- Company Is Listed
 	IsListed                                BOOLEAN,
 	-- Primary index to Company
 	PRIMARY KEY CLUSTERED(CompanyID),
@@ -23,11 +23,11 @@ CREATE TABLE Company (
 
 
 CREATE TABLE Directorship (
-	-- Directorship ID
+	-- Directorship surrogate key
 	DirectorshipID                          BIGINT IDENTITY NOT NULL,
-	-- Person ID
+	-- Directorship involves Director
 	DirectorPersonID                        BIGINT NOT NULL,
-	-- Company ID
+	-- Directorship involves Company
 	CompanyID                               BIGINT NOT NULL,
 	-- Directorship began on appointment-Date
 	AppointmentDate                         DATE NOT NULL,
@@ -40,15 +40,15 @@ CREATE TABLE Directorship (
 
 
 CREATE TABLE Employee (
-	-- Employee ID
+	-- Employee surrogate key
 	EmployeeID                              BIGINT IDENTITY NOT NULL,
 	-- Employee has Employee Nr
 	EmployeeNr                              INTEGER NOT NULL,
-	-- Company ID
+	-- Employee works at Company
 	CompanyID                               BIGINT NOT NULL,
-	-- Employee ID
+	-- maybe Employee is supervised by Manager that is a kind of Employee
 	ManagerEmployeeID                       BIGINT NOT NULL,
-	-- Is Ceo
+	-- maybe Employee is a Manager that Is Ceo
 	ManagerIsCeo                            BOOLEAN,
 	-- Primary index to Employee
 	PRIMARY KEY CLUSTERED(EmployeeID),
@@ -60,9 +60,9 @@ CREATE TABLE Employee (
 
 
 CREATE TABLE Employment (
-	-- Person ID
+	-- Employment involves Person
 	PersonID                                BIGINT NOT NULL,
-	-- Employee ID
+	-- Employment involves Employee
 	EmployeeID                              BIGINT NOT NULL,
 	-- Primary index to Employment over PresenceConstraint over (Person, Employee in "Person works as Employee") occurs at most one time
 	PRIMARY KEY CLUSTERED(PersonID, EmployeeID),
@@ -71,9 +71,9 @@ CREATE TABLE Employment (
 
 
 CREATE TABLE Meeting (
-	-- Meeting ID
+	-- Meeting surrogate key
 	MeetingID                               BIGINT IDENTITY NOT NULL,
-	-- Company ID
+	-- Meeting is held by Company
 	CompanyID                               BIGINT NOT NULL,
 	-- Meeting is held on Date
 	[Date]                                  DATE NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE Meeting (
 
 
 CREATE TABLE Person (
-	-- Person ID
+	-- Person surrogate key
 	PersonID                                BIGINT IDENTITY NOT NULL,
 	-- Person has given-Name
 	GivenName                               VARCHAR(48) NOT NULL,

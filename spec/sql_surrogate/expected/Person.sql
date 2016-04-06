@@ -1,5 +1,5 @@
 CREATE TABLE Person (
-	-- Person ID
+	-- Person surrogate key
 	PersonID                                BIGINT IDENTITY NOT NULL,
 	-- Person has family-Name
 	FamilyName                              VARCHAR NOT NULL,

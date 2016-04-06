@@ -1,5 +1,5 @@
 CREATE TABLE Country (
-	-- Country Code ID
+	-- Country has Country Code
 	CountryCodeID                           BIGINT NOT NULL,
 	-- Primary index to Country over PresenceConstraint over (Country Code in "Country has Country Code") occurs at most one time
 	PRIMARY KEY CLUSTERED(CountryCode, CountryCodeID)
@@ -7,7 +7,7 @@ CREATE TABLE Country (
 
 
 CREATE TABLE CountryCode (
-	-- Country Code ID
+	-- Country Code surrogate key
 	CountryCodeID                           BIGINT IDENTITY NOT NULL,
 	-- Country Code Value
 	CountryCodeValue                        CHARACTER(3) NOT NULL,

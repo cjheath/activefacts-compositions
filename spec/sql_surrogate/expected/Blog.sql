@@ -19,7 +19,7 @@ CREATE TABLE Comment (
 	ContentStyle                            VARCHAR(20) NULL,
 	-- Comment consists of text-Content and Content has Text
 	ContentText                             VARCHAR(MAX) NOT NULL,
-	-- Paragraph ID
+	-- Comment is on Paragraph
 	ParagraphID                             BIGINT NOT NULL,
 	-- Primary index to Comment over PresenceConstraint over (Comment Id in "Comment has Comment Id") occurs at most one time
 	PRIMARY KEY CLUSTERED(CommentId),
@@ -28,7 +28,7 @@ CREATE TABLE Comment (
 
 
 CREATE TABLE Paragraph (
-	-- Paragraph ID
+	-- Paragraph surrogate key
 	ParagraphID                             BIGINT IDENTITY NOT NULL,
 	-- Paragraph involves Post that has Post Id
 	PostId                                  BIGINT NOT NULL,

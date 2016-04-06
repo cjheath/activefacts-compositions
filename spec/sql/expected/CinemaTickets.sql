@@ -139,9 +139,9 @@ CREATE TABLE [Session] (
 	SessionTimeHour                         INTEGER NOT NULL CHECK((SessionTimeHour >= 0 AND SessionTimeHour <= 23)),
 	-- Session involves Session Time that is at Minute
 	SessionTimeMinute                       INTEGER NOT NULL CHECK((SessionTimeMinute >= 0 AND SessionTimeMinute <= 59)),
-	-- Is High Demand
+	-- Session Is High Demand
 	IsHighDemand                            BOOLEAN,
-	-- Uses Allocated Seating
+	-- Session Uses Allocated Seating
 	UsesAllocatedSeating                    BOOLEAN,
 	-- Session involves Film that has Film ID
 	FilmID                                  BIGINT NOT NULL,

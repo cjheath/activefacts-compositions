@@ -1,9 +1,9 @@
 CREATE TABLE AcceptableSubstitution (
-	-- Acceptable Substitution ID
+	-- Acceptable Substitution surrogate key
 	AcceptableSubstitutionID                BIGINT IDENTITY NOT NULL,
-	-- Product ID
+	-- Acceptable Substitution involves Product
 	ProductID                               BIGINT NOT NULL,
-	-- Product ID
+	-- Acceptable Substitution involves alternate-Product
 	AlternateProductID                      BIGINT NOT NULL,
 	-- Acceptable Substitution involves Season
 	Season                                  VARCHAR(6) NOT NULL CHECK(Season = 'Autumn' OR Season = 'Spring' OR Season = 'Summer' OR Season = 'Winter'),
@@ -15,7 +15,7 @@ CREATE TABLE AcceptableSubstitution (
 
 
 CREATE TABLE [Month] (
-	-- Month ID
+	-- Month surrogate key
 	MonthID                                 BIGINT IDENTITY NOT NULL,
 	-- Month has Month Nr
 	MonthNr                                 INTEGER NOT NULL CHECK((MonthNr >= 1 AND MonthNr <= 12)),
@@ -29,7 +29,7 @@ CREATE TABLE [Month] (
 
 
 CREATE TABLE Product (
-	-- Product ID
+	-- Product surrogate key
 	ProductID                               BIGINT IDENTITY NOT NULL,
 	-- Product has Product Name
 	ProductName                             VARCHAR NOT NULL,
@@ -41,13 +41,13 @@ CREATE TABLE Product (
 
 
 CREATE TABLE ProductionForecast (
-	-- Production Forecast ID
+	-- Production Forecast surrogate key
 	ProductionForecastID                    BIGINT IDENTITY NOT NULL,
-	-- Refinery ID
+	-- Production Forecast involves Refinery
 	RefineryID                              BIGINT NOT NULL,
-	-- Supply Period ID
+	-- Production Forecast involves Supply Period
 	SupplyPeriodID                          BIGINT NOT NULL,
-	-- Product ID
+	-- Production Forecast involves Product
 	ProductID                               BIGINT NOT NULL,
 	-- Production Forecast involves Quantity
 	Quantity                                INTEGER NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE ProductionForecast (
 
 
 CREATE TABLE Refinery (
-	-- Refinery ID
+	-- Refinery surrogate key
 	RefineryID                              BIGINT IDENTITY NOT NULL,
 	-- Refinery has Refinery Name
 	RefineryName                            VARCHAR(80) NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE Refinery (
 
 
 CREATE TABLE Region (
-	-- Region ID
+	-- Region surrogate key
 	RegionID                                BIGINT IDENTITY NOT NULL,
 	-- Region has Region Name
 	RegionName                              VARCHAR NOT NULL,
@@ -86,13 +86,13 @@ CREATE TABLE Region (
 
 
 CREATE TABLE RegionalDemand (
-	-- Regional Demand ID
+	-- Regional Demand surrogate key
 	RegionalDemandID                        BIGINT IDENTITY NOT NULL,
-	-- Region ID
+	-- Regional Demand involves Region
 	RegionID                                BIGINT NOT NULL,
-	-- Supply Period ID
+	-- Regional Demand involves Supply Period
 	SupplyPeriodID                          BIGINT NOT NULL,
-	-- Product ID
+	-- Regional Demand involves Product
 	ProductID                               BIGINT NOT NULL,
 	-- Regional Demand involves Quantity
 	Quantity                                INTEGER NOT NULL,
@@ -106,11 +106,11 @@ CREATE TABLE RegionalDemand (
 
 
 CREATE TABLE SupplyPeriod (
-	-- Supply Period ID
+	-- Supply Period surrogate key
 	SupplyPeriodID                          BIGINT IDENTITY NOT NULL,
 	-- Supply Period is in Year that has Year Nr
 	YearNr                                  INTEGER NOT NULL,
-	-- Month ID
+	-- Supply Period is in Month
 	MonthID                                 BIGINT NOT NULL,
 	-- Primary index to Supply Period
 	PRIMARY KEY CLUSTERED(SupplyPeriodID),
@@ -121,13 +121,13 @@ CREATE TABLE SupplyPeriod (
 
 
 CREATE TABLE TransportRoute (
-	-- Transport Route ID
+	-- Transport Route surrogate key
 	TransportRouteID                        BIGINT IDENTITY NOT NULL,
 	-- Transport Route involves Transport Method
 	TransportMethod                         VARCHAR NOT NULL CHECK(TransportMethod = 'Rail' OR TransportMethod = 'Road' OR TransportMethod = 'Sea'),
-	-- Refinery ID
+	-- Transport Route involves Refinery
 	RefineryID                              BIGINT NOT NULL,
-	-- Region ID
+	-- Transport Route involves Region
 	RegionID                                BIGINT NOT NULL,
 	-- maybe Transport Route incurs Cost per kl
 	Cost                                    DECIMAL NULL,

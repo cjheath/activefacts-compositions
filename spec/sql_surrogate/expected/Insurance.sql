@@ -3,7 +3,7 @@ CREATE TABLE Asset (
 	AssetID                                 BIGINT IDENTITY NOT NULL,
 	-- maybe Asset is a Vehicle that has VIN
 	VehicleVIN                              INTEGER NULL,
-	-- Has Commercial Registration
+	-- maybe Asset is a Vehicle that Has Commercial Registration
 	VehicleHasCommercialRegistration        BOOLEAN,
 	-- maybe Asset is a Vehicle that is of model-Year and Year has Year Nr
 	VehicleModelYearNr                      INTEGER NULL,
@@ -35,7 +35,7 @@ CREATE TABLE Claim (
 	ClaimID                                 BIGINT IDENTITY NOT NULL,
 	-- Claim has p_sequence
 	PSequence                               SMALLINT NOT NULL CHECK((PSequence >= 1 AND PSequence <= 999)),
-	-- Policy ID
+	-- Claim is on Policy
 	PolicyID                                BIGINT NOT NULL,
 	-- maybe Claim concerns Incident that relates to loss at Address that is at Street
 	IncidentAddressStreet                   VARCHAR(256) NULL,
@@ -43,7 +43,7 @@ CREATE TABLE Claim (
 	IncidentAddressCity                     VARCHAR NULL,
 	-- maybe Claim concerns Incident that relates to loss at Address that maybe is in Postcode
 	IncidentAddressPostcode                 VARCHAR NULL,
-	-- State ID
+	-- maybe Claim concerns Incident that relates to loss at Address that maybe is in State
 	IncidentAddressStateID                  BIGINT NOT NULL,
 	-- maybe Claim concerns Incident that relates to loss on Date Time
 	IncidentDateTime                        TIMESTAMP NULL,
@@ -80,9 +80,9 @@ CREATE TABLE ContractorAppointment (
 
 
 CREATE TABLE Cover (
-	-- Policy ID
+	-- Cover involves Policy
 	PolicyID                                BIGINT NOT NULL,
-	-- Cover Type ID
+	-- Cover involves Cover Type
 	CoverTypeID                             BIGINT NOT NULL,
 	-- Cover involves Asset that has Asset ID
 	AssetID                                 BIGINT NOT NULL,
@@ -93,7 +93,7 @@ CREATE TABLE Cover (
 
 
 CREATE TABLE CoverType (
-	-- Cover Type ID
+	-- Cover Type surrogate key
 	CoverTypeID                             BIGINT IDENTITY NOT NULL,
 	-- Cover Type has Cover Type Code
 	CoverTypeCode                           CHARACTER NOT NULL,
@@ -109,9 +109,9 @@ CREATE TABLE CoverType (
 
 
 CREATE TABLE CoverWording (
-	-- Cover Wording ID
+	-- Cover Wording surrogate key
 	CoverWordingID                          BIGINT IDENTITY NOT NULL,
-	-- Cover Type ID
+	-- Cover Wording involves Cover Type
 	CoverTypeID                             BIGINT NOT NULL,
 	-- Cover Wording involves Policy Wording that has Policy Wording Text
 	PolicyWordingText                       VARCHAR NOT NULL,
@@ -126,13 +126,13 @@ CREATE TABLE CoverWording (
 
 
 CREATE TABLE LossType (
-	-- Loss Type ID
+	-- Loss Type surrogate key
 	LossTypeID                              BIGINT IDENTITY NOT NULL,
 	-- Loss Type has Loss Type Code
 	LossTypeCode                            CHARACTER NOT NULL,
-	-- Involves Driving
+	-- Loss Type Involves Driving
 	InvolvesDriving                         BOOLEAN,
-	-- Is Single Vehicle Incident
+	-- Loss Type Is Single Vehicle Incident
 	IsSingleVehicleIncident                 BOOLEAN,
 	-- maybe Loss Type implies Liability that has Liability Code
 	LiabilityCode                           CHARACTER(1) NULL CHECK(LiabilityCode = 'D' OR LiabilityCode = 'L' OR LiabilityCode = 'R' OR LiabilityCode = 'U'),
@@ -144,7 +144,7 @@ CREATE TABLE LossType (
 
 
 CREATE TABLE LostItem (
-	-- Lost Item ID
+	-- Lost Item surrogate key
 	LostItemID                              BIGINT IDENTITY NOT NULL,
 	-- Lost Item was lost in Incident that is of Claim that has Claim ID
 	IncidentClaimID                         BIGINT NOT NULL,
@@ -169,7 +169,7 @@ CREATE TABLE LostItem (
 CREATE TABLE Party (
 	-- Party has Party ID
 	PartyID                                 BIGINT IDENTITY NOT NULL,
-	-- Is A Company
+	-- Party Is A Company
 	IsACompany                              BOOLEAN,
 	-- maybe Party has postal-Address and Address is at Street
 	PostalAddressStreet                     VARCHAR(256) NULL,
@@ -177,7 +177,7 @@ CREATE TABLE Party (
 	PostalAddressCity                       VARCHAR NULL,
 	-- maybe Party has postal-Address and maybe Address is in Postcode
 	PostalAddressPostcode                   VARCHAR NULL,
-	-- State ID
+	-- maybe Party has postal-Address and maybe Address is in State
 	PostalAddressStateID                    BIGINT NOT NULL,
 	-- maybe Party is a Company that has contact-Person and Person is a kind of Party that has Party ID
 	CompanyContactPersonID                  BIGINT NULL,
@@ -205,11 +205,11 @@ CREATE TABLE Party (
 	PersonAddressCity                       VARCHAR NULL,
 	-- maybe Party is a Person that maybe lives at Address that maybe is in Postcode
 	PersonAddressPostcode                   VARCHAR NULL,
-	-- State ID
+	-- maybe Party is a Person that maybe lives at Address that maybe is in State
 	PersonAddressStateID                    BIGINT NOT NULL,
 	-- maybe Party is a Person that maybe has birth-Date
 	PersonBirthDate                         DATE NULL,
-	-- Is International
+	-- maybe Party is a Person that maybe holds License that Is International
 	PersonIsInternational                   BOOLEAN,
 	-- maybe Party is a Person that maybe holds License that has License Number
 	PersonLicenseNumber                     VARCHAR NULL,
@@ -226,13 +226,13 @@ CREATE TABLE Party (
 
 
 CREATE TABLE Policy (
-	-- Policy ID
+	-- Policy surrogate key
 	PolicyID                                BIGINT IDENTITY NOT NULL,
 	-- Policy was issued in p_year and Year has Year Nr
 	PYearNr                                 INTEGER NOT NULL,
-	-- Product ID
+	-- Policy is for product having p_product
 	PProductID                              BIGINT NOT NULL,
-	-- State ID
+	-- Policy issued in state having p_state
 	PStateID                                BIGINT NOT NULL,
 	-- Policy has p_serial
 	PSerial                                 INTEGER NOT NULL CHECK((PSerial >= 1 AND PSerial <= 99999)),
@@ -254,7 +254,7 @@ CREATE TABLE Policy (
 
 
 CREATE TABLE Product (
-	-- Product ID
+	-- Product surrogate key
 	ProductID                               BIGINT IDENTITY NOT NULL,
 	-- Product has Product Code
 	ProductCode                             SMALLINT NOT NULL CHECK((ProductCode >= 1 AND ProductCode <= 99)),
@@ -275,7 +275,7 @@ CREATE UNIQUE NONCLUSTERED INDEX ProductByDescription ON Product(Description) WH
 
 
 CREATE TABLE PropertyDamage (
-	-- Property Damage ID
+	-- Property Damage surrogate key
 	PropertyDamageID                        BIGINT IDENTITY NOT NULL,
 	-- maybe Property Damage was damaged in Incident that is of Claim that has Claim ID
 	IncidentClaimID                         BIGINT NULL,
@@ -285,7 +285,7 @@ CREATE TABLE PropertyDamage (
 	AddressCity                             VARCHAR NOT NULL,
 	-- Property Damage is at Address that maybe is in Postcode
 	AddressPostcode                         VARCHAR NULL,
-	-- State ID
+	-- Property Damage is at Address that maybe is in State
 	AddressStateID                          BIGINT NOT NULL,
 	-- maybe Property Damage belongs to owner-Name
 	OwnerName                               VARCHAR(256) NULL,
@@ -300,7 +300,7 @@ CREATE UNIQUE NONCLUSTERED INDEX PropertyDamageByIncidentClaimIDAddressStreetAdd
 
 
 CREATE TABLE [State] (
-	-- State ID
+	-- State surrogate key
 	StateID                                 BIGINT IDENTITY NOT NULL,
 	-- State has State Code
 	StateCode                               SMALLINT NOT NULL CHECK((StateCode >= 0 AND StateCode <= 9)),
@@ -316,7 +316,7 @@ CREATE UNIQUE NONCLUSTERED INDEX StateByStateName ON [State](StateName) WHERE St
 
 
 CREATE TABLE ThirdParty (
-	-- Third Party ID
+	-- Third Party surrogate key
 	ThirdPartyID                            BIGINT IDENTITY NOT NULL,
 	-- Third Party involves Person that is a kind of Party that has Party ID
 	PersonID                                BIGINT NOT NULL,
@@ -344,7 +344,7 @@ CREATE TABLE ThirdParty (
 
 
 CREATE TABLE UnderwritingDemerit (
-	-- Underwriting Demerit ID
+	-- Underwriting Demerit surrogate key
 	UnderwritingDemeritID                   BIGINT IDENTITY NOT NULL,
 	-- Underwriting Demerit preceded Vehicle Incident that is a kind of Incident that is of Claim that has Claim ID
 	VehicleIncidentClaimID                  BIGINT NOT NULL,
@@ -374,7 +374,7 @@ CREATE TABLE UnderwritingQuestion (
 CREATE TABLE VehicleIncident (
 	-- Vehicle Incident is a kind of Incident that is of Claim that has Claim ID
 	IncidentClaimID                         BIGINT NOT NULL,
-	-- Occurred While Being Driven
+	-- Vehicle Incident Occurred While Being Driven
 	OccurredWhileBeingDriven                BOOLEAN,
 	-- maybe Vehicle Incident has Description
 	Description                             VARCHAR(1024) NULL,
@@ -382,7 +382,7 @@ CREATE TABLE VehicleIncident (
 	DrivingPersonID                         BIGINT NULL,
 	-- maybe Driving involves Vehicle Incident and maybe Driving resulted in breath-Test Result
 	DrivingBreathTestResult                 VARCHAR NULL,
-	-- Is A Warning
+	-- maybe Driving involves Vehicle Incident and maybe Driving Charge involves Driving that Is A Warning
 	DrivingIsAWarning                       BOOLEAN,
 	-- maybe Driving involves Vehicle Incident and maybe Driving Charge involves Driving and Driving Charge involves Charge
 	DrivingCharge                           VARCHAR NULL,
@@ -396,7 +396,7 @@ CREATE TABLE VehicleIncident (
 	DrivingNonconsentReason                 VARCHAR NULL,
 	-- maybe Driving involves Vehicle Incident and maybe Driving was unlicenced for unlicensed-Reason
 	DrivingUnlicensedReason                 VARCHAR NULL,
-	-- Loss Type ID
+	-- maybe Vehicle Incident resulted from Loss Type
 	LossTypeID                              BIGINT NOT NULL,
 	-- maybe Vehicle Incident involved previous_damage-Description
 	PreviousDamageDescription               VARCHAR(1024) NULL,
@@ -415,7 +415,7 @@ CREATE TABLE VehicleIncident (
 
 
 CREATE TABLE Witness (
-	-- Witness ID
+	-- Witness surrogate key
 	WitnessID                               BIGINT IDENTITY NOT NULL,
 	-- Witness saw Incident that is of Claim that has Claim ID
 	IncidentClaimID                         BIGINT NOT NULL,
@@ -427,7 +427,7 @@ CREATE TABLE Witness (
 	AddressCity                             VARCHAR NULL,
 	-- maybe Witness lives at Address that maybe is in Postcode
 	AddressPostcode                         VARCHAR NULL,
-	-- State ID
+	-- maybe Witness lives at Address that maybe is in State
 	AddressStateID                          BIGINT NOT NULL,
 	-- maybe Witness has contact-Phone and Phone has Phone Nr
 	ContactPhoneNr                          VARCHAR NULL,

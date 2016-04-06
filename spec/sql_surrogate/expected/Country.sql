@@ -1,5 +1,5 @@
 CREATE TABLE Country (
-	-- Country ID
+	-- Country surrogate key
 	CountryID                               BIGINT IDENTITY NOT NULL,
 	-- Country has ISO3166Code3
 	ISO3166Code3                            VARCHAR(3) NOT NULL,

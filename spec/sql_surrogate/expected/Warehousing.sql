@@ -1,9 +1,9 @@
 CREATE TABLE BackOrderAllocation (
-	-- Back Order Allocation ID
+	-- Back Order Allocation surrogate key
 	BackOrderAllocationID                   BIGINT IDENTITY NOT NULL,
-	-- Purchase Order Item ID
+	-- Back Order Allocation involves Purchase Order Item
 	PurchaseOrderItemID                     BIGINT NOT NULL,
-	-- Sales Order Item ID
+	-- Back Order Allocation involves Sales Order Item
 	SalesOrderItemID                        BIGINT NOT NULL,
 	-- Back Order Allocation is for Quantity
 	Quantity                                INTEGER NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE DispatchItem (
 	Quantity                                INTEGER NOT NULL,
 	-- maybe Dispatch Item is for Dispatch that has Dispatch ID
 	DispatchID                              BIGINT NULL,
-	-- Sales Order Item ID
+	-- maybe Dispatch Item is for Sales Order Item
 	SalesOrderItemID                        BIGINT NOT NULL,
 	-- maybe Dispatch Item is for Transfer Request that has Transfer Request ID
 	TransferRequestID                       BIGINT NULL,
@@ -76,7 +76,7 @@ CREATE TABLE PurchaseOrder (
 
 
 CREATE TABLE PurchaseOrderItem (
-	-- Purchase Order Item ID
+	-- Purchase Order Item surrogate key
 	PurchaseOrderItemID                     BIGINT IDENTITY NOT NULL,
 	-- Purchase Order Item is part of Purchase Order that has Purchase Order ID
 	PurchaseOrderID                         BIGINT NOT NULL,
@@ -100,7 +100,7 @@ CREATE TABLE ReceivedItem (
 	ProductID                               BIGINT NOT NULL,
 	-- Received Item is in Quantity
 	Quantity                                INTEGER NOT NULL,
-	-- Purchase Order Item ID
+	-- maybe Received Item is for Purchase Order Item
 	PurchaseOrderItemID                     BIGINT NOT NULL,
 	-- maybe Received Item has Receipt that has Receipt ID
 	ReceiptID                               BIGINT NULL,
@@ -127,7 +127,7 @@ CREATE TABLE SalesOrder (
 
 
 CREATE TABLE SalesOrderItem (
-	-- Sales Order Item ID
+	-- Sales Order Item surrogate key
 	SalesOrderItemID                        BIGINT IDENTITY NOT NULL,
 	-- Sales Order Item is part of Sales Order that has Sales Order ID
 	SalesOrderID                            BIGINT NOT NULL,
