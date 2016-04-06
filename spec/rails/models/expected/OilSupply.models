@@ -1,0 +1,152 @@
+module AcceptableSubstitution
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'acceptable_substitution_id'
+
+    # Acceptable Substitution involves Product
+    belongs_to :product, :foreign_key => :product_id
+
+    # Acceptable Substitution involves alternate-Product
+    belongs_to :alternate_product, :class_name => 'Product', :foreign_key => :alternate_product_id
+
+    validates :product_id, :presence => true
+    validates :alternate_product_id, :presence => true
+    validates :season, :presence => true
+  end
+end
+
+module Month
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'month_id'
+
+    # Supply Period is in Month
+    has_many :supply_periods, :class_name => 'SupplyPeriod', :foreign_key => :month_id, :dependent => :destroy
+
+    validates :month_nr, :presence => true
+    validates :season, :presence => true
+  end
+end
+
+module Product
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'product_id'
+
+    # Acceptable Substitution involves Product
+    has_many :acceptable_substitutions, :class_name => 'AcceptableSubstitution', :foreign_key => :product_id, :dependent => :destroy
+    # Acceptable Substitution involves alternate-Product
+    has_many :acceptable_substitutions, :class_name => 'AcceptableSubstitution', :foreign_key => :alternate_product_id, :dependent => :destroy
+    # Production Forecast involves Product
+    has_many :production_forecasts, :class_name => 'ProductionForecast', :foreign_key => :product_id, :dependent => :destroy
+    # Regional Demand involves Product
+    has_many :regional_demands, :class_name => 'RegionalDemand', :foreign_key => :product_id, :dependent => :destroy
+
+    validates :product_name, :presence => true
+  end
+end
+
+module ProductionForecast
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'production_forecast_id'
+
+    # Production Forecast involves Refinery
+    belongs_to :refinery, :foreign_key => :refinery_id
+
+    # Production Forecast involves Supply Period
+    belongs_to :supply_period, :foreign_key => :supply_period_id
+
+    # Production Forecast involves Product
+    belongs_to :product, :foreign_key => :product_id
+
+    validates :refinery_id, :presence => true
+    validates :supply_period_id, :presence => true
+    validates :product_id, :presence => true
+    validates :quantity, :presence => true
+  end
+end
+
+module Refinery
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'refinery_id'
+
+    # Production Forecast involves Refinery
+    has_many :production_forecasts, :class_name => 'ProductionForecast', :foreign_key => :refinery_id, :dependent => :destroy
+    # Transport Route involves Refinery
+    has_many :transport_routes, :class_name => 'TransportRoute', :foreign_key => :refinery_id, :dependent => :destroy
+
+    validates :refinery_name, :presence => true
+  end
+end
+
+module Region
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'region_id'
+
+    # Regional Demand involves Region
+    has_many :regional_demands, :class_name => 'RegionalDemand', :foreign_key => :region_id, :dependent => :destroy
+    # Transport Route involves Region
+    has_many :transport_routes, :class_name => 'TransportRoute', :foreign_key => :region_id, :dependent => :destroy
+
+    validates :region_name, :presence => true
+  end
+end
+
+module RegionalDemand
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'regional_demand_id'
+
+    # Regional Demand involves Region
+    belongs_to :region, :foreign_key => :region_id
+
+    # Regional Demand involves Supply Period
+    belongs_to :supply_period, :foreign_key => :supply_period_id
+
+    # Regional Demand involves Product
+    belongs_to :product, :foreign_key => :product_id
+
+    validates :region_id, :presence => true
+    validates :supply_period_id, :presence => true
+    validates :product_id, :presence => true
+    validates :quantity, :presence => true
+  end
+end
+
+module SupplyPeriod
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'supply_period_id'
+
+    # Supply Period is in Month
+    belongs_to :month, :foreign_key => :month_id
+
+    # Production Forecast involves Supply Period
+    has_many :production_forecasts, :class_name => 'ProductionForecast', :foreign_key => :supply_period_id, :dependent => :destroy
+    # Regional Demand involves Supply Period
+    has_many :regional_demands, :class_name => 'RegionalDemand', :foreign_key => :supply_period_id, :dependent => :destroy
+
+    validates :year_nr, :presence => true
+    validates :month_id, :presence => true
+  end
+end
+
+module TransportRoute
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'transport_route_id'
+
+    # Transport Route involves Refinery
+    belongs_to :refinery, :foreign_key => :refinery_id
+
+    # Transport Route involves Region
+    belongs_to :region, :foreign_key => :region_id
+
+    validates :transport_method, :presence => true
+    validates :refinery_id, :presence => true
+    validates :region_id, :presence => true
+  end
+end

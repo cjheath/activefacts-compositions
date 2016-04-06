@@ -1,0 +1,45 @@
+module OT
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'ot_id'
+
+    # VTP involves VT
+    has_many :vtps, :class_name => 'VTP', :foreign_key => :vt_ot_id, :dependent => :destroy
+    # VTPRestriction involves VT
+    has_many :vtp_restrictions, :class_name => 'VTPRestriction', :foreign_key => :vt_ot_id, :dependent => :destroy
+    has_many :vtps, :through => :vtp_restrictions
+
+    validates :name, :presence => true
+  end
+end
+
+module VTP
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'vtp_id'
+
+    # VTP involves VT
+    belongs_to :vt, :class_name => 'OT', :foreign_key => :vt_ot_id
+
+    # VTPRestriction involves VTP
+    has_many :vtp_restrictions, :class_name => 'VTPRestriction', :foreign_key => :vtp_id, :dependent => :destroy
+    has_many :ots, :through => :vtp_restrictions
+
+    validates :vt_ot_id, :presence => true
+    validates :name, :presence => true
+  end
+end
+
+module VTPRestriction
+  extend ActiveSupport::Concern
+  included do
+    # VTPRestriction involves VT
+    belongs_to :vt, :class_name => 'OT', :foreign_key => :vt_ot_id
+
+    # VTPRestriction involves VTP
+    belongs_to :vtp, :foreign_key => :vtp_id
+
+    validates :vt_ot_id, :presence => true
+    validates :vtp_id, :presence => true
+  end
+end

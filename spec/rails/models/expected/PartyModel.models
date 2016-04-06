@@ -1,0 +1,37 @@
+module Company
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'party_id'
+
+    # Company is a kind of Party
+    belongs_to :party, :foreign_key => :party_id
+
+    validates :party_id, :presence => true
+  end
+end
+
+module Party
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'party_id'
+
+    # Company is a kind of Party
+    has_one :company, :class_name => 'Company', :foreign_key => :party_id, :dependent => :destroy
+    # Person is a kind of Party
+    has_one :person, :class_name => 'Person', :foreign_key => :party_id, :dependent => :destroy
+
+    validates :party_type_code, :presence => true
+  end
+end
+
+module Person
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'party_id'
+
+    # Person is a kind of Party
+    belongs_to :party, :foreign_key => :party_id
+
+    validates :party_id, :presence => true
+  end
+end

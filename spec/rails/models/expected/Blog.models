@@ -1,0 +1,83 @@
+module Author
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'author_id'
+
+    # Comment was written by Author
+    has_many :comments, :class_name => 'Comment', :foreign_key => :author_id, :dependent => :destroy
+    # Post was written by Author
+    has_many :posts, :class_name => 'Post', :foreign_key => :author_id, :dependent => :destroy
+
+    validates :author_name, :presence => true
+  end
+end
+
+module Comment
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'comment_id'
+
+    # Comment was written by Author
+    belongs_to :author, :foreign_key => :author_id
+
+    # Comment is on Paragraph
+    belongs_to :paragraph, :foreign_key => :paragraph_id
+
+    validates :author_id, :presence => true
+    validates :content_text, :presence => true
+    validates :paragraph_id, :presence => true
+  end
+end
+
+module Paragraph
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'paragraph_id'
+
+    # Paragraph involves Post
+    belongs_to :post, :foreign_key => :post_id
+
+    # Comment is on Paragraph
+    has_many :comments, :class_name => 'Comment', :foreign_key => :paragraph_id, :dependent => :destroy
+
+    validates :post_id, :presence => true
+    validates :ordinal, :presence => true
+    validates :content_text, :presence => true
+  end
+end
+
+module Post
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'post_id'
+
+    # Post was written by Author
+    belongs_to :author, :foreign_key => :author_id
+
+    # Post belongs to Topic
+    belongs_to :topic, :foreign_key => :topic_id
+
+    # Paragraph involves Post
+    has_many :paragraphs, :class_name => 'Paragraph', :foreign_key => :post_id, :dependent => :destroy
+
+    validates :author_id, :presence => true
+    validates :topic_id, :presence => true
+  end
+end
+
+module Topic
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'topic_id'
+
+    # maybe Topic belongs to parent-Topic
+    belongs_to :parent_topic, :class_name => 'Topic', :foreign_key => :parent_topic_id
+
+    # Post belongs to Topic
+    has_many :posts, :class_name => 'Post', :foreign_key => :topic_id, :dependent => :destroy
+    # maybe Topic belongs to parent-Topic
+    has_many :topics, :class_name => 'Topic', :foreign_key => :parent_topic_id, :dependent => :destroy
+
+    validates :topic_name, :presence => true
+  end
+end

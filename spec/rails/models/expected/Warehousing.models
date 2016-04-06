@@ -1,0 +1,229 @@
+module BackOrderAllocation
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'back_order_allocation_id'
+
+    # Back Order Allocation involves Purchase Order Item
+    belongs_to :purchase_order_item, :foreign_key => :purchase_order_item_id
+
+    # Back Order Allocation involves Sales Order Item
+    belongs_to :sales_order_item, :foreign_key => :sales_order_item_id
+
+    validates :purchase_order_item_id, :presence => true
+    validates :sales_order_item_id, :presence => true
+    validates :quantity, :presence => true
+  end
+end
+
+module Bin
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'bin_id'
+
+    # maybe Bin contains Product
+    belongs_to :product, :foreign_key => :product_id
+
+    # maybe Warehouse contains Bin
+    belongs_to :warehouse, :foreign_key => :warehouse_id
+
+    validates :quantity, :presence => true
+  end
+end
+
+module DispatchItem
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'dispatch_item_id'
+
+    # Dispatch Item is Product
+    belongs_to :product, :foreign_key => :product_id
+
+    # maybe Dispatch Item is for Sales Order Item
+    belongs_to :sales_order_item, :foreign_key => :sales_order_item_id
+
+    # maybe Dispatch Item is for Transfer Request
+    belongs_to :transfer_request, :foreign_key => :transfer_request_id
+
+    validates :product_id, :presence => true
+    validates :quantity, :presence => true
+    validates :sales_order_item_id, :presence => true
+  end
+end
+
+module Party
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'party_id'
+
+    # Purchase Order is to Supplier
+    has_many :purchase_orders, :class_name => 'PurchaseOrder', :foreign_key => :supplier_id, :dependent => :destroy
+    # Sales Order was made by Customer
+    has_many :sales_orders, :class_name => 'SalesOrder', :foreign_key => :customer_id, :dependent => :destroy
+  end
+end
+
+module Product
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'product_id'
+
+    # maybe Bin contains Product
+    has_many :bins, :class_name => 'Bin', :foreign_key => :product_id, :dependent => :destroy
+    # Dispatch Item is Product
+    has_many :dispatch_items, :class_name => 'DispatchItem', :foreign_key => :product_id, :dependent => :destroy
+    # Purchase Order Item is for Product
+    has_many :purchase_order_items, :class_name => 'PurchaseOrderItem', :foreign_key => :product_id, :dependent => :destroy
+    # Received Item is Product
+    has_many :received_items, :class_name => 'ReceivedItem', :foreign_key => :product_id, :dependent => :destroy
+    # Sales Order Item is for Product
+    has_many :sales_order_items, :class_name => 'SalesOrderItem', :foreign_key => :product_id, :dependent => :destroy
+    # Transfer Request is for Product
+    has_many :transfer_requests, :class_name => 'TransferRequest', :foreign_key => :product_id, :dependent => :destroy
+  end
+end
+
+module PurchaseOrder
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'purchase_order_id'
+
+    # Purchase Order is to Supplier
+    belongs_to :supplier, :class_name => 'Party', :foreign_key => :supplier_id
+
+    # Purchase Order is to Warehouse
+    belongs_to :warehouse, :foreign_key => :warehouse_id
+
+    # Purchase Order Item is part of Purchase Order
+    has_many :purchase_order_items, :class_name => 'PurchaseOrderItem', :foreign_key => :purchase_order_id, :dependent => :destroy
+
+    validates :supplier_id, :presence => true
+    validates :warehouse_id, :presence => true
+  end
+end
+
+module PurchaseOrderItem
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'purchase_order_item_id'
+
+    # Purchase Order Item is part of Purchase Order
+    belongs_to :purchase_order, :foreign_key => :purchase_order_id
+
+    # Purchase Order Item is for Product
+    belongs_to :product, :foreign_key => :product_id
+
+    # Back Order Allocation involves Purchase Order Item
+    has_many :back_order_allocations, :class_name => 'BackOrderAllocation', :foreign_key => :purchase_order_item_id, :dependent => :destroy
+    # maybe Received Item is for Purchase Order Item
+    has_many :received_items, :class_name => 'ReceivedItem', :foreign_key => :purchase_order_item_id, :dependent => :destroy
+
+    validates :purchase_order_id, :presence => true
+    validates :product_id, :presence => true
+    validates :quantity, :presence => true
+  end
+end
+
+module ReceivedItem
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'received_item_id'
+
+    # Received Item is Product
+    belongs_to :product, :foreign_key => :product_id
+
+    # maybe Received Item is for Purchase Order Item
+    belongs_to :purchase_order_item, :foreign_key => :purchase_order_item_id
+
+    # maybe Received Item is for Transfer Request
+    belongs_to :transfer_request, :foreign_key => :transfer_request_id
+
+    validates :product_id, :presence => true
+    validates :quantity, :presence => true
+    validates :purchase_order_item_id, :presence => true
+  end
+end
+
+module SalesOrder
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'sales_order_id'
+
+    # Sales Order was made by Customer
+    belongs_to :customer, :class_name => 'Party', :foreign_key => :customer_id
+
+    # Sales Order is from Warehouse
+    belongs_to :warehouse, :foreign_key => :warehouse_id
+
+    # Sales Order Item is part of Sales Order
+    has_many :sales_order_items, :class_name => 'SalesOrderItem', :foreign_key => :sales_order_id, :dependent => :destroy
+
+    validates :customer_id, :presence => true
+    validates :warehouse_id, :presence => true
+  end
+end
+
+module SalesOrderItem
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'sales_order_item_id'
+
+    # Sales Order Item is part of Sales Order
+    belongs_to :sales_order, :foreign_key => :sales_order_id
+
+    # Sales Order Item is for Product
+    belongs_to :product, :foreign_key => :product_id
+
+    # Back Order Allocation involves Sales Order Item
+    has_many :back_order_allocations, :class_name => 'BackOrderAllocation', :foreign_key => :sales_order_item_id, :dependent => :destroy
+    # maybe Dispatch Item is for Sales Order Item
+    has_many :dispatch_items, :class_name => 'DispatchItem', :foreign_key => :sales_order_item_id, :dependent => :destroy
+
+    validates :sales_order_id, :presence => true
+    validates :product_id, :presence => true
+    validates :quantity, :presence => true
+  end
+end
+
+module TransferRequest
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'transfer_request_id'
+
+    # Transfer Request is from From Warehouse
+    belongs_to :from_warehouse, :class_name => 'Warehouse', :foreign_key => :from_warehouse_id
+
+    # Transfer Request is for Product
+    belongs_to :product, :foreign_key => :product_id
+
+    # Transfer Request is to To Warehouse
+    belongs_to :to_warehouse, :class_name => 'Warehouse', :foreign_key => :to_warehouse_id
+
+    # maybe Dispatch Item is for Transfer Request
+    has_many :dispatch_items, :class_name => 'DispatchItem', :foreign_key => :transfer_request_id, :dependent => :destroy
+    # maybe Received Item is for Transfer Request
+    has_many :received_items, :class_name => 'ReceivedItem', :foreign_key => :transfer_request_id, :dependent => :destroy
+
+    validates :from_warehouse_id, :presence => true
+    validates :product_id, :presence => true
+    validates :quantity, :presence => true
+    validates :to_warehouse_id, :presence => true
+  end
+end
+
+module Warehouse
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'warehouse_id'
+
+    # maybe Warehouse contains Bin
+    has_many :bins, :class_name => 'Bin', :foreign_key => :warehouse_id, :dependent => :destroy
+    # Purchase Order is to Warehouse
+    has_many :purchase_orders, :class_name => 'PurchaseOrder', :foreign_key => :warehouse_id, :dependent => :destroy
+    # Sales Order is from Warehouse
+    has_many :sales_orders, :class_name => 'SalesOrder', :foreign_key => :warehouse_id, :dependent => :destroy
+    # Transfer Request is from From Warehouse
+    has_many :transfer_requests, :class_name => 'TransferRequest', :foreign_key => :from_warehouse_id, :dependent => :destroy
+    # Transfer Request is to To Warehouse
+    has_many :transfer_requests, :class_name => 'TransferRequest', :foreign_key => :to_warehouse_id, :dependent => :destroy
+  end
+end

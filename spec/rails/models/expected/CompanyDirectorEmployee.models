@@ -1,0 +1,120 @@
+module Attendance
+  extend ActiveSupport::Concern
+  included do
+    # Attendance involves Attendee
+    belongs_to :attendee, :class_name => 'Person', :foreign_key => :attendee_person_id
+
+    # Attendance involves Meeting
+    belongs_to :meeting, :foreign_key => :meeting_id
+
+    validates :attendee_person_id, :presence => true
+    validates :meeting_id, :presence => true
+  end
+end
+
+module Company
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'company_id'
+
+    # Directorship involves Company
+    has_many :directorships, :class_name => 'Directorship', :foreign_key => :company_id, :dependent => :destroy
+    # Employee works at Company
+    has_many :employees, :class_name => 'Employee', :foreign_key => :company_id, :dependent => :destroy
+    # Meeting is held by Company
+    has_many :meetings, :class_name => 'Meeting', :foreign_key => :company_id, :dependent => :destroy
+
+    validates :company_name, :presence => true
+    validates :is_listed, :presence => true
+  end
+end
+
+module Directorship
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'directorship_id'
+
+    # Directorship involves Director
+    belongs_to :director, :class_name => 'Person', :foreign_key => :director_person_id
+
+    # Directorship involves Company
+    belongs_to :company, :foreign_key => :company_id
+
+    validates :director_person_id, :presence => true
+    validates :company_id, :presence => true
+    validates :appointment_date, :presence => true
+  end
+end
+
+module Employee
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'employee_id'
+
+    # Employee works at Company
+    belongs_to :company, :foreign_key => :company_id
+
+    # maybe Employee is supervised by Manager
+    belongs_to :manager, :class_name => 'Employee', :foreign_key => :manager_employee_id
+
+    # maybe Employee is supervised by Manager
+    has_many :employees, :class_name => 'Employee', :foreign_key => :manager_employee_id, :dependent => :destroy
+    # Employment involves Employee
+    has_many :employments, :class_name => 'Employment', :foreign_key => :employee_id, :dependent => :destroy
+    has_many :people, :through => :employments
+
+    validates :employee_nr, :presence => true
+    validates :company_id, :presence => true
+    validates :manager_employee_id, :presence => true
+  end
+end
+
+module Employment
+  extend ActiveSupport::Concern
+  included do
+    # Employment involves Person
+    belongs_to :person, :foreign_key => :person_id
+
+    # Employment involves Employee
+    belongs_to :employee, :foreign_key => :employee_id
+
+    validates :person_id, :presence => true
+    validates :employee_id, :presence => true
+  end
+end
+
+module Meeting
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'meeting_id'
+
+    # Meeting is held by Company
+    belongs_to :company, :foreign_key => :company_id
+
+    # Attendance involves Meeting
+    has_many :attendances, :class_name => 'Attendance', :foreign_key => :meeting_id, :dependent => :destroy
+    has_many :people, :through => :attendances
+
+    validates :company_id, :presence => true
+    validates :date, :presence => true
+    validates :is_board_meeting, :presence => true
+  end
+end
+
+module Person
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'person_id'
+
+    # Attendance involves Attendee
+    has_many :attendances, :class_name => 'Attendance', :foreign_key => :attendee_person_id, :dependent => :destroy
+    has_many :meetings, :through => :attendances
+    # Directorship involves Director
+    has_many :directorships, :class_name => 'Directorship', :foreign_key => :director_person_id, :dependent => :destroy
+    # Employment involves Person
+    has_many :employments, :class_name => 'Employment', :foreign_key => :person_id, :dependent => :destroy
+    has_many :employees, :through => :employments
+
+    validates :given_name, :presence => true
+  end
+end

@@ -1,0 +1,22 @@
+module Magnet
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'magnet_auto_counter'
+
+    # MagnetPole belongs to Magnet
+    has_many :magnet_poles, :class_name => 'MagnetPole', :foreign_key => :magnet_auto_counter, :dependent => :destroy
+  end
+end
+
+module MagnetPole
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'magnet_pole_id'
+
+    # MagnetPole belongs to Magnet
+    belongs_to :magnet, :foreign_key => :magnet_auto_counter
+
+    validates :magnet_auto_counter, :presence => true
+    validates :is_north, :presence => true
+  end
+end

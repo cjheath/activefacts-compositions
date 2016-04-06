@@ -1,0 +1,355 @@
+module Asset
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'asset_id'
+
+    # maybe Asset is a Vehicle that maybe was sold by Dealer
+    belongs_to :vehicle_dealer, :class_name => 'Party', :foreign_key => :vehicle_dealer_id
+
+    # maybe Asset is a Vehicle that maybe is subject to finance with Finance Institution
+    belongs_to :vehicle_finance_institution, :class_name => 'Party', :foreign_key => :vehicle_finance_institution_id
+
+    # Cover involves Asset
+    has_many :covers, :class_name => 'Cover', :foreign_key => :asset_id, :dependent => :destroy
+    has_many :policies, :through => :covers
+    has_many :cover_types, :through => :covers
+  end
+end
+
+module Claim
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'claim_id'
+
+    # Claim is on Policy
+    belongs_to :policy, :foreign_key => :policy_id
+
+    # maybe Claim concerns Incident that relates to loss at Address that maybe is in State
+    belongs_to :incident_address_state, :class_name => 'State', :foreign_key => :incident_address_state_id
+
+    # maybe Lodgement involves Claim and Lodgement involves Person
+    belongs_to :lodgement_person, :class_name => 'Party', :foreign_key => :lodgement_person_id
+
+    # Contractor Appointment involves Claim
+    has_many :contractor_appointments, :class_name => 'ContractorAppointment', :foreign_key => :claim_id, :dependent => :destroy
+    has_many :parties, :through => :contractor_appointments
+    # Lost Item was lost in Incident
+    has_many :lost_items, :class_name => 'LostItem', :foreign_key => :incident_claim_id, :dependent => :destroy
+    # maybe Property Damage was damaged in Incident
+    has_many :property_damages, :class_name => 'PropertyDamage', :foreign_key => :incident_claim_id, :dependent => :destroy
+    # Vehicle Incident is a kind of Incident
+    has_one :vehicle_incident, :class_name => 'VehicleIncident', :foreign_key => :incident_claim_id, :dependent => :destroy
+    # Witness saw Incident
+    has_many :witnesses, :class_name => 'Witness', :foreign_key => :incident_claim_id, :dependent => :destroy
+
+    validates :p_sequence, :presence => true
+    validates :policy_id, :presence => true
+    validates :incident_address_state_id, :presence => true
+  end
+end
+
+module ContractorAppointment
+  extend ActiveSupport::Concern
+  included do
+    # Contractor Appointment involves Claim
+    belongs_to :claim, :foreign_key => :claim_id
+
+    # Contractor Appointment involves Contractor
+    belongs_to :contractor, :class_name => 'Party', :foreign_key => :contractor_id
+
+    validates :claim_id, :presence => true
+    validates :contractor_id, :presence => true
+  end
+end
+
+module Cover
+  extend ActiveSupport::Concern
+  included do
+    # Cover involves Policy
+    belongs_to :policy, :foreign_key => :policy_id
+
+    # Cover involves Cover Type
+    belongs_to :cover_type, :foreign_key => :cover_type_id
+
+    # Cover involves Asset
+    belongs_to :asset, :foreign_key => :asset_id
+
+    validates :policy_id, :presence => true
+    validates :cover_type_id, :presence => true
+    validates :asset_id, :presence => true
+  end
+end
+
+module CoverType
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'cover_type_id'
+
+    # Cover involves Cover Type
+    has_many :covers, :class_name => 'Cover', :foreign_key => :cover_type_id, :dependent => :destroy
+    has_many :policies, :through => :covers
+    has_many :assets, :through => :covers
+    # Cover Wording involves Cover Type
+    has_many :cover_wordings, :class_name => 'CoverWording', :foreign_key => :cover_type_id, :dependent => :destroy
+
+    validates :cover_type_code, :presence => true
+    validates :cover_type_name, :presence => true
+  end
+end
+
+module CoverWording
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'cover_wording_id'
+
+    # Cover Wording involves Cover Type
+    belongs_to :cover_type, :foreign_key => :cover_type_id
+
+    validates :cover_type_id, :presence => true
+    validates :policy_wording_text, :presence => true
+    validates :start_date, :presence => true
+  end
+end
+
+module LossType
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'loss_type_id'
+
+    # maybe Vehicle Incident resulted from Loss Type
+    has_many :vehicle_incidents, :class_name => 'VehicleIncident', :foreign_key => :loss_type_id, :dependent => :destroy
+
+    validates :loss_type_code, :presence => true
+    validates :involves_driving, :presence => true
+    validates :is_single_vehicle_incident, :presence => true
+  end
+end
+
+module LostItem
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'lost_item_id'
+
+    # Lost Item was lost in Incident
+    belongs_to :incident, :class_name => 'Claim', :foreign_key => :incident_claim_id
+
+    validates :incident_claim_id, :presence => true
+    validates :lost_item_nr, :presence => true
+    validates :description, :presence => true
+  end
+end
+
+module Party
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'party_id'
+
+    # maybe Party has postal-Address and maybe Address is in State
+    belongs_to :postal_address_state, :class_name => 'State', :foreign_key => :postal_address_state_id
+
+    # maybe Party is a Company that has contact-Person
+    belongs_to :company_contact_person, :class_name => 'Party', :foreign_key => :company_contact_person_id
+
+    # maybe Party is a Person that maybe lives at Address that maybe is in State
+    belongs_to :person_address_state, :class_name => 'State', :foreign_key => :person_address_state_id
+
+    # maybe Asset is a Vehicle that maybe was sold by Dealer
+    has_many :assets, :class_name => 'Asset', :foreign_key => :vehicle_dealer_id, :dependent => :destroy
+    # maybe Asset is a Vehicle that maybe is subject to finance with Finance Institution
+    has_many :assets, :class_name => 'Asset', :foreign_key => :vehicle_finance_institution_id, :dependent => :destroy
+    # maybe Lodgement involves Claim and Lodgement involves Person
+    has_many :claims, :class_name => 'Claim', :foreign_key => :lodgement_person_id, :dependent => :destroy
+    # Contractor Appointment involves Contractor
+    has_many :contractor_appointments, :class_name => 'ContractorAppointment', :foreign_key => :contractor_id, :dependent => :destroy
+    has_many :claims, :through => :contractor_appointments
+    # maybe Party is a Company that has contact-Person
+    has_many :parties, :class_name => 'Party', :foreign_key => :company_contact_person_id, :dependent => :destroy
+    # Policy belongs to Insured
+    has_many :policies, :class_name => 'Policy', :foreign_key => :insured_id, :dependent => :destroy
+    # maybe Policy was sold by Authorised Rep
+    has_many :policies, :class_name => 'Policy', :foreign_key => :authorised_rep_id, :dependent => :destroy
+    # Third Party involves Person
+    has_many :third_parties, :class_name => 'ThirdParty', :foreign_key => :person_id, :dependent => :destroy
+    # maybe Third Party is insured by Insurer
+    has_many :third_parties, :class_name => 'ThirdParty', :foreign_key => :insurer_id, :dependent => :destroy
+    # maybe Driving involves Vehicle Incident and Driving was by Person
+    has_many :vehicle_incidents, :class_name => 'VehicleIncident', :foreign_key => :driving_person_id, :dependent => :destroy
+
+    validates :is_a_company, :presence => true
+    validates :postal_address_state_id, :presence => true
+    validates :person_address_state_id, :presence => true
+  end
+end
+
+module Policy
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'policy_id'
+
+    # Policy is for product having p_product
+    belongs_to :p_product, :class_name => 'Product', :foreign_key => :p_product_id
+
+    # Policy issued in state having p_state
+    belongs_to :p_state, :class_name => 'State', :foreign_key => :p_state_id
+
+    # Policy belongs to Insured
+    belongs_to :insured, :class_name => 'Party', :foreign_key => :insured_id
+
+    # maybe Policy was sold by Authorised Rep
+    belongs_to :authorised_rep, :class_name => 'Party', :foreign_key => :authorised_rep_id
+
+    # Claim is on Policy
+    has_many :claims, :class_name => 'Claim', :foreign_key => :policy_id, :dependent => :destroy
+    # Cover involves Policy
+    has_many :covers, :class_name => 'Cover', :foreign_key => :policy_id, :dependent => :destroy
+    has_many :cover_types, :through => :covers
+    has_many :assets, :through => :covers
+
+    validates :p_year_nr, :presence => true
+    validates :p_product_id, :presence => true
+    validates :p_state_id, :presence => true
+    validates :p_serial, :presence => true
+    validates :application_nr, :presence => true
+    validates :insured_id, :presence => true
+  end
+end
+
+module Product
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'product_id'
+
+    # Policy is for product having p_product
+    has_many :policies, :class_name => 'Policy', :foreign_key => :p_product_id, :dependent => :destroy
+
+    validates :product_code, :presence => true
+  end
+end
+
+module PropertyDamage
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'property_damage_id'
+
+    # maybe Property Damage was damaged in Incident
+    belongs_to :incident, :class_name => 'Claim', :foreign_key => :incident_claim_id
+
+    # Property Damage is at Address that maybe is in State
+    belongs_to :address_state, :class_name => 'State', :foreign_key => :address_state_id
+
+    validates :address_street, :presence => true
+    validates :address_city, :presence => true
+    validates :address_state_id, :presence => true
+  end
+end
+
+module State
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'state_id'
+
+    # maybe Claim concerns Incident that relates to loss at Address that maybe is in State
+    has_many :claims, :class_name => 'Claim', :foreign_key => :incident_address_state_id, :dependent => :destroy
+    # maybe Party has postal-Address and maybe Address is in State
+    has_many :parties, :class_name => 'Party', :foreign_key => :postal_address_state_id, :dependent => :destroy
+    # maybe Party is a Person that maybe lives at Address that maybe is in State
+    has_many :parties, :class_name => 'Party', :foreign_key => :person_address_state_id, :dependent => :destroy
+    # Policy issued in state having p_state
+    has_many :policies, :class_name => 'Policy', :foreign_key => :p_state_id, :dependent => :destroy
+    # Property Damage is at Address that maybe is in State
+    has_many :property_damages, :class_name => 'PropertyDamage', :foreign_key => :address_state_id, :dependent => :destroy
+    # maybe Witness lives at Address that maybe is in State
+    has_many :witnesses, :class_name => 'Witness', :foreign_key => :address_state_id, :dependent => :destroy
+
+    validates :state_code, :presence => true
+  end
+end
+
+module ThirdParty
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'third_party_id'
+
+    # Third Party involves Person
+    belongs_to :person, :class_name => 'Party', :foreign_key => :person_id
+
+    # Third Party involves Vehicle Incident
+    belongs_to :vehicle_incident, :foreign_key => :vehicle_incident_claim_id
+
+    # maybe Third Party is insured by Insurer
+    belongs_to :insurer, :class_name => 'Party', :foreign_key => :insurer_id
+
+    validates :person_id, :presence => true
+    validates :vehicle_incident_claim_id, :presence => true
+  end
+end
+
+module UnderwritingDemerit
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'underwriting_demerit_id'
+
+    # Underwriting Demerit preceded Vehicle Incident
+    belongs_to :vehicle_incident, :foreign_key => :vehicle_incident_claim_id
+
+    # Underwriting Demerit has Underwriting Question
+    belongs_to :underwriting_question, :foreign_key => :underwriting_question_id
+
+    validates :vehicle_incident_claim_id, :presence => true
+    validates :underwriting_question_id, :presence => true
+  end
+end
+
+module UnderwritingQuestion
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'underwriting_question_id'
+
+    # Underwriting Demerit has Underwriting Question
+    has_many :underwriting_demerits, :class_name => 'UnderwritingDemerit', :foreign_key => :underwriting_question_id, :dependent => :destroy
+
+    validates :text, :presence => true
+  end
+end
+
+module VehicleIncident
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'incident_claim_id'
+
+    # Vehicle Incident is a kind of Incident
+    belongs_to :incident, :class_name => 'Claim', :foreign_key => :incident_claim_id
+
+    # maybe Driving involves Vehicle Incident and Driving was by Person
+    belongs_to :driving_person, :class_name => 'Party', :foreign_key => :driving_person_id
+
+    # maybe Vehicle Incident resulted from Loss Type
+    belongs_to :loss_type, :foreign_key => :loss_type_id
+
+    # Third Party involves Vehicle Incident
+    has_many :third_parties, :class_name => 'ThirdParty', :foreign_key => :vehicle_incident_claim_id, :dependent => :destroy
+    # Underwriting Demerit preceded Vehicle Incident
+    has_many :underwriting_demerits, :class_name => 'UnderwritingDemerit', :foreign_key => :vehicle_incident_claim_id, :dependent => :destroy
+
+    validates :incident_claim_id, :presence => true
+    validates :occurred_while_being_driven, :presence => true
+    validates :loss_type_id, :presence => true
+  end
+end
+
+module Witness
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'witness_id'
+
+    # Witness saw Incident
+    belongs_to :incident, :class_name => 'Claim', :foreign_key => :incident_claim_id
+
+    # maybe Witness lives at Address that maybe is in State
+    belongs_to :address_state, :class_name => 'State', :foreign_key => :address_state_id
+
+    validates :incident_claim_id, :presence => true
+    validates :name, :presence => true
+    validates :address_state_id, :presence => true
+  end
+end
