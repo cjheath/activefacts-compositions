@@ -51,7 +51,7 @@ describe "Rails schema from CQL" do
       compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, basename, "surrogates" => true)
       compositor.generate
 
-      output = ActiveFacts::Generators::Rails::Schema.new(compositor.composition).generate
+      output = ActiveFacts::Generators::Rails::Schema.new(compositor.composition, "closed_world" => true).generate
 
       # Save or delete the actual output file:
       if expected_text != output

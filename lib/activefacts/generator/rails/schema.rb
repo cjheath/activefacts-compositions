@@ -134,10 +134,11 @@ module ActiveFacts
             index_name = ACTR::name_trunc("index_#{ar_table_name}_on_#{index_column_names*'_'}")
 
             index_texts << '' if index_texts.empty?
+
             all_mandatory = index.all_index_field.to_a.all?{|ixf| ixf.component.path_mandatory}
             index_texts << %Q{  add_index "#{ar_table_name}", #{index_column_names.inspect}, :name => :#{index_name}#{
-              # Avoid problems with closed-world uniqueness: only all_mandatory indices can be unique
-              index.is_unique && all_mandatory ? ", :unique => true" : ''
+              # Avoid problems with closed-world uniqueness: only all_mandatory indices can be unique on closed-world index semantics (MS SQL)
+              index.is_unique && (!@option_closed_world || all_mandatory) ? ", :unique => true" : ''
             }}
           end
 
@@ -167,7 +168,7 @@ module ActiveFacts
           if a = options[:auto_assign]
             case type_name
             when 'integer'
-              type_name = a != 'assert' ? 'primary_key' : 'integer'
+              type_name = 'primary_key' if a != 'assert'
             when 'uuid'
               type_name = "uuid, :default => 'gen_random_uuid()', :primary_key => true"
             end
