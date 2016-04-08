@@ -1,6 +1,6 @@
 CREATE TABLE Country (
 	-- Country surrogate key
-	CountryID                               BIGINT IDENTITY NOT NULL,
+	CountryID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Country has ISO3166Code3
 	ISO3166Code3                            VARCHAR(3) NOT NULL,
 	-- Country is called Country Name

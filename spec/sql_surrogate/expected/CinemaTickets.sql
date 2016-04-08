@@ -1,6 +1,6 @@
 CREATE TABLE AllocatableCinemaSection (
 	-- AllocatableCinemaSection surrogate key
-	AllocatableCinemaSectionID              BIGINT IDENTITY NOT NULL,
+	AllocatableCinemaSectionID              BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- AllocatableCinemaSection involves Cinema that has Cinema ID
 	CinemaID                                BIGINT NOT NULL,
 	-- AllocatableCinemaSection involves Section that has Section Name
@@ -14,7 +14,7 @@ CREATE TABLE AllocatableCinemaSection (
 
 CREATE TABLE Booking (
 	-- Booking surrogate key
-	BookingID                               BIGINT IDENTITY NOT NULL,
+	BookingID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Booking has Booking Nr
 	BookingNr                               INTEGER NOT NULL,
 	-- Tickets For Booking Have Been Issued
@@ -42,7 +42,7 @@ CREATE TABLE Booking (
 
 CREATE TABLE Cinema (
 	-- Cinema has Cinema ID
-	CinemaID                                BIGINT IDENTITY NOT NULL,
+	CinemaID                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Cinema has Name
 	Name                                    VARCHAR NOT NULL,
 	-- Primary index to Cinema over PresenceConstraint over (Cinema ID in "Cinema has Cinema ID") occurs at most one time
@@ -54,7 +54,7 @@ CREATE TABLE Cinema (
 
 CREATE TABLE Film (
 	-- Film has Film ID
-	FilmID                                  BIGINT IDENTITY NOT NULL,
+	FilmID                                  BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Film has Name
 	Name                                    VARCHAR NOT NULL,
 	-- maybe Film was made in Year that has Year Nr
@@ -68,7 +68,7 @@ CREATE UNIQUE NONCLUSTERED INDEX FilmByNameYearNr ON Film(Name, YearNr) WHERE Ye
 
 CREATE TABLE Person (
 	-- Person has Person ID
-	PersonID                                BIGINT IDENTITY NOT NULL,
+	PersonID                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- maybe Person has Encrypted Password
 	EncryptedPassword                       VARCHAR NULL,
 	-- maybe Person has login-Name
@@ -82,7 +82,7 @@ CREATE UNIQUE NONCLUSTERED INDEX PersonByLoginName ON Person(LoginName) WHERE Lo
 
 CREATE TABLE PlacesPaid (
 	-- Places Paid surrogate key
-	PlacesPaidID                            BIGINT IDENTITY NOT NULL,
+	PlacesPaidID                            BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Places Paid involves Booking
 	BookingID                               BIGINT NOT NULL,
 	-- Places Paid involves Payment Method that has Payment Method Code
@@ -99,7 +99,7 @@ CREATE TABLE PlacesPaid (
 
 CREATE TABLE Seat (
 	-- Seat surrogate key
-	SeatID                                  BIGINT IDENTITY NOT NULL,
+	SeatID                                  BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Seat is in Row that is in Cinema that has Cinema ID
 	RowCinemaID                             BIGINT NOT NULL,
 	-- Seat is in Row that has Row Nr
@@ -130,7 +130,7 @@ CREATE TABLE SeatAllocation (
 
 CREATE TABLE [Session] (
 	-- Session surrogate key
-	SessionID                               BIGINT IDENTITY NOT NULL,
+	SessionID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Session involves Cinema that has Cinema ID
 	CinemaID                                BIGINT NOT NULL,
 	-- Session involves Session Time that is in Year that has Year Nr
@@ -160,7 +160,7 @@ CREATE TABLE [Session] (
 
 CREATE TABLE TicketPricing (
 	-- Ticket Pricing surrogate key
-	TicketPricingID                         BIGINT IDENTITY NOT NULL,
+	TicketPricingID                         BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Ticket Pricing involves Session Time that is in Year that has Year Nr
 	SessionTimeYearNr                       INTEGER NOT NULL CHECK((SessionTimeYearNr >= 1900 AND SessionTimeYearNr <= 9999)),
 	-- Ticket Pricing involves Session Time that is in Month that has Month Nr

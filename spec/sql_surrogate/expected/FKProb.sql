@@ -1,6 +1,6 @@
 CREATE TABLE OT (
 	-- OT surrogate key
-	OTID                                    BIGINT IDENTITY NOT NULL,
+	OTID                                    BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- OT is called Name
 	Name                                    VARCHAR NOT NULL,
 	-- Primary index to OT
@@ -12,7 +12,7 @@ CREATE TABLE OT (
 
 CREATE TABLE VTP (
 	-- VTP surrogate key
-	VTPID                                   BIGINT IDENTITY NOT NULL,
+	VTPID                                   BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- VTP involves VT that is a kind of DOT that is a kind of OT
 	VTOTID                                  BIGINT NOT NULL,
 	-- VTP involves Name

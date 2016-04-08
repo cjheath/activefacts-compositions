@@ -1,6 +1,6 @@
 CREATE TABLE AcceptableSubstitution (
 	-- Acceptable Substitution surrogate key
-	AcceptableSubstitutionID                BIGINT IDENTITY NOT NULL,
+	AcceptableSubstitutionID                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Acceptable Substitution involves Product
 	ProductID                               BIGINT NOT NULL,
 	-- Acceptable Substitution involves alternate-Product
@@ -16,7 +16,7 @@ CREATE TABLE AcceptableSubstitution (
 
 CREATE TABLE [Month] (
 	-- Month surrogate key
-	MonthID                                 BIGINT IDENTITY NOT NULL,
+	MonthID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Month has Month Nr
 	MonthNr                                 INTEGER NOT NULL CHECK((MonthNr >= 1 AND MonthNr <= 12)),
 	-- Month is in Season
@@ -30,7 +30,7 @@ CREATE TABLE [Month] (
 
 CREATE TABLE Product (
 	-- Product surrogate key
-	ProductID                               BIGINT IDENTITY NOT NULL,
+	ProductID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Product has Product Name
 	ProductName                             VARCHAR NOT NULL,
 	-- Primary index to Product
@@ -42,7 +42,7 @@ CREATE TABLE Product (
 
 CREATE TABLE ProductionForecast (
 	-- Production Forecast surrogate key
-	ProductionForecastID                    BIGINT IDENTITY NOT NULL,
+	ProductionForecastID                    BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Production Forecast involves Refinery
 	RefineryID                              BIGINT NOT NULL,
 	-- Production Forecast involves Supply Period
@@ -63,7 +63,7 @@ CREATE TABLE ProductionForecast (
 
 CREATE TABLE Refinery (
 	-- Refinery surrogate key
-	RefineryID                              BIGINT IDENTITY NOT NULL,
+	RefineryID                              BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Refinery has Refinery Name
 	RefineryName                            VARCHAR(80) NOT NULL,
 	-- Primary index to Refinery
@@ -75,7 +75,7 @@ CREATE TABLE Refinery (
 
 CREATE TABLE Region (
 	-- Region surrogate key
-	RegionID                                BIGINT IDENTITY NOT NULL,
+	RegionID                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Region has Region Name
 	RegionName                              VARCHAR NOT NULL,
 	-- Primary index to Region
@@ -87,7 +87,7 @@ CREATE TABLE Region (
 
 CREATE TABLE RegionalDemand (
 	-- Regional Demand surrogate key
-	RegionalDemandID                        BIGINT IDENTITY NOT NULL,
+	RegionalDemandID                        BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Regional Demand involves Region
 	RegionID                                BIGINT NOT NULL,
 	-- Regional Demand involves Supply Period
@@ -107,7 +107,7 @@ CREATE TABLE RegionalDemand (
 
 CREATE TABLE SupplyPeriod (
 	-- Supply Period surrogate key
-	SupplyPeriodID                          BIGINT IDENTITY NOT NULL,
+	SupplyPeriodID                          BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Supply Period is in Year that has Year Nr
 	YearNr                                  INTEGER NOT NULL,
 	-- Supply Period is in Month
@@ -122,7 +122,7 @@ CREATE TABLE SupplyPeriod (
 
 CREATE TABLE TransportRoute (
 	-- Transport Route surrogate key
-	TransportRouteID                        BIGINT IDENTITY NOT NULL,
+	TransportRouteID                        BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Transport Route involves Transport Method
 	TransportMethod                         VARCHAR NOT NULL CHECK(TransportMethod = 'Rail' OR TransportMethod = 'Road' OR TransportMethod = 'Sea'),
 	-- Transport Route involves Refinery

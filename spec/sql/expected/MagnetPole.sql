@@ -1,6 +1,6 @@
 CREATE TABLE Magnet (
 	-- Magnet has Magnet AutoCounter
-	MagnetAutoCounter                       BIGINT IDENTITY NOT NULL,
+	MagnetAutoCounter                       BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Primary index to Magnet over PresenceConstraint over (Magnet AutoCounter in "Magnet has Magnet AutoCounter") occurs at most one time
 	PRIMARY KEY CLUSTERED(MagnetAutoCounter)
 );

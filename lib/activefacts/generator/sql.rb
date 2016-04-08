@@ -45,6 +45,10 @@ module ActiveFacts
         @delayed_foreign_keys.sort*"\n"
       end
 
+      def data_type_context
+        @data_type_context ||= SQLDataTypeContext.new
+      end
+
       def table_name_max
         60
       end
@@ -59,73 +63,6 @@ module ActiveFacts
 
       def schema_name_max
         60
-      end
-
-      def default_char_type
-        (@unicode ? 'NATIONAL ' : '') +
-        'CHARACTER'
-      end
-
-      def default_varchar_type
-        (@unicode ? 'NATIONAL ' : '') +
-        'VARCHAR'
-      end
-
-      def char_default_length
-        nil
-      end
-
-      def varchar_default_length
-        nil
-      end
-
-      def date_time_type
-        'TIMESTAMP'
-      end
-
-      def valid_from_type
-        date_time_type
-      end
-
-      def boolean_type
-        'BOOLEAN'
-      end
-
-      def surrogate_type
-        type_name, = data_type_context.choose_integer_type(0, 2**(default_surrogate_length-1)-1)
-        type_name
-      end
-
-      def default_surrogate_length
-        64
-      end
-
-      def default_text_type
-        default_varchar_type
-      end
-
-      def integer_ranges
-        [
-          ['SMALLINT', -2**15, 2**15-1],  # The standard says -10^5..10^5 (less than 16 bits)
-          ['INTEGER', -2**31, 2**31-1],   # The standard says -10^10..10^10 (more than 32 bits!)
-          ['BIGINT', -2**63, 2**63-1],    # The standard says -10^19..10^19 (less than 64 bits)
-        ]
-      end
-
-      def safe_table_name composite
-        escape(table_name(composite), table_name_max)
-      end
-
-      def safe_column_name component
-        escape(column_name(component), column_name_max)
-      end
-
-      def table_name composite
-        composite.mapping.name.gsub(' ', @underscore)
-      end
-
-      def column_name component
-        component.column_name.capcase
       end
 
       def generate_schema
@@ -173,78 +110,32 @@ module ActiveFacts
         padding = " "*(column_name.size >= column_name_max ? 1 : column_name_max-column_name.size)
         constraints = leaf.all_leaf_constraint
 
-        identity = ''
-        "-- #{leaf.comment}\n\t#{column_name}#{padding}#{component_type leaf, column_name}#{identity}"
+        "-- #{leaf.comment}\n" +
+        "\t#{column_name}#{padding}#{column_type leaf, column_name}"
       end
 
-      def component_type component, column_name
-        case component
-        when MM::Indicator
-          boolean_type
-        when MM::SurrogateKey
-          # REVISIT: This is an SQL Server-ism. Replace with a standard SQL SEQUENCE/
-          # Emit IDENTITY for columns auto-assigned on commit (except FKs)
-          surrogate_type +
-            if component.root.primary_index.all_index_field.detect{|ixf| ixf.component == component} and
-              !component.all_foreign_key_field.detect{|fkf| fkf.foreign_key.source_composite == component.root}
-              ' IDENTITY'
-            else
-              ''
-            end +
-            (component.path_mandatory ? ' NOT' : '') + ' NULL'
-        when MM::ValidFrom
-          valid_from_type
-        when MM::ValueField, MM::Absorption
-          object_type = component.object_type
-          while object_type.is_a?(MM::EntityType)
-            rr = object_type.preferred_identifier.role_sequence.all_role_ref.single
-            raise "Can't produce a column for composite #{component.inspect}" unless rr
-            object_type = rr.role.object_type
-          end
-          raise "A column can only be produced from a ValueType" unless object_type.is_a?(MM::ValueType)
+      def auto_assign_type
+        ' GENERATED ALWAYS AS IDENTITY'
+      end
 
-          if component.is_a?(MM::Absorption)
-            value_constraint ||= component.child_role.role_value_constraint
-          end
+      def column_type component, column_name
+        type_name, options = component.data_type(data_type_context)
+        options ||= {}
+        length = options[:length]
+        value_constraint = options[:value_constraint]
+        type_name, length = normalise_type(type_name, length, value_constraint)
 
-          supertype = object_type
-          begin
-            object_type = supertype
-            length ||= object_type.length
-            scale ||= object_type.scale
-            unless component.parent.parent and component.parent.foreign_key
-              # No need to enforce value constraints that are already enforced by a foreign key
-              value_constraint ||= object_type.value_constraint
-            end
-          end while supertype = object_type.supertype
-
-          type, length = normalise_type(object_type.name, length, value_constraint)
-          sql_type = "#{type}#{
-            if !length
-              ''
-            else
-              '(' + length.to_s + (scale ? ", #{scale}" : '') + ')'
-            end
-          }#{
-            # REVISIT: This is an SQL Server-ism. Replace with a standard SQL SEQUENCE/
-            # Emit IDENTITY for PK columns auto-assigned on commit (except FKs)
-            if a = object_type.is_auto_assigned and a != 'assert' and
-                component.root.primary_index.all_index_field.detect{|ixf| ixf.component == component} and
-                !component.all_foreign_key_field.detect{|fkf| fkf.foreign_key.source_composite == component.root}
-              ' IDENTITY'
-            else
-              ''
-            end
-          }#{
-            (component.path_mandatory ? ' NOT' : '') + ' NULL'
-          }#{
-            value_constraint ? check_clause(column_name, value_constraint) : ''
-          }"
-        when MM::Injection
-          component.object_type.name
-        else
-          raise "Can't make a column from #{component}"
-        end
+        "#{
+          type_name
+        }#{
+          "(#{length}#{(s = options[:scale]) ? ", #{s}" : ''})" if length
+        }#{
+          ((options[:mandatory] ? ' NOT' : '') + ' NULL') if options.has_key?(:mandatory)
+        }#{
+          auto_assign_type if options[:auto_assign]
+        }#{
+          check_clause(column_name, value_constraint) if value_constraint
+        }"
       end
 
       def generate_index index, delayed_indices
@@ -290,6 +181,41 @@ module ActiveFacts
           ") REFERENCES #{safe_table_name fk.composite} (" +
           fk.all_index_field.map{|ixf| safe_column_name ixf.component}*", " +
         ")"
+      end
+
+      # Return SQL type and (modified?) length for the passed base type
+      def normalise_type(type_name, length, value_constraint)
+        type = MM::DataType.normalise(type_name)
+
+        case type
+        when MM::DataType::TYPE_Boolean;  data_type_context.boolean_type
+        when MM::DataType::TYPE_Integer
+          if type_name =~ /^Auto ?Counter$/i
+            MM::DataType.normalise_int_length('int', data_type_context.default_surrogate_length, value_constraint, data_type_context)[0]
+          else
+            MM::DataType.normalise_int_length(type_name, length, value_constraint, data_type_context)[0]
+          end
+        when MM::DataType::TYPE_Real;
+          ["FLOAT", data_type_context.default_length(type, type_name)]
+        when MM::DataType::TYPE_Decimal;  'DECIMAL'
+        when MM::DataType::TYPE_Money;    'DECIMAL'
+        when MM::DataType::TYPE_Char;     [data_type_context.default_char_type, length || data_type_context.char_default_length]
+        when MM::DataType::TYPE_String;   [data_type_context.default_varchar_type, length || data_type_context.varchar_default_length]
+        when MM::DataType::TYPE_Text;     [data_type_context.default_text_type, length || 'MAX']
+        when MM::DataType::TYPE_Date;     'DATE' # SQLSVR 2K5: 'date'
+        when MM::DataType::TYPE_Time;     'TIME' # SQLSVR 2K5: 'time'
+        when MM::DataType::TYPE_DateTime; 'TIMESTAMP'
+        when MM::DataType::TYPE_Timestamp;'TIMESTAMP'
+        when MM::DataType::TYPE_Binary;
+          length ||= 16 if type_name =~ /^(guid|uuid)$/i
+          if length
+            ['BINARY', length]
+          else
+            'VARBINARY'
+          end
+        else
+          type_name
+        end
       end
 
       def reserved_words
@@ -363,55 +289,6 @@ module ActiveFacts
         end
       end
 
-      class SQLContext < MM::DataType::DefaultContext
-        def integer_ranges
-          [
-            ['SMALLINT', -2**15, 2**15-1],  # The standard says -10^5..10^5 (less than 16 bits)
-            ['INTEGER', -2**31, 2**31-1],   # The standard says -10^10..10^10 (more than 32 bits!)
-            ['BIGINT', -2**63, 2**63-1],    # The standard says -10^19..10^19 (less than 64 bits)
-          ]
-        end
-      end
-
-      def data_type_context
-        SQLContext.new
-      end
-
-      # Return SQL type and (modified?) length for the passed base type
-      def normalise_type(type_name, length, value_constraint)
-        type = MM::DataType.normalise(type_name)
-
-        case type
-        when MM::DataType::TYPE_Boolean;  boolean_type
-        when MM::DataType::TYPE_Integer
-          if type_name =~ /^Auto ?Counter$/i
-            MM::DataType.normalise_int_length('int', default_surrogate_length, value_constraint, data_type_context)[0]
-          else
-            MM::DataType.normalise_int_length(type_name, length, value_constraint, data_type_context)[0]
-          end
-        when MM::DataType::TYPE_Real;
-          ["FLOAT", MM::DataType::DefaultContext.new.default_length(type, type_name)]
-        when MM::DataType::TYPE_Decimal;  'DECIMAL'
-        when MM::DataType::TYPE_Money;    'DECIMAL'
-        when MM::DataType::TYPE_Char;     [default_char_type, length || char_default_length]
-        when MM::DataType::TYPE_String;   [default_varchar_type, length || varchar_default_length]
-        when MM::DataType::TYPE_Text;     [default_text_type, length || 'MAX']
-        when MM::DataType::TYPE_Date;     'DATE' # SQLSVR 2K5: 'date'
-        when MM::DataType::TYPE_Time;     'TIME' # SQLSVR 2K5: 'time'
-        when MM::DataType::TYPE_DateTime; 'TIMESTAMP'
-        when MM::DataType::TYPE_Timestamp;'TIMESTAMP'
-        when MM::DataType::TYPE_Binary;
-          length ||= 16 if type_name =~ /^(guid|uuid)$/i
-          if length
-            ['BINARY', length]
-          else
-            'VARBINARY'
-          end
-        else
-          type_name
-        end
-      end
-
       def sql_value(value)
         value.is_literal_string ? sql_string(value.literal) : value.literal
       end
@@ -437,6 +314,96 @@ module ActiveFacts
             end
           end*" OR " +
         ")"
+      end
+
+      class SQLDataTypeContext < MM::DataType::Context
+        def integer_ranges
+          [
+            ['SMALLINT', -2**15, 2**15-1],  # The standard says -10^5..10^5 (less than 16 bits)
+            ['INTEGER', -2**31, 2**31-1],   # The standard says -10^10..10^10 (more than 32 bits!)
+            ['BIGINT', -2**63, 2**63-1],    # The standard says -10^19..10^19 (less than 64 bits)
+          ]
+        end
+
+        def default_length data_type, type_name
+          case data_type
+          when MM::DataType::TYPE_Real
+            53        # IEEE Double precision floating point
+          when MM::DataType::TYPE_Integer
+            case type_name
+            when /([a-z ]|\b)Tiny([a-z ]|\b)/i
+              8
+            when /([a-z ]|\b)Small([a-z ]|\b)/i,
+              /([a-z ]|\b)Short([a-z ]|\b)/i
+              16
+            when /([a-z ]|\b)Big(INT)?([a-z ]|\b)/i
+              64
+            else
+              32
+            end
+          else
+            nil
+          end
+        end
+
+        def boolean_type
+          'BOOLEAN'
+        end
+
+        def surrogate_type
+          type_name, = choose_integer_type(0, 2**(default_surrogate_length-1)-1)
+          type_name
+        end
+
+        def valid_from_type
+          'TIMESTAMP'
+        end
+
+        def date_time_type
+          'TIMESTAMP'
+        end
+
+        def default_char_type
+          (@unicode ? 'NATIONAL ' : '') +
+          'CHARACTER'
+        end
+
+        def default_varchar_type
+          (@unicode ? 'NATIONAL ' : '') +
+          'VARCHAR'
+        end
+
+        def char_default_length
+          nil
+        end
+
+        def varchar_default_length
+          nil
+        end
+
+        def default_surrogate_length
+          64
+        end
+
+        def default_text_type
+          default_varchar_type
+        end
+      end
+
+      def safe_table_name composite
+        escape(table_name(composite), table_name_max)
+      end
+
+      def safe_column_name component
+        escape(column_name(component), column_name_max)
+      end
+
+      def table_name composite
+        composite.mapping.name.gsub(' ', @underscore)
+      end
+
+      def column_name component
+        component.column_name.capcase
       end
 
     end

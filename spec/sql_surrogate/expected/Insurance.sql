@@ -1,6 +1,6 @@
 CREATE TABLE Asset (
 	-- Asset has Asset ID
-	AssetID                                 BIGINT IDENTITY NOT NULL,
+	AssetID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- maybe Asset is a Vehicle that has VIN
 	VehicleVIN                              INTEGER NULL,
 	-- maybe Asset is a Vehicle that Has Commercial Registration
@@ -32,7 +32,7 @@ CREATE UNIQUE NONCLUSTERED INDEX AssetByVehicleVIN ON Asset(VehicleVIN) WHERE Ve
 
 CREATE TABLE Claim (
 	-- Claim has Claim ID
-	ClaimID                                 BIGINT IDENTITY NOT NULL,
+	ClaimID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Claim has p_sequence
 	PSequence                               SMALLINT NOT NULL CHECK((PSequence >= 1 AND PSequence <= 999)),
 	-- Claim is on Policy
@@ -94,7 +94,7 @@ CREATE TABLE Cover (
 
 CREATE TABLE CoverType (
 	-- Cover Type surrogate key
-	CoverTypeID                             BIGINT IDENTITY NOT NULL,
+	CoverTypeID                             BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Cover Type has Cover Type Code
 	CoverTypeCode                           CHARACTER NOT NULL,
 	-- Cover Type has Cover Type Name
@@ -110,7 +110,7 @@ CREATE TABLE CoverType (
 
 CREATE TABLE CoverWording (
 	-- Cover Wording surrogate key
-	CoverWordingID                          BIGINT IDENTITY NOT NULL,
+	CoverWordingID                          BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Cover Wording involves Cover Type
 	CoverTypeID                             BIGINT NOT NULL,
 	-- Cover Wording involves Policy Wording that has Policy Wording Text
@@ -127,7 +127,7 @@ CREATE TABLE CoverWording (
 
 CREATE TABLE LossType (
 	-- Loss Type surrogate key
-	LossTypeID                              BIGINT IDENTITY NOT NULL,
+	LossTypeID                              BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Loss Type has Loss Type Code
 	LossTypeCode                            CHARACTER NOT NULL,
 	-- Loss Type Involves Driving
@@ -145,7 +145,7 @@ CREATE TABLE LossType (
 
 CREATE TABLE LostItem (
 	-- Lost Item surrogate key
-	LostItemID                              BIGINT IDENTITY NOT NULL,
+	LostItemID                              BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Lost Item was lost in Incident that is of Claim that has Claim ID
 	IncidentClaimID                         BIGINT NOT NULL,
 	-- Lost Item has Lost Item Nr
@@ -168,7 +168,7 @@ CREATE TABLE LostItem (
 
 CREATE TABLE Party (
 	-- Party has Party ID
-	PartyID                                 BIGINT IDENTITY NOT NULL,
+	PartyID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Party Is A Company
 	IsACompany                              BOOLEAN,
 	-- maybe Party has postal-Address and Address is at Street
@@ -227,7 +227,7 @@ CREATE TABLE Party (
 
 CREATE TABLE Policy (
 	-- Policy surrogate key
-	PolicyID                                BIGINT IDENTITY NOT NULL,
+	PolicyID                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Policy was issued in p_year and Year has Year Nr
 	PYearNr                                 INTEGER NOT NULL,
 	-- Policy is for product having p_product
@@ -255,7 +255,7 @@ CREATE TABLE Policy (
 
 CREATE TABLE Product (
 	-- Product surrogate key
-	ProductID                               BIGINT IDENTITY NOT NULL,
+	ProductID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Product has Product Code
 	ProductCode                             SMALLINT NOT NULL CHECK((ProductCode >= 1 AND ProductCode <= 99)),
 	-- maybe Product has Alias
@@ -276,7 +276,7 @@ CREATE UNIQUE NONCLUSTERED INDEX ProductByDescription ON Product(Description) WH
 
 CREATE TABLE PropertyDamage (
 	-- Property Damage surrogate key
-	PropertyDamageID                        BIGINT IDENTITY NOT NULL,
+	PropertyDamageID                        BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- maybe Property Damage was damaged in Incident that is of Claim that has Claim ID
 	IncidentClaimID                         BIGINT NULL,
 	-- Property Damage is at Address that is at Street
@@ -301,7 +301,7 @@ CREATE UNIQUE NONCLUSTERED INDEX PropertyDamageByIncidentClaimIDAddressStreetAdd
 
 CREATE TABLE [State] (
 	-- State surrogate key
-	StateID                                 BIGINT IDENTITY NOT NULL,
+	StateID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- State has State Code
 	StateCode                               SMALLINT NOT NULL CHECK((StateCode >= 0 AND StateCode <= 9)),
 	-- maybe State has State Name
@@ -317,7 +317,7 @@ CREATE UNIQUE NONCLUSTERED INDEX StateByStateName ON [State](StateName) WHERE St
 
 CREATE TABLE ThirdParty (
 	-- Third Party surrogate key
-	ThirdPartyID                            BIGINT IDENTITY NOT NULL,
+	ThirdPartyID                            BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Third Party involves Person that is a kind of Party that has Party ID
 	PersonID                                BIGINT NOT NULL,
 	-- Third Party involves Vehicle Incident that is a kind of Incident that is of Claim that has Claim ID
@@ -345,7 +345,7 @@ CREATE TABLE ThirdParty (
 
 CREATE TABLE UnderwritingDemerit (
 	-- Underwriting Demerit surrogate key
-	UnderwritingDemeritID                   BIGINT IDENTITY NOT NULL,
+	UnderwritingDemeritID                   BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Underwriting Demerit preceded Vehicle Incident that is a kind of Incident that is of Claim that has Claim ID
 	VehicleIncidentClaimID                  BIGINT NOT NULL,
 	-- Underwriting Demerit has Underwriting Question that has Underwriting Question ID
@@ -361,7 +361,7 @@ CREATE TABLE UnderwritingDemerit (
 
 CREATE TABLE UnderwritingQuestion (
 	-- Underwriting Question has Underwriting Question ID
-	UnderwritingQuestionID                  BIGINT IDENTITY NOT NULL,
+	UnderwritingQuestionID                  BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Underwriting Question has Text
 	Text                                    VARCHAR NOT NULL,
 	-- Primary index to Underwriting Question over PresenceConstraint over (Underwriting Question ID in "Underwriting Question has Underwriting Question ID") occurs at most one time
@@ -416,7 +416,7 @@ CREATE TABLE VehicleIncident (
 
 CREATE TABLE Witness (
 	-- Witness surrogate key
-	WitnessID                               BIGINT IDENTITY NOT NULL,
+	WitnessID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Witness saw Incident that is of Claim that has Claim ID
 	IncidentClaimID                         BIGINT NOT NULL,
 	-- Witness is called Name

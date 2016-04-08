@@ -1,6 +1,6 @@
 CREATE TABLE Author (
 	-- Author has Author Id
-	AuthorId                                BIGINT IDENTITY NOT NULL,
+	AuthorId                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Author is called Name
 	AuthorName                              VARCHAR(64) NOT NULL,
 	-- Primary index to Author over PresenceConstraint over (Author Id in "Author has Author Id") occurs at most one time
@@ -12,7 +12,7 @@ CREATE TABLE Author (
 
 CREATE TABLE Comment (
 	-- Comment has Comment Id
-	CommentId                               BIGINT IDENTITY NOT NULL,
+	CommentId                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Comment was written by Author that has Author Id
 	AuthorId                                BIGINT NOT NULL,
 	-- Comment consists of text-Content and maybe Content is of Style
@@ -29,7 +29,7 @@ CREATE TABLE Comment (
 
 CREATE TABLE Paragraph (
 	-- Paragraph surrogate key
-	ParagraphID                             BIGINT IDENTITY NOT NULL,
+	ParagraphID                             BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Paragraph involves Post that has Post Id
 	PostId                                  BIGINT NOT NULL,
 	-- Paragraph involves Ordinal
@@ -47,7 +47,7 @@ CREATE TABLE Paragraph (
 
 CREATE TABLE Post (
 	-- Post has Post Id
-	PostId                                  BIGINT IDENTITY NOT NULL,
+	PostId                                  BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Post was written by Author that has Author Id
 	AuthorId                                BIGINT NOT NULL,
 	-- Post belongs to Topic that has Topic Id
@@ -60,7 +60,7 @@ CREATE TABLE Post (
 
 CREATE TABLE Topic (
 	-- Topic has Topic Id
-	TopicId                                 BIGINT IDENTITY NOT NULL,
+	TopicId                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Topic is called topic-Name
 	TopicName                               VARCHAR(64) NOT NULL,
 	-- maybe Topic belongs to parent-Topic and Topic has Topic Id

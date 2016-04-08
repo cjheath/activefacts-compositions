@@ -8,7 +8,7 @@ CREATE TABLE Country (
 
 CREATE TABLE CountryCode (
 	-- Country Code surrogate key
-	CountryCodeID                           BIGINT IDENTITY NOT NULL,
+	CountryCodeID                           BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Country Code Value
 	CountryCodeValue                        CHARACTER(3) NOT NULL,
 	-- Primary index to Country Code

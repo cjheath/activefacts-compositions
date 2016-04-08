@@ -10,7 +10,7 @@ CREATE TABLE Attendance (
 
 CREATE TABLE Company (
 	-- Company surrogate key
-	CompanyID                               BIGINT IDENTITY NOT NULL,
+	CompanyID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Company is called Company Name
 	CompanyName                             VARCHAR(48) NOT NULL,
 	-- Company Is Listed
@@ -24,7 +24,7 @@ CREATE TABLE Company (
 
 CREATE TABLE Directorship (
 	-- Directorship surrogate key
-	DirectorshipID                          BIGINT IDENTITY NOT NULL,
+	DirectorshipID                          BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Directorship involves Director
 	DirectorPersonID                        BIGINT NOT NULL,
 	-- Directorship involves Company
@@ -41,7 +41,7 @@ CREATE TABLE Directorship (
 
 CREATE TABLE Employee (
 	-- Employee surrogate key
-	EmployeeID                              BIGINT IDENTITY NOT NULL,
+	EmployeeID                              BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Employee has Employee Nr
 	EmployeeNr                              INTEGER NOT NULL,
 	-- Employee works at Company
@@ -72,7 +72,7 @@ CREATE TABLE Employment (
 
 CREATE TABLE Meeting (
 	-- Meeting surrogate key
-	MeetingID                               BIGINT IDENTITY NOT NULL,
+	MeetingID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Meeting is held by Company
 	CompanyID                               BIGINT NOT NULL,
 	-- Meeting is held on Date
@@ -89,7 +89,7 @@ CREATE TABLE Meeting (
 
 CREATE TABLE Person (
 	-- Person surrogate key
-	PersonID                                BIGINT IDENTITY NOT NULL,
+	PersonID                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Person has given-Name
 	GivenName                               VARCHAR(48) NOT NULL,
 	-- maybe Person is called family-Name

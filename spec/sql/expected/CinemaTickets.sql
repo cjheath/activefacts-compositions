@@ -44,7 +44,7 @@ CREATE TABLE Booking (
 
 CREATE TABLE Cinema (
 	-- Cinema has Cinema ID
-	CinemaID                                BIGINT IDENTITY NOT NULL,
+	CinemaID                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Cinema has Name
 	Name                                    VARCHAR NOT NULL,
 	-- Primary index to Cinema over PresenceConstraint over (Cinema ID in "Cinema has Cinema ID") occurs at most one time
@@ -56,7 +56,7 @@ CREATE TABLE Cinema (
 
 CREATE TABLE Film (
 	-- Film has Film ID
-	FilmID                                  BIGINT IDENTITY NOT NULL,
+	FilmID                                  BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Film has Name
 	Name                                    VARCHAR NOT NULL,
 	-- maybe Film was made in Year that has Year Nr
@@ -70,7 +70,7 @@ CREATE UNIQUE NONCLUSTERED INDEX FilmByNameYearNr ON Film(Name, YearNr) WHERE Ye
 
 CREATE TABLE Person (
 	-- Person has Person ID
-	PersonID                                BIGINT IDENTITY NOT NULL,
+	PersonID                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- maybe Person has Encrypted Password
 	EncryptedPassword                       VARCHAR NULL,
 	-- maybe Person has login-Name

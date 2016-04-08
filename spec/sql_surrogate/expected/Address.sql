@@ -1,6 +1,6 @@
 CREATE TABLE Company (
 	-- Company surrogate key
-	CompanyID                               BIGINT IDENTITY NOT NULL,
+	CompanyID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Company has Company Name
 	CompanyName                             VARCHAR NOT NULL,
 	-- maybe Company has head office at Address that maybe is at street-Number
@@ -24,7 +24,7 @@ CREATE TABLE Company (
 
 CREATE TABLE Person (
 	-- Person surrogate key
-	PersonID                                BIGINT IDENTITY NOT NULL,
+	PersonID                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Person is of Family that has Family Name
 	FamilyName                              VARCHAR(20) NOT NULL,
 	-- Person has Given Names

@@ -1,6 +1,6 @@
 CREATE TABLE Person (
 	-- Person surrogate key
-	PersonID                                BIGINT IDENTITY NOT NULL,
+	PersonID                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Person has family-Name
 	FamilyName                              VARCHAR NOT NULL,
 	-- Person has given-Name

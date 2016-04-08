@@ -25,36 +25,12 @@ module ActiveFacts
           128
         end
 
-        def boolean_type
-          'BIT'
-        end
-
-        def default_char_type
-          (@unicode ? 'N' : '') +
-          'CHAR'
-        end
-
-        def default_varchar_type
-          (@unicode ? 'N' : '') +
-          'VARCHAR'
-        end
-
-        def date_time_type
-          'DATETIME'
-        end
-
-        class SQLServerContext < SQLContext
-          def integer_ranges
-            [
-              ['BIT', 0, 1],
-              ['TINYINT', -2**7, 2**7-1],
-            ] +
-            super
-          end
-        end
-
         def data_type_context
-          SQLServerContext.new
+          SQLServerDataTypeContext.new
+        end
+
+        def auto_assign_type
+          ' IDENTITY'
         end
 
         def normalise_type(type_name, length, value_constraint)
@@ -104,6 +80,38 @@ module ActiveFacts
 
         def go s = ''
           "#{s}\nGO\n"
+        end
+
+        class SQLServerDataTypeContext < SQLDataTypeContext
+          def integer_ranges
+            [
+              ['BIT', 0, 1],
+              ['TINYINT', -2**7, 2**7-1],
+            ] +
+            super
+          end
+
+          def boolean_type
+            'BIT'
+          end
+
+          def valid_from_type
+            'DATETIME'
+          end
+
+          def default_char_type
+            (@unicode ? 'N' : '') +
+            'CHAR'
+          end
+
+          def default_varchar_type
+            (@unicode ? 'N' : '') +
+            'VARCHAR'
+          end
+
+          def date_time_type
+            'DATETIME'
+          end
         end
       end
 

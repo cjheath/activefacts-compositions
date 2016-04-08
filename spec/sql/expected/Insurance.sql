@@ -1,6 +1,6 @@
 CREATE TABLE Asset (
 	-- Asset has Asset ID
-	AssetID                                 BIGINT IDENTITY NOT NULL,
+	AssetID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- maybe Asset is a Vehicle that has VIN
 	VehicleVIN                              INTEGER NULL,
 	-- maybe Asset is a Vehicle that Has Commercial Registration
@@ -32,7 +32,7 @@ CREATE UNIQUE NONCLUSTERED INDEX AssetByVehicleVIN ON Asset(VehicleVIN) WHERE Ve
 
 CREATE TABLE Claim (
 	-- Claim has Claim ID
-	ClaimID                                 BIGINT IDENTITY NOT NULL,
+	ClaimID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Claim has p_sequence
 	PSequence                               SMALLINT NOT NULL CHECK((PSequence >= 1 AND PSequence <= 999)),
 	-- Claim is on Policy that was issued in p_year and Year has Year Nr
@@ -164,7 +164,7 @@ CREATE TABLE LostItem (
 
 CREATE TABLE Party (
 	-- Party has Party ID
-	PartyID                                 BIGINT IDENTITY NOT NULL,
+	PartyID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Party Is A Company
 	IsACompany                              BOOLEAN,
 	-- maybe Party has postal-Address and Address is at Street
@@ -333,7 +333,7 @@ CREATE TABLE UnderwritingDemerit (
 
 CREATE TABLE UnderwritingQuestion (
 	-- Underwriting Question has Underwriting Question ID
-	UnderwritingQuestionID                  BIGINT IDENTITY NOT NULL,
+	UnderwritingQuestionID                  BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Underwriting Question has Text
 	Text                                    VARCHAR NOT NULL,
 	-- Primary index to Underwriting Question over PresenceConstraint over (Underwriting Question ID in "Underwriting Question has Underwriting Question ID") occurs at most one time

@@ -1,6 +1,6 @@
 CREATE TABLE Magnet (
 	-- Magnet has Magnet AutoCounter
-	MagnetAutoCounter                       BIGINT IDENTITY NOT NULL,
+	MagnetAutoCounter                       BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Primary index to Magnet over PresenceConstraint over (Magnet AutoCounter in "Magnet has Magnet AutoCounter") occurs at most one time
 	PRIMARY KEY CLUSTERED(MagnetAutoCounter)
 );
@@ -8,7 +8,7 @@ CREATE TABLE Magnet (
 
 CREATE TABLE MagnetPole (
 	-- MagnetPole surrogate key
-	MagnetPoleID                            BIGINT IDENTITY NOT NULL,
+	MagnetPoleID                            BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- MagnetPole belongs to Magnet that has Magnet AutoCounter
 	MagnetAutoCounter                       BIGINT NOT NULL,
 	-- MagnetPole Is North
