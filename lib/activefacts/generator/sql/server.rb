@@ -43,24 +43,27 @@ module ActiveFacts
           'DATETIME'
         end
 
-        def integer_ranges
-          [
-            ['BIT', 0, 1],
-            ['TINYINT', -2**7, 2**7-1],
-          ] +
-          super
+        class SQLServerContext < SQLContext
+          def integer_ranges
+            [
+              ['BIT', 0, 1],
+              ['TINYINT', -2**7, 2**7-1],
+            ] +
+            super
+          end
+        end
+
+        def data_type_context
+          SQLServerContext.new
         end
 
         def normalise_type(type_name, length, value_constraint)
-          case type_name
-          when /^Guid$/
-            'UNIQUEIDENTIFIER'
+          return ['UNIQUEIDENTIFIER', 16] if type_name =~ /^(guid|uuid)$/i
 
-          when /^Money$/
-            'MONEY'     # Also SMALLMONEY; care factor?
-
-          when /^Picture ?Raw ?Data$/,
-              /^Image$/
+          type = MM::DataType.normalise(type_name)
+          case type
+          when MM::DataType::TYPE_Money;    'MONEY'
+          when MM::DataType::TYPE_Binary;
             if length && length <= 8192
               super
             else

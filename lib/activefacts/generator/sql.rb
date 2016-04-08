@@ -5,6 +5,7 @@
 #
 require 'digest/sha1'
 require 'activefacts/metamodel'
+require 'activefacts/metamodel/datatypes'
 require 'activefacts/registry'
 require 'activefacts/compositions'
 require 'activefacts/generator'
@@ -15,6 +16,7 @@ module ActiveFacts
     # * delay_fks Leave all foreign keys until the end, not just those that contain forward-references
     # * underscore 
     class SQL
+      MM = ActiveFacts::Metamodel
       def self.options
         {
           delay_fks: ['Boolean', "Delay emitting all foreign keys until the bottom of the file"],
@@ -90,7 +92,8 @@ module ActiveFacts
       end
 
       def surrogate_type
-        choose_integer_type(0, 2**(default_surrogate_length-1)-1)
+        type_name, = data_type_context.choose_integer_type(0, 2**(default_surrogate_length-1)-1)
+        type_name
       end
 
       def default_surrogate_length
@@ -360,97 +363,52 @@ module ActiveFacts
         end
       end
 
-      def choose_integer_type min, max
-        best = integer_ranges.detect{|type_name, vmin, vmax| min >= vmin && max <= vmax}
-        best && best[0]
+      class SQLContext < MM::DataType::DefaultContext
+        def integer_ranges
+          [
+            ['SMALLINT', -2**15, 2**15-1],  # The standard says -10^5..10^5 (less than 16 bits)
+            ['INTEGER', -2**31, 2**31-1],   # The standard says -10^10..10^10 (more than 32 bits!)
+            ['BIGINT', -2**63, 2**63-1],    # The standard says -10^19..10^19 (less than 64 bits)
+          ]
+        end
+      end
+
+      def data_type_context
+        SQLContext.new
       end
 
       # Return SQL type and (modified?) length for the passed base type
       def normalise_type(type_name, length, value_constraint)
-        int_length = length ||
-          case type_name
-          when /([a-z ]|\b)Tiny([a-z ]|\b)/i
-            8
-          when /([a-z ]|\b)Small([a-z ]|\b)/i
-            16
-          when /([a-z ]|\b)Big([a-z ]|\b)/i,
-            64
-          when /^Auto ?Counter$/
-            default_surrogate_length
+        type = MM::DataType.normalise(type_name)
+
+        case type
+        when MM::DataType::TYPE_Boolean;  boolean_type
+        when MM::DataType::TYPE_Integer
+          if type_name =~ /^Auto ?Counter$/i
+            MM::DataType.normalise_int_length('int', default_surrogate_length, value_constraint, data_type_context)[0]
           else
-            32
+            MM::DataType.normalise_int_length(type_name, length, value_constraint, data_type_context)[0]
           end
-
-        if int_length
-          if value_constraint
-            # Pick out the largest maximum and smallest minimum from the ValueConstraint:
-            ranges = value_constraint.all_allowed_range_sorted.flat_map{|ar| ar.value_range}
-            min = ranges.map(&:minimum_bound).compact.map{|minb| minb.is_inclusive ? minb.value : minb.value-1}.map{|v| v.literal.to_i}.sort[0]
-            max = ranges.map(&:maximum_bound).compact.map{|maxb| maxb.is_inclusive ? maxb.value : maxb.value+1}.map{|v| v.literal.to_i}.sort[-1]
+        when MM::DataType::TYPE_Real;
+          ["FLOAT", MM::DataType::DefaultContext.new.default_length(type, type_name)]
+        when MM::DataType::TYPE_Decimal;  'DECIMAL'
+        when MM::DataType::TYPE_Money;    'DECIMAL'
+        when MM::DataType::TYPE_Char;     [default_char_type, length || char_default_length]
+        when MM::DataType::TYPE_String;   [default_varchar_type, length || varchar_default_length]
+        when MM::DataType::TYPE_Text;     [default_text_type, length || 'MAX']
+        when MM::DataType::TYPE_Date;     'DATE' # SQLSVR 2K5: 'date'
+        when MM::DataType::TYPE_Time;     'TIME' # SQLSVR 2K5: 'time'
+        when MM::DataType::TYPE_DateTime; 'TIMESTAMP'
+        when MM::DataType::TYPE_Timestamp;'TIMESTAMP'
+        when MM::DataType::TYPE_Binary;
+          length ||= 16 if type_name =~ /^(guid|uuid)$/i
+          if length
+            ['BINARY', length]
+          else
+            'VARBINARY'
           end
-
-          unsigned = type_name =~ /^unsigned/i
-          int_min = unsigned ? 0 : -2**(int_length-1)+1
-          min = int_min if !min || length && int_min < min
-          # SQL does not have unsigned types.
-          # Don't force the next largest type just because the app calls for unsigned:
-          int_max = unsigned ? 2**(int_length-1) - 1 : 2**(int_length-1)-1
-          max = int_max if !max || length && int_max < max
-        end
-
-        case type_name
-        when /^BIT$/i,
-            /^boolean$/i,
-          boolean_type
-
-        when /^Auto ?Counter$/,
-            /[a-z]Int(eger)?$|\b[Ii]nt(eger)?$/
-          choose_integer_type min, max
-
-        when /^Real$/
-          length ||= 53   # Mantissa bits. 1..24 is 7 digits, 25..53 is 15 digits
-          [ 'FLOAT', length]  # No need to use either 'REAL' or 'DOUBLE PRECISION'
-
-        when /^Decimal$/
-          'DECIMAL'
-
-        when /^Money$/
-          'DECIMAL'
-
-        when /^Fixed ?Length ?Text$/, /^Char$/
-          [default_char_type, length || char_default_length]
-
-        when /^Variable ?Length ?Text$/, /^String$/
-          [default_varchar_type, length || varchar_default_length]
-
-        when /^Large ?Length ?Text$/, /^Text$/
-          [default_text_type, length || 'MAX']
-
-        when /^Date ?And ?Time$/, /^Date ?Time$/
-          date_time_type
-
-        when /^Date$/
-          'DATE' # SQLSVR 2K5: 'date'
-
-        when /^Time$/
-          'TIME' # SQLSVR 2K5: 'time'
-
-        when /^Auto ?Time ?Stamp$/
-          'TIMESTAMP'
-
-        when /^Guid$/
-          ['BINARY', 16]
-
-        when /^Picture ?Raw ?Data$/,
-            /^Image$/
-          ['VARBINARY', length]
-
-        when /^Variable ?Length ?Raw ?Data$/,
-            /^Blob$/
-          ['VARBINARY', length]
-
         else
-          type_name # raise "SQL type unknown for standard type #{type}"
+          type_name
         end
       end
 
@@ -481,7 +439,6 @@ module ActiveFacts
         ")"
       end
 
-      MM = ActiveFacts::Metamodel
     end
     publish_generator SQL
   end

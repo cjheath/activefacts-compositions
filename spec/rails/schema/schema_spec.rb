@@ -11,8 +11,8 @@ require 'activefacts/compositions/names'
 require 'activefacts/generator/rails/schema'
 require 'activefacts/input/cql'
 
-MODELS_CQL_DIR = Pathname.new(__FILE__+'/../../../relational').relative_path_from(Pathname(Dir.pwd)).to_s
-MODELS_TEST_DIR = Pathname.new(__FILE__+'/..').relative_path_from(Pathname(Dir.pwd)).to_s
+SCHEMAS_CQL_DIR = Pathname.new(__FILE__+'/../../../relational').relative_path_from(Pathname(Dir.pwd)).to_s
+SCHEMAS_TEST_DIR = Pathname.new(__FILE__+'/..').relative_path_from(Pathname(Dir.pwd)).to_s
 
 RSpec::Matchers.define :be_like do |expected|
   match do |actual|
@@ -27,9 +27,9 @@ RSpec::Matchers.define :be_like do |expected|
 end
 
 describe "Rails schema from CQL" do
-  dir = ENV['CQL_DIR'] || MODELS_CQL_DIR
-  actual_dir = (ENV['CQL_DIR'] ? '' : MODELS_TEST_DIR+'/') + 'actual'
-  expected_dir = (ENV['CQL_DIR'] ? '' : MODELS_TEST_DIR+'/') + 'expected'
+  dir = ENV['CQL_DIR'] || SCHEMAS_CQL_DIR
+  actual_dir = (ENV['CQL_DIR'] ? '' : SCHEMAS_TEST_DIR+'/') + 'actual'
+  expected_dir = (ENV['CQL_DIR'] ? '' : SCHEMAS_TEST_DIR+'/') + 'expected'
   Dir.mkdir actual_dir unless Dir.exist? actual_dir
   if f = ENV['TEST_FILES']
     files = Dir[dir+"/#{f}*.cql"]

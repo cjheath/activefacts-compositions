@@ -229,8 +229,8 @@ module ActiveFacts
           ccs
         end
 
+        MM = ActiveFacts::Metamodel
       end
-      MM = ActiveFacts::Metamodel
     end
     publish_generator Rails::Models
   end

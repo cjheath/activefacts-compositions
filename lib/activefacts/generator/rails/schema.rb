@@ -192,8 +192,8 @@ module ActiveFacts
           ]*"\n"+"\n"
         end
 
+        MM = ActiveFacts::Metamodel
       end
-      MM = ActiveFacts::Metamodel
     end
     publish_generator Rails::Schema
   end

@@ -176,7 +176,7 @@ CREATE TABLE TicketPricing (
 	-- Ticket Pricing involves Section that has Section Name
 	SectionName                             VARCHAR NOT NULL,
 	-- Ticket Pricing involves High Demand
-	HighDemand                               NOT NULL,
+	HighDemand                              BOOLEAN NOT NULL,
 	-- Ticket Pricing involves Price
 	Price                                   DECIMAL NOT NULL,
 	-- Primary index to Ticket Pricing
