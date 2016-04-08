@@ -5,6 +5,7 @@
 #
 require 'digest/sha1'
 require 'activefacts/metamodel'
+require 'activefacts/metamodel/datatypes'
 require 'activefacts/registry'
 require 'activefacts/compositions'
 require 'activefacts/generator'
@@ -14,6 +15,7 @@ module ActiveFacts
   module Generators
     module Rails
       class Schema
+        MM = ActiveFacts::Metamodel
         HEADER = "# Auto-generated from CQL, edits will be lost"
         def self.options
           ({
@@ -35,9 +37,8 @@ module ActiveFacts
           $stderr.puts *a
         end
 
-        def generate
-
-          models
+        def data_type_context
+          @data_type_context ||= RailsDataTypeContext.new
         end
 
         def generate
@@ -71,7 +72,7 @@ module ActiveFacts
             else
               [
                 '  unless ENV["EXCLUDE_FKS"]',
-                *@foreign_keys,
+                *@foreign_keys.sort,
                 '  end',
                 'end'
               ]
@@ -84,54 +85,8 @@ module ActiveFacts
           )*"\n"+"\n"
         end
 
-        def generate_columns composite
-          composite.mapping.all_leaf.flat_map do |component|
-
-=begin
-            if pk.size == 1 && pk[0] == column
-              case rails_type
-              when 'serial'
-                rails_type = "primary_key"
-              when 'uuid'
-                rails_type = "uuid, :default => 'gen_random_uuid()', :primary_key => true"
-              end
-            else
-              case rails_type
-              when 'serial'
-                rails_type = 'integer'        # An integer foreign key
-              end
-            end
-=end
-
-            if component.is_a?(MM::Mapping) and
-              supertype = component.object_type and
-              supertype.is_a?(MM::ValueType)
-              # Extract length and scale. REVISIT: Should share code with SQL
-              begin
-                object_type = supertype
-                length ||= object_type.length
-                scale ||= object_type.scale
-                unless component.parent.parent and component.parent.foreign_key
-                  # No need to enforce value constraints that are already enforced by a foreign key
-                  value_constraint ||= object_type.value_constraint
-                end
-              end while supertype = object_type.supertype
-              length_option = length ? ", limit: #{length}" : ''
-              scale_option = scale ? ", limit: #{scale}" : ''
-            else
-              length_option = scale_option = ''
-            end
-
-            rails_type = 'string'
-            null_option = ", null: #{!component.path_mandatory}"
-
-            (@option_include_comments ? ["    \# #{component.comment}"] : []) +
-            [%Q{    t.column "#{component.column_name.snakecase}", :#{rails_type}#{length_option}#{scale_option}#{null_option}}]
-          end
-        end
-
         def generate_composite composite
-          ar_table_name = composite.mapping.rails.name
+          ar_table_name = composite.rails.plural_name
 
           pk = composite.primary_index.all_index_field.to_a
           if pk[0].component.is_auto_assigned
@@ -179,8 +134,10 @@ module ActiveFacts
             index_name = ACTR::name_trunc("index_#{ar_table_name}_on_#{index_column_names*'_'}")
 
             index_texts << '' if index_texts.empty?
+            all_mandatory = index.all_index_field.to_a.all?{|ixf| ixf.component.path_mandatory}
             index_texts << %Q{  add_index "#{ar_table_name}", #{index_column_names.inspect}, :name => :#{index_name}#{
-              index.is_unique ? ", :unique => true" : ''
+              # Avoid problems with closed-world uniqueness: only all_mandatory indices can be unique
+              index.is_unique && all_mandatory ? ", :unique => true" : ''
             }}
           end
 
@@ -188,11 +145,117 @@ module ActiveFacts
             create_table,
             *columns,
             "  end",
-            *index_texts
+            *index_texts.sort
           ]*"\n"+"\n"
         end
 
-        MM = ActiveFacts::Metamodel
+        def generate_columns composite
+          composite.mapping.all_leaf.flat_map do |component|
+            # Absorbed empty subtypes appear as leaves
+            next [] if component.is_a?(MM::Absorption) && component.parent_role.fact_type.is_a?(MM::TypeInheritance)
+            generate_column component
+          end
+        end
+
+        def generate_column component
+          type_name, options = component.data_type(data_type_context)
+          options ||= {}
+          length = options[:length]
+          value_constraint = options[:value_constraint]
+          type_name = normalise_type(type_name)
+
+          if a = options[:auto_assign]
+            case type_name
+            when 'integer'
+              type_name = a != 'assert' ? 'primary_key' : 'integer'
+            when 'uuid'
+              type_name = "uuid, :default => 'gen_random_uuid()', :primary_key => true"
+            end
+          end
+
+          length_option = options[:length] ? ", limit: #{options[:length]}" : ''
+          scale_option = options[:scale] ? ", limit: #{options[:scale]}" : ''
+          null_option = ", null: #{!options[:mandatory]}"
+
+          (@option_include_comments ? ["    \# #{component.comment}"] : []) +
+          [%Q{    t.column "#{component.column_name.snakecase}", :#{type_name}#{length_option}#{scale_option}#{null_option}}]
+        end
+
+        class RailsDataTypeContext < MM::DataType::Context
+          def integer_ranges
+            [
+              ['integer', -2**63, 2**63-1]
+            ]
+          end
+
+          def default_length data_type, type_name
+            case data_type
+            when MM::DataType::TYPE_Real
+              53        # IEEE Double precision floating point
+            when MM::DataType::TYPE_Integer
+              63
+            else
+              nil
+            end
+          end
+
+          def default_surrogate_length
+            64
+          end
+
+          def boolean_type
+            'boolean'
+          end
+
+          def surrogate_type
+            type_name, = choose_integer_type(0, 2**(default_surrogate_length-1)-1)
+            type_name
+          end
+
+          def valid_from_type
+            date_time_type
+          end
+
+          def date_time_type
+            'datetime'
+          end
+
+          def default_char_type
+            'string'
+          end
+
+          def default_varchar_type
+            'string'
+          end
+
+          def default_text_type
+            default_varchar_type
+          end
+        end
+
+        # Return SQL type and (modified?) length for the passed base type
+        def normalise_type type_name
+          type = MM::DataType.normalise(type_name)
+
+          case type
+          when MM::DataType::TYPE_Boolean;  'boolean'
+          when MM::DataType::TYPE_Integer;  'integer'
+          when MM::DataType::TYPE_Real;     'float'
+          when MM::DataType::TYPE_Decimal;  'decimal'
+          when MM::DataType::TYPE_Money;    'decimal'
+          when MM::DataType::TYPE_Char;     'string'
+          when MM::DataType::TYPE_String;   'string'
+          when MM::DataType::TYPE_Text;     'string'
+          when MM::DataType::TYPE_Date;     'datetime'
+          when MM::DataType::TYPE_Time;     'time'
+          when MM::DataType::TYPE_DateTime; 'datetime'
+          when MM::DataType::TYPE_Timestamp;'datetime'
+          when MM::DataType::TYPE_Binary;   'binary'
+          else
+            type_name
+          end
+        end
+
       end
     end
     publish_generator Rails::Schema

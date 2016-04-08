@@ -132,7 +132,7 @@ module ActiveFacts
         }#{
           ((options[:mandatory] ? ' NOT' : '') + ' NULL') if options.has_key?(:mandatory)
         }#{
-          auto_assign_type if options[:auto_assign]
+          auto_assign_type if a = options[:auto_assign] && a != 'assert'
         }#{
           check_clause(column_name, value_constraint) if value_constraint
         }"
