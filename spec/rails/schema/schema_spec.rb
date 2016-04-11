@@ -16,7 +16,7 @@ SCHEMAS_TEST_DIR = Pathname.new(__FILE__+'/..').relative_path_from(Pathname(Dir.
 
 RSpec::Matchers.define :be_like do |expected|
   match do |actual|
-    actual.gsub(/(:version => ..............)/,'') == expected.gsub(/(:version => ..............)/,'')
+    actual.gsub(/(version: ..............)/,'') == expected.gsub(/(version: ..............)/,'')
   end
 
   failure_message do
