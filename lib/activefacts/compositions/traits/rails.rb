@@ -108,7 +108,7 @@ module ActiveFacts
               when /^Date ?And ?Time$/i, /^Date ?Time$/i
                 'datetime'
               when /^Date$/i
-                'datetime'
+                'date'
               when /^Time$/i
                 'time'
               when /^Auto ?Time ?Stamp$/i

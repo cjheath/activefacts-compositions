@@ -193,7 +193,8 @@ module ActiveFacts
           if type_name =~ /^Auto ?Counter$/i
             MM::DataType.normalise_int_length('int', data_type_context.default_surrogate_length, value_constraint, data_type_context)[0]
           else
-            MM::DataType.normalise_int_length(type_name, length, value_constraint, data_type_context)[0]
+            v, = MM::DataType.normalise_int_length(type_name, length, value_constraint, data_type_context)
+            v
           end
         when MM::DataType::TYPE_Real;
           ["FLOAT", data_type_context.default_length(type, type_name)]

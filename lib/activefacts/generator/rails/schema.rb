@@ -60,7 +60,7 @@ module ActiveFacts
               '#',
               '',
               "ActiveRecord::Base.logger = Logger.new(STDOUT)",
-              "ActiveRecord::Schema.define(:version => #{Time.now.strftime('%Y%m%d%H%M%S')}) do",
+              "ActiveRecord::Schema.define(version: #{Time.now.strftime('%Y%m%d%H%M%S')}) do",
               "  enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')",
               '',
             ]
@@ -102,7 +102,7 @@ module ActiveFacts
             end
           warn "Warning: #{table.name} has a multi-part primary key" if pk.length > 1 and !is_join_table
 
-          create_table = %Q{  create_table "#{ar_table_name}", :id => false, :force => true do |t|}
+          create_table = %Q{  create_table "#{ar_table_name}", id: false, force: true do |t|}
           columns = generate_columns composite
 
           unless @option_exclude_fks
@@ -114,10 +114,10 @@ module ActiveFacts
                 if (from_column_names.length == 1)
                   index_name = ACTR::name_trunc("index_#{ar_table_name}_on_#{from_column_names[0]}")
                   [
-                    "    add_foreign_key :#{ar_table_name}, :#{fk.composite.mapping.rails.name}, :column => :#{from_column_names[0]}, :primary_key => :#{to_column_names[0]}, :on_delete => :cascade",
+                    "    add_foreign_key :#{ar_table_name}, :#{fk.composite.mapping.rails.name}, column: :#{from_column_names[0]}, primary_key: :#{to_column_names[0]}, on_delete: :cascade",
                     # Index it non-uniquely only if it's not unique already:
                     fk.absorption && fk.absorption.child_role.is_unique ? nil :
-                      "    add_index :#{ar_table_name}, [:#{from_column_names[0]}], :unique => false, :name => :#{index_name}"
+                      "    add_index :#{ar_table_name}, [:#{from_column_names[0]}], unique: false, name: :#{index_name}"
                   ].compact
                 else
                   [ ]
@@ -136,9 +136,9 @@ module ActiveFacts
             index_texts << '' if index_texts.empty?
 
             all_mandatory = index.all_index_field.to_a.all?{|ixf| ixf.component.path_mandatory}
-            index_texts << %Q{  add_index "#{ar_table_name}", #{index_column_names.inspect}, :name => :#{index_name}#{
+            index_texts << %Q{  add_index "#{ar_table_name}", #{index_column_names.inspect}, name: :#{index_name}#{
               # Avoid problems with closed-world uniqueness: only all_mandatory indices can be unique on closed-world index semantics (MS SQL)
-              index.is_unique && (!@option_closed_world || all_mandatory) ? ", :unique => true" : ''
+              index.is_unique && (!@option_closed_world || all_mandatory) ? ", unique: true" : ''
             }}
           end
 
@@ -163,19 +163,24 @@ module ActiveFacts
           options ||= {}
           length = options[:length]
           value_constraint = options[:value_constraint]
-          type_name = normalise_type(type_name)
+          type, type_name = *normalise_type(type_name)
 
           if a = options[:auto_assign]
             case type_name
             when 'integer'
               type_name = 'primary_key' if a != 'assert'
             when 'uuid'
-              type_name = "uuid, :default => 'gen_random_uuid()', :primary_key => true"
+              type_name = "uuid, default: 'gen_random_uuid()', primary_key: true"
             end
           end
 
-          length_option = options[:length] ? ", limit: #{options[:length]}" : ''
-          scale_option = options[:scale] ? ", limit: #{options[:scale]}" : ''
+          valid_parameters = MM::DataType::TypeParameters[type]
+          length_ok = valid_parameters &&
+            ![MM::DataType::TYPE_Real, MM::DataType::TYPE_Integer].include?(type) &&
+            (valid_parameters.include?(:length) || valid_parameters.include?(:precision))
+          scale_ok = length_ok && valid_parameters.include?(:scale)
+          length_option = length_ok && options[:length] ? ", limit: #{options[:length]}" : ''
+          scale_option = scale_ok && options[:scale] ? ", scale: #{options[:scale]}" : ''
           null_option = ", null: #{!options[:mandatory]}"
 
           (@option_include_comments ? ["    \# #{component.comment}"] : []) +
@@ -238,23 +243,26 @@ module ActiveFacts
         def normalise_type type_name
           type = MM::DataType.normalise(type_name)
 
-          case type
-          when MM::DataType::TYPE_Boolean;  'boolean'
-          when MM::DataType::TYPE_Integer;  'integer'
-          when MM::DataType::TYPE_Real;     'float'
-          when MM::DataType::TYPE_Decimal;  'decimal'
-          when MM::DataType::TYPE_Money;    'decimal'
-          when MM::DataType::TYPE_Char;     'string'
-          when MM::DataType::TYPE_String;   'string'
-          when MM::DataType::TYPE_Text;     'string'
-          when MM::DataType::TYPE_Date;     'datetime'
-          when MM::DataType::TYPE_Time;     'time'
-          when MM::DataType::TYPE_DateTime; 'datetime'
-          when MM::DataType::TYPE_Timestamp;'datetime'
-          when MM::DataType::TYPE_Binary;   'binary'
-          else
-            type_name
-          end
+          [
+            type,
+            case type
+            when MM::DataType::TYPE_Boolean;  'boolean'
+            when MM::DataType::TYPE_Integer;  'integer'
+            when MM::DataType::TYPE_Real;     'float'
+            when MM::DataType::TYPE_Decimal;  'decimal'
+            when MM::DataType::TYPE_Money;    'datatime'
+            when MM::DataType::TYPE_Char;     'string'
+            when MM::DataType::TYPE_String;   'string'
+            when MM::DataType::TYPE_Text;     'text'
+            when MM::DataType::TYPE_Date;     'datetime'
+            when MM::DataType::TYPE_Time;     'time'
+            when MM::DataType::TYPE_DateTime; 'datetime'
+            when MM::DataType::TYPE_Timestamp;'datetime'
+            when MM::DataType::TYPE_Binary;   'binary'
+            else
+              type_name
+            end
+          ]
         end
 
       end
