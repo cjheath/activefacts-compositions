@@ -30,7 +30,7 @@ module ActiveFacts
       def prelude composition
         "require 'activefacts/api'\n\n" +
         (0...@scope.size).map{|i| '  '*i + "module #{@scope[i]}\n"}*'' +
-        "#{@scope_prefix}module #{composition.name}\n"
+        "#{@scope_prefix}module #{composition.name.words.capcase}\n"
       end
 
       def finale
