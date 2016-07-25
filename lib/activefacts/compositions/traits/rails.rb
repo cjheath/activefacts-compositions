@@ -73,6 +73,10 @@ module ActiveFacts
           def name
             ACTR::singular_name(@base.name)
           end
+          
+          def plural_name
+            ACTR::plural_name(@base.name)
+          end
 
           def type
             type_name, params, constraints = *explode.type()
