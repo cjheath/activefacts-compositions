@@ -189,8 +189,6 @@ module ActiveFacts
           component.name
         end
       end
-
-      MM = ActiveFacts::Metamodel
     end
   end
 end

@@ -228,8 +228,6 @@ module ActiveFacts
           ccs.unshift("") unless ccs.empty?
           ccs
         end
-
-        MM = ActiveFacts::Metamodel
       end
     end
     publish_generator Rails::Models

@@ -15,7 +15,6 @@ module ActiveFacts
   module Generators
     module Rails
       class Schema
-        MM = ActiveFacts::Metamodel
         HEADER = "# Auto-generated from CQL, edits will be lost"
         def self.options
           ({

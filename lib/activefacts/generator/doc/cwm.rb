@@ -7,6 +7,7 @@
 #
 require 'digest/sha1'
 require 'activefacts/metamodel'
+require 'activefacts/metamodel/datatypes'
 require 'activefacts/registry'
 require 'activefacts/compositions'
 require 'activefacts/generator'
@@ -38,8 +39,7 @@ module ActiveFacts
         attr_accessor   :xmiid
       end
       
-      class CWM      
-        MM = ActiveFacts::Metamodel
+      class CWM
         def self.options
           {
             underscore: [String, "Use 'str' instead of underscore between words in table names"]
