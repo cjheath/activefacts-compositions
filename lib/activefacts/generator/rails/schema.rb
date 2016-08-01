@@ -114,7 +114,7 @@ module ActiveFacts
                 if (from_column_names.length == 1)
                   index_name = ACTR::name_trunc("index_#{ar_table_name}_on_#{from_column_names[0]}")
                   [
-                    "    add_foreign_key :#{ar_table_name}, :#{fk.composite.mapping.rails.name}, column: :#{from_column_names[0]}, primary_key: :#{to_column_names[0]}, on_delete: :cascade",
+                    "    add_foreign_key :#{ar_table_name}, :#{fk.composite.mapping.rails.plural_name}, column: :#{from_column_names[0]}, primary_key: :#{to_column_names[0]}, on_delete: :cascade",
                     # Index it non-uniquely only if it's not unique already:
                     fk.absorption && fk.absorption.child_role.is_unique ? nil :
                       "    add_index :#{ar_table_name}, [:#{from_column_names[0]}], unique: false, name: :#{index_name}"
