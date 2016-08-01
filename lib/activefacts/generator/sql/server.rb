@@ -39,6 +39,8 @@ module ActiveFacts
           type = MM::DataType.normalise(type_name)
           case type
           when MM::DataType::TYPE_Money;    'MONEY'
+          when MM::DataType::TYPE_DateTime; 'DATETIME'
+          when MM::DataType::TYPE_Timestamp;'DATETIME'
           when MM::DataType::TYPE_Binary;
             if length && length <= 8192
               super
