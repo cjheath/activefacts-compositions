@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160802114152) do
+ActiveRecord::Schema.define(version: 20160802181213) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "acceptable_substitutions", id: false, force: true do |t|
@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(version: 20160802114152) do
     t.column "supply_period_id", :integer, null: false
     t.column "product_id", :integer, null: false
     t.column "quantity", :integer, null: false
-    t.column "cost", :datatime, null: true
+    t.column "cost", :decimal, null: true
   end
 
   add_index "production_forecasts", ["refinery_id", "supply_period_id", "product_id"], name: :index_production_forecasts_on_refinery_id_supply_peri__a385e824, unique: true
@@ -78,7 +78,7 @@ ActiveRecord::Schema.define(version: 20160802114152) do
     t.column "transport_method", :string, null: false
     t.column "refinery_id", :integer, null: false
     t.column "region_id", :integer, null: false
-    t.column "cost", :datatime, null: true
+    t.column "cost", :decimal, null: true
   end
 
   add_index "transport_routes", ["transport_method", "refinery_id", "region_id"], name: :index_transport_routes_on_transport_method_refinery_i__bb1e6e85, unique: true

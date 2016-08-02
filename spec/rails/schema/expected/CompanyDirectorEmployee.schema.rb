@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160802114147) do
+ActiveRecord::Schema.define(version: 20160802155714) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "attendances", id: false, force: true do |t|
@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 20160802114147) do
     t.column "employee_id", :primary_key, null: false
     t.column "employee_nr", :integer, null: false
     t.column "company_id", :integer, null: false
-    t.column "manager_employee_id", :integer, null: false
+    t.column "manager_employee_id", :integer, null: true
     t.column "manager_is_ceo", :boolean, null: true
   end
 

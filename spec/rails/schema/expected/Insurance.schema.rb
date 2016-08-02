@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160802114151) do
+ActiveRecord::Schema.define(version: 20160802155717) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "assets", id: false, force: true do |t|
@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 20160802114151) do
     t.column "incident_address_street", :string, limit: 256, null: true
     t.column "incident_address_city", :string, null: true
     t.column "incident_address_postcode", :string, null: true
-    t.column "incident_address_state_id", :integer, null: false
+    t.column "incident_address_state_id", :integer, null: true
     t.column "incident_date_time", :datetime, null: true
     t.column "incident_officer_name", :string, limit: 256, null: true
     t.column "incident_police_report_nr", :integer, null: true
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(version: 20160802114151) do
     t.column "postal_address_street", :string, limit: 256, null: true
     t.column "postal_address_city", :string, null: true
     t.column "postal_address_postcode", :string, null: true
-    t.column "postal_address_state_id", :integer, null: false
+    t.column "postal_address_state_id", :integer, null: true
     t.column "company_contact_person_id", :integer, null: true
     t.column "person_business_phone_nr", :string, null: true
     t.column "person_contact_time", :time, null: true
@@ -118,7 +118,7 @@ ActiveRecord::Schema.define(version: 20160802114151) do
     t.column "person_address_street", :string, limit: 256, null: true
     t.column "person_address_city", :string, null: true
     t.column "person_address_postcode", :string, null: true
-    t.column "person_address_state_id", :integer, null: false
+    t.column "person_address_state_id", :integer, null: true
     t.column "person_birth_date", :datetime, null: true
     t.column "person_is_international", :boolean, null: true
     t.column "person_license_number", :string, null: true
@@ -158,7 +158,7 @@ ActiveRecord::Schema.define(version: 20160802114151) do
     t.column "address_street", :string, limit: 256, null: false
     t.column "address_city", :string, null: false
     t.column "address_postcode", :string, null: true
-    t.column "address_state_id", :integer, null: false
+    t.column "address_state_id", :integer, null: true
     t.column "owner_name", :string, limit: 256, null: true
     t.column "phone_nr", :string, null: true
   end
@@ -217,7 +217,7 @@ ActiveRecord::Schema.define(version: 20160802114151) do
     t.column "driving_intoxication", :string, null: true
     t.column "driving_nonconsent_reason", :string, null: true
     t.column "driving_unlicensed_reason", :string, null: true
-    t.column "loss_type_id", :integer, null: false
+    t.column "loss_type_id", :integer, null: true
     t.column "previous_damage_description", :string, limit: 1024, null: true
     t.column "reason", :string, null: true
     t.column "towed_location", :string, null: true
@@ -231,7 +231,7 @@ ActiveRecord::Schema.define(version: 20160802114151) do
     t.column "address_street", :string, limit: 256, null: true
     t.column "address_city", :string, null: true
     t.column "address_postcode", :string, null: true
-    t.column "address_state_id", :integer, null: false
+    t.column "address_state_id", :integer, null: true
     t.column "contact_phone_nr", :string, null: true
   end
 
