@@ -39,7 +39,8 @@ module ActiveFacts
         attr_accessor   :xmiid
       end
       
-      class CWM
+      class CWM      
+        MM = ActiveFacts::Metamodel unless const_defined?(:MM)
         def self.options
           {
             underscore: [String, "Use 'str' instead of underscore between words in table names"]

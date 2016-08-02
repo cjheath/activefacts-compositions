@@ -124,7 +124,7 @@ END
           t.gsub(/[ |<>]/){|c| "\\#{c}"}
         end
 
-        MM = ActiveFacts::Metamodel
+        MM = ActiveFacts::Metamodel unless const_defined?(:MM)
       end
 
     end

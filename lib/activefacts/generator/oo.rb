@@ -189,6 +189,8 @@ module ActiveFacts
           component.name
         end
       end
+
+      MM = ActiveFacts::Metamodel unless const_defined?(:MM)
     end
   end
 end
