@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160411150449) do
+ActiveRecord::Schema.define(version: 20160802114151) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "assets", id: false, force: true do |t|
@@ -238,37 +238,37 @@ ActiveRecord::Schema.define(version: 20160411150449) do
   add_index "witnesses", ["incident_claim_id", "name"], name: :index_witnesses_on_incident_claim_id_name, unique: true
 
   unless ENV["EXCLUDE_FKS"]
-    add_foreign_key :assets, :party, column: :vehicle_dealer_id, primary_key: :party_id, on_delete: :cascade
-    add_foreign_key :assets, :party, column: :vehicle_finance_institution_id, primary_key: :party_id, on_delete: :cascade
-    add_foreign_key :claims, :party, column: :lodgement_person_id, primary_key: :party_id, on_delete: :cascade
-    add_foreign_key :claims, :policy, column: :policy_id, primary_key: :policy_id, on_delete: :cascade
-    add_foreign_key :claims, :state, column: :incident_address_state_id, primary_key: :state_id, on_delete: :cascade
-    add_foreign_key :contractor_appointments, :claim, column: :claim_id, primary_key: :claim_id, on_delete: :cascade
-    add_foreign_key :contractor_appointments, :party, column: :contractor_id, primary_key: :party_id, on_delete: :cascade
-    add_foreign_key :cover_wordings, :cover_type, column: :cover_type_id, primary_key: :cover_type_id, on_delete: :cascade
-    add_foreign_key :covers, :asset, column: :asset_id, primary_key: :asset_id, on_delete: :cascade
-    add_foreign_key :covers, :cover_type, column: :cover_type_id, primary_key: :cover_type_id, on_delete: :cascade
-    add_foreign_key :covers, :policy, column: :policy_id, primary_key: :policy_id, on_delete: :cascade
-    add_foreign_key :lost_items, :claim, column: :incident_claim_id, primary_key: :claim_id, on_delete: :cascade
-    add_foreign_key :parties, :party, column: :company_contact_person_id, primary_key: :party_id, on_delete: :cascade
-    add_foreign_key :parties, :state, column: :person_address_state_id, primary_key: :state_id, on_delete: :cascade
-    add_foreign_key :parties, :state, column: :postal_address_state_id, primary_key: :state_id, on_delete: :cascade
-    add_foreign_key :policies, :party, column: :authorised_rep_id, primary_key: :party_id, on_delete: :cascade
-    add_foreign_key :policies, :party, column: :insured_id, primary_key: :party_id, on_delete: :cascade
-    add_foreign_key :policies, :product, column: :p_product_id, primary_key: :product_id, on_delete: :cascade
-    add_foreign_key :policies, :state, column: :p_state_id, primary_key: :state_id, on_delete: :cascade
-    add_foreign_key :property_damages, :claim, column: :incident_claim_id, primary_key: :claim_id, on_delete: :cascade
-    add_foreign_key :property_damages, :state, column: :address_state_id, primary_key: :state_id, on_delete: :cascade
-    add_foreign_key :third_parties, :party, column: :insurer_id, primary_key: :party_id, on_delete: :cascade
-    add_foreign_key :third_parties, :party, column: :person_id, primary_key: :party_id, on_delete: :cascade
-    add_foreign_key :third_parties, :vehicle_incident, column: :vehicle_incident_claim_id, primary_key: :incident_claim_id, on_delete: :cascade
-    add_foreign_key :underwriting_demerits, :underwriting_question, column: :underwriting_question_id, primary_key: :underwriting_question_id, on_delete: :cascade
-    add_foreign_key :underwriting_demerits, :vehicle_incident, column: :vehicle_incident_claim_id, primary_key: :incident_claim_id, on_delete: :cascade
-    add_foreign_key :vehicle_incidents, :claim, column: :incident_claim_id, primary_key: :claim_id, on_delete: :cascade
-    add_foreign_key :vehicle_incidents, :loss_type, column: :loss_type_id, primary_key: :loss_type_id, on_delete: :cascade
-    add_foreign_key :vehicle_incidents, :party, column: :driving_person_id, primary_key: :party_id, on_delete: :cascade
-    add_foreign_key :witnesses, :claim, column: :incident_claim_id, primary_key: :claim_id, on_delete: :cascade
-    add_foreign_key :witnesses, :state, column: :address_state_id, primary_key: :state_id, on_delete: :cascade
+    add_foreign_key :assets, :parties, column: :vehicle_dealer_id, primary_key: :party_id, on_delete: :cascade
+    add_foreign_key :assets, :parties, column: :vehicle_finance_institution_id, primary_key: :party_id, on_delete: :cascade
+    add_foreign_key :claims, :parties, column: :lodgement_person_id, primary_key: :party_id, on_delete: :cascade
+    add_foreign_key :claims, :policies, column: :policy_id, primary_key: :policy_id, on_delete: :cascade
+    add_foreign_key :claims, :states, column: :incident_address_state_id, primary_key: :state_id, on_delete: :cascade
+    add_foreign_key :contractor_appointments, :claims, column: :claim_id, primary_key: :claim_id, on_delete: :cascade
+    add_foreign_key :contractor_appointments, :parties, column: :contractor_id, primary_key: :party_id, on_delete: :cascade
+    add_foreign_key :cover_wordings, :cover_types, column: :cover_type_id, primary_key: :cover_type_id, on_delete: :cascade
+    add_foreign_key :covers, :assets, column: :asset_id, primary_key: :asset_id, on_delete: :cascade
+    add_foreign_key :covers, :cover_types, column: :cover_type_id, primary_key: :cover_type_id, on_delete: :cascade
+    add_foreign_key :covers, :policies, column: :policy_id, primary_key: :policy_id, on_delete: :cascade
+    add_foreign_key :lost_items, :claims, column: :incident_claim_id, primary_key: :claim_id, on_delete: :cascade
+    add_foreign_key :parties, :parties, column: :company_contact_person_id, primary_key: :party_id, on_delete: :cascade
+    add_foreign_key :parties, :states, column: :person_address_state_id, primary_key: :state_id, on_delete: :cascade
+    add_foreign_key :parties, :states, column: :postal_address_state_id, primary_key: :state_id, on_delete: :cascade
+    add_foreign_key :policies, :parties, column: :authorised_rep_id, primary_key: :party_id, on_delete: :cascade
+    add_foreign_key :policies, :parties, column: :insured_id, primary_key: :party_id, on_delete: :cascade
+    add_foreign_key :policies, :products, column: :p_product_id, primary_key: :product_id, on_delete: :cascade
+    add_foreign_key :policies, :states, column: :p_state_id, primary_key: :state_id, on_delete: :cascade
+    add_foreign_key :property_damages, :claims, column: :incident_claim_id, primary_key: :claim_id, on_delete: :cascade
+    add_foreign_key :property_damages, :states, column: :address_state_id, primary_key: :state_id, on_delete: :cascade
+    add_foreign_key :third_parties, :parties, column: :insurer_id, primary_key: :party_id, on_delete: :cascade
+    add_foreign_key :third_parties, :parties, column: :person_id, primary_key: :party_id, on_delete: :cascade
+    add_foreign_key :third_parties, :vehicle_incidents, column: :vehicle_incident_claim_id, primary_key: :incident_claim_id, on_delete: :cascade
+    add_foreign_key :underwriting_demerits, :underwriting_questions, column: :underwriting_question_id, primary_key: :underwriting_question_id, on_delete: :cascade
+    add_foreign_key :underwriting_demerits, :vehicle_incidents, column: :vehicle_incident_claim_id, primary_key: :incident_claim_id, on_delete: :cascade
+    add_foreign_key :vehicle_incidents, :claims, column: :incident_claim_id, primary_key: :claim_id, on_delete: :cascade
+    add_foreign_key :vehicle_incidents, :loss_types, column: :loss_type_id, primary_key: :loss_type_id, on_delete: :cascade
+    add_foreign_key :vehicle_incidents, :parties, column: :driving_person_id, primary_key: :party_id, on_delete: :cascade
+    add_foreign_key :witnesses, :claims, column: :incident_claim_id, primary_key: :claim_id, on_delete: :cascade
+    add_foreign_key :witnesses, :states, column: :address_state_id, primary_key: :state_id, on_delete: :cascade
     add_index :assets, [:vehicle_dealer_id], unique: false, name: :index_assets_on_vehicle_dealer_id
     add_index :assets, [:vehicle_finance_institution_id], unique: false, name: :index_assets_on_vehicle_finance_institution_id
     add_index :claims, [:incident_address_state_id], unique: false, name: :index_claims_on_incident_address_state_id

@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160411150444) do
+ActiveRecord::Schema.define(version: 20160802114147) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "allocatable_cinema_sections", id: false, force: true do |t|
@@ -109,16 +109,16 @@ ActiveRecord::Schema.define(version: 20160411150444) do
   add_index "ticket_pricings", ["session_time_year_nr", "session_time_month_nr", "session_time_day", "session_time_hour", "session_time_minute", "cinema_id", "section_name", "high_demand"], name: :index_ticket_pricings_on_session_time_year_nr_session__181a38a0, unique: true
 
   unless ENV["EXCLUDE_FKS"]
-    add_foreign_key :allocatable_cinema_sections, :cinema, column: :cinema_id, primary_key: :cinema_id, on_delete: :cascade
-    add_foreign_key :bookings, :person, column: :person_id, primary_key: :person_id, on_delete: :cascade
-    add_foreign_key :bookings, :session, column: :session_id, primary_key: :session_id, on_delete: :cascade
-    add_foreign_key :places_paids, :booking, column: :booking_id, primary_key: :booking_id, on_delete: :cascade
-    add_foreign_key :seat_allocations, :booking, column: :booking_id, primary_key: :booking_id, on_delete: :cascade
-    add_foreign_key :seat_allocations, :seat, column: :allocated_seat_id, primary_key: :seat_id, on_delete: :cascade
-    add_foreign_key :seats, :cinema, column: :row_cinema_id, primary_key: :cinema_id, on_delete: :cascade
-    add_foreign_key :sessions, :cinema, column: :cinema_id, primary_key: :cinema_id, on_delete: :cascade
-    add_foreign_key :sessions, :film, column: :film_id, primary_key: :film_id, on_delete: :cascade
-    add_foreign_key :ticket_pricings, :cinema, column: :cinema_id, primary_key: :cinema_id, on_delete: :cascade
+    add_foreign_key :allocatable_cinema_sections, :cinemas, column: :cinema_id, primary_key: :cinema_id, on_delete: :cascade
+    add_foreign_key :bookings, :people, column: :person_id, primary_key: :person_id, on_delete: :cascade
+    add_foreign_key :bookings, :sessions, column: :session_id, primary_key: :session_id, on_delete: :cascade
+    add_foreign_key :places_paids, :bookings, column: :booking_id, primary_key: :booking_id, on_delete: :cascade
+    add_foreign_key :seat_allocations, :bookings, column: :booking_id, primary_key: :booking_id, on_delete: :cascade
+    add_foreign_key :seat_allocations, :seats, column: :allocated_seat_id, primary_key: :seat_id, on_delete: :cascade
+    add_foreign_key :seats, :cinemas, column: :row_cinema_id, primary_key: :cinema_id, on_delete: :cascade
+    add_foreign_key :sessions, :cinemas, column: :cinema_id, primary_key: :cinema_id, on_delete: :cascade
+    add_foreign_key :sessions, :films, column: :film_id, primary_key: :film_id, on_delete: :cascade
+    add_foreign_key :ticket_pricings, :cinemas, column: :cinema_id, primary_key: :cinema_id, on_delete: :cascade
     add_index :allocatable_cinema_sections, [:cinema_id], unique: false, name: :index_allocatable_cinema_sections_on_cinema_id
     add_index :bookings, [:person_id], unique: false, name: :index_bookings_on_person_id
     add_index :bookings, [:session_id], unique: false, name: :index_bookings_on_session_id

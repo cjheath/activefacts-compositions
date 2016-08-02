@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160411150443) do
+ActiveRecord::Schema.define(version: 20160802114146) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "authors", id: false, force: true do |t|
@@ -46,12 +46,12 @@ ActiveRecord::Schema.define(version: 20160411150443) do
   add_index "topics", ["topic_name"], name: :index_topics_on_topic_name, unique: true
 
   unless ENV["EXCLUDE_FKS"]
-    add_foreign_key :comments, :author, column: :author_id, primary_key: :author_id, on_delete: :cascade
-    add_foreign_key :comments, :paragraph, column: :paragraph_id, primary_key: :paragraph_id, on_delete: :cascade
-    add_foreign_key :paragraphs, :post, column: :post_id, primary_key: :post_id, on_delete: :cascade
-    add_foreign_key :posts, :author, column: :author_id, primary_key: :author_id, on_delete: :cascade
-    add_foreign_key :posts, :topic, column: :topic_id, primary_key: :topic_id, on_delete: :cascade
-    add_foreign_key :topics, :topic, column: :parent_topic_id, primary_key: :topic_id, on_delete: :cascade
+    add_foreign_key :comments, :authors, column: :author_id, primary_key: :author_id, on_delete: :cascade
+    add_foreign_key :comments, :paragraphs, column: :paragraph_id, primary_key: :paragraph_id, on_delete: :cascade
+    add_foreign_key :paragraphs, :posts, column: :post_id, primary_key: :post_id, on_delete: :cascade
+    add_foreign_key :posts, :authors, column: :author_id, primary_key: :author_id, on_delete: :cascade
+    add_foreign_key :posts, :topics, column: :topic_id, primary_key: :topic_id, on_delete: :cascade
+    add_foreign_key :topics, :topics, column: :parent_topic_id, primary_key: :topic_id, on_delete: :cascade
     add_index :comments, [:author_id], unique: false, name: :index_comments_on_author_id
     add_index :comments, [:paragraph_id], unique: false, name: :index_comments_on_paragraph_id
     add_index :paragraphs, [:post_id], unique: false, name: :index_paragraphs_on_post_id

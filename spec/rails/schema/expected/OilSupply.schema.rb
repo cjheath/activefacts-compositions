@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160411150449) do
+ActiveRecord::Schema.define(version: 20160802114152) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "acceptable_substitutions", id: false, force: true do |t|
@@ -84,17 +84,17 @@ ActiveRecord::Schema.define(version: 20160411150449) do
   add_index "transport_routes", ["transport_method", "refinery_id", "region_id"], name: :index_transport_routes_on_transport_method_refinery_i__bb1e6e85, unique: true
 
   unless ENV["EXCLUDE_FKS"]
-    add_foreign_key :acceptable_substitutions, :product, column: :alternate_product_id, primary_key: :product_id, on_delete: :cascade
-    add_foreign_key :acceptable_substitutions, :product, column: :product_id, primary_key: :product_id, on_delete: :cascade
-    add_foreign_key :production_forecasts, :product, column: :product_id, primary_key: :product_id, on_delete: :cascade
-    add_foreign_key :production_forecasts, :refinery, column: :refinery_id, primary_key: :refinery_id, on_delete: :cascade
-    add_foreign_key :production_forecasts, :supply_period, column: :supply_period_id, primary_key: :supply_period_id, on_delete: :cascade
-    add_foreign_key :regional_demands, :product, column: :product_id, primary_key: :product_id, on_delete: :cascade
-    add_foreign_key :regional_demands, :region, column: :region_id, primary_key: :region_id, on_delete: :cascade
-    add_foreign_key :regional_demands, :supply_period, column: :supply_period_id, primary_key: :supply_period_id, on_delete: :cascade
-    add_foreign_key :supply_periods, :month, column: :month_id, primary_key: :month_id, on_delete: :cascade
-    add_foreign_key :transport_routes, :refinery, column: :refinery_id, primary_key: :refinery_id, on_delete: :cascade
-    add_foreign_key :transport_routes, :region, column: :region_id, primary_key: :region_id, on_delete: :cascade
+    add_foreign_key :acceptable_substitutions, :products, column: :alternate_product_id, primary_key: :product_id, on_delete: :cascade
+    add_foreign_key :acceptable_substitutions, :products, column: :product_id, primary_key: :product_id, on_delete: :cascade
+    add_foreign_key :production_forecasts, :products, column: :product_id, primary_key: :product_id, on_delete: :cascade
+    add_foreign_key :production_forecasts, :refineries, column: :refinery_id, primary_key: :refinery_id, on_delete: :cascade
+    add_foreign_key :production_forecasts, :supply_periods, column: :supply_period_id, primary_key: :supply_period_id, on_delete: :cascade
+    add_foreign_key :regional_demands, :products, column: :product_id, primary_key: :product_id, on_delete: :cascade
+    add_foreign_key :regional_demands, :regions, column: :region_id, primary_key: :region_id, on_delete: :cascade
+    add_foreign_key :regional_demands, :supply_periods, column: :supply_period_id, primary_key: :supply_period_id, on_delete: :cascade
+    add_foreign_key :supply_periods, :months, column: :month_id, primary_key: :month_id, on_delete: :cascade
+    add_foreign_key :transport_routes, :refineries, column: :refinery_id, primary_key: :refinery_id, on_delete: :cascade
+    add_foreign_key :transport_routes, :regions, column: :region_id, primary_key: :region_id, on_delete: :cascade
     add_index :acceptable_substitutions, [:alternate_product_id], unique: false, name: :index_acceptable_substitutions_on_alternate_product_id
     add_index :acceptable_substitutions, [:product_id], unique: false, name: :index_acceptable_substitutions_on_product_id
     add_index :production_forecasts, [:product_id], unique: false, name: :index_production_forecasts_on_product_id

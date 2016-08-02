@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160411150450) do
+ActiveRecord::Schema.define(version: 20160802114152) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "people", id: false, force: true do |t|

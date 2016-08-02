@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160411150445) do
+ActiveRecord::Schema.define(version: 20160802114147) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "attendances", id: false, force: true do |t|
@@ -66,15 +66,15 @@ ActiveRecord::Schema.define(version: 20160411150445) do
   add_index "people", ["given_name", "family_name"], name: :index_people_on_given_name_family_name
 
   unless ENV["EXCLUDE_FKS"]
-    add_foreign_key :attendances, :meeting, column: :meeting_id, primary_key: :meeting_id, on_delete: :cascade
-    add_foreign_key :attendances, :person, column: :attendee_person_id, primary_key: :person_id, on_delete: :cascade
-    add_foreign_key :directorships, :company, column: :company_id, primary_key: :company_id, on_delete: :cascade
-    add_foreign_key :directorships, :person, column: :director_person_id, primary_key: :person_id, on_delete: :cascade
-    add_foreign_key :employees, :company, column: :company_id, primary_key: :company_id, on_delete: :cascade
-    add_foreign_key :employees, :employee, column: :manager_employee_id, primary_key: :employee_id, on_delete: :cascade
-    add_foreign_key :employments, :employee, column: :employee_id, primary_key: :employee_id, on_delete: :cascade
-    add_foreign_key :employments, :person, column: :person_id, primary_key: :person_id, on_delete: :cascade
-    add_foreign_key :meetings, :company, column: :company_id, primary_key: :company_id, on_delete: :cascade
+    add_foreign_key :attendances, :meetings, column: :meeting_id, primary_key: :meeting_id, on_delete: :cascade
+    add_foreign_key :attendances, :people, column: :attendee_person_id, primary_key: :person_id, on_delete: :cascade
+    add_foreign_key :directorships, :companies, column: :company_id, primary_key: :company_id, on_delete: :cascade
+    add_foreign_key :directorships, :people, column: :director_person_id, primary_key: :person_id, on_delete: :cascade
+    add_foreign_key :employees, :companies, column: :company_id, primary_key: :company_id, on_delete: :cascade
+    add_foreign_key :employees, :employees, column: :manager_employee_id, primary_key: :employee_id, on_delete: :cascade
+    add_foreign_key :employments, :employees, column: :employee_id, primary_key: :employee_id, on_delete: :cascade
+    add_foreign_key :employments, :people, column: :person_id, primary_key: :person_id, on_delete: :cascade
+    add_foreign_key :meetings, :companies, column: :company_id, primary_key: :company_id, on_delete: :cascade
     add_index :attendances, [:attendee_person_id], unique: false, name: :index_attendances_on_attendee_person_id
     add_index :attendances, [:meeting_id], unique: false, name: :index_attendances_on_meeting_id
     add_index :directorships, [:company_id], unique: false, name: :index_directorships_on_company_id
