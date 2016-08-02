@@ -10,7 +10,8 @@ require "activefacts/compositions"
 module ActiveFacts
   module Compositions
     class Relational < Compositor
-    public
+      MM = ActiveFacts::Metamodel unless const_defined?(:MM)
+
       def self.options
         {
           surrogates: ['Boolean', "Inject a surrogate key into each table whose primary key is not already suitable as a foreign key"]
