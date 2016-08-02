@@ -44,7 +44,7 @@ CREATE TABLE Claim (
 	-- maybe Claim concerns Incident that relates to loss at Address that maybe is in Postcode
 	IncidentAddressPostcode                 VARCHAR NULL,
 	-- maybe Claim concerns Incident that relates to loss at Address that maybe is in State
-	IncidentAddressStateID                  BIGINT NOT NULL,
+	IncidentAddressStateID                  BIGINT NULL,
 	-- maybe Claim concerns Incident that relates to loss on Date Time
 	IncidentDateTime                        TIMESTAMP NULL,
 	-- maybe Claim concerns Incident that maybe is covered by Police Report that maybe was to officer-Name
@@ -178,7 +178,7 @@ CREATE TABLE Party (
 	-- maybe Party has postal-Address and maybe Address is in Postcode
 	PostalAddressPostcode                   VARCHAR NULL,
 	-- maybe Party has postal-Address and maybe Address is in State
-	PostalAddressStateID                    BIGINT NOT NULL,
+	PostalAddressStateID                    BIGINT NULL,
 	-- maybe Party is a Company that has contact-Person and Person is a kind of Party that has Party ID
 	CompanyContactPersonID                  BIGINT NULL,
 	-- maybe Party is a Person that has Contact Methods that maybe includes business-Phone and Phone has Phone Nr
@@ -206,7 +206,7 @@ CREATE TABLE Party (
 	-- maybe Party is a Person that maybe lives at Address that maybe is in Postcode
 	PersonAddressPostcode                   VARCHAR NULL,
 	-- maybe Party is a Person that maybe lives at Address that maybe is in State
-	PersonAddressStateID                    BIGINT NOT NULL,
+	PersonAddressStateID                    BIGINT NULL,
 	-- maybe Party is a Person that maybe has birth-Date
 	PersonBirthDate                         DATE NULL,
 	-- maybe Party is a Person that maybe holds License that Is International
@@ -286,7 +286,7 @@ CREATE TABLE PropertyDamage (
 	-- Property Damage is at Address that maybe is in Postcode
 	AddressPostcode                         VARCHAR NULL,
 	-- Property Damage is at Address that maybe is in State
-	AddressStateID                          BIGINT NOT NULL,
+	AddressStateID                          BIGINT NULL,
 	-- maybe Property Damage belongs to owner-Name
 	OwnerName                               VARCHAR(256) NULL,
 	-- maybe Property Damage owner has contact Phone that has Phone Nr
@@ -296,7 +296,7 @@ CREATE TABLE PropertyDamage (
 	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID)
 );
 
-CREATE UNIQUE NONCLUSTERED INDEX PropertyDamageByIncidentClaimIDAddressStreetAddressCityAd0ba ON PropertyDamage(IncidentClaimID, AddressStreet, AddressCity, AddressPostcode, AddressStateID) WHERE IncidentClaimID IS NOT NULL AND AddressPostcode IS NOT NULL;
+CREATE UNIQUE NONCLUSTERED INDEX PropertyDamageByIncidentClaimIDAddressStreetAddressCityAd0ba ON PropertyDamage(IncidentClaimID, AddressStreet, AddressCity, AddressPostcode, AddressStateID) WHERE IncidentClaimID IS NOT NULL AND AddressPostcode IS NOT NULL AND AddressStateID IS NOT NULL;
 
 
 CREATE TABLE [State] (
@@ -397,7 +397,7 @@ CREATE TABLE VehicleIncident (
 	-- maybe Driving involves Vehicle Incident and maybe Driving was unlicenced for unlicensed-Reason
 	DrivingUnlicensedReason                 VARCHAR NULL,
 	-- maybe Vehicle Incident resulted from Loss Type
-	LossTypeID                              BIGINT NOT NULL,
+	LossTypeID                              BIGINT NULL,
 	-- maybe Vehicle Incident involved previous_damage-Description
 	PreviousDamageDescription               VARCHAR(1024) NULL,
 	-- maybe Vehicle Incident was caused by Reason
@@ -428,7 +428,7 @@ CREATE TABLE Witness (
 	-- maybe Witness lives at Address that maybe is in Postcode
 	AddressPostcode                         VARCHAR NULL,
 	-- maybe Witness lives at Address that maybe is in State
-	AddressStateID                          BIGINT NOT NULL,
+	AddressStateID                          BIGINT NULL,
 	-- maybe Witness has contact-Phone and Phone has Phone Nr
 	ContactPhoneNr                          VARCHAR NULL,
 	-- Primary index to Witness

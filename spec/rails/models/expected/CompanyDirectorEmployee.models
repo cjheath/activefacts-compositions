@@ -68,7 +68,6 @@ module Employee
 
     validates :employee_nr, :presence => true
     validates :company_id, :presence => true
-    validates :manager_employee_id, :presence => true
   end
 end
 

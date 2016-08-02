@@ -46,7 +46,6 @@ module DispatchItem
 
     validates :product_id, :presence => true
     validates :quantity, :presence => true
-    validates :sales_order_item_id, :presence => true
   end
 end
 
@@ -148,7 +147,6 @@ module ReceivedItem
 
     validates :product_id, :presence => true
     validates :quantity, :presence => true
-    validates :purchase_order_item_id, :presence => true
   end
 end
 

@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160802114147) do
+ActiveRecord::Schema.define(version: 20160802181208) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "allocatable_cinema_sections", id: false, force: true do |t|
@@ -103,7 +103,7 @@ ActiveRecord::Schema.define(version: 20160802114147) do
     t.column "cinema_id", :integer, null: false
     t.column "section_name", :string, null: false
     t.column "high_demand", :boolean, null: false
-    t.column "price", :datatime, null: false
+    t.column "price", :decimal, null: false
   end
 
   add_index "ticket_pricings", ["session_time_year_nr", "session_time_month_nr", "session_time_day", "session_time_hour", "session_time_minute", "cinema_id", "section_name", "high_demand"], name: :index_ticket_pricings_on_session_time_year_nr_session__181a38a0, unique: true

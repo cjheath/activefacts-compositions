@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160802114153) do
+ActiveRecord::Schema.define(version: 20160802155719) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "back_order_allocations", id: false, force: true do |t|
@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 20160802114153) do
     t.column "product_id", :integer, null: false
     t.column "quantity", :integer, null: false
     t.column "dispatch_id", :integer, null: true
-    t.column "sales_order_item_id", :integer, null: false
+    t.column "sales_order_item_id", :integer, null: true
     t.column "transfer_request_id", :integer, null: true
   end
 
@@ -58,7 +58,7 @@ ActiveRecord::Schema.define(version: 20160802114153) do
     t.column "received_item_id", :primary_key, null: false
     t.column "product_id", :integer, null: false
     t.column "quantity", :integer, null: false
-    t.column "purchase_order_item_id", :integer, null: false
+    t.column "purchase_order_item_id", :integer, null: true
     t.column "receipt_id", :integer, null: true
     t.column "transfer_request_id", :integer, null: true
   end

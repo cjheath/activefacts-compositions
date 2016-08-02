@@ -49,7 +49,6 @@ module Claim
 
     validates :p_sequence, :presence => true
     validates :policy_id, :presence => true
-    validates :incident_address_state_id, :presence => true
   end
 end
 
@@ -191,8 +190,6 @@ module Party
     has_many :vehicle_incidents, :class_name => 'VehicleIncident', :foreign_key => :driving_person_id, :dependent => :destroy
 
     validates :is_a_company, :presence => true
-    validates :postal_address_state_id, :presence => true
-    validates :person_address_state_id, :presence => true
   end
 end
 
@@ -255,7 +252,6 @@ module PropertyDamage
 
     validates :address_street, :presence => true
     validates :address_city, :presence => true
-    validates :address_state_id, :presence => true
   end
 end
 
@@ -355,7 +351,6 @@ module VehicleIncident
 
     validates :incident_claim_id, :presence => true
     validates :occurred_while_being_driven, :presence => true
-    validates :loss_type_id, :presence => true
   end
 end
 
@@ -372,6 +367,5 @@ module Witness
 
     validates :incident_claim_id, :presence => true
     validates :name, :presence => true
-    validates :address_state_id, :presence => true
   end
 end

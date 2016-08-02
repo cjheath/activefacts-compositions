@@ -47,7 +47,7 @@ CREATE TABLE Employee (
 	-- Employee works at Company
 	CompanyID                               BIGINT NOT NULL,
 	-- maybe Employee is supervised by Manager that is a kind of Employee
-	ManagerEmployeeID                       BIGINT NOT NULL,
+	ManagerEmployeeID                       BIGINT NULL,
 	-- maybe Employee is a Manager that Is Ceo
 	ManagerIsCeo                            BOOLEAN,
 	-- Primary index to Employee

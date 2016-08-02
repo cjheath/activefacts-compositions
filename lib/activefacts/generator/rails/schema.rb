@@ -165,12 +165,14 @@ module ActiveFacts
           value_constraint = options[:value_constraint]
           type, type_name = *normalise_type(type_name)
 
-          if a = options[:auto_assign]
+          if component.all_index_field.detect{|ixf| (a = ixf.access_path).is_a?(MM::Index) && a.composite_as_primary_index }
+            auto_assign = options[:auto_assign]
             case type_name
             when 'integer'
-              type_name = 'primary_key' if a != 'assert'
+              type_name = 'primary_key' if auto_assign
             when 'uuid'
-              type_name = "uuid, default: 'gen_random_uuid()', primary_key: true"
+              type_name = "uuid"
+              type_name += ", default: 'gen_random_uuid()', primary_key: true" if auto_assign
             end
           end
 
@@ -250,7 +252,7 @@ module ActiveFacts
             when MM::DataType::TYPE_Integer;  'integer'
             when MM::DataType::TYPE_Real;     'float'
             when MM::DataType::TYPE_Decimal;  'decimal'
-            when MM::DataType::TYPE_Money;    'datatime'
+            when MM::DataType::TYPE_Money;    'decimal'
             when MM::DataType::TYPE_Char;     'string'
             when MM::DataType::TYPE_String;   'string'
             when MM::DataType::TYPE_Text;     'text'
@@ -258,7 +260,12 @@ module ActiveFacts
             when MM::DataType::TYPE_Time;     'time'
             when MM::DataType::TYPE_DateTime; 'datetime'
             when MM::DataType::TYPE_Timestamp;'datetime'
-            when MM::DataType::TYPE_Binary;   'binary'
+            when MM::DataType::TYPE_Binary;
+              if type_name =~ /^([Gu]uid|uniqueidentifier)$/i
+                'uuid'
+              else
+                'binary'
+              end
             else
               type_name
             end

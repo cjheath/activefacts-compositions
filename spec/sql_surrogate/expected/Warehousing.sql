@@ -38,7 +38,7 @@ CREATE TABLE DispatchItem (
 	-- maybe Dispatch Item is for Dispatch that has Dispatch ID
 	DispatchID                              BIGINT NULL,
 	-- maybe Dispatch Item is for Sales Order Item
-	SalesOrderItemID                        BIGINT NOT NULL,
+	SalesOrderItemID                        BIGINT NULL,
 	-- maybe Dispatch Item is for Transfer Request that has Transfer Request ID
 	TransferRequestID                       BIGINT NULL,
 	-- Primary index to Dispatch Item over PresenceConstraint over (Dispatch Item ID in "Dispatch Item has Dispatch Item ID") occurs at most one time
@@ -101,7 +101,7 @@ CREATE TABLE ReceivedItem (
 	-- Received Item is in Quantity
 	Quantity                                INTEGER NOT NULL,
 	-- maybe Received Item is for Purchase Order Item
-	PurchaseOrderItemID                     BIGINT NOT NULL,
+	PurchaseOrderItemID                     BIGINT NULL,
 	-- maybe Received Item has Receipt that has Receipt ID
 	ReceiptID                               BIGINT NULL,
 	-- maybe Received Item is for Transfer Request that has Transfer Request ID
