@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160411150445) do
+ActiveRecord::Schema.define(version: 20160802114148) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "countries", id: false, force: true do |t|
@@ -20,6 +20,6 @@ ActiveRecord::Schema.define(version: 20160411150445) do
   add_index "country_codes", ["country_code_value"], name: :index_country_codes_on_country_code_value, unique: true
 
   unless ENV["EXCLUDE_FKS"]
-    add_foreign_key :countries, :country_code, column: :country_code_id, primary_key: :country_code_id, on_delete: :cascade
+    add_foreign_key :countries, :country_codes, column: :country_code_id, primary_key: :country_code_id, on_delete: :cascade
   end
 end

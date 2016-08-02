@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160411150450) do
+ActiveRecord::Schema.define(version: 20160802114152) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "companies", id: false, force: true do |t|
@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 20160411150450) do
   end
 
   unless ENV["EXCLUDE_FKS"]
-    add_foreign_key :companies, :party, column: :party_id, primary_key: :party_id, on_delete: :cascade
-    add_foreign_key :people, :party, column: :party_id, primary_key: :party_id, on_delete: :cascade
+    add_foreign_key :companies, :parties, column: :party_id, primary_key: :party_id, on_delete: :cascade
+    add_foreign_key :people, :parties, column: :party_id, primary_key: :party_id, on_delete: :cascade
   end
 end
