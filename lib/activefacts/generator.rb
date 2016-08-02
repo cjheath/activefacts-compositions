@@ -3,9 +3,6 @@ require "activefacts/compositions/version"
 
 module ActiveFacts
   module Generators
-    private
-      MM = ActiveFacts::Metamodel
-      
     def self.generators
       @@generators ||= {}
     end
