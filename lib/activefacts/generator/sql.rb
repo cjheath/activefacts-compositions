@@ -16,7 +16,7 @@ module ActiveFacts
     # * delay_fks Leave all foreign keys until the end, not just those that contain forward-references
     # * underscore 
     class SQL
-      MM = ActiveFacts::Metamodel
+      MM = ActiveFacts::Metamodel unless const_defined?(:MM)
       def self.options
         {
           delay_fks: ['Boolean', "Delay emitting all foreign keys until the bottom of the file"],

@@ -229,7 +229,7 @@ module ActiveFacts
           ccs
         end
 
-        MM = ActiveFacts::Metamodel
+        MM = ActiveFacts::Metamodel unless const_defined?(:MM)
       end
     end
     publish_generator Rails::Models

@@ -190,7 +190,7 @@ module ActiveFacts
         end
       end
 
-      MM = ActiveFacts::Metamodel
+      MM = ActiveFacts::Metamodel unless const_defined?(:MM)
     end
   end
 end
