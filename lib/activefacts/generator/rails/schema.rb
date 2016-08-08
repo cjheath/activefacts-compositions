@@ -42,6 +42,7 @@ module ActiveFacts
         end
 
         def generate
+          @indexes_generated = {}
           @foreign_keys = []
           # If we get index names that need to be truncated, add a counter to ensure uniqueness
           @dup_id = 0
@@ -105,27 +106,6 @@ module ActiveFacts
           create_table = %Q{  create_table "#{ar_table_name}", id: false, force: true do |t|}
           columns = generate_columns composite
 
-          unless @option_exclude_fks
-            composite.all_foreign_key_as_source_composite.each do |fk|
-              from_column_names = fk.all_foreign_key_field.map{|fxf| fxf.component.column_name.snakecase}
-              to_column_names = fk.all_index_field.map{|ixf| ixf.component.column_name.snakecase}
-
-              @foreign_keys.concat(
-                if (from_column_names.length == 1)
-                  index_name = ACTR::name_trunc("index_#{ar_table_name}_on_#{from_column_names[0]}")
-                  [
-                    "    add_foreign_key :#{ar_table_name}, :#{fk.composite.mapping.rails.plural_name}, column: :#{from_column_names[0]}, primary_key: :#{to_column_names[0]}, on_delete: :cascade",
-                    # Index it non-uniquely only if it's not unique already:
-                    fk.absorption && fk.absorption.child_role.is_unique ? nil :
-                      "    add_index :#{ar_table_name}, [:#{from_column_names[0]}], unique: false, name: :#{index_name}"
-                  ].compact
-                else
-                  [ ]
-                end
-              )
-            end
-          end
-
           index_texts = []
           composite.all_index.each do |index|
             next if index.composite_as_primary_index && index.all_index_field.size == 1   # We've handled this already
@@ -136,10 +116,50 @@ module ActiveFacts
             index_texts << '' if index_texts.empty?
 
             all_mandatory = index.all_index_field.to_a.all?{|ixf| ixf.component.path_mandatory}
+            @indexes_generated[index] = true
             index_texts << %Q{  add_index "#{ar_table_name}", #{index_column_names.inspect}, name: :#{index_name}#{
               # Avoid problems with closed-world uniqueness: only all_mandatory indices can be unique on closed-world index semantics (MS SQL)
               index.is_unique && (!@option_closed_world || all_mandatory) ? ", unique: true" : ''
             }}
+          end
+
+          unless @option_exclude_fks
+            composite.all_foreign_key_as_source_composite.each do |fk|
+              from_column_names = fk.all_foreign_key_field.map{|fxf| fxf.component.column_name.snakecase}
+              to_column_names = fk.all_index_field.map{|ixf| ixf.component.column_name.snakecase}
+
+              @foreign_keys.concat(
+                if (from_column_names.length == 1)
+
+                  # See if the from_column already has an index (not necessarily unique, but the column must be first):
+                  from_index_needed =
+                    fk.
+                    all_foreign_key_field.
+                    single.
+                    component.        # See whether the foreign key component
+                    all_index_field.  # occurs in a unique index already
+                    select do |ixf|
+                      ixf.access_path.is_a?(Metamodel::Index) &&    # It's an Index, not an FK
+                      ixf.ordinal == 0                              # It's first in this index
+                    end
+                  already_indexed = from_index_needed.any?{|ixf| @indexes_generated[ixf.access_path]}
+                  is_one_to_one = fk.absorption && fk.absorption.child_role.is_unique
+
+                  index_name = ACTR::name_trunc("index_#{ar_table_name}_on_#{from_column_names[0]}")
+                  [
+                    "    add_foreign_key :#{ar_table_name}, :#{fk.composite.mapping.rails.plural_name}, column: :#{from_column_names[0]}, primary_key: :#{to_column_names[0]}, on_delete: :cascade",
+                    # Index it non-uniquely only if it's not unique already:
+                    if already_indexed or is_one_to_one  # Either it already is, or it will be indexed, no new index needed
+                      nil
+                    else
+                      "    add_index :#{ar_table_name}, [:#{from_column_names[0]}], unique: false, name: :#{index_name}"
+                    end
+                  ].compact
+                else
+                  [ ]
+                end
+              )
+            end
           end
 
           [
@@ -165,14 +185,18 @@ module ActiveFacts
           value_constraint = options[:value_constraint]
           type, type_name = *normalise_type(type_name)
 
-          if component.all_index_field.detect{|ixf| (a = ixf.access_path).is_a?(MM::Index) && a.composite_as_primary_index }
+          if pkxf = component.all_index_field.detect{|ixf| (a = ixf.access_path).is_a?(MM::Index) && a.composite_as_primary_index }
             auto_assign = options[:auto_assign]
             case type_name
             when 'integer'
               type_name = 'primary_key' if auto_assign
+              @indexes_generated[pkxf.access_path] = true
             when 'uuid'
               type_name = "uuid"
-              type_name += ", default: 'gen_random_uuid()', primary_key: true" if auto_assign
+              if auto_assign
+                type_name += ", default: 'gen_random_uuid()', primary_key: true"
+                @indexes_generated[pkxf.access_path] = true
+              end
             end
           end
 
