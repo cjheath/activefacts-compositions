@@ -221,7 +221,7 @@ module ActiveFacts
           return [] unless @option_validations
           ccs =
             composite.mapping.all_leaf.flat_map do |component|
-              next unless component.path_mandatory
+              next unless component.path_mandatory && !component.is_a?(Metamodel::Indicator)
               next if component.is_a?(Metamodel::Mapping) && component.object_type.is_a?(Metamodel::ValueType) && component.is_auto_assigned
               [ "    validates :#{component.column_name.snakecase}, :presence => true" ]
             end.compact
