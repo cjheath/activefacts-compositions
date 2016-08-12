@@ -39,6 +39,11 @@ module ActiveFacts
         attr_accessor   :xmiid
       end
       
+      class ActiveFacts::Metamodel::ValueField
+        attr_accessor   :xmiid
+        attr_accessor   :index_xmiid
+      end
+      
       class CWM      
         MM = ActiveFacts::Metamodel unless const_defined?(:MM)
         def self.options
@@ -51,21 +56,21 @@ module ActiveFacts
           @composition = composition
           @options = options
           @underscore = options.has_key?("underscore") ? (options['underscore'] || '_') : ''
-        
+
           @vocabulary = composition.constellation.Vocabulary.values[0]      # REVISIT when importing from other vocabularies
         end
 
         def data_type_context
           @data_type_context ||= CWMDataTypeContext.new
         end
-      
+
         def generate
           # @tables_emitted = {}
-          @namespace = Array.new
+          @ns = 0
           @datatypes = Array.new
-        
+
           trace.enable 'cwm'
-          
+
           model_ns, schema_ns = populate_namespace_ids
 
           generate_header +
@@ -108,16 +113,22 @@ module ActiveFacts
         def indent depth, str
           "  " * depth + str + "\n"
         end
-      
-        def nsdef name
-          ns = "_#{@namespace.size + 1}"
-          @namespace << [ns, name]
-          ns
+
+        def rawnsdef
+          @ns += 1
+          "_#{@ns}"
         end
-      
+
+        def nsdef obj, pref = nil
+          if obj.xmiid == nil
+            obj.xmiid = "#{pref}#{rawnsdef}"
+          end
+          obj.xmiid
+        end
+
         def populate_namespace_ids
-          model_ns = nsdef("Model")
-          schema_ns = nsdef("Schema")
+          model_ns = rawnsdef
+          schema_ns = rawnsdef
           
           @composition.
           all_composite.
@@ -129,21 +140,18 @@ module ActiveFacts
         
         def populate_table_ids(table)
           tname = table_name(table)
-          table.xmiid = nsdef(tname)
+          nsdef(table)
           table.mapping.all_leaf.flat_map do |leaf|
             # Absorbed empty subtypes appear as leaves
             next if leaf.is_a?(MM::Absorption) && leaf.parent_role.fact_type.is_a?(MM::TypeInheritance)
-            leaf.xmiid = nsdef(safe_column_name(leaf))
+            nsdef(leaf)
           end
           table.all_index.map do |index|
-            index.xmiid = nsdef("PK#{tname}")
-            # for index to single column, save the index id with the column
-            if index.all_index_field.size == 1
-              index.all_index_field[0].component.index_xmiid = index.xmiid
-            end
+            nsdef(index)
+            index.all_index_field.map{|idf| idf.component.index_xmiid = index.xmiid}
           end
-          table.all_foreign_key_as_source_composite.map do |fk|
-            fk.xmiid = nsdef("R_#{@namespace.size+1}")
+          table.all_foreign_key_as_source_composite.sort_by{|fk| [fk.source_composite.mapping.name, fk.absorption.inspect] }.map do |fk|
+            nsdef(fk)
           end
         end
         
@@ -209,7 +217,7 @@ module ActiveFacts
           
           table_columns =
             indent(depth, "  <CWM:Classifier.feature>") +
-            (table.mapping.all_leaf.flat_map do |leaf|
+            (table.mapping.all_leaf.flat_map.sort_by{|c| column_name(c)}.map do |leaf|
                 # Absorbed empty subtypes appear as leaves
                 next if leaf.is_a?(MM::Absorption) && leaf.parent_role.fact_type.is_a?(MM::TypeInheritance)
 
@@ -221,10 +229,10 @@ module ActiveFacts
           table_keys =
             indent(depth, "  <CWM:Namespace.ownedElement>") +
             (table.all_index.map do |index|
-                generate_index(depth+2, table.xmiid, index, name)
+                generate_index(depth+2, table.xmiid, index, name, table.all_foreign_key_as_target_composite)
               end
             ) * "" +
-            (table.all_foreign_key_as_source_composite.map do |fk|
+            (table.all_foreign_key_as_source_composite.sort_by{|fk| [fk.source_composite.mapping.name, fk.absorption.inspect] }.map do |fk|
                 generate_foreign_key(depth+2, table.xmiid, fk)
               end
             ) * "" +
@@ -256,7 +264,7 @@ module ActiveFacts
         end
 
         def create_data_type(type_name, type_num, type_params)
-          type_ns = nsdef(type_name)
+          type_ns = rawnsdef
         
           cwm_data_type = 
             "<CWMRDB:SQLSimpleType xmi.id=\"#{type_ns}\" name=\"#{type_name}\" visibility=\"public\" typeNumber=\"#{type_num}\" #{type_params}/>"
@@ -265,7 +273,7 @@ module ActiveFacts
           type_ns
         end
         
-        def generate_index(depth, table_ns, index, table_name)
+        def generate_index(depth, table_ns, index, table_name, all_fks_as_target)
           key_ns = index.xmiid
 
           nullable_columns =
@@ -276,25 +284,42 @@ module ActiveFacts
 
           primary = index.composite_as_primary_index && !contains_nullable_columns
           column_ids =
-              index.all_index_field.map do |ixf|
-                ixf.component.xmiid
-              end
-          clustering =
-            (index.composite_as_primary_index ? ' CLUSTERED' : ' NONCLUSTERED')
+            index.all_index_field.map do |ixf|
+              ixf.component.xmiid
+            end
+          # clustering =
+          #   (index.composite_as_primary_index ? ' CLUSTERED' : ' NONCLUSTERED')
 
-          key_type = primary ? 'PrimaryKey' : 'UniqueKey'
+          key_type = primary ? 'CWMRDB:PrimaryKey' : 'CWM:UniqueKey'
+          
+          # find target foreign keys for this index
+          fks_as_target = all_fks_as_target
 
-          if column_ids.count == 1
+          if column_ids.count == 1 && fks_as_target.count == 0
             colid = column_ids[0]
-            indent(depth, "<CWMRDB:#{key_type} xmi.id=\"#{key_ns}\" name=\"XPK#{table_name}\" visibility=\"public\" namespace=\"#{table_ns}\" feature=\"#{colid}\"/>")
+            indent(depth, "<#{key_type} xmi.id=\"#{key_ns}\" name=\"XPK#{table_name}\" visibility=\"public\" namespace=\"#{table_ns}\" feature=\"#{colid}\"/>")
           else
-            indent(depth, "<CWMRDB:#{key_type} xmi.id=\"#{key_ns}\" name=\"XPK#{table_name}\" visibility=\"public\" namespace=\"#{table_ns}\">") +
-            indent(depth, "  <CWM:UniqueKey.feature>") +
-            column_ids.map do |id|
-              indent(depth, "    <CWM:StructuralFeature xmi.idref=\"#{id}\"/>")
-            end * "" +
-            indent(depth, "  </CWM:UniqueKey.feature>") +
-            indent(depth, "</CWMRDB:#{key_type}>")
+            if column_ids.count == 1
+              colid = column_ids[0]
+              indent(depth, "<#{key_type} xmi.id=\"#{key_ns}\" name=\"XPK#{table_name}\" visibility=\"public\" namespace=\"#{table_ns}\" feature=\"#{colid}\">")
+            else
+              indent(depth, "<#{key_type} xmi.id=\"#{key_ns}\" name=\"XPK#{table_name}\" visibility=\"public\" namespace=\"#{table_ns}\">") +
+              indent(depth, "  <CWM:UniqueKey.feature>") +
+              column_ids.map do |id|
+                indent(depth, "    <CWM:StructuralFeature xmi.idref=\"#{id}\"/>")
+              end * "" +
+              indent(depth, "  </CWM:UniqueKey.feature>")
+            end +
+            if fks_as_target.count > 0
+              indent(depth, "<CWM:UniqueKey.keyRelationship>") +
+              fks_as_target.map do |fk|
+                indent(depth, " <CWM:KeyRelationship xmi.idref=\"#{fk.xmiid}\"/>") 
+              end * "" +
+              indent(depth, "</CWM:UniqueKey.keyRelationship>")
+            else
+              ""
+            end +
+            indent(depth, "</#{key_type}>")
           end
         end
         
@@ -304,13 +329,19 @@ module ActiveFacts
           if fk.all_foreign_key_field.size == 1
             fkf = fk.all_foreign_key_field[0]
             ixf = fk.all_index_field[0]
-            indent(depth, "<CWMRDB:ForeignKey xmi.id=\"#{key_ns}\" name=\"R#{key_ns}\" visibility=\"public\" namespace=\"#{table_ns}\" feature=\"#{fkf.component.xmiid}\" uniqueKey=\"#{ixf.component.index_xmiid}\"/>")
+            indent(depth, "<CWMRDB:ForeignKey xmi.id=\"#{key_ns}\" name=\"R#{key_ns}\" visibility=\"public\" namespace=\"#{table_ns}\" feature=\"#{fkf.component.xmiid}\" uniqueKey=\"#{ixf.component.index_xmiid}\" />")
           else
             indent(depth, "<CWMRDB:ForeignKey xmi.id=\"#{key_ns}\" name=\"R#{key_ns}\" visibility=\"public\" namespace=\"#{table_ns}\">") +
             indent(depth, "  <CWM:KeyRelationship.feature>") +
-            fk.all_foreign_key_field.map do |fkf|
-              indent(depth, "    <CWM:StructuralFeature xmi.idref=\"#{fkf.component.xmiid}\"/>")
-            end * "" +
+            begin
+              out = ""
+              for i in 0..(fk.all_foreign_key_field.size - 1)
+                fkf = fk.all_foreign_key_field[i]
+                ixf = fk.all_index_field[i]
+                out += indent(depth, "    <CWM:StructuralFeature xmi.idref=\"#{fkf.component.xmiid}\" uniqueKey=\"#{ixf.component.index_xmiid}\" />")
+              end
+              out
+            end + 
             indent(depth, "  </CWM:KeyRelationship.feature>") +
             indent(depth, "</CWMRDB:ForeignKey>")
           end
@@ -322,154 +353,6 @@ module ActiveFacts
             
         end
 
-
-      
-      
-        ########################
-      
-  
-
-
-        #
-        # Dump functions
-        #
-        # def entity_type_dump(o, level)
-        #   pi = o.preferred_identifier
-        #   supers = o.supertypes
-        #   if (supers.size > 0) # Ignore identification by a supertype:
-        #     pi = nil if pi && pi.role_sequence.all_role_ref.detect{ |rr|
-        #         rr.role.fact_type.is_a?(ActiveFacts::Metamodel::TypeInheritance)
-        #        }
-        #   end
-        #
-        #   cn_array = o.concept.all_context_note_as_relevant_concept.map{|cn| [cn.context_note_kind, cn.discussion] }
-        #   cn_hash = cn_array.inject({}) do |hash, value|
-        #           hash[value.first] = value.last
-        #           hash
-        #         end
-        #
-        #   informal_defn = cn_hash["because"]
-        #   defn_term =
-        #     "              <div class=\"row\">\n" +
-        #     "                <div class=\"col-md-12 definition\">\n" +
-        #     "                  A #{termdef(o.name)} #{informal_defn ? 'is ' + informal_defn : ''}\n" +
-        #     "                </div>\n" +
-        #     "              </div>\n"
-        #
-        #   defn_detail =
-        #     "              <div class=\"row\">\n" +
-        #     "                <div class=\"col-md-12 details\">\n" +
-        #     (supers.size > 0 ?
-        #       "#{span('Each', 'keyword')} #{termref(o.name, nil, o)} #{span('is a kind of', 'keyword')} #{supers.map{|s| termref(s.name, nil, s)}*', '}\n" :
-        #       ''
-        #     ) +
-        #     if pi
-        #       "#{span('Each', 'keyword')} #{termref(o.name, nil, o)} #{span('is identified by', 'keyword')} " +
-        #       pi.role_sequence.all_role_ref_in_order.map do |rr|
-        #         termref(
-        #           rr.role.object_type.name,
-        #           [ rr.leading_adjective,
-        #             rr.role.role_name || rr.role.object_type.name,
-        #             rr.trailing_adjective
-        #           ].compact * '-',
-        #           rr.role.object_type
-        #         )
-        #       end * ", " + "\n"
-        #     else
-        #       ''
-        #     end +
-        #     fact_types_dump(o, relevant_fact_types(o)) + "\n" +
-        #     "                </div>\n" +
-        #     "              </div>\n"
-        #
-        #   defn_term + defn_detail
-        # end
-        #
-        # def relevant_fact_types(o)
-        #     o.
-        #       all_role.
-        #       map{|r| [r, r.fact_type]}.
-        #       reject { |r, ft| ft.is_a?(ActiveFacts::Metamodel::LinkFactType) }.
-        #       select { |r, ft| ft.entity_type || has_another_nonstatic_role(ft, r) }
-        # end
-        #
-        # def has_another_nonstatic_role(ft, r)
-        #   ft.all_role.detect do |rr|
-        #     rr != r &&
-        #     rr.object_type.is_a?(ActiveFacts::Metamodel::EntityType) &&
-        #     !rr.object_type.is_static
-        #   end
-        # end
-        #
-        # def fact_types_dump(o, ftm)
-        #   ftm.
-        #       map { |r, ft| [ft, "    #{fact_type_dump(ft, o)}"] }.
-        #       sort_by{|ft, text| [ ft.is_a?(ActiveFacts::Metamodel::TypeInheritance) ? 0 : 1, text]}.
-        #       map{|ft, text| text} * "\n"
-        # end
-        #
-        # def fact_type_dump(ft, wrt = nil)
-        #   if ft.entity_type
-        #     div(
-        #       div(span('Each ', 'keyword') + termref(ft.entity_type.name, nil, ft.entity_type) + span(' is where ', 'keyword')) +
-        #       div(expand_fact_type(ft, wrt, true, 'some')),
-        #       'glossary-objectification'
-        #     )
-        #   else
-        #     fact_type_block(ft, wrt)
-        #   end
-        # end
-        #
-        # def fact_type_block(ft, wrt = nil, include_rolenames = true)
-        #   div(expand_fact_type(ft, wrt, include_rolenames, ''), 'glossary-facttype')
-        # end
-        #
-        # def expand_fact_type(ft, wrt = nil, include_rolenames = true, wrt_qualifier = '')
-        #   role = ft.all_role.detect{|r| r.object_type == wrt}
-        #   preferred_reading = ft.reading_preferably_starting_with_role(role)
-        #   alternate_readings = ft.all_reading.reject{|r| r == preferred_reading}
-        #
-        #   div(
-        #     expand_reading(preferred_reading, include_rolenames, wrt, wrt_qualifier),
-        #     'glossary-reading'
-        #   )
-        # end
-        #
-        # def role_ref(rr, freq_con, l_adj, name, t_adj, role_name_def, literal)
-        #   term_parts = [l_adj, termref(name, nil, rr.role.object_type), t_adj].compact
-        #   [
-        #     freq_con ? element(freq_con, :class=>:keyword) : nil,
-        #     term_parts.size > 1 ? term([l_adj, termref(name, nil, rr.role.object_type), t_adj].compact*' ') : term_parts[0],
-        #     role_name_def,
-        #     literal
-        #   ]
-        # end
-        #
-        # def expand_reading(reading, include_rolenames = true, wrt = nil, wrt_qualifier = '')
-        #   role_refs = reading.role_sequence.all_role_ref.sort_by{|role_ref| role_ref.ordinal}
-        #   lrr = role_refs[role_refs.size - 1]
-        #   element(
-        #     # element(rr.role.is_unique ? "one" : "some", :class=>:keyword) +
-        #     reading.expand([], include_rolenames) do |rr, freq_con, l_adj, name, t_adj, role_name_def, literal|
-        #       if role_name_def
-        #         role_name_def = role_name_def.gsub(/\(as ([^)]+)\)/) {
-        #           span("(as #{ termref(rr.role.object_type.name, $1, rr.role.object_type) })", 'keyword')
-        #         }
-        #       end
-        #       # qualify the last role of the reading
-        #       quantifier = ''
-        #       if rr == lrr
-        #         uniq = true
-        #         (0 ... role_refs.size - 2).each{|i| uniq = uniq && role_refs[i].role.is_unique }
-        #         quantifier =  uniq ? "one" : "at least one"
-        #       end
-        #       role_ref(rr, quantifier, l_adj, name, t_adj, role_name_def, literal)
-        #     end,
-        #     {:class => 'reading'}
-        #   )
-        # end
-      
-
         def boolean_type
           'boolean'
         end
@@ -478,107 +361,6 @@ module ActiveFacts
           'bigint'
         end
 
-        # def component_type component, column_name
-        #   case component
-        #   when MM::Indicator
-        #     boolean_type
-        #   when MM::SurrogateKey
-        #     surrogate_type
-        #   when MM::ValueField, MM::Absorption
-        #     object_type = component.object_type
-        #     while object_type.is_a?(MM::EntityType)
-        #       rr = object_type.preferred_identifier.role_sequence.all_role_ref.single
-        #       raise "Can't produce a column for composite #{component.inspect}" unless rr
-        #       object_type = rr.role.object_type
-        #     end
-        #     raise "A column can only be produced from a ValueType" unless object_type.is_a?(MM::ValueType)
-        #
-        #     if component.is_a?(MM::Absorption)
-        #       value_constraint ||= component.child_role.role_value_constraint
-        #     end
-        #
-        #     supertype = object_type
-        #     begin
-        #       object_type = supertype
-        #       length ||= object_type.length
-        #       scale ||= object_type.scale
-        #       unless component.parent.parent and component.parent.foreign_key
-        #         # No need to enforce value constraints that are already enforced by a foreign key
-        #         value_constraint ||= object_type.value_constraint
-        #       end
-        #     end while supertype = object_type.supertype
-        #     type, length = normalise_type(object_type.name, length)
-        #     sql_type = "#{type}#{
-        #       if !length
-        #         ''
-        #       else
-        #         '(' + length.to_s + (scale ? ", #{scale}" : '') + ')'
-        #       end
-        #     # }#{
-        #     #   (component.path_mandatory ? '' : ' NOT') + ' NULL'
-        #     # }#{
-        #     #   # REVISIT: This is an SQL Server-ism. Replace with a standard SQL SEQUENCE/
-        #     #   # Emit IDENTITY for columns auto-assigned on commit (except FKs)
-        #     #   if a = object_type.is_auto_assigned and a != 'assert' and
-        #     #       !component.all_foreign_key_field.detect{|fkf| fkf.foreign_key.source_composite == component.root}
-        #     #     ' IDENTITY'
-        #     #   else
-        #     #     ''
-        #     #   end
-        #     }#{
-        #       value_constraint ? check_clause(column_name, value_constraint) : ''
-        #     }"
-        #   when MM::Injection
-        #     component.object_type.name
-        #   else
-        #     raise "Can't make a column from #{component}"
-        #   end
-        # end
-
-        # def generate_index index, delayed_indices, indent
-        #   nullable_columns =
-        #     index.all_index_field.select do |ixf|
-        #       !ixf.component.path_mandatory
-        #     end
-        #   contains_nullable_columns = nullable_columns.size > 0
-        #
-        #   primary = index.composite_as_primary_index && !contains_nullable_columns
-        #   column_names =
-        #       index.all_index_field.map do |ixf|
-        #         column_name(ixf.component)
-        #       end
-        #   clustering =
-        #     (index.composite_as_primary_index ? ' CLUSTERED' : ' NONCLUSTERED')
-        #
-        #   if contains_nullable_columns
-        #     table_name = safe_table_name(index.composite)
-        #     delayed_indices <<
-        #       'CREATE UNIQUE'+clustering+' INDEX '+
-        #       escape("#{table_name(index.composite)}By#{column_names*''}", index_name_max) +
-        #       " ON #{table_name}("+column_names.map{|n| escape(n, column_name_max)}*', ' +
-        #       ") WHERE #{
-        #         nullable_columns.
-        #         map{|ixf| safe_column_name ixf.component}.
-        #         map{|column_name| column_name + ' IS NOT NULL'} *
-        #         ' AND '
-        #       }"
-        #     nil
-        #   else
-        #     # '-- '+index.inspect
-        #     "  " * indent + (primary ? 'PRIMARY KEY' : 'UNIQUE') +
-        #     clustering +
-        #     "(#{column_names.map{|n| escape(n, column_name_max)}*', '})"
-        #   end
-        # end
-
-        # def generate_foreign_key fk, indent
-        #   # '-- '+fk.inspect
-        #   "  " * indent + "FOREIGN KEY (" +
-        #     fk.all_foreign_key_field.map{|fkf| safe_column_name fkf.component}*", " +
-        #     ") REFERENCES <a href=\"#LDMD_#{table_name fk.composite}\">#{table_name fk.composite}</a> (" +
-        #     fk.all_index_field.map{|ixf| safe_column_name ixf.component}*", " +
-        #   ")"
-        # end
 
         def reserved_words
           @reserved_words ||= %w{ }
@@ -592,10 +374,6 @@ module ActiveFacts
             end
           @reserved_word_hash[w.upcase]
         end
-
-        # def go s = ''
-        #   "#{s}\nGO\n"  # REVISIT: This is an SQL-Serverism. Move it to a subclass.
-        # end
 
         def escape s, max = table_name_max
           # Escape SQL keywords and non-identifiers
