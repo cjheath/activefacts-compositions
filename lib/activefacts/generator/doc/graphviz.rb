@@ -4,7 +4,6 @@
 # Copyright (c) 2009-2016 Clifford Heath. Read the LICENSE file.
 #
 require 'activefacts/metamodel'
-require 'activefacts/registry'
 require 'activefacts/compositions'
 require 'activefacts/generator'
 

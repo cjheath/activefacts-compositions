@@ -8,7 +8,6 @@
 require 'digest/sha1'
 require 'activefacts/metamodel'
 require 'activefacts/metamodel/datatypes'
-require 'activefacts/registry'
 require 'activefacts/compositions'
 require 'activefacts/generator'
 require 'activefacts/support'

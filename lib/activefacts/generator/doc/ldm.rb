@@ -7,7 +7,6 @@
 #
 require 'digest/sha1'
 require 'activefacts/metamodel'
-require 'activefacts/registry'
 require 'activefacts/compositions'
 require 'activefacts/generator'
 require 'activefacts/support'
@@ -26,7 +25,7 @@ module ActiveFacts
           @composition = composition
           @options = options
           @underscore = options.has_key?("underscore") ? (options['underscore'] || '_') : ''
-          
+
           @vocabulary = composition.constellation.Vocabulary.values[0]      # REVISIT when importing from other vocabularies
           # glossary_options = {"gen_bootstrap" => true}
           # @glossary = GLOSSARY.new(@vocabulary, glossary_options)
@@ -34,7 +33,7 @@ module ActiveFacts
 
         def generate
           @tables_emitted = {}
-          
+
           # trace.enable 'ldm'
 
           generate_header +
@@ -78,22 +77,22 @@ module ActiveFacts
 
         def generate_header
           css_file = "/css/ldm.css"
-          
+
           "<!DOCTYPE html>\n" +
-          "<html lang=\"en\">\n" + 
+          "<html lang=\"en\">\n" +
           "  <head>\n" +
           "    <meta charset=\"utf-8\">\n" +
           "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
           "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
-          "    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->\n" + 
-          "    <title>Logical Data Model for " + @composition.name + "</title>\n" + 
+          "    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->\n" +
+          "    <title>Logical Data Model for " + @composition.name + "</title>\n" +
           "\n" +
           "    <!-- Bootstrap -->\n" +
           "    <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\" integrity=\"sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7\" crossorigin=\"anonymous\">\n" +
           "\n" +
           "    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->\n" +
           "    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->\n" +
-          "    <!--[if lt IE 9]>\n" + 
+          "    <!--[if lt IE 9]>\n" +
           "      <script src=\"https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js\"></script>\n" +
           "      <script src=\"https://oss.maxcdn.com/respond/1.4.2/respond.min.js\"></script>\n" +
           "    <![endif]-->\n" +
@@ -118,49 +117,49 @@ module ActiveFacts
               reject {|c| c.mapping.object_type.is_static}.
               reject {|c| c.mapping.object_type.fact_type}.
               map {|c| c.mapping.object_type}
-          
+
           @definitions = {}
           defns.each do |o|
             @definitions[o] = true
           end
-          
-          defns.each do |o| 
+
+          defns.each do |o|
             ftm = relevant_fact_types(o)
-            
+
             trace :ldm, "expanding #{o.name}"
-            
+
             ftm.each do |r, ft|
               next if ft.is_a?(ActiveFacts::Metamodel::TypeInheritance)
               ft.all_role.each do |ftr|
                 next if @definitions[ftr.object_type]
                 next if ftr.object_type.is_a?(ActiveFacts::Metamodel::ValueType)
-                
+
                 trace :ldm, "adding #{ftr.object_type.name}"
-                
+
                 defns = defns << ftr.object_type
                 @definitions[ftr.object_type] = true
               end
             end
           end
-              
+
           "            <h2>Business Definitions and Relationships</h2>\n" +
           defns.sort_by{|o| o.name.gsub(/ /, '').downcase}.map do |o|
             entity_type_dump(o, 0)
           end * "\n" + "\n"
-        end 
-        
+        end
+
         def generate_diagrams
           ''
         end
-        
-        def generate_details 
+
+        def generate_details
           h2("Logical Data Model Details") +
           @composition.
           all_composite.
           sort_by{|composite| composite.mapping.name}.
           map{|composite| generate_table(composite)}*"\n" + "\n"
         end
-        
+
         def generate_footer
           "            </div>\n" +
           "        </div>\n" +
@@ -224,7 +223,7 @@ module ActiveFacts
         def term(name)
           element(name, :class=>:object_type)
         end
-        
+
         #
         # Dump functions
         #
@@ -239,10 +238,10 @@ module ActiveFacts
 
           cn_array = o.concept.all_context_note_as_relevant_concept.map{|cn| [cn.context_note_kind, cn.discussion] }
           cn_hash = cn_array.inject({}) do |hash, value|
-                  hash[value.first] = value.last 
+                  hash[value.first] = value.last
                   hash
                 end
-          
+
           informal_defn = cn_hash["because"]
           defn_term =
             "              <div class=\"row\">\n" +
@@ -254,7 +253,7 @@ module ActiveFacts
           defn_detail =
             "              <div class=\"row\">\n" +
             "                <div class=\"col-md-12 details\">\n" +
-            (supers.size > 0 ? 
+            (supers.size > 0 ?
               "#{span('Each', 'keyword')} #{termref(o.name, nil, o)} #{span('is a kind of', 'keyword')} #{supers.map{|s| termref(s.name, nil, s)}*', '}\n" :
               ''
             ) +
@@ -276,7 +275,7 @@ module ActiveFacts
             fact_types_dump(o, relevant_fact_types(o)) + "\n" +
             "                </div>\n" +
             "              </div>\n"
-          
+
           defn_term + defn_detail
         end
 
@@ -287,7 +286,7 @@ module ActiveFacts
               reject { |r, ft| ft.is_a?(ActiveFacts::Metamodel::LinkFactType) }.
               select { |r, ft| ft.entity_type || has_another_nonstatic_role(ft, r) }
         end
-        
+
         def has_another_nonstatic_role(ft, r)
           ft.all_role.detect do |rr|
             rr != r &&
@@ -295,7 +294,7 @@ module ActiveFacts
             !rr.object_type.is_static
           end
         end
-        
+
         def fact_types_dump(o, ftm)
           ftm.
               map { |r, ft| [ft, "    #{fact_type_dump(ft, o)}"] }.
@@ -314,11 +313,11 @@ module ActiveFacts
             fact_type_block(ft, wrt)
           end
         end
-        
+
         def fact_type_block(ft, wrt = nil, include_rolenames = true)
           div(expand_fact_type(ft, wrt, include_rolenames, ''), 'glossary-facttype')
         end
-        
+
         def expand_fact_type(ft, wrt = nil, include_rolenames = true, wrt_qualifier = '')
           role = ft.all_role.detect{|r| r.object_type == wrt}
           preferred_reading = ft.reading_preferably_starting_with_role(role)
@@ -329,7 +328,7 @@ module ActiveFacts
             'glossary-reading'
           )
         end
-        
+
         def role_ref(rr, freq_con, l_adj, name, t_adj, role_name_def, literal)
           term_parts = [l_adj, termref(name, nil, rr.role.object_type), t_adj].compact
           [
@@ -363,7 +362,7 @@ module ActiveFacts
             {:class => 'reading'}
           )
         end
-        
+
         def generate_table(composite)
           @tables_emitted[composite] = true
           delayed_indices = []
@@ -387,7 +386,7 @@ module ActiveFacts
           ).compact.flat_map{|f| "#{f}" }*"\n"+"\n" +
           "                    </tbody>\n" +
           "                  </table>\n"
-          
+
           table_keys =
           (
             composite.all_index.map do |index|
@@ -399,7 +398,7 @@ module ActiveFacts
             end.compact.sort
           ).compact.flat_map{|f| "#{f}" }*"<br>\n"+"\n"
 
-          table_values = 
+          table_values =
             if composite.mapping.object_type.all_instance.size > 0 then
               table_values =
               "                  <table class=\"table table-bordered table-striped\">\n" +
@@ -421,7 +420,7 @@ module ActiveFacts
             else
               ''
             end
-            
+
           table_defn + table_keys + table_values
         end
 
@@ -431,13 +430,13 @@ module ActiveFacts
           constraints = leaf.all_leaf_constraint
 
           identity = ''
-          
+
           "  " * indent + "<tr>\n" +
           "  " * indent + "  <td>#{column_name}\n" +
           "  " * indent + "  <td>#{component_type(leaf, column_name)}\n" +
           "  " * indent + "  <td>#{leaf.path_mandatory ? 'Yes' : 'No'}\n" +
           "  " * indent + "  <td>#{column_comment leaf}\n" +
-          "  " * indent + "</tr>" 
+          "  " * indent + "</tr>"
           # "-- #{column_comment leaf}\n\t#{column_name}#{padding}#{component_type leaf, column_name}#{identity}"
         end
 

@@ -24,8 +24,8 @@ class SchemaCompositor
     while argv[0] =~ /^-/
       option, value = argv.shift.split(/=/, 2)
       @options[option.sub(/^-*/,'')] =
-	(value =~ /,/ ? value.split(',') : Array(value)).
-	inject({}){|h,s| k, v = s.split(/=/, 2); h[k] = v || true; h }
+        (value =~ /,/ ? value.split(',') : Array(value)).
+        inject({}){|h,s| k, v = s.split(/=/, 2); h[k] = v || true; h }
     end
   end
 
@@ -35,10 +35,11 @@ class SchemaCompositor
     enumerate.
     select do |filename|
       begin
-	require(pathname = path+"/"+filename)
+        require(pathname = path+"/"+filename)
       rescue LoadError => e
+        trace :loaderror, "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
       rescue Exception => e
-	$stderr.puts "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
+        $stderr.puts "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
       end
     end
   end
@@ -49,19 +50,19 @@ class SchemaCompositor
     @generators = []
     @options.clone.each do |option, mode|
       if action = ActiveFacts::Compositions.compositors[option]
-	options.delete(option)
-	check_options(action, mode)
-	@compositors << [action, mode]
+        options.delete(option)
+        check_options(action, mode)
+        @compositors << [action, mode]
       elsif action = ActiveFacts::Generators.generators[option]
-	options.delete(option)
-	check_options(action, mode)
-	@generators << [action, mode]
+        options.delete(option)
+        check_options(action, mode)
+        @generators << [action, mode]
       else
-	$stderr.puts "Action --#{option} is not recognised"
-	exit 1
+        $stderr.puts "Action --#{option} is not recognised"
+        exit 1
       end
       if mode && mode['help']
-	puts "Help for #{option} is not yet available"
+        puts "Help for #{option} is not yet available"
       end
     end
   end
@@ -82,32 +83,44 @@ class SchemaCompositor
 
       # Read the input file:
       vocabulary =
-	if input_klass
-	  begin
-	    input_klass.readfile(filename, *input_options)
-	  rescue => e
-	    $stderr.puts "#{e.message}"
-	    if trace :exception
-	      $stderr.puts "\t#{e.backtrace*"\n\t"}"
-	    else
-	      $stderr.puts "\t#{e.backtrace[0]}"
-	    end
-	    exit 1
-	  end
-	end
+        if input_klass
+          begin
+            input_klass.readfile(filename, *input_options)
+          rescue => e
+            $stderr.puts "#{e.message}"
+            if trace :exception
+              $stderr.puts "\t#{e.backtrace*"\n\t"}"
+            else
+              $stderr.puts "\t#{e.backtrace[0]}"
+            end
+            exit 1
+          end
+        end
       exit 0 unless vocabulary
       vocabulary.finalise unless vocabulary == true
 
-      # Run each compositor
+      # Run one or more compositors
+      compositor = []
+      nc = 0
       @compositors.each do |compositor_klass, mode|
-	compositor = compositor_klass.new(vocabulary.constellation, basename, mode||{})
-	compositor.generate
+        compositor[nc] = compositor_klass.new(vocabulary.constellation, basename, mode || {})
+        compositor[nc].generate
+        nc = nc + 1
+      end
 
-	# Run each generator
-	@generators.each do |generator, mode|
-	  output = generator.new(compositor.composition, mode||{}).generate
-	  puts output if output
-	end
+      # Run each generator
+      @generators.each do |generator_klass, mode|
+        if generator_klass == ActiveFacts::Generators::Transform
+          output = generator_klass.new(
+                  nc > 0 ? compositor[0].composition : nil,
+                  mode || {},
+                  nc > 1 ? compositor[1].composition : nil,
+                  vocabulary.constellation
+              ).generate
+        else
+          output = generator_klass.new(nc > 0 ? compositor[0].composition : nil, mode || {}).generate
+        end
+        puts output if output
       end
     end
   end
@@ -124,21 +137,21 @@ class SchemaCompositor
     else
       stream.puts "Options for --#{name} (say e.g. --#{action_name action}=option1=value,option2)"
       options.keys.sort.each do |key|
-	type, description = *options[key]
-	tag =
-	  key.to_s +
-	  case type
-	  when NilClass,'Boolean', TrueClass
-	    ''
-	  when Numeric
-	    ' num'
-	  when Pathname
-	    ' file'
-	  else
-	    ' str'
-	  end
+        type, description = *options[key]
+        tag =
+          key.to_s +
+          case type
+          when NilClass,'Boolean', TrueClass
+            ''
+          when Numeric
+            ' num'
+          when Pathname
+            ' file'
+          else
+            ' str'
+          end
 
-	stream.puts "\t#{tag}#{' '*(24-tag.size)}#{description}"
+        stream.puts "\t#{tag}#{' '*(24-tag.size)}#{description}"
       end
     end
   end
