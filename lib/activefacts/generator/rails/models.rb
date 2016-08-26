@@ -5,7 +5,6 @@
 #
 require 'digest/sha1'
 require 'activefacts/metamodel'
-require 'activefacts/registry'
 require 'activefacts/compositions'
 require 'activefacts/generator'
 require 'activefacts/compositions/traits/rails'
