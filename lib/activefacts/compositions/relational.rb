@@ -46,6 +46,9 @@ module ActiveFacts
           # Inject surrogate keys if the options ask for that
           inject_surrogates if @option_surrogates
 
+          # Inject load date time and record source if building staging
+          inject_all_datetime_recordsource
+
           # Remove the un-used absorption paths
           delete_reverse_absorptions
 
@@ -392,6 +395,67 @@ module ActiveFacts
         return true
       end
 
+      # This function is over-written in the Staging subclass
+      def inject_all_datetime_recordsource
+      end
+
+      #
+      # Datetime and recordsource functions defined here because they are used in both Staging and Datavault subclasses
+      #
+      def inject_datetime_recordsource mapping
+        # Add a load DateTime value
+        date_field = @constellation.ValidFrom(:new,
+          parent: mapping,
+          name: "Load"+datestamp_type_name,
+          object_type: datestamp_type
+        )
+        # Add a load DateTime value
+        recsrc_field = @constellation.ValueField(:new,
+          parent: mapping,
+          name: "RecordSource",
+          object_type: recordsource_type
+        )
+        mapping.re_rank
+        date_field
+      end
+
+      def datestamp_type_name
+        @datestamp_type_name ||= begin
+          [true, '', 'true', 'yes', nil].include?(t = @option_datestamp) ? 'DateTime' : t
+        end
+      end
+
+      def datestamp_type
+        @datestamp_type ||= begin
+          vocabulary = @composition.all_composite.to_a[0].mapping.object_type.vocabulary
+          @constellation.ObjectType[[[vocabulary.name], datestamp_type_name]] or
+            @constellation.ValueType(
+              vocabulary: vocabulary,
+              name: datestamp_type_name,
+              concept: [:new, :implication_rule => "datestamp injection"]
+            )
+        end
+      end
+
+      def recordsource_type_name
+        @recordsource_type_name ||= begin
+          [true, '', 'true', 'yes', nil].include?(t = @option_recordsource) ? 'RecordSource' : t
+        end
+      end
+
+      def recordsource_type
+        @recordsource_type ||= begin
+          vocabulary = @composition.all_composite.to_a[0].mapping.object_type.vocabulary
+          @constellation.ObjectType[[[vocabulary.name], recordsource_type_name]] or
+            @constellation.ValueType(
+              vocabulary: vocabulary,
+              name: recordsource_type_name,
+              concept: [:new]
+            )
+        end
+      end
+
+
       def clean_unused_mappings
         @candidates.keys.to_a.each do |object_type|
           candidate = @candidates[object_type]
@@ -482,8 +546,21 @@ module ActiveFacts
         accumulator
       end
 
+      # Overwritten by Staging and Datavault subclasses
       def devolve_all
-        # Data Vaults have satellites, not normal relational schemas.
+      end
+
+      #
+      # Rename parents functions defined because they are used in both Staging and Datavault subclasses
+      #
+      def apply_name pattern, name
+        pattern.sub(/\+/, name)
+      end
+
+      def rename_parents
+        @composites.each do |key, composite|
+          composite.mapping.name = apply_name(@option_stg_name, composite.mapping.name)
+        end
       end
 
       # This member is an Absorption. Process it recursively, absorbing all its members or just a key

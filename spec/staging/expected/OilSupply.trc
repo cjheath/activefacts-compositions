@@ -1,0 +1,68 @@
+Summary of OilSupply
+Acceptable Substitution STG
+	Acceptable Substitution STG->RecordSource[1.0] as "Record Source"
+	Acceptable Substitution STG->{Product}->[RecordSource][2.0] as "Product Record Source"
+	Acceptable Substitution STG->{Product}->[Product Name][2.1] as "Product Name"
+	Acceptable Substitution STG->{Alternate Product}->[RecordSource][2.2] as "Alternate Product Record Source"
+	Acceptable Substitution STG->{Alternate Product}->[Product Name][2.3] as "Alternate Product Name"
+	Acceptable Substitution STG->Season[2.4] as "Season"
+	Acceptable Substitution STG->LoadDateTime as "Load Date Time"
+	### RingConstraint(AcyclicIntransitive: Product, Product in Product may be substituted by alternate-Product in Season)
+Month STG
+	Month STG->RecordSource[1.0] as "Record Source"
+	Month STG->Month Nr[2.0] as "Month Nr"
+		### restricted to {1..12}
+	Month STG->LoadDateTime as "Load Date Time"
+	Month STG->Season as "Season"
+Product STG
+	Product STG->RecordSource[1.0] as "Record Source"
+	Product STG->Product Name[2.0] as "Product Name"
+	Product STG->LoadDateTime as "Load Date Time"
+Production Forecast STG
+	Production Forecast STG->RecordSource[1.0] as "Record Source"
+	Production Forecast STG->{Refinery}->[RecordSource][2.0] as "Refinery Record Source"
+	Production Forecast STG->{Refinery}->[Refinery Name][2.1] as "Refinery Name"
+	Production Forecast STG->{Supply Period}->[RecordSource][2.2] as "Supply Period Record Source"
+	Production Forecast STG->{Supply Period}->Year->[Year Nr][2.3] as "Supply Period Year Nr"
+	Production Forecast STG->{Supply Period}->Month->[RecordSource][2.4] as "Supply Period Month Record Source"
+	Production Forecast STG->{Supply Period}->Month->[Month Nr][2.5] as "Supply Period Month Nr"
+	Production Forecast STG->{Product}->[RecordSource][2.6] as "Product Record Source"
+	Production Forecast STG->{Product}->[Product Name][2.7] as "Product Name"
+	Production Forecast STG->LoadDateTime as "Load Date Time"
+	Production Forecast STG->Quantity as "Quantity"
+	Production Forecast STG->Cost? as "Cost"
+Refinery STG
+	Refinery STG->RecordSource[1.0] as "Record Source"
+	Refinery STG->Refinery Name[2.0] as "Refinery Name"
+	Refinery STG->LoadDateTime as "Load Date Time"
+Region STG
+	Region STG->RecordSource[1.0] as "Record Source"
+	Region STG->Region Name[2.0] as "Region Name"
+	Region STG->LoadDateTime as "Load Date Time"
+Regional Demand STG
+	Regional Demand STG->RecordSource[1.0] as "Record Source"
+	Regional Demand STG->{Region}->[RecordSource][2.0] as "Region Record Source"
+	Regional Demand STG->{Region}->[Region Name][2.1] as "Region Name"
+	Regional Demand STG->{Supply Period}->[RecordSource][2.2] as "Supply Period Record Source"
+	Regional Demand STG->{Supply Period}->Year->[Year Nr][2.3] as "Supply Period Year Nr"
+	Regional Demand STG->{Supply Period}->Month->[RecordSource][2.4] as "Supply Period Month Record Source"
+	Regional Demand STG->{Supply Period}->Month->[Month Nr][2.5] as "Supply Period Month Nr"
+	Regional Demand STG->{Product}->[RecordSource][2.6] as "Product Record Source"
+	Regional Demand STG->{Product}->[Product Name][2.7] as "Product Name"
+	Regional Demand STG->LoadDateTime as "Load Date Time"
+	Regional Demand STG->Quantity as "Quantity"
+Supply Period STG
+	Supply Period STG->RecordSource[1.0] as "Record Source"
+	Supply Period STG->Year->Year Nr[2.0] as "Year Nr"
+	Supply Period STG->{Month}->[RecordSource][2.1] as "Month Record Source"
+	Supply Period STG->{Month}->[Month Nr][2.2] as "Month Nr"
+	Supply Period STG->LoadDateTime as "Load Date Time"
+Transport Route STG
+	Transport Route STG->RecordSource[1.0] as "Record Source"
+	Transport Route STG->Transport Method[2.0] as "Transport Method"
+	Transport Route STG->{Refinery}->[RecordSource][2.1] as "Refinery Record Source"
+	Transport Route STG->{Refinery}->[Refinery Name][2.2] as "Refinery Name"
+	Transport Route STG->{Region}->[RecordSource][2.3] as "Region Record Source"
+	Transport Route STG->{Region}->[Region Name][2.4] as "Region Name"
+	Transport Route STG->LoadDateTime as "Load Date Time"
+	Transport Route STG->Cost? as "Cost"

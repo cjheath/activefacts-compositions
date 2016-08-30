@@ -100,25 +100,18 @@ class SchemaCompositor
       vocabulary.finalise unless vocabulary == true
 
       # Run one or more compositors
-      compositor = []
-      nc = 0
-      @compositors.each do |compositor_klass, mode|
-        compositor[nc] = compositor_klass.new(vocabulary.constellation, basename, mode || {})
-        compositor[nc].generate
-        nc = nc + 1
+      compositions = @compositors.map do |compositor_klass, mode|
+        compositor = compositor_klass.new(vocabulary.constellation, basename, mode || {})
+        compositor.generate
+        compositor.composition
       end
 
       # Run each generator
       @generators.each do |generator_klass, mode|
         if generator_klass == ActiveFacts::Generators::Transform
-          output = generator_klass.new(
-                  nc > 0 ? compositor[0].composition : nil,
-                  mode || {},
-                  nc > 1 ? compositor[1].composition : nil,
-                  vocabulary.constellation
-              ).generate
+          output = generator_klass.new(compositions[0], mode || {}, compositions[1], vocabulary.constellation).generate
         else
-          output = generator_klass.new(nc > 0 ? compositor[0].composition : nil, mode || {}).generate
+          output = generator_klass.new(compositions[0], mode || {}).generate
         end
         puts output if output
       end

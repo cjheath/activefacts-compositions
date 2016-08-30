@@ -1,0 +1,104 @@
+Summary of CinemaTickets
+AllocatableCinemaSection STG
+	AllocatableCinemaSection STG->RecordSource[1.0] as "Record Source"
+	AllocatableCinemaSection STG->{Cinema}->[RecordSource][2.0] as "Cinema Record Source"
+	AllocatableCinemaSection STG->{Cinema}->[Cinema ID][2.1] as "Cinema ID"
+	AllocatableCinemaSection STG->Section->Section Name[2.2] as "Section Name"
+	AllocatableCinemaSection STG->LoadDateTime as "Load Date Time"
+Booking STG
+	Booking STG->RecordSource[1.0] as "Record Source"
+	Booking STG->Booking Nr[2.0] as "Booking Nr"
+	Booking STG->LoadDateTime as "Load Date Time"
+	Booking STG->Tickets For Booking Have Been Issued? as "Tickets For Booking Have Been Issued"
+	Booking STG->Number as "Number"
+	Booking STG->{Person}->[RecordSource][3.0] as "Person Record Source"
+	Booking STG->{Person}->[Person ID][3.1] as "Person ID"
+	Booking STG->{Session}->[RecordSource][3.2] as "Session Record Source"
+	Booking STG->{Session}->Cinema->[RecordSource][3.3] as "Session Cinema Record Source"
+	Booking STG->{Session}->Cinema->[Cinema ID][3.4] as "Session Cinema ID"
+	Booking STG->{Session}->Session Time->Year->[Year Nr][3.5] as "Session Time Year Nr"
+	Booking STG->{Session}->Session Time->Month->[Month Nr][3.6] as "Session Time Month Nr"
+	Booking STG->{Session}->Session Time->[Day][3.7] as "Session Time Day"
+	Booking STG->{Session}->Session Time->[Hour][3.8] as "Session Time Hour"
+	Booking STG->{Session}->Session Time->[Minute][3.9] as "Session Time Minute"
+	Booking STG->Address?->Address Text as "Address Text"
+	Booking STG->Collection Code? as "Collection Code"
+	Booking STG->Section?->Section Name as "Section Name"
+	### SubsetConstraint((Booking in "tickets for Booking are being mailed to Address") only if (Tickets For Booking Have Been Issued in "tickets for Booking have been issued"))
+	### at most one of (Booking in "Booking has Collection Code") or (Booking in "tickets for Booking are being mailed to Address")
+Cinema STG
+	Cinema STG->RecordSource[1.0] as "Record Source"
+	Cinema STG->Cinema ID[2.0] as "Cinema ID"
+	Cinema STG->LoadDateTime as "Load Date Time"
+	Cinema STG->Name[3.0] as "Name"
+Film STG
+	Film STG->RecordSource[1.0] as "Record Source"
+	Film STG->Film ID[2.0] as "Film ID"
+	Film STG->LoadDateTime as "Load Date Time"
+	Film STG->Name[3.0] as "Name"
+	Film STG->Year?->Year Nr[3.1] as "Year Nr"
+Person STG
+	Person STG->RecordSource[1.0] as "Record Source"
+	Person STG->Person ID[2.0] as "Person ID"
+	Person STG->LoadDateTime as "Load Date Time"
+	Person STG->Encrypted Password? as "Encrypted Password"
+	Person STG->Login Name?[3.0] as "Login Name"
+	### SubsetConstraint((Person in "Person has login-Name") only if (Person in "Person has Encrypted Password"))
+Places Paid STG
+	Places Paid STG->RecordSource[1.0] as "Record Source"
+	Places Paid STG->{Booking}->[RecordSource][2.0] as "Booking Record Source"
+	Places Paid STG->{Booking}->[Booking Nr][2.1] as "Booking Nr"
+	Places Paid STG->Payment Method->Payment Method Code[2.2] as "Payment Method Code"
+		### restricted to {'Card', 'Cash', 'Gift Voucher', 'Loyalty Voucher'}
+	Places Paid STG->LoadDateTime as "Load Date Time"
+	Places Paid STG->Number as "Number"
+### SubsetConstraint((Booking in "Booking has allocated-Seat") only if (Booking in "Number of places for Booking have been paid for by Payment Method"))
+Seat Allocation STG
+	Seat Allocation STG->RecordSource[1.0] as "Record Source"
+	Seat Allocation STG->{Booking}->[RecordSource][2.0] as "Booking Record Source"
+	Seat Allocation STG->{Booking}->[Booking Nr][2.1] as "Booking Nr"
+	Seat Allocation STG->{Allocated Seat}->[RecordSource][2.2] as "Allocated Seat Record Source"
+	Seat Allocation STG->{Allocated Seat}->Row->Cinema->[RecordSource][2.3] as "Allocated Seat Row Cinema Record Source"
+	Seat Allocation STG->{Allocated Seat}->Row->Cinema->[Cinema ID][2.4] as "Allocated Seat Row Cinema ID"
+	Seat Allocation STG->{Allocated Seat}->Row->[Row Nr][2.5] as "Allocated Seat Row Nr"
+	Seat Allocation STG->{Allocated Seat}->[Seat Number][2.6] as "Allocated Seat Number"
+	Seat Allocation STG->LoadDateTime as "Load Date Time"
+### SubsetConstraint((Booking in "Booking has allocated-Seat") only if (Booking in "Number of places for Booking have been paid for by Payment Method"))
+### SubsetConstraint((Cinema, Allocated Seat in "Cinema shows Film on Session Time", "Booking has allocated-Seat") only if (Cinema, Seat in "Row is in Cinema", "Seat is in Row"))
+Seat STG
+	Seat STG->RecordSource[1.0] as "Record Source"
+	Seat STG->Row->{Cinema}->[RecordSource][2.0] as "Row Cinema Record Source"
+	Seat STG->Row->{Cinema}->[Cinema ID][2.1] as "Row Cinema ID"
+	Seat STG->Row->Row Nr[2.2] as "Row Nr"
+	Seat STG->Seat Number[2.3] as "Seat Number"
+	Seat STG->LoadDateTime as "Load Date Time"
+	Seat STG->Section?->Section Name as "Section Name"
+### SubsetConstraint((Cinema, Allocated Seat in "Cinema shows Film on Session Time", "Booking has allocated-Seat") only if (Cinema, Seat in "Row is in Cinema", "Seat is in Row"))
+Session STG
+	Session STG->RecordSource[1.0] as "Record Source"
+	Session STG->{Cinema}->[RecordSource][2.0] as "Cinema Record Source"
+	Session STG->{Cinema}->[Cinema ID][2.1] as "Cinema ID"
+	Session STG->Session Time->Year->Year Nr[2.2] as "Session Time Year Nr"
+	Session STG->Session Time->Month->Month Nr[2.3] as "Session Time Month Nr"
+	Session STG->Session Time->Day[2.4] as "Session Time Day"
+	Session STG->Session Time->Hour[2.5] as "Session Time Hour"
+	Session STG->Session Time->Minute[2.6] as "Session Time Minute"
+	Session STG->LoadDateTime as "Load Date Time"
+	Session STG->Is High Demand? as "Is High Demand"
+	Session STG->Uses Allocated Seating? as "Uses Allocated Seating"
+	Session STG->{Film}->[RecordSource] as "Film Record Source"
+	Session STG->{Film}->[Film ID] as "Film ID"
+### SubsetConstraint((Cinema, Allocated Seat in "Cinema shows Film on Session Time", "Booking has allocated-Seat") only if (Cinema, Seat in "Row is in Cinema", "Seat is in Row"))
+Ticket Pricing STG
+	Ticket Pricing STG->RecordSource[1.0] as "Record Source"
+	Ticket Pricing STG->Session Time->Year->Year Nr[2.0] as "Session Time Year Nr"
+	Ticket Pricing STG->Session Time->Month->Month Nr[2.1] as "Session Time Month Nr"
+	Ticket Pricing STG->Session Time->Day[2.2] as "Session Time Day"
+	Ticket Pricing STG->Session Time->Hour[2.3] as "Session Time Hour"
+	Ticket Pricing STG->Session Time->Minute[2.4] as "Session Time Minute"
+	Ticket Pricing STG->{Cinema}->[RecordSource][2.5] as "Cinema Record Source"
+	Ticket Pricing STG->{Cinema}->[Cinema ID][2.6] as "Cinema ID"
+	Ticket Pricing STG->Section->Section Name[2.7] as "Section Name"
+	Ticket Pricing STG->High Demand[2.8] as "High Demand"
+	Ticket Pricing STG->LoadDateTime as "Load Date Time"
+	Ticket Pricing STG->Price as "Price"

@@ -27,14 +27,14 @@ module ActiveFacts
         # Extract recognised options:
         @option_reference = options.delete('reference')
         @option_datestamp = options.delete('datestamp')
-        @option_id = ' ' + (options.delete('id') || 'VID')
+        @option_id = ' ' + (options.delete('id') || 'HID')
         @option_hub_name = options.delete('hubname') || 'HUB'
         @option_hub_name.sub!(/^/,'+ ') unless @option_hub_name =~ /\+/
         @option_link_name = options.delete('linkname') || 'LINK'
         @option_link_name.sub!(/^/,'+ ') unless @option_link_name =~ /\+/
         @option_sat_name = options.delete('satname') || 'SAT'
         @option_sat_name.sub!(/^/,'+ ') unless @option_sat_name =~ /\+/
-        @option_ref_name = options.delete('refname') || 'SAT'
+        @option_ref_name = options.delete('refname') || 'REF'
         @option_ref_name.sub!(/^/,'+ ') unless @option_ref_name =~ /\+/
 
         super constellation, name, options
@@ -160,6 +160,8 @@ module ActiveFacts
         end
 
         rename_parents
+
+        inject_all_datetime_recordsource
 
         unless @option_reference
           if trace :reference_retraction
@@ -303,15 +305,10 @@ module ActiveFacts
           fk_target = composite.primary_index.all_index_field.single
           fk_field = fork_component_to_new_parent(satellite.mapping, fk_target.component)
 
-          # Add a load DateTime value
-          date_field = @constellation.ValidFrom(
-            :new,
-            parent: satellite.mapping,
-            name: "Load"+datestamp_type_name,
-            object_type: datestamp_type
-          )
+          # Add a load DateTime value and record source
+          date_field = inject_datetime_recordsource(satellite.mapping)
 
-          # Add a natural key:
+          # Add a primary and natural key:
           natural_index =
             @constellation.Index(:new, composite: satellite, is_unique: true,
               presence_constraint: nil, composite_as_natural_index: satellite, composite_as_primary_index: satellite)
@@ -335,24 +332,6 @@ module ActiveFacts
           satellite.classify_constraints
           satellite.all_local_constraint.map(&:local_constraint).each(&:retract)
           leaf_constraints = satellite.mapping.all_leaf.flat_map(&:all_leaf_constraint).map(&:leaf_constraint).each(&:retract)
-        end
-      end
-
-      def datestamp_type_name
-        @datestamp_type_name ||= begin
-          [true, '', 'true', 'yes', nil].include?(t = @option_datestamp) ? 'DateTime' : t
-        end
-      end
-
-      def datestamp_type
-        @datestamp_type ||= begin
-          vocabulary = @composition.all_composite.to_a[0].mapping.object_type.vocabulary
-          @constellation.ObjectType[[[vocabulary.name], datestamp_type_name]] or
-            @constellation.ValueType(
-              vocabulary: vocabulary,
-              name: datestamp_type_name,
-              concept: [:new, :implication_rule => "datestamp injection"]
-            )
         end
       end
 
@@ -507,13 +486,9 @@ module ActiveFacts
           debugger if issues > 0
 =end
 
-          # Add a load DateTime value
-          date_field = @constellation.ValidFrom(:new,
-            parent: mapping,
-            name: "FirstLoad"+datestamp_type_name,
-            object_type: datestamp_type
-          )
-          mapping.re_rank
+
+          # # Add a load DateTime value
+          # date_field = add_datetime_recordsource(mapping)
 
           #link.mapping.re_rank
 
@@ -535,6 +510,15 @@ module ActiveFacts
         end
         @reference_composites.each do |composite|
           composite.mapping.name = apply_name(@option_ref_name, composite.mapping.name)
+        end
+      end
+
+      def inject_all_datetime_recordsource
+        @link_composites.each do |composite|
+          inject_datetime_recordsource(composite.mapping)
+        end
+        @hub_composites.each do |composite|
+          inject_datetime_recordsource(composite.mapping)
         end
       end
 

@@ -1,0 +1,11 @@
+Summary of MagnetPole
+Magnet STG
+	Magnet STG->RecordSource[1.0] as "Record Source"
+	Magnet STG->Magnet AutoCounter[2.0] as "Magnet Auto Counter"
+	Magnet STG->LoadDateTime as "Load Date Time"
+MagnetPole STG
+	MagnetPole STG->RecordSource[1.0] as "Record Source"
+	MagnetPole STG->{Magnet}->[RecordSource][2.0] as "Magnet Record Source"
+	MagnetPole STG->{Magnet}->[Magnet AutoCounter][2.1] as "Magnet Auto Counter"
+	MagnetPole STG->Is North?[2.2] as "Is North"
+	MagnetPole STG->LoadDateTime as "Load Date Time"

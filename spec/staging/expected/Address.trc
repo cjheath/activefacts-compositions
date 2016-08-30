@@ -1,0 +1,26 @@
+Summary of Address
+Company STG
+	Company STG->RecordSource[1.0] as "Record Source"
+	Company STG->Company Name[2.0] as "Company Name"
+	Company STG->LoadDateTime as "Load Date Time"
+	Company STG->Address?->Street Number? as "Address Street Number"
+	Company STG->Address?->Street->First Street Line as "Address Street First Street Line"
+	Company STG->Address?->Street->Second Street Line? as "Address Street Second Street Line"
+	Company STG->Address?->Street->Third Street Line? as "Address Street Third Street Line"
+	Company STG->Address?->City as "Address City"
+	Company STG->Address?->Postcode? as "Address Postcode"
+		### restricted to {1000..9999}
+	### SubsetConstraint((Street, Third Street Line in "Street includes third-Street Line") only if (Street, Second Street Line in "Street includes second-Street Line"))
+Person STG
+	Person STG->RecordSource[1.0] as "Record Source"
+	Person STG->Family->Family Name[2.0] as "Family Name"
+	Person STG->Given Names[2.1] as "Given Names"
+	Person STG->LoadDateTime as "Load Date Time"
+	Person STG->Address?->Street Number? as "Address Street Number"
+	Person STG->Address?->Street->First Street Line as "Address Street First Street Line"
+	Person STG->Address?->Street->Second Street Line? as "Address Street Second Street Line"
+	Person STG->Address?->Street->Third Street Line? as "Address Street Third Street Line"
+	Person STG->Address?->City as "Address City"
+	Person STG->Address?->Postcode? as "Address Postcode"
+		### restricted to {1000..9999}
+	### SubsetConstraint((Street, Third Street Line in "Street includes third-Street Line") only if (Street, Second Street Line in "Street includes second-Street Line"))
