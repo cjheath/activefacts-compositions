@@ -1,0 +1,61 @@
+Summary of CompanyDirectorEmployee
+Attendance STG
+	Attendance STG->RecordSource[1.0] as "Record Source"
+	Attendance STG->{Attendee}->[RecordSource][2.0] as "Attendee Record Source"
+	Attendance STG->{Attendee}->[Given Name][2.1] as "Attendee Given Name"
+	Attendance STG->{Attendee}->[Family Name]?[2.2] as "Attendee Family Name"
+	Attendance STG->{Meeting}->[RecordSource][2.3] as "Meeting Record Source"
+	Attendance STG->{Meeting}->Company->[RecordSource][2.4] as "Meeting Company Record Source"
+	Attendance STG->{Meeting}->Company->[Company Name][2.5] as "Meeting Company Name"
+	Attendance STG->{Meeting}->[Date][2.6] as "Meeting Date"
+	Attendance STG->{Meeting}->[Is Board Meeting]?[2.7] as "Meeting Is Board Meeting"
+	Attendance STG->LoadDateTime as "Load Date Time"
+Company STG
+	Company STG->RecordSource[1.0] as "Record Source"
+	Company STG->Company Name[2.0] as "Company Name"
+	Company STG->LoadDateTime as "Load Date Time"
+	Company STG->Is Listed? as "Is Listed"
+Directorship STG
+	Directorship STG->RecordSource[1.0] as "Record Source"
+	Directorship STG->{Director}->[RecordSource][2.0] as "Director Record Source"
+	Directorship STG->{Director}->[Given Name][2.1] as "Director Given Name"
+	Directorship STG->{Director}->[Family Name]?[2.2] as "Director Family Name"
+	Directorship STG->{Company}->[RecordSource][2.3] as "Company Record Source"
+	Directorship STG->{Company}->[Company Name][2.4] as "Company Name"
+	Directorship STG->LoadDateTime as "Load Date Time"
+	Directorship STG->Appointment Date as "Appointment Date"
+Employee STG
+	Employee STG->RecordSource[1.0] as "Record Source"
+	Employee STG->Employee Nr[2.0] as "Employee Nr"
+	Employee STG->LoadDateTime as "Load Date Time"
+	Employee STG->{Company}->[RecordSource] as "Company Record Source"
+	Employee STG->{Company}->[Company Name] as "Company Name"
+	Employee STG->{Manager}?->Employee->[RecordSource] as "Manager Record Source"
+		### RingConstraint(Acyclic: Employee, Manager in Employee is supervised by Manager)
+		### exactly one of (Employee in "Employee is supervised by Manager") or (Employee in "Manager is a kind of Employee")
+	Employee STG->{Manager}?->Employee->[Employee Nr] as "Manager Nr"
+		### RingConstraint(Acyclic: Employee, Manager in Employee is supervised by Manager)
+		### exactly one of (Employee in "Employee is supervised by Manager") or (Employee in "Manager is a kind of Employee")
+	Employee STG->Manager?->Is Ceo? as "Manager Is Ceo"
+Employment STG
+	Employment STG->RecordSource[1.0] as "Record Source"
+	Employment STG->{Person}->[RecordSource][2.0] as "Person Record Source"
+	Employment STG->{Person}->[Given Name][2.1] as "Person Given Name"
+	Employment STG->{Person}->[Family Name]?[2.2] as "Person Family Name"
+	Employment STG->{Employee}->[RecordSource][2.3] as "Employee Record Source"
+	Employment STG->{Employee}->[Employee Nr][2.4] as "Employee Nr"
+	Employment STG->LoadDateTime as "Load Date Time"
+Meeting STG
+	Meeting STG->RecordSource[1.0] as "Record Source"
+	Meeting STG->{Company}->[RecordSource][2.0] as "Company Record Source"
+	Meeting STG->{Company}->[Company Name][2.1] as "Company Name"
+	Meeting STG->Date[2.2] as "Date"
+	Meeting STG->Is Board Meeting?[2.3] as "Is Board Meeting"
+	Meeting STG->LoadDateTime as "Load Date Time"
+Person STG
+	Person STG->RecordSource[1.0] as "Record Source"
+	Person STG->Given Name[2.0] as "Given Name"
+	Person STG->Family Name?[2.1] as "Family Name"
+	Person STG->LoadDateTime as "Load Date Time"
+	Person STG->Birth Date? as "Birth Date"
+		### restricted to {'1900/01/01'..}

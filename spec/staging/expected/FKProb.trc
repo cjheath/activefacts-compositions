@@ -1,0 +1,21 @@
+Summary of FKProb
+OT STG
+	OT STG->RecordSource[1.0] as "Record Source"
+	OT STG->Name[2.0] as "Name"
+	OT STG->LoadDateTime as "Load Date Time"
+	OT STG->DOT?->VT? as "VT"
+VTP STG
+	VTP STG->RecordSource[1.0] as "Record Source"
+	VTP STG->{VT}->DOT->OT->[RecordSource][2.0] as "VT Record Source"
+	VTP STG->{VT}->DOT->OT->[Name][2.1] as "VT Name"
+	VTP STG->Name[2.2] as "Name"
+	VTP STG->LoadDateTime as "Load Date Time"
+VTPRestriction STG
+	VTPRestriction STG->RecordSource[1.0] as "Record Source"
+	VTPRestriction STG->{VT}->DOT->OT->[RecordSource][2.0] as "VT Record Source"
+	VTPRestriction STG->{VT}->DOT->OT->[Name][2.1] as "VT Name"
+	VTPRestriction STG->{VTP}->[RecordSource][2.2] as "VTP Record Source"
+	VTPRestriction STG->{VTP}->VT->DOT->OT->[RecordSource][2.3] as "VTP VT Record Source"
+	VTPRestriction STG->{VTP}->VT->DOT->OT->[Name][2.4] as "VTP VT Name"
+	VTPRestriction STG->{VTP}->[Name][2.5] as "VTP Name"
+	VTPRestriction STG->LoadDateTime as "Load Date Time"
