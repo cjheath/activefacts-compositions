@@ -14,9 +14,9 @@ class Loadable
       pattern = dir_path+"/**/*"+@extension
       Dir[pattern].
       map do |p|
-	p.
-	sub(%r{#{Regexp.escape(dir_path)}/}, '').
-	sub(%r{#{@extension}}, '')
+        p.
+        sub(%r{#{Regexp.escape(dir_path)}/}, '').
+        sub(%r{#{@extension}}, '')
       end
     end
 

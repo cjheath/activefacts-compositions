@@ -31,15 +31,17 @@ class SchemaCompositor
 
   # Load and enumerate all available modules in this path
   def enumerate_available path
-    Loadable.new(path).
-    enumerate.
-    select do |filename|
-      begin
-        require(pathname = path+"/"+filename)
-      rescue LoadError => e
-        trace :loaderror, "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
-      rescue Exception => e
-        $stderr.puts "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
+    trace :loading, "Enumerating under #{path.inspect}" do
+      Loadable.new(path).
+      enumerate.
+      select do |filename|
+	begin
+	  require(pathname = path+"/"+filename)
+	rescue LoadError => e
+	  trace :loading, "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
+	rescue Exception => e
+	  $stderr.puts "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
+	end
       end
     end
   end
