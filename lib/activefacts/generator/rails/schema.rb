@@ -24,8 +24,9 @@ module ActiveFacts
           })
         end
 
-        def initialize composition, options = {}
-          @composition = composition
+        def initialize compositions, options = {}
+          raise "--rails/schema only processes a single composition" if compositions.size > 1
+          @composition = compositions[0]
           @options = options
           @option_exclude_fks = options.delete("exclude_fks")
           @option_include_comments = options.delete("include_comments")

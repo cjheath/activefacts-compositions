@@ -92,13 +92,13 @@ module ActiveFacts
         }
       end
 
-      def initialize composition, options = {}
-        @composition = composition
+      def initialize compositions, options = {}
+        @compositions = compositions
         @options = options
       end
 
       def generate
-        @composition.summary
+        @compositions.map(&:summary)*"\n\n"
       end
     end
     publish_generator Summary

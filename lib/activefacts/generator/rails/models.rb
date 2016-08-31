@@ -22,8 +22,9 @@ module ActiveFacts
           })
         end
 
-        def initialize composition, options = {}
-          @composition = composition
+        def initialize compositions, options = {}
+          raise "--rails/models only processes a single composition" if compositions.size > 1
+          @composition = compositions[0]
           @options = options
           @option_output = options.delete("output")
           @option_concern = options.delete("concern")

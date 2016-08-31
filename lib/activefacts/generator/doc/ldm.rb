@@ -21,8 +21,9 @@ module ActiveFacts
           }
         end
 
-        def initialize composition, options = {}
-          @composition = composition
+        def initialize compositions, options = {}
+          raise "--ldm only processes a single composition" if compositions.size > 1
+          @composition = compositions[0]
           @options = options
           @underscore = options.has_key?("underscore") ? (options['underscore'] || '_') : ''
 

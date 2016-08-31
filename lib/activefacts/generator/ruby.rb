@@ -20,7 +20,8 @@ module ActiveFacts
         )
       end
 
-      def initialize composition, options = {}
+      def initialize compositions, options = {}
+        raise "--ruby only processes a single composition" if compositions.size > 1
         super
         @scope = options.delete('scope') || ''
         @scope = @scope.split(/::/)
