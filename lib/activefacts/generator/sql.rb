@@ -7,6 +7,7 @@ require 'digest/sha1'
 require 'activefacts/metamodel'
 require 'activefacts/metamodel/datatypes'
 require 'activefacts/compositions'
+require 'activefacts/compositions/names'
 require 'activefacts/generator'
 
 module ActiveFacts

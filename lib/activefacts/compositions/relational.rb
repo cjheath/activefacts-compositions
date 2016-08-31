@@ -142,6 +142,7 @@ module ActiveFacts
             end
 
             # Rule 3: If there's more than one absorption path and any functional dependencies that can't absorb us, it's a table
+#            trace :relational_optimiser, "From-references for #{object_type.name}(#{pi_roles.map(&:object_type).map(&:name)*', '}) are #{references_from.map(&:inspect)*', '}"
             non_identifying_refs_from =
               candidate.references_from.reject do |member|
                 case member
@@ -622,7 +623,7 @@ module ActiveFacts
           if rank == MM::Component::RANK_SURROGATE && prefer_natural
             next
           end
-          member = fork_component_to_new_parent mapping, member
+          member = member.fork_to_new_parent mapping
           augment_paths paths, member
           if rank == MM::Component::RANK_SURROGATE && !prefer_natural
             break   # Will always be first (higher rank), and usurps others
@@ -669,7 +670,7 @@ module ActiveFacts
         ordered.each do |member|
           trace :relational_columns, proc {"#{top_level ? 'Existing' : 'Absorbing'} #{member.inspect}"} do
             unless top_level    # Top-level members are already instantiated
-              member = fork_component_to_new_parent(mapping, member)
+              member = member.fork_to_new_parent mapping
             end
             rel = paths.merge(relevant_paths(newpaths, member))
             augment_paths rel, member
@@ -832,17 +833,6 @@ module ActiveFacts
               end
             end
           end
-        end
-      end
-
-      def fork_component_to_new_parent parent, component
-        case component
-        # A place to put more special cases.
-        when MM::ValueField
-          # When we fork from a ValueField, we want to use the name of the ValueType, not the ValueField name
-          @constellation.fork component, guid: :new, parent: parent, name: component.object_type.name
-        else
-          @constellation.fork component, guid: :new, parent: parent
         end
       end
 

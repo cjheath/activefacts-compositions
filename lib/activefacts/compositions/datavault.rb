@@ -303,7 +303,7 @@ module ActiveFacts
 
           # Add a Surrogate foreign Key to the parent composite
           fk_target = composite.primary_index.all_index_field.single
-          fk_field = fork_component_to_new_parent(satellite.mapping, fk_target.component)
+          fk_field = fk_target.component.fork_to_new_parent satellite.mapping
 
           # Add a load DateTime value and record source
           date_field = inject_datetime_recordsource(satellite.mapping)
@@ -436,12 +436,12 @@ module ActiveFacts
           # We have no fact type for this absorption; it should be the LinkFactType of the notional objectification
           # This affects the absorption path comment on the related SQL coliumn, for example.
           # REVISIT: Add the LinkFactType for the notional objectification, and use that.
-          fk1_component = fork_component_to_new_parent(mapping, fk1_target.component)
+          fk1_component = fk1_target.component.fork_to_new_parent mapping
 
           fk2_target = link_to.primary_index.all_index_field.single
           if make_copy
-            # See the above comment for fk1_component; it aplies here also
-            fk2_component = fork_component_to_new_parent(mapping, fk2_target.component)
+            # See the above comment for fk1_component; it applies here also
+            fk2_component = fk2_target.component.fork_to_new_parent mapping
           else
             # We're using the leaf component of the absorption we moved across
           end
