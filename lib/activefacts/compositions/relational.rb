@@ -46,9 +46,6 @@ module ActiveFacts
           # Inject surrogate keys if the options ask for that
           inject_surrogates if @option_surrogates
 
-          # Inject load date time and record source if building staging
-          inject_all_datetime_recordsource
-
           # Remove the un-used absorption paths
           delete_reverse_absorptions
 
@@ -396,10 +393,6 @@ module ActiveFacts
         return true
       end
 
-      # This function is over-written in the Staging subclass
-      def inject_all_datetime_recordsource
-      end
-
       #
       # Datetime and recordsource functions defined here because they are used in both Staging and Datavault subclasses
       #
@@ -410,6 +403,7 @@ module ActiveFacts
           name: "Load"+datestamp_type_name,
           object_type: datestamp_type
         )
+
         # Add a load DateTime value
         recsrc_field = @constellation.ValueField(:new,
           parent: mapping,
