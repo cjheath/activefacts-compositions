@@ -41,6 +41,8 @@ module ActiveFacts
       def devolve_all
         # Rename composites with STG prefix
         rename_parents
+
+        inject_all_datetime_recordsource
       end
     end
 
