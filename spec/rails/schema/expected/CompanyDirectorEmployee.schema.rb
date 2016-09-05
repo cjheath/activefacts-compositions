@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160802155714) do
+ActiveRecord::Schema.define(version: 20000000000000) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "attendances", id: false, force: true do |t|
@@ -75,14 +75,10 @@ ActiveRecord::Schema.define(version: 20160802155714) do
     add_foreign_key :employments, :employees, column: :employee_id, primary_key: :employee_id, on_delete: :cascade
     add_foreign_key :employments, :people, column: :person_id, primary_key: :person_id, on_delete: :cascade
     add_foreign_key :meetings, :companies, column: :company_id, primary_key: :company_id, on_delete: :cascade
-    add_index :attendances, [:attendee_person_id], unique: false, name: :index_attendances_on_attendee_person_id
     add_index :attendances, [:meeting_id], unique: false, name: :index_attendances_on_meeting_id
     add_index :directorships, [:company_id], unique: false, name: :index_directorships_on_company_id
-    add_index :directorships, [:director_person_id], unique: false, name: :index_directorships_on_director_person_id
     add_index :employees, [:company_id], unique: false, name: :index_employees_on_company_id
     add_index :employees, [:manager_employee_id], unique: false, name: :index_employees_on_manager_employee_id
     add_index :employments, [:employee_id], unique: false, name: :index_employments_on_employee_id
-    add_index :employments, [:person_id], unique: false, name: :index_employments_on_person_id
-    add_index :meetings, [:company_id], unique: false, name: :index_meetings_on_company_id
   end
 end

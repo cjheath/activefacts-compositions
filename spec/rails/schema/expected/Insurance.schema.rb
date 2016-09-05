@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160802155717) do
+ActiveRecord::Schema.define(version: 20000000000000) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "assets", id: false, force: true do |t|
@@ -274,13 +274,9 @@ ActiveRecord::Schema.define(version: 20160802155717) do
     add_index :claims, [:incident_address_state_id], unique: false, name: :index_claims_on_incident_address_state_id
     add_index :claims, [:lodgement_person_id], unique: false, name: :index_claims_on_lodgement_person_id
     add_index :claims, [:policy_id], unique: false, name: :index_claims_on_policy_id
-    add_index :contractor_appointments, [:claim_id], unique: false, name: :index_contractor_appointments_on_claim_id
     add_index :contractor_appointments, [:contractor_id], unique: false, name: :index_contractor_appointments_on_contractor_id
-    add_index :cover_wordings, [:cover_type_id], unique: false, name: :index_cover_wordings_on_cover_type_id
     add_index :covers, [:asset_id], unique: false, name: :index_covers_on_asset_id
     add_index :covers, [:cover_type_id], unique: false, name: :index_covers_on_cover_type_id
-    add_index :covers, [:policy_id], unique: false, name: :index_covers_on_policy_id
-    add_index :lost_items, [:incident_claim_id], unique: false, name: :index_lost_items_on_incident_claim_id
     add_index :parties, [:company_contact_person_id], unique: false, name: :index_parties_on_company_contact_person_id
     add_index :parties, [:person_address_state_id], unique: false, name: :index_parties_on_person_address_state_id
     add_index :parties, [:postal_address_state_id], unique: false, name: :index_parties_on_postal_address_state_id
@@ -289,15 +285,11 @@ ActiveRecord::Schema.define(version: 20160802155717) do
     add_index :policies, [:p_product_id], unique: false, name: :index_policies_on_p_product_id
     add_index :policies, [:p_state_id], unique: false, name: :index_policies_on_p_state_id
     add_index :property_damages, [:address_state_id], unique: false, name: :index_property_damages_on_address_state_id
-    add_index :property_damages, [:incident_claim_id], unique: false, name: :index_property_damages_on_incident_claim_id
     add_index :third_parties, [:insurer_id], unique: false, name: :index_third_parties_on_insurer_id
-    add_index :third_parties, [:person_id], unique: false, name: :index_third_parties_on_person_id
     add_index :third_parties, [:vehicle_incident_claim_id], unique: false, name: :index_third_parties_on_vehicle_incident_claim_id
     add_index :underwriting_demerits, [:underwriting_question_id], unique: false, name: :index_underwriting_demerits_on_underwriting_question_id
-    add_index :underwriting_demerits, [:vehicle_incident_claim_id], unique: false, name: :index_underwriting_demerits_on_vehicle_incident_claim_id
     add_index :vehicle_incidents, [:driving_person_id], unique: false, name: :index_vehicle_incidents_on_driving_person_id
     add_index :vehicle_incidents, [:loss_type_id], unique: false, name: :index_vehicle_incidents_on_loss_type_id
     add_index :witnesses, [:address_state_id], unique: false, name: :index_witnesses_on_address_state_id
-    add_index :witnesses, [:incident_claim_id], unique: false, name: :index_witnesses_on_incident_claim_id
   end
 end

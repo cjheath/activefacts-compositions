@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160802181213) do
+ActiveRecord::Schema.define(version: 20000000000000) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "acceptable_substitutions", id: false, force: true do |t|
@@ -75,13 +75,13 @@ ActiveRecord::Schema.define(version: 20160802181213) do
 
   create_table "transport_routes", id: false, force: true do |t|
     t.column "transport_route_id", :primary_key, null: false
-    t.column "transport_method", :string, null: false
+    t.column "transport_mode", :string, null: false
     t.column "refinery_id", :integer, null: false
     t.column "region_id", :integer, null: false
     t.column "cost", :decimal, null: true
   end
 
-  add_index "transport_routes", ["transport_method", "refinery_id", "region_id"], name: :index_transport_routes_on_transport_method_refinery_i__bb1e6e85, unique: true
+  add_index "transport_routes", ["transport_mode", "refinery_id", "region_id"], name: :index_transport_routes_on_transport_mode_refinery_id_region_id, unique: true
 
   unless ENV["EXCLUDE_FKS"]
     add_foreign_key :acceptable_substitutions, :products, column: :alternate_product_id, primary_key: :product_id, on_delete: :cascade
@@ -96,12 +96,9 @@ ActiveRecord::Schema.define(version: 20160802181213) do
     add_foreign_key :transport_routes, :refineries, column: :refinery_id, primary_key: :refinery_id, on_delete: :cascade
     add_foreign_key :transport_routes, :regions, column: :region_id, primary_key: :region_id, on_delete: :cascade
     add_index :acceptable_substitutions, [:alternate_product_id], unique: false, name: :index_acceptable_substitutions_on_alternate_product_id
-    add_index :acceptable_substitutions, [:product_id], unique: false, name: :index_acceptable_substitutions_on_product_id
     add_index :production_forecasts, [:product_id], unique: false, name: :index_production_forecasts_on_product_id
-    add_index :production_forecasts, [:refinery_id], unique: false, name: :index_production_forecasts_on_refinery_id
     add_index :production_forecasts, [:supply_period_id], unique: false, name: :index_production_forecasts_on_supply_period_id
     add_index :regional_demands, [:product_id], unique: false, name: :index_regional_demands_on_product_id
-    add_index :regional_demands, [:region_id], unique: false, name: :index_regional_demands_on_region_id
     add_index :regional_demands, [:supply_period_id], unique: false, name: :index_regional_demands_on_supply_period_id
     add_index :supply_periods, [:month_id], unique: false, name: :index_supply_periods_on_month_id
     add_index :transport_routes, [:refinery_id], unique: false, name: :index_transport_routes_on_refinery_id

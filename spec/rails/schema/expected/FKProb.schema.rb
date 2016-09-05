@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160802114148) do
+ActiveRecord::Schema.define(version: 20000000000000) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "ots", id: false, force: true do |t|
@@ -32,8 +32,6 @@ ActiveRecord::Schema.define(version: 20160802114148) do
     add_foreign_key :vtp_restrictions, :ots, column: :vt_ot_id, primary_key: :ot_id, on_delete: :cascade
     add_foreign_key :vtp_restrictions, :vtps, column: :vtp_id, primary_key: :vtp_id, on_delete: :cascade
     add_foreign_key :vtps, :ots, column: :vt_ot_id, primary_key: :ot_id, on_delete: :cascade
-    add_index :vtp_restrictions, [:vt_ot_id], unique: false, name: :index_vtp_restrictions_on_vt_ot_id
     add_index :vtp_restrictions, [:vtp_id], unique: false, name: :index_vtp_restrictions_on_vtp_id
-    add_index :vtps, [:vt_ot_id], unique: false, name: :index_vtps_on_vt_ot_id
   end
 end

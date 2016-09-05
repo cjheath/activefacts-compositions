@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160802181208) do
+ActiveRecord::Schema.define(version: 20000000000000) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "allocatable_cinema_sections", id: false, force: true do |t|
@@ -119,14 +119,8 @@ ActiveRecord::Schema.define(version: 20160802181208) do
     add_foreign_key :sessions, :cinemas, column: :cinema_id, primary_key: :cinema_id, on_delete: :cascade
     add_foreign_key :sessions, :films, column: :film_id, primary_key: :film_id, on_delete: :cascade
     add_foreign_key :ticket_pricings, :cinemas, column: :cinema_id, primary_key: :cinema_id, on_delete: :cascade
-    add_index :allocatable_cinema_sections, [:cinema_id], unique: false, name: :index_allocatable_cinema_sections_on_cinema_id
-    add_index :bookings, [:person_id], unique: false, name: :index_bookings_on_person_id
     add_index :bookings, [:session_id], unique: false, name: :index_bookings_on_session_id
-    add_index :places_paids, [:booking_id], unique: false, name: :index_places_paids_on_booking_id
     add_index :seat_allocations, [:allocated_seat_id], unique: false, name: :index_seat_allocations_on_allocated_seat_id
-    add_index :seat_allocations, [:booking_id], unique: false, name: :index_seat_allocations_on_booking_id
-    add_index :seats, [:row_cinema_id], unique: false, name: :index_seats_on_row_cinema_id
-    add_index :sessions, [:cinema_id], unique: false, name: :index_sessions_on_cinema_id
     add_index :sessions, [:film_id], unique: false, name: :index_sessions_on_film_id
     add_index :ticket_pricings, [:cinema_id], unique: false, name: :index_ticket_pricings_on_cinema_id
   end

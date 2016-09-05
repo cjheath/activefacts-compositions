@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160802114146) do
+ActiveRecord::Schema.define(version: 20000000000000) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "authors", id: false, force: true do |t|
@@ -54,7 +54,6 @@ ActiveRecord::Schema.define(version: 20160802114146) do
     add_foreign_key :topics, :topics, column: :parent_topic_id, primary_key: :topic_id, on_delete: :cascade
     add_index :comments, [:author_id], unique: false, name: :index_comments_on_author_id
     add_index :comments, [:paragraph_id], unique: false, name: :index_comments_on_paragraph_id
-    add_index :paragraphs, [:post_id], unique: false, name: :index_paragraphs_on_post_id
     add_index :posts, [:author_id], unique: false, name: :index_posts_on_author_id
     add_index :posts, [:topic_id], unique: false, name: :index_posts_on_topic_id
     add_index :topics, [:parent_topic_id], unique: false, name: :index_topics_on_parent_topic_id

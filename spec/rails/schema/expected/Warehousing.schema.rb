@@ -3,7 +3,7 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160802155719) do
+ActiveRecord::Schema.define(version: 20000000000000) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "back_order_allocations", id: false, force: true do |t|
@@ -112,7 +112,6 @@ ActiveRecord::Schema.define(version: 20160802155719) do
     add_foreign_key :transfer_requests, :products, column: :product_id, primary_key: :product_id, on_delete: :cascade
     add_foreign_key :transfer_requests, :warehouses, column: :from_warehouse_id, primary_key: :warehouse_id, on_delete: :cascade
     add_foreign_key :transfer_requests, :warehouses, column: :to_warehouse_id, primary_key: :warehouse_id, on_delete: :cascade
-    add_index :back_order_allocations, [:purchase_order_item_id], unique: false, name: :index_back_order_allocations_on_purchase_order_item_id
     add_index :back_order_allocations, [:sales_order_item_id], unique: false, name: :index_back_order_allocations_on_sales_order_item_id
     add_index :bins, [:product_id], unique: false, name: :index_bins_on_product_id
     add_index :bins, [:warehouse_id], unique: false, name: :index_bins_on_warehouse_id
@@ -120,14 +119,12 @@ ActiveRecord::Schema.define(version: 20160802155719) do
     add_index :dispatch_items, [:sales_order_item_id], unique: false, name: :index_dispatch_items_on_sales_order_item_id
     add_index :dispatch_items, [:transfer_request_id], unique: false, name: :index_dispatch_items_on_transfer_request_id
     add_index :purchase_order_items, [:product_id], unique: false, name: :index_purchase_order_items_on_product_id
-    add_index :purchase_order_items, [:purchase_order_id], unique: false, name: :index_purchase_order_items_on_purchase_order_id
     add_index :purchase_orders, [:supplier_id], unique: false, name: :index_purchase_orders_on_supplier_id
     add_index :purchase_orders, [:warehouse_id], unique: false, name: :index_purchase_orders_on_warehouse_id
     add_index :received_items, [:product_id], unique: false, name: :index_received_items_on_product_id
     add_index :received_items, [:purchase_order_item_id], unique: false, name: :index_received_items_on_purchase_order_item_id
     add_index :received_items, [:transfer_request_id], unique: false, name: :index_received_items_on_transfer_request_id
     add_index :sales_order_items, [:product_id], unique: false, name: :index_sales_order_items_on_product_id
-    add_index :sales_order_items, [:sales_order_id], unique: false, name: :index_sales_order_items_on_sales_order_id
     add_index :sales_orders, [:customer_id], unique: false, name: :index_sales_orders_on_customer_id
     add_index :sales_orders, [:warehouse_id], unique: false, name: :index_sales_orders_on_warehouse_id
     add_index :transfer_requests, [:from_warehouse_id], unique: false, name: :index_transfer_requests_on_from_warehouse_id
