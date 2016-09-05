@@ -57,7 +57,7 @@ module ActiveFacts
           @options = options
           @underscore = options.has_key?("underscore") ? (options['underscore'] || '_') : ''
 
-          @vocabulary = composition.constellation.Vocabulary.values[0]      # REVISIT when importing from other vocabularies
+          @vocabulary = @composition.constellation.Vocabulary.values[0]      # REVISIT when importing from other vocabularies
         end
 
         def data_type_context
