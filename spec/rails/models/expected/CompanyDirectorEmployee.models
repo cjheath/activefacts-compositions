@@ -27,7 +27,6 @@ module Company
     has_many :meetings, :class_name => 'Meeting', :foreign_key => :company_id, :dependent => :destroy
 
     validates :company_name, :presence => true
-    validates :is_listed, :presence => true
   end
 end
 
@@ -99,7 +98,6 @@ module Meeting
 
     validates :company_id, :presence => true
     validates :date, :presence => true
-    validates :is_board_meeting, :presence => true
   end
 end
 

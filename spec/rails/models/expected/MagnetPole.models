@@ -18,6 +18,5 @@ module MagnetPole
     belongs_to :magnet, :foreign_key => :magnet_auto_counter
 
     validates :magnet_auto_counter, :presence => true
-    validates :is_north, :presence => true
   end
 end

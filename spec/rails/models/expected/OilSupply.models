@@ -151,7 +151,7 @@ module TransportRoute
     # Transport Route involves Region
     belongs_to :region, :foreign_key => :region_id
 
-    validates :transport_method, :presence => true
+    validates :transport_mode, :presence => true
     validates :refinery_id, :presence => true
     validates :region_id, :presence => true
   end

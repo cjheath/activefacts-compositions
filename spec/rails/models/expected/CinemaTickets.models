@@ -30,7 +30,6 @@ module Booking
     has_many :seats, :through => :seat_allocations
 
     validates :booking_nr, :presence => true
-    validates :tickets_for_booking_have_been_issued, :presence => true
     validates :number, :presence => true
     validates :person_id, :presence => true
     validates :session_id, :presence => true
@@ -147,8 +146,6 @@ module Session
     validates :session_time_day, :presence => true
     validates :session_time_hour, :presence => true
     validates :session_time_minute, :presence => true
-    validates :is_high_demand, :presence => true
-    validates :uses_allocated_seating, :presence => true
     validates :film_id, :presence => true
   end
 end

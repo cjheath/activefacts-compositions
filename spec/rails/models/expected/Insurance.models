@@ -125,8 +125,6 @@ module LossType
     has_many :vehicle_incidents, :class_name => 'VehicleIncident', :foreign_key => :loss_type_id, :dependent => :destroy
 
     validates :loss_type_code, :presence => true
-    validates :involves_driving, :presence => true
-    validates :is_single_vehicle_incident, :presence => true
   end
 end
 
@@ -189,7 +187,6 @@ module Party
     # maybe Driving involves Vehicle Incident and Driving was by Person
     has_many :vehicle_incidents, :class_name => 'VehicleIncident', :foreign_key => :driving_person_id, :dependent => :destroy
 
-    validates :is_a_company, :presence => true
   end
 end
 
@@ -350,7 +347,6 @@ module VehicleIncident
     has_many :underwriting_demerits, :class_name => 'UnderwritingDemerit', :foreign_key => :vehicle_incident_claim_id, :dependent => :destroy
 
     validates :incident_claim_id, :presence => true
-    validates :occurred_while_being_driven, :presence => true
   end
 end
 
