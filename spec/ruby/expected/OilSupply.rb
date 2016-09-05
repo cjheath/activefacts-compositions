@@ -89,13 +89,13 @@ module OilSupply
     has_one         :quantity, mandatory: true          # Regional Demand involves Quantity, see Quantity#all_regional_demand
   end
 
-  class TransportMethod < String
+  class TransportMode < String
     value_type
   end
 
   class TransportRoute
-    identified_by   :transport_method, :refinery, :region
-    has_one         :transport_method, mandatory: true  # Transport Route involves Transport Method, see TransportMethod#all_transport_route
+    identified_by   :transport_mode, :refinery, :region
+    has_one         :transport_mode, mandatory: true    # Transport Route involves Transport Mode, see TransportMode#all_transport_route
     has_one         :refinery, mandatory: true          # Transport Route involves Refinery, see Refinery#all_transport_route
     has_one         :region, mandatory: true            # Transport Route involves Region, see Region#all_transport_route
     has_one         :cost                               # Transport Route incurs Cost per kl, see Cost#all_transport_route
