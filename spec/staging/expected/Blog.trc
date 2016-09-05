@@ -1,45 +1,37 @@
 Summary of Blog
 Author STG
-	Author STG->RecordSource[1.0] as "Record Source"
-	Author STG->Author Id[2.0] as "Author Id"
+	Author STG->RecordSource as "Record Source"
+	Author STG->Author Id[1.0] as "Author Id"
 	Author STG->LoadDateTime as "Load Date Time"
-	Author STG->Author Name[3.0] as "Author Name"
+	Author STG->Author Name[2.0] as "Author Name"
 Comment STG
-	Comment STG->RecordSource[1.0] as "Record Source"
-	Comment STG->Comment Id[2.0] as "Comment Id"
+	Comment STG->RecordSource as "Record Source"
+	Comment STG->Comment Id[1.0] as "Comment Id"
 	Comment STG->LoadDateTime as "Load Date Time"
-	Comment STG->{Author}->[RecordSource] as "Author Record Source"
 	Comment STG->{Author}->[Author Id] as "Author Id"
 	Comment STG->Content->Style? as "Content Style"
 	Comment STG->Content->Text as "Content Text"
-	Comment STG->{Paragraph}->[RecordSource] as "Paragraph Record Source"
-	Comment STG->{Paragraph}->Post->[RecordSource] as "Paragraph Post Record Source"
 	Comment STG->{Paragraph}->Post->[Post Id] as "Paragraph Post Id"
 	Comment STG->{Paragraph}->[Ordinal] as "Paragraph Ordinal"
 ### exactly one of (Content in "Content provides text of Comment") or (Content in "Content is of Paragraph")
 Paragraph STG
-	Paragraph STG->RecordSource[1.0] as "Record Source"
-	Paragraph STG->{Post}->[RecordSource][2.0] as "Post Record Source"
-	Paragraph STG->{Post}->[Post Id][2.1] as "Post Id"
-	Paragraph STG->Ordinal[2.2] as "Ordinal"
+	Paragraph STG->RecordSource as "Record Source"
+	Paragraph STG->{Post}->[Post Id][1.0] as "Post Id"
+	Paragraph STG->Ordinal[1.1] as "Ordinal"
 	Paragraph STG->LoadDateTime as "Load Date Time"
 	Paragraph STG->Content->Style? as "Content Style"
 	Paragraph STG->Content->Text as "Content Text"
 ### exactly one of (Content in "Content provides text of Comment") or (Content in "Content is of Paragraph")
 Post STG
-	Post STG->RecordSource[1.0] as "Record Source"
-	Post STG->Post Id[2.0] as "Post Id"
+	Post STG->RecordSource as "Record Source"
+	Post STG->Post Id[1.0] as "Post Id"
 	Post STG->LoadDateTime as "Load Date Time"
-	Post STG->{Author}->[RecordSource] as "Author Record Source"
 	Post STG->{Author}->[Author Id] as "Author Id"
-	Post STG->{Topic}->[RecordSource] as "Topic Record Source"
 	Post STG->{Topic}->[Topic Id] as "Topic Id"
 Topic STG
-	Topic STG->RecordSource[1.0] as "Record Source"
-	Topic STG->Topic Id[2.0] as "Topic Id"
+	Topic STG->RecordSource as "Record Source"
+	Topic STG->Topic Id[1.0] as "Topic Id"
 	Topic STG->LoadDateTime as "Load Date Time"
-	Topic STG->Topic Name[3.0] as "Topic Name"
-	Topic STG->{Parent Topic}?->[RecordSource] as "Parent Topic Record Source"
-		### RingConstraint(Acyclic: Topic, Topic in Topic belongs to parent-Topic)
+	Topic STG->Topic Name[2.0] as "Topic Name"
 	Topic STG->{Parent Topic}?->[Topic Id] as "Parent Topic Id"
 		### RingConstraint(Acyclic: Topic, Topic in Topic belongs to parent-Topic)

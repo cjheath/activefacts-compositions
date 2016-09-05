@@ -1,6 +1,6 @@
 Summary of Person
 Person STG
-	Person STG->RecordSource[1.0] as "Record Source"
-	Person STG->Family Name[2.0] as "Family Name"
-	Person STG->Given Name[2.1] as "Given Name"
+	Person STG->RecordSource as "Record Source"
+	Person STG->Family Name[1.0] as "Family Name"
+	Person STG->Given Name[1.1] as "Given Name"
 	Person STG->LoadDateTime as "Load Date Time"

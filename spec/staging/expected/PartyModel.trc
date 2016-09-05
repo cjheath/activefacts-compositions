@@ -1,24 +1,22 @@
 Summary of PartyModel
 Company STG
-	Company STG->{Party}->[RecordSource][1.0] as "Party Record Source"
-	Company STG->{Party}->[Party ID][1.1] as "Party ID"
-	Company STG->RecordSource[2.0] as "Record Source"
+	Company STG->{Party}->[Party ID][1.0] as "Party ID"
+	Company STG->RecordSource as "Record Source"
 	Company STG->LoadDateTime as "Load Date Time"
 	Company STG->Superannuation Company? as "Superannuation Company"
 	Company STG->Teaching Institution?->RTO? as "RTO"
 ### (Party in "Company is a kind of Party") if and only if (Party in "Party is of Party Type")
 ### exactly one of (Party in "Person is a kind of Party") or (Party in "Company is a kind of Party")
 Party STG
-	Party STG->RecordSource[1.0] as "Record Source"
-	Party STG->Party ID[2.0] as "Party ID"
+	Party STG->RecordSource as "Record Source"
+	Party STG->Party ID[1.0] as "Party ID"
 	Party STG->LoadDateTime as "Load Date Time"
 	Party STG->Party Type->Party Type Code as "Party Type Code"
 ### (Party in "Company is a kind of Party") if and only if (Party in "Party is of Party Type")
 ### (Party in "Person is a kind of Party") if and only if (Party in "Party is of Party Type")
 Person STG
-	Person STG->{Party}->[RecordSource][1.0] as "Party Record Source"
-	Person STG->{Party}->[Party ID][1.1] as "Party ID"
-	Person STG->RecordSource[2.0] as "Record Source"
+	Person STG->{Party}->[Party ID][1.0] as "Party ID"
+	Person STG->RecordSource as "Record Source"
 	Person STG->LoadDateTime as "Load Date Time"
 	Person STG->User? as "User"
 ### (Party in "Person is a kind of Party") if and only if (Party in "Party is of Party Type")
