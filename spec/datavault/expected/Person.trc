@@ -1,5 +1,7 @@
 Summary of Person
 Person HUB
-	Person HUB->Person VID[1.0] as "Person VID"
+	Person HUB->Person HID[1.0] as "Person HID"
+	Person HUB->RecordSource as "Record Source"
 	Person HUB->Family Name[2.0] as "Family Name"
 	Person HUB->Given Name[2.1] as "Given Name"
+	Person HUB->LoadDateTime as "Load Date Time"

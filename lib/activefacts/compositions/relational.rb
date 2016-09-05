@@ -434,7 +434,7 @@ module ActiveFacts
 
       def recordsource_type_name
         @recordsource_type_name ||= begin
-          [true, '', 'true', 'yes', nil].include?(t = @option_recordsource) ? 'RecordSource' : t
+          [true, '', 'true', 'yes', nil].include?(t = @option_recordsource) ? 'String' : t
         end
       end
 

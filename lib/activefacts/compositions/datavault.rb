@@ -15,7 +15,7 @@ module ActiveFacts
         {
           reference: ['Boolean', "Emit the reference (static) tables as well. Default is to omit them"],
           datestamp: ['String', "Use this data type for date stamps"],
-          id: ['String', "Append this to data vault surrogate keys (default VID)"],
+          id: ['String', "Append this to data vault surrogate keys (default HID)"],
           hubname: ['String', "Suffix or pattern for naming hub tables. Include a + to insert the name. Default 'HUB'"],
           linkname: ['String', "Suffix or pattern for naming link tables. Include a + to insert the name. Default 'LINK'"],
           satname: ['String', "Suffix or pattern for naming satellite tables. Include a + to insert the name. Default 'SAT'"],

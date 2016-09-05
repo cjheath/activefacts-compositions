@@ -1,4 +1,6 @@
 Summary of Countries
 Country HUB
-	Country HUB->Country VID[1.0] as "Country VID"
+	Country HUB->Country HID[1.0] as "Country HID"
+	Country HUB->RecordSource as "Record Source"
 	Country HUB->Country Code->Country Code[2.1] as "Country Code"
+	Country HUB->LoadDateTime as "Load Date Time"
