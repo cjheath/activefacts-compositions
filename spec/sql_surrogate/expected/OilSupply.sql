@@ -123,8 +123,8 @@ CREATE TABLE SupplyPeriod (
 CREATE TABLE TransportRoute (
 	-- Transport Route surrogate key
 	TransportRouteID                        BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-	-- Transport Route involves Transport Method
-	TransportMethod                         VARCHAR NOT NULL CHECK(TransportMethod = 'Rail' OR TransportMethod = 'Road' OR TransportMethod = 'Sea'),
+	-- Transport Route involves Transport Mode
+	TransportMode                           VARCHAR NOT NULL CHECK(TransportMode = 'Rail' OR TransportMode = 'Road' OR TransportMode = 'Sea'),
 	-- Transport Route involves Refinery
 	RefineryID                              BIGINT NOT NULL,
 	-- Transport Route involves Region
@@ -133,8 +133,8 @@ CREATE TABLE TransportRoute (
 	Cost                                    DECIMAL NULL,
 	-- Primary index to Transport Route
 	PRIMARY KEY CLUSTERED(TransportRouteID),
-	-- Unique index to Transport Route over PresenceConstraint over (Transport Method, Refinery, Region in "Transport Method transportation is available from Refinery to Region") occurs at most one time
-	UNIQUE NONCLUSTERED(TransportMethod, RefineryID, RegionID),
+	-- Unique index to Transport Route over PresenceConstraint over (Transport Mode, Refinery, Region in "Transport Mode transportation is available from Refinery to Region") occurs at most one time
+	UNIQUE NONCLUSTERED(TransportMode, RefineryID, RegionID),
 	FOREIGN KEY (RefineryID) REFERENCES Refinery (RefineryID),
 	FOREIGN KEY (RegionID) REFERENCES Region (RegionID)
 );

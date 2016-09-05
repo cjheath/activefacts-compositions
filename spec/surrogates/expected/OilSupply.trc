@@ -180,7 +180,7 @@
 #     Columns
 #       Mapping (top) of Transport Route
 #         0: SurrogateKey (surrogate) in Transport Route of Transport Route ID
-#         1: Absorption (existential) in Transport Route of Transport Method in "Transport Route involves Transport Method"
+#         1: Absorption (existential) in Transport Route of Transport Mode in "Transport Route involves Transport Mode"
 #         2: Absorption (existential) in Transport Route of Refinery in "Transport Route involves Refinery"
 #           0: SurrogateKey (mandatory) in Refinery of Refinery ID
 #         3: Absorption (existential) in Transport Route of Region in "Transport Route involves Region"
@@ -189,8 +189,8 @@
 #     Indices
 #       Primary index to Transport Route
 #         IndexField part 0 in Transport Route references SurrogateKey (surrogate) in Transport Route of Transport Route ID
-#       Unique index to Transport Route over PresenceConstraint over (Transport Method, Refinery, Region in "Transport Method transportation is available from Refinery to Region") occurs at most one time
-#         IndexField part 0 in Transport Route references Absorption (existential) in Transport Route of Transport Method in "Transport Route involves Transport Method"
+#       Unique index to Transport Route over PresenceConstraint over (Transport Mode, Refinery, Region in "Transport Mode transportation is available from Refinery to Region") occurs at most one time
+#         IndexField part 0 in Transport Route references Absorption (existential) in Transport Route of Transport Mode in "Transport Route involves Transport Mode"
 #         IndexField part 1 in Transport Route references SurrogateKey (mandatory) in Refinery of Refinery ID
 #         IndexField part 2 in Transport Route references SurrogateKey (mandatory) in Region of Region ID
 #     Foreign keys outbound

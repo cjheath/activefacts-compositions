@@ -93,16 +93,16 @@ CREATE TABLE SupplyPeriod (
 
 
 CREATE TABLE TransportRoute (
-	-- Transport Route involves Transport Method
-	TransportMethod                         VARCHAR NOT NULL CHECK(TransportMethod = 'Rail' OR TransportMethod = 'Road' OR TransportMethod = 'Sea'),
+	-- Transport Route involves Transport Mode
+	TransportMode                           VARCHAR NOT NULL CHECK(TransportMode = 'Rail' OR TransportMode = 'Road' OR TransportMode = 'Sea'),
 	-- Transport Route involves Refinery that has Refinery Name
 	RefineryName                            VARCHAR(80) NOT NULL,
 	-- Transport Route involves Region that has Region Name
 	RegionName                              VARCHAR NOT NULL,
 	-- maybe Transport Route incurs Cost per kl
 	Cost                                    DECIMAL NULL,
-	-- Primary index to Transport Route over PresenceConstraint over (Transport Method, Refinery, Region in "Transport Method transportation is available from Refinery to Region") occurs at most one time
-	PRIMARY KEY CLUSTERED(TransportMethod, RefineryName, RegionName),
+	-- Primary index to Transport Route over PresenceConstraint over (Transport Mode, Refinery, Region in "Transport Mode transportation is available from Refinery to Region") occurs at most one time
+	PRIMARY KEY CLUSTERED(TransportMode, RefineryName, RegionName),
 	FOREIGN KEY (RefineryName) REFERENCES Refinery (RefineryName),
 	FOREIGN KEY (RegionName) REFERENCES Region (RegionName)
 );

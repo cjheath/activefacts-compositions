@@ -171,15 +171,15 @@
 #   Composite Mapping (top) of Transport Route
 #     Columns
 #       Mapping (top) of Transport Route
-#         0: Absorption (existential) in Transport Route of Transport Method in "Transport Route involves Transport Method"
+#         0: Absorption (existential) in Transport Route of Transport Mode in "Transport Route involves Transport Mode"
 #         1: Absorption (existential) in Transport Route of Refinery in "Transport Route involves Refinery"
 #           0: Absorption (existential) in Refinery of Refinery Name in "Refinery has Refinery Name"
 #         2: Absorption (existential) in Transport Route of Region in "Transport Route involves Region"
 #           0: Absorption (existential) in Region of Region Name in "Region has Region Name"
 #         3: Absorption (optional) in Transport Route of Cost in "Transport Route incurs Cost per kl"
 #     Indices
-#       Primary index to Transport Route over PresenceConstraint over (Transport Method, Refinery, Region in "Transport Method transportation is available from Refinery to Region") occurs at most one time
-#         IndexField part 0 in Transport Route references Absorption (existential) in Transport Route of Transport Method in "Transport Route involves Transport Method"
+#       Primary index to Transport Route over PresenceConstraint over (Transport Mode, Refinery, Region in "Transport Mode transportation is available from Refinery to Region") occurs at most one time
+#         IndexField part 0 in Transport Route references Absorption (existential) in Transport Route of Transport Mode in "Transport Route involves Transport Mode"
 #         IndexField part 1 in Transport Route references Absorption (existential) in Refinery of Refinery Name in "Refinery has Refinery Name"
 #         IndexField part 2 in Transport Route references Absorption (existential) in Region of Region Name in "Region has Region Name"
 #     Foreign keys outbound

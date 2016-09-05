@@ -31,7 +31,7 @@ Supply Period
 	Supply Period->Year->Year Nr[1.0] as "Year Nr"
 	Supply Period->{Month}->[Month Nr][1.1] as "Month Nr"
 Transport Route
-	Transport Route->Transport Method[1.0] as "Transport Method"
+	Transport Route->Transport Mode[1.0] as "Transport Mode"
 	Transport Route->{Refinery}->[Refinery Name][1.1] as "Refinery Name"
 	Transport Route->{Region}->[Region Name][1.2] as "Region Name"
 	Transport Route->Cost? as "Cost"
