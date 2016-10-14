@@ -23,7 +23,7 @@ module ActiveFacts
         end
         
         # Base class for generators of object-oriented class libraries for an ActiveFacts vocabulary.
-        def initialize vocabulary, options = {}
+        def initialize vocabulary, options = {}, compositor_klass_names = []
           @vocabulary = vocabulary  # REVISIT: This should be a Composition here
           @options = options
           @gen_bootstrap = options.has_key?("gen_bootstrap")

@@ -18,9 +18,10 @@ module ActiveFacts
         }
       end
 
-      def initialize compositions, options = {}
+      def initialize compositions, options = {}, compositor_klass_names = []
         raise "--oo only processes a single composition" if compositions.size > 1
         @composition = compositions[0]
+        @compositor_klass_name = compositor_klass_names[0]
         @options = options
         @comments = @options.delete("comments")
       end
