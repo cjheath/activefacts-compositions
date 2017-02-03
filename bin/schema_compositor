@@ -80,7 +80,7 @@ class SchemaCompositor
       # Load the correct file type input method
       pathname, basename, extension = * /(?:(.*)[\/\\])?(.*)\.([^.]*)$/.match(filename).captures
       if EXTENSIONS.detect { |e| extension == e }
-        extension = cql
+        extension = "cql"
       end
       input_handler = "activefacts/input/#{extension}"
       require input_handler
