@@ -1,6 +1,6 @@
 #
 # ActiveFacts Compositions, Fundamental Compositor
-# 
+#
 #       All Compositors derive from this one, which can calculate the basic binary bi-directional mapping
 #
 #       The term "reference" used here means either an Absorption
@@ -13,19 +13,26 @@
 #
 require "activefacts/metamodel"
 
+require 'byebug'
+
 module ActiveFacts
   module Compositions
     class Compositor
       attr_reader :options, :name, :composition
 
       def self.options
-        {}
+        {
+          source: ['Boolean', "Generate composition for source model"],
+          target: ['Boolean', "Generate composition for target model"]
+        }
       end
 
       def initialize constellation, name, options = {}
         @constellation = constellation
         @name = name
         @options = options
+        @option_source = options.delete('source')
+        @option_target = options.delete('target')
       end
 
       # Generate all Mappings into @binary_mappings for a binary composition of all ObjectTypes in this constellation
@@ -92,6 +99,35 @@ module ActiveFacts
         trace :binarize, "Populating #{a.inspect}"
       end
 
+      def find_topic import_role
+        if import = @constellation.Import.values.select{ |import| import.import_role == import_role }.first
+          import.precursor_topic
+        else
+          nil
+        end
+      end
+
+      def build_binary_mappings model_topic
+        trace :binarize, "Build_binary_mappings for #{model_topic.topic_name}"
+        if @model_topics.key?(model_topic)
+          trace :binarize, "already built, skip"
+          return
+        end
+        @model_topics[model_topic] = true
+
+        # add binary mapping for all object types in this model
+        model_topic.all_concept.each do |concept|
+          if concept.object_type
+            @binary_mappings[concept.object_type]
+          end
+        end
+
+        # recurse through precursor models
+        model_topic.all_import.each do |import|
+          build_binary_mappings(import.precursor_topic)
+        end
+      end
+
       def populate_references
         # A table of Mappings by object type, with a default Mapping for each:
         @binary_mappings = Hash.new do |h, object_type|
@@ -103,11 +139,29 @@ module ActiveFacts
         end
         @component_by_fact = {}
 
-        @constellation.ObjectType.each do |key, object_type|
-          trace :binarize, "Populating possible absorptions for #{object_type.name}" do
+        @model_topics = {}
+        if @option_source || @option_target
+          import_role = @option_source ? 'source' : 'target'
+          if model_topic = find_topic(import_role)
+            build_binary_mappings(model_topic)
+          else
+            raise "Could not find #{import_role} model"
+          end
+        else
+          @constellation.ObjectType.each do |key, object_type|
             @binary_mappings[object_type]  # Ensure we create the top Mapping even if it has no references
+          end
+        end
+
+        @binary_mappings.each do |object_type, mapping|
+          trace :binarize, "Populating possible absorptions for #{object_type.name}" do
 
             object_type.all_role.each do |role|
+
+              # byebug if role.counterpart.name == "IJC ID"
+
+              # Exclude fact types not in @model_topics
+              next if @model_topics.size > 0 && !@model_topics.key?(role.fact_type.concept.topic)
               # Exclude base roles in objectified fact types (unless unary); just use link fact types
               next if role.fact_type.entity_type && role.fact_type.all_role.size != 1
               next if role.variable   # REVISIT: Continue to ignore roles in derived fact types?
@@ -166,7 +220,7 @@ module ActiveFacts
             detect do |c|
                 (rr = c.role_sequence.all_role_ref.single) and
                 rr.role == role
-            end 
+            end
 
         if from_1 || fact_type.entity_type
           # This is a role in an objectified fact type

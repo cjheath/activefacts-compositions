@@ -14,7 +14,9 @@ module ActiveFacts
 
       def self.options
         {
-          surrogates: ['Boolean', "Inject a surrogate key into each table whose primary key is not already suitable as a foreign key"]
+          surrogates: ['Boolean', "Inject a surrogate key into each table whose primary key is not already suitable as a foreign key"],
+          source: ['Boolean', "Generate composition for source model"],
+          target: ['Boolean', "Generate composition for target model"]
         }
       end
 

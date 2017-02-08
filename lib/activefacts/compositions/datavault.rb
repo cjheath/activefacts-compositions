@@ -20,6 +20,8 @@ module ActiveFacts
           linkname: ['String', "Suffix or pattern for naming link tables. Include a + to insert the name. Default 'LINK'"],
           satname: ['String', "Suffix or pattern for naming satellite tables. Include a + to insert the name. Default 'SAT'"],
           refname: ['String', "Suffix or pattern for naming reference tables. Include a + to insert the name. Default '+'"],
+          source: ['Boolean', "Generate composition for source model"],
+          target: ['Boolean', "Generate composition for target model"]
         }
       end
 
@@ -97,8 +99,7 @@ module ActiveFacts
             @links_as_hubs = {}
             fk_dependencies_by_target = {}
             fk_dependencies_by_source = {}
-            (@hub_composites+@link_composites).
-            each do |composite|
+            (@hub_composites+@link_composites).each do |composite|
               target_composites = enumerate_foreign_keys composite.mapping
               target_composites.each do |target_composite|
                 next if @reference_composites.include?(target_composite)
@@ -154,8 +155,7 @@ module ActiveFacts
         # For each hub and link, move each non-identifying member
         # to a new satellite or promote it to a new link.
 
-        @non_reference_composites.
-        each do |composite|
+        @non_reference_composites.each do |composite|
           devolve composite
         end
 
