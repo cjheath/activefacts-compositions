@@ -54,6 +54,14 @@ class SchemaCompositor
     @compositors = []
     @generators = []
     @options.clone.each do |option, modes|
+
+      # Flip option and first mode if option is source or target
+      if option == 'source' || option == 'target'
+        compositor, flag = modes.shift
+        modes[option] = true
+        option = compositor
+      end
+
       if action = ActiveFacts::Compositions.compositors[option]
         options.delete(option)
         check_options(action, modes)

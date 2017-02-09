@@ -33,6 +33,7 @@ module ActiveFacts
         @options = options
         @option_source = options.delete('source')
         @option_target = options.delete('target')
+        @option_transform = options.delete('transform')
       end
 
       # Generate all Mappings into @binary_mappings for a binary composition of all ObjectTypes in this constellation
@@ -142,14 +143,31 @@ module ActiveFacts
         @model_topics = {}
         if @option_source || @option_target
           import_role = @option_source ? 'source' : 'target'
-          if model_topic = find_topic(import_role)
-            build_binary_mappings(model_topic)
-          else
-            raise "Could not find #{import_role} model"
+          trace :binarize, "Build binary bindings for #{import_role} model" do
+            if model_topic = find_topic(import_role)
+              build_binary_mappings(model_topic)
+            else
+              raise "Could not find #{import_role} model"
+            end
+          end
+        elsif @option_transform
+          trace :binarize, "Build binary bindings for transform model" do
+            transform_topic = @constellation.Topic.values.select do |topic|
+              @constellation.Import.values.select{|i| i.precursor_topic == topic}.size == 0
+            end.first
+
+            # add binary mapping for all object types in the transform model
+            transform_topic.all_concept.each do |concept|
+              if concept.object_type
+                @binary_mappings[concept.object_type]
+              end
+            end
           end
         else
-          @constellation.ObjectType.each do |key, object_type|
-            @binary_mappings[object_type]  # Ensure we create the top Mapping even if it has no references
+          trace :binarize, "Build binary bindings for full model" do
+            @constellation.ObjectType.each do |key, object_type|
+              @binary_mappings[object_type]  # Ensure we create the top Mapping even if it has no references
+            end
           end
         end
 

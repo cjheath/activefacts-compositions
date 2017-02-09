@@ -16,7 +16,8 @@ module ActiveFacts
         {
           surrogates: ['Boolean', "Inject a surrogate key into each table whose primary key is not already suitable as a foreign key"],
           source: ['Boolean', "Generate composition for source model"],
-          target: ['Boolean', "Generate composition for target model"]
+          target: ['Boolean', "Generate composition for target model"],
+          transform: ['Boolean', "Generate composition for transform model"]
         }
       end
 
@@ -185,10 +186,10 @@ module ActiveFacts
                 next true if a.full_absorption && child_candidate.full_absorption.absorption != a
 
                 # If our counterpart is a full absorption, don't try to reverse that!
-                next false if (a.forward_absorption || a.reverse_absorption).full_absorption
+                next false if (aa = (a.forward_absorption || a.reverse_absorption)) && aa.full_absorption
 
                 # Otherwise the other end must already be a table or fully absorbed into one
-                next false unless child_candidate.is_table || child_candidate.full_absorption
+                next false unless child_candidate.nil? || child_candidate.is_table || child_candidate.full_absorption
 
                 next false unless a.child_role.is_unique && a.parent_role.is_unique   # Must be one-to-one
 
