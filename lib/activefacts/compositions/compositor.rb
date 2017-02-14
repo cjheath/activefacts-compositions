@@ -13,8 +13,6 @@
 #
 require "activefacts/metamodel"
 
-require 'byebug'
-
 module ActiveFacts
   module Compositions
     class Compositor
@@ -175,9 +173,6 @@ module ActiveFacts
           trace :binarize, "Populating possible absorptions for #{object_type.name}" do
 
             object_type.all_role.each do |role|
-
-              # byebug if role.counterpart.name == "IJC ID"
-
               # Exclude fact types not in @model_topics
               next if @model_topics.size > 0 && !@model_topics.key?(role.fact_type.concept.topic)
               # Exclude base roles in objectified fact types (unless unary); just use link fact types
