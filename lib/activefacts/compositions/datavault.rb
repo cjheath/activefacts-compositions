@@ -20,8 +20,8 @@ module ActiveFacts
           linkname: ['String', "Suffix or pattern for naming link tables. Include a + to insert the name. Default 'LINK'"],
           satname: ['String', "Suffix or pattern for naming satellite tables. Include a + to insert the name. Default 'SAT'"],
           refname: ['String', "Suffix or pattern for naming reference tables. Include a + to insert the name. Default '+'"],
-          source: ['Boolean', "Generate composition for source model"],
-          target: ['Boolean', "Generate composition for target model"]
+          source: ['Boolean', "Generate composition for source schema"],
+          target: ['Boolean', "Generate composition for target schema"]
         }
       end
 

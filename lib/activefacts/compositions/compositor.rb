@@ -20,8 +20,8 @@ module ActiveFacts
 
       def self.options
         {
-          source: ['Boolean', "Generate composition for source model"],
-          target: ['Boolean', "Generate composition for target model"]
+          source: ['Boolean', "Generate composition for source schema"],
+          target: ['Boolean', "Generate composition for target schema"]
         }
       end
 
@@ -106,23 +106,23 @@ module ActiveFacts
         end
       end
 
-      def build_binary_mappings model_topic
-        trace :binarize, "Build_binary_mappings for #{model_topic.topic_name}"
-        if @model_topics.key?(model_topic)
+      def build_binary_mappings schema_topic
+        trace :binarize, "Build_binary_mappings for #{schema_topic.topic_name}"
+        if @schema_topics.key?(schema_topic)
           trace :binarize, "already built, skip"
           return
         end
-        @model_topics[model_topic] = true
+        @schema_topics[schema_topic] = true
 
-        # add binary mapping for all object types in this model
-        model_topic.all_concept.each do |concept|
+        # add binary mapping for all object types in this schema
+        schema_topic.all_concept.each do |concept|
           if concept.object_type
             @binary_mappings[concept.object_type]
           end
         end
 
-        # recurse through precursor models
-        model_topic.all_import.each do |import|
+        # recurse through precursor schemas
+        schema_topic.all_import.each do |import|
           build_binary_mappings(import.precursor_topic)
         end
       end
@@ -138,23 +138,23 @@ module ActiveFacts
         end
         @component_by_fact = {}
 
-        @model_topics = {}
+        @schema_topics = {}
         if @option_source || @option_target
           import_role = @option_source ? 'source' : 'target'
-          trace :binarize, "Build binary bindings for #{import_role} model" do
-            if model_topic = find_topic(import_role)
-              build_binary_mappings(model_topic)
+          trace :binarize, "Build binary bindings for #{import_role} schema" do
+            if schema_topic = find_topic(import_role)
+              build_binary_mappings(schema_topic)
             else
-              raise "Could not find #{import_role} model"
+              raise "Could not find #{import_role} schema"
             end
           end
         elsif @option_transform
-          trace :binarize, "Build binary bindings for transform model" do
+          trace :binarize, "Build binary bindings for transform schema" do
             transform_topic = @constellation.Topic.values.select do |topic|
               @constellation.Import.values.select{|i| i.precursor_topic == topic}.size == 0
             end.first
 
-            # add binary mapping for all object types in the transform model
+            # add binary mapping for all object types in the transform schema
             transform_topic.all_concept.each do |concept|
               if concept.object_type
                 @binary_mappings[concept.object_type]
@@ -162,7 +162,7 @@ module ActiveFacts
             end
           end
         else
-          trace :binarize, "Build binary bindings for full model" do
+          trace :binarize, "Build binary bindings for full schema" do
             @constellation.ObjectType.each do |key, object_type|
               @binary_mappings[object_type]  # Ensure we create the top Mapping even if it has no references
             end
@@ -173,8 +173,8 @@ module ActiveFacts
           trace :binarize, "Populating possible absorptions for #{object_type.name}" do
 
             object_type.all_role.each do |role|
-              # Exclude fact types not in @model_topics
-              next if @model_topics.size > 0 && !@model_topics.key?(role.fact_type.concept.topic)
+              # Exclude fact types not in @schema_topics
+              next if @schema_topics.size > 0 && !@schema_topics.key?(role.fact_type.concept.topic)
               # Exclude base roles in objectified fact types (unless unary); just use link fact types
               next if role.fact_type.entity_type && role.fact_type.all_role.size != 1
               next if role.variable   # REVISIT: Continue to ignore roles in derived fact types?

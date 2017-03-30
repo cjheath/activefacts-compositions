@@ -14,8 +14,8 @@ module ActiveFacts
       def self.options
         {
           stgname: ['String', "Suffix or pattern for naming staging tables. Include a + to insert the name. Default 'STG'"],
-          source: ['Boolean', "Generate composition for source model"],
-          target: ['Boolean', "Generate composition for target model"]
+          source: ['Boolean', "Generate composition for source schema"],
+          target: ['Boolean', "Generate composition for target schema"]
         }
       end
 
