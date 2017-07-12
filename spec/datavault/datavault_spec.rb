@@ -72,11 +72,10 @@ describe "DataVault schema from CQL" do
   end
   
   # Business Data Vault tests
-  file_and_options = [ {:file => 'DV2book.cql', :option => 'raw'}, {:file => 'DV2bookBDV.cql', :option => 'business'} ]
+  file_and_options = [ {file: 'DV2book.cql', options: {'datavault' => 'raw'}}, {file: 'DV2bookBDV.cql', options: {'datavault' => 'business'}} ]
   file_and_options.each do |file_and_option|
     cql_file = BDV_CQL_DIR + '/' + file_and_option[:file]
-    options = {}
-    options[file_and_option[:option]] = true
+    options = file_and_option[:options]
     it "produces the expected DataVault SQL output for #{cql_file}" do
       basename = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, '\2')
       expected = expected_dir+'/'+basename+'.sql'
@@ -88,10 +87,10 @@ describe "DataVault schema from CQL" do
 
       vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
       vocabulary.finalise
-      compositor = ActiveFacts::Compositions::DataVault.new(vocabulary.constellation, basename, options)
+      compositor = ActiveFacts::Compositions::DataVault.new(vocabulary.constellation, basename, {})
       compositor.generate
 
-      output = ActiveFacts::Generators::SQL.new([compositor.composition], {}).generate
+      output = ActiveFacts::Generators::SQL.new([compositor.composition], options).generate
 
       # Save or delete the actual output file:
       if expected_text != output

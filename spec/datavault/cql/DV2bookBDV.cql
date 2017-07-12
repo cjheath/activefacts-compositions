@@ -10,7 +10,7 @@ import schema DV2Book;
  */
 each Age is written as Integer;
     
-Passenger has one Age /*[satellite PassengerBDV]*/ where
+Passenger has one [computed satellite Passenger] Age where
     Passenger has Birth Date,
     Age = /*DATEDIFF('year', Birth Date, NOW())*/ 18;
 
@@ -25,24 +25,24 @@ each Passenger Same As [separate, same as link] is where
  * Hierarchy Link
  */
 
-each Part Hierachy [separate, hierarchy link] is where
+each Part Hierarchy [separate, hierarchy link] is where
     Part is child of at most one parent- Part;
 
 /*
  * Computed Link
  */
 
-Service [computed link] is where
+Service Computed [computed link] is where
     Airline flies from origin- Airport to destination- Airport;
     
-// Service has Count where
+// Service Computed has Count where
 //     count of Flight Number in Connection;
     
 /*
  * Exploration Link
  */
 
-each Airplane Part Manufacturer [exploration link] is where
+each Airplane Part Manufacturer Exploration [exploration link] is where
     Airplane has parts from Manufacturer;
 
 Airplane has parts from Manufacturer where

@@ -14,14 +14,16 @@ module ActiveFacts
   module Generators
     # Options are comma or space separated:
     # * delay_fks Leave all foreign keys until the end, not just those that contain forward-references
-    # * underscore 
+    # * underscore
     class SQL
       MM = ActiveFacts::Metamodel unless const_defined?(:MM)
+      BDV_NAME_SUFFIX = /Same As LINK$|Hierarchy LINK$|Computed LINK$|Exploration LINK$|Computed SAT$|PIT$|BRIDGE$/
       def self.options
         {
           delay_fks: ['Boolean', "Delay emitting all foreign keys until the bottom of the file"],
-          underscore: [String, "Use 'str' instead of underscore between words in table names"],
+          underscore: ['String', "Use 'str' instead of underscore between words in table names"],
           unicode: ['Boolean', "Use Unicode for all text fields by default"],
+          datavault: ['String', "Generate 'raw' or 'business' data vault tables"]
         }
       end
 
@@ -32,17 +34,23 @@ module ActiveFacts
         @delay_fks = options.delete "delay_fks"
         @underscore = options.has_key?("underscore") ? (options['underscore'] || '_') : ''
         @unicode = options.delete "unicode"
+        @datavault = options.delete "datavault"
+        @never_delay_fks = @datavault && @datavault == 'business'
       end
 
       def generate
         @tables_emitted = {}
         @delayed_foreign_keys = []
 
+        composite_list = @composition.all_composite.sort_by{|composite| composite.mapping.name}
+        if @datavault
+          composite_list = @datavault == 'business' ?
+            composite_list.select{|c| c.mapping.name =~ BDV_NAME_SUFFIX} :
+            composite_list.select{|c| c.mapping.name !~ BDV_NAME_SUFFIX}
+        end
+
         generate_schema +
-        @composition.
-        all_composite.
-        sort_by{|composite| composite.mapping.name}.
-        map{|composite| generate_table composite}*"\n" + "\n" +
+        composite_list.map{|composite| generate_table composite}*"\n" + "\n" +
         @delayed_foreign_keys.sort*"\n"
       end
 
@@ -88,7 +96,7 @@ module ActiveFacts
           end.compact.sort +
           composite.all_foreign_key_as_source_composite.map do |fk|
             fk_text = generate_foreign_key fk
-            if !@delay_fks and @tables_emitted[fk.composite]
+            if @never_delay_fks or (!@delay_fks and @tables_emitted[fk.composite])
               fk_text
             else
               @delayed_foreign_keys <<

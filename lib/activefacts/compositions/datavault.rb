@@ -10,8 +10,9 @@ require "activefacts/compositions/relational"
 module ActiveFacts
   module Compositions
     class DataVault < Relational
-      BDV_ANNOTATIONS = /same as link|hierarchy link|computed link|exploration link|point in time|bridge/
+      BDV_ANNOTATIONS = /same as link|hierarchy link|computed link|exploration link|computed satellite|point in time|bridge/
       BDV_LINK_ANNOTATIONS = /same as link|hierarchy link|computed link|exploration link/
+      BDV_SAT_ANNOTATIONS = /computed satellite/
       BDV_PIT_ANNOTATIONS = /point in time/
       BDV_BRIDGE_ANNOTATIONS = /bridge/
 
@@ -29,8 +30,6 @@ module ActiveFacts
           refname: ['String', "Suffix or pattern for naming reference tables. Include a + to insert the name. Default '+'"],
           source: ['Boolean', "Generate composition for source schema"],
           target: ['Boolean', "Generate composition for target schema"],
-          raw: ['Boolean', "Generate Raw Data Vault composition.  Default true"],
-          business: ['Boolean', "Generate Business Data Vault composition"]
         }
       end
 
@@ -51,8 +50,6 @@ module ActiveFacts
         @option_bridge_name.sub!(/^/,'+ ') unless @option_ref_name =~ /\+/
         @option_ref_name = options.delete('refname') || 'REF'
         @option_ref_name.sub!(/^/,'+ ') unless @option_ref_name =~ /\+/
-        @option_bdv = !options.delete('raw')
-        @option_bdv = options.delete('business')
 
         super constellation, name, options
 
@@ -110,21 +107,17 @@ module ActiveFacts
           @link_composites = []
           @sat_composites = []
           @bdv_link_composites = []
+          @bdv_sat_composites = []
           @pit_composites = []
           @bridge_composites = []
           @key_structure = {}
           @links_as_hubs = {}
           @pit_hub = {}
           @pit_members = {}
+          @pit_satellite = {}
 
           rdv_classify_composites
           bdv_classify_composites
-
-          # if (@option_bdv)
-          #   bdv_classify_composites
-          # else
-          #   rdv_classify_composites
-          # end
 
           trace :datavault_classification!, "Data Vault classification of composites:" do
             trace :datavault, "Reference: #{@reference_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
@@ -133,6 +126,7 @@ module ActiveFacts
             trace :datavault, "Hub: #{@hub_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
             trace :datavault, "Link: #{@link_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
             trace :datavault, "BDV Link: #{@bdv_link_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
+            trace :datavault, "BDV Sat: #{@bdv_sat_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
             trace :datavault, "PIT: #{@pit_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
             trace :datavault, "Bridge: #{@bridge_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
           end
@@ -161,17 +155,7 @@ module ActiveFacts
 
           pit_members = composite.mapping.all_member.select do |member|
             if member.is_a?(MM::Absorption)
-              # found_pit = (
-              #   pc = member.parent_role.base_role.uniqueness_constraint and
-              #   pc.concept.all_concept_annotation.detect{|ca| ca.mapping_annotation =~ BDV_PIT_ANNOTATIONS}
-              # )
-
-              all_pc = member.parent_role.all_role_ref.map(&:role_sequence).uniq.flat_map(&:all_presence_constraint).uniq
-              found_pit = all_pc.detect do |pc|
-                pc.concept.all_concept_annotation.detect{ |ca| ca.mapping_annotation =~ BDV_PIT_ANNOTATIONS}
-              end
-
-              if found_pit
+              if found_pit = check_pit(member)
                 trace :datavault, "Found PIT member #{member.child_role.object_type.name}"
               end
               found_pit
@@ -186,6 +170,13 @@ module ActiveFacts
             @pit_hub[pit_composite] = composite
             @pit_members[pit_composite] = pit_members
           end
+        end
+      end
+
+      def check_pit component
+        all_pc = component.parent_role.all_role_ref.map(&:role_sequence).uniq.flat_map(&:all_presence_constraint).uniq
+        all_pc.detect do |pc|
+          pc.concept.all_concept_annotation.detect{ |ca| ca.mapping_annotation =~ BDV_PIT_ANNOTATIONS}
         end
       end
 
@@ -329,58 +320,77 @@ module ActiveFacts
           @constellation.loggers.pop if trace :reference_retraction
         end
 
-        # Devolve point in time tables
-        if @option_bdv
-          @pit_composites.each do |composite|
-            devolve_pit(composite)
-          end
+        # Devolve point in time tables, if any
+        @pit_composites.each do |composite|
+          devolve_pit(composite)
         end
 
-        # Retract the composites of the opposite vault
-        retraction_composites =
-          @option_bdv ?
-            (@hub_composites + @link_composites + @sat_composites) :
-            (@bdv_link_composites + @bridge_composites + @pit_composites)
-        retraction_composites.each do |rc|
-          rc.retract
-        end
       end
 
-      def devolve_pit(composite)
+      def devolve_pit(pit_composite)
         # inject standard PIT components: surrogate key, hub hash key and snapshot date time
-        inject_surrogate(composite)
+        inject_surrogate(pit_composite)
 
-        hub_composite = @pit_hub[composite]
-        hub_hash_key = hub_composite.primary_index.all_index_field.single.component
-        hub_field = hub_hash_key.fork_to_new_parent(composite.mapping)
+        hub_composite = @pit_hub[pit_composite]
+        hub_hash_field = hub_composite.primary_index.all_index_field.single.component
+        pit_hub_field = hub_hash_field.fork_to_new_parent(pit_composite.mapping)
         date_field = @constellation.ValidFrom(:new,
-          parent: composite.mapping,
+          parent: pit_composite.mapping,
           name: "Snapshot"+datestamp_type_name,
           object_type: datestamp_type
         )
 
         natural_index =
-          @constellation.Index(:new, composite: composite, is_unique: true,
-            presence_constraint: nil, composite_as_natural_index: composite #, composite_as_primary_index: satellite
+          @constellation.Index(:new, composite: pit_composite, is_unique: true,
+            presence_constraint: nil, composite_as_natural_index: pit_composite #, composite_as_primary_index: pit_composite
             )
-        @constellation.IndexField(access_path: natural_index, ordinal: 0, component: hub_field)
+        @constellation.IndexField(access_path: natural_index, ordinal: 0, component: pit_hub_field)
         @constellation.IndexField(access_path: natural_index, ordinal: 1, component: date_field)
 
-        # inject hash and load date time for pit members
-        pit_members = @pit_members[composite]
-        pit_members.each do |pm|
-          sat_name = satellite_base_name(pm)
+        # Add a foreign key to the hub
+        fk = @constellation.ForeignKey(
+            :new,
+            source_composite: pit_composite,
+            composite: hub_composite,
+            absorption: nil           # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+          )
+        @constellation.ForeignKeyField(foreign_key: fk, ordinal: 0, component: pit_hub_field)
+        # This should be filled in by complete_foreign_keys, but there is no Absorption
+        @constellation.IndexField(access_path: fk, ordinal: 0, component: hub_hash_field)
+
+        # inject hash and load date time for sats associated with all pit members
+        pit_members = @pit_members[pit_composite]
+        sat_composites = pit_members.map{|pm| @pit_satellite[pm]}.compact.uniq
+
+        sat_composites.each do |sat_composite|
+          sat_name = sat_composite.mapping.name
           sat_hash_name = "#{sat_name}#{@option_id}"
 
-          sat_hash_field = hub_hash_key.fork_to_new_parent(composite.mapping)
-          sat_hash_field.name = sat_hash_name
-          sat_load_field = @constellation.ValidFrom(:new,
-            parent: composite.mapping,
+          src_hash_field = hub_hash_field.fork_to_new_parent(pit_composite.mapping)
+          src_hash_field.name = sat_hash_name
+          src_load_field = @constellation.ValidFrom(:new,
+            parent: pit_composite.mapping,
             name: "#{sat_name} Load"+datestamp_type_name,
             object_type: datestamp_type
           )
+
+          sat_index_fields = sat_composite.primary_index.all_index_field.to_a
+          sat_hash_field = sat_index_fields[0].component
+          sat_load_field = sat_index_fields[1].component
+
+          # Add a foreign key to the satellite's primary key and load date time
+          fk = @constellation.ForeignKey(
+              :new,
+              source_composite: pit_composite,
+              composite: sat_composite,
+              absorption: nil           # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+            )
+          @constellation.ForeignKeyField(foreign_key: fk, ordinal: 0, component: src_hash_field)
+          @constellation.IndexField(access_path: fk, ordinal: 0, component: sat_hash_field)
+          @constellation.ForeignKeyField(foreign_key: fk, ordinal: 1, component: src_load_field)
+          @constellation.IndexField(access_path: fk, ordinal: 1, component: sat_load_field)
         end
-        composite.mapping.re_rank
+        pit_composite.mapping.re_rank
       end
 
       def delete_reference_table_foreign_keys
@@ -436,12 +446,12 @@ module ActiveFacts
             # We may absorb a subtype that has no contents. There's no point moving these to a satellite.
             next if is_empty_inheritance member
 
-            satellite_name = name_satellite member
-            satellite = satellites[satellite_name]
-            unless satellite
-              satellite =
-              satellites[satellite_name] =
-                create_satellite satellite_name, composite
+            satellite_name = name_satellite(member)
+            if !(satellite = satellites[satellite_name])
+              satellite = satellites[satellite_name] = create_satellite(satellite_name, composite)
+              if member.is_a?(MM::Absorption) && check_pit(member)
+                @pit_satellite[member] = satellite
+              end
             end
 
             devolve_member_to_satellite satellite, member
@@ -496,7 +506,11 @@ module ActiveFacts
           satellite.all_local_constraint.map(&:local_constraint).each(&:retract)
           leaf_constraints = satellite.mapping.all_leaf.flat_map(&:all_leaf_constraint).map(&:leaf_constraint).each(&:retract)
 
-          @sat_composites << satellite
+          if satellite.mapping.name =~ /Computed #{@option_sat_name}$/
+            @bdv_sat_composites << satellite
+          else
+            @sat_composites << satellite
+          end
         end
       end
 
@@ -505,7 +519,10 @@ module ActiveFacts
         satellite_name =
           if component.is_a?(MM::Absorption)
             pc = component.parent_role.base_role.uniqueness_constraint and
-            pc.concept.all_concept_annotation.map{|ca| ca.mapping_annotation =~ /^satellite *(.*)/ && $1}.compact.uniq[0]
+            pc.concept.all_concept_annotation.map do |ca|
+              ca.mapping_annotation =~ /^satellite *(.*)/ && $1 or
+              ca.mapping_annotation =~ /^computed satellite *(.*)/ && "#{$1} Computed"
+            end.compact.uniq[0]
           # REVISIT: How do we name the satellite for an Indicator? Add a Concept Annotation on the fact type?
           end
         satellite_name = satellite_name.words.capcase if satellite_name
@@ -670,14 +687,17 @@ module ActiveFacts
       end
 
       def rename_parents
-        @link_composites.each do |composite|
-          composite.mapping.name = apply_name(@option_link_name, composite.mapping.name)
+        @reference_composites.each do |composite|
+          composite.mapping.name = apply_name(@option_ref_name, composite.mapping.name)
         end
         @hub_composites.each do |composite|
           composite.mapping.name = apply_name(@option_hub_name, composite.mapping.name)
         end
-        @reference_composites.each do |composite|
-          composite.mapping.name = apply_name(@option_ref_name, composite.mapping.name)
+        @link_composites.each do |composite|
+          composite.mapping.name = apply_name(@option_link_name, composite.mapping.name)
+        end
+        @bdv_link_composites.each do |composite|
+          composite.mapping.name = apply_name(@option_link_name, composite.mapping.name)
         end
         @pit_composites.each do |composite|
           composite.mapping.name = apply_name(@option_pit_name, composite.mapping.name)

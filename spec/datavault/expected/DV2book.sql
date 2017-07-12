@@ -15,7 +15,7 @@ CREATE TABLE AirlineHUB (
 
 
 CREATE TABLE AirlineSAT (
-	-- Airline SAT surrogate key
+	-- Airline HUB surrogate key
 	AirlineHID                              BIGINT NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE AirportHUB (
 
 
 CREATE TABLE AirportSAT (
-	-- Airport SAT surrogate key
+	-- Airport HUB surrogate key
 	AirportHID                              BIGINT NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
@@ -201,7 +201,7 @@ CREATE TABLE PartHUB (
 
 
 CREATE TABLE PartSAT (
-	-- Part SAT surrogate key
+	-- Part HUB surrogate key
 	PartHID                                 BIGINT NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
@@ -232,7 +232,7 @@ CREATE TABLE PassengerHUB (
 
 
 CREATE TABLE PassengerSAT (
-	-- Passenger SAT surrogate key
+	-- Passenger HUB surrogate key
 	PassengerHID                            BIGINT NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
@@ -247,7 +247,7 @@ CREATE TABLE PassengerSAT (
 
 
 CREATE TABLE PassengerNameSAT (
-	-- PassengerName SAT surrogate key
+	-- Passenger HUB surrogate key
 	PassengerHID                            BIGINT NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
@@ -256,6 +256,21 @@ CREATE TABLE PassengerNameSAT (
 	-- Passenger has Name
 	Name                                    VARCHAR(48) NOT NULL,
 	-- Primary index to PassengerName SAT
+	PRIMARY KEY CLUSTERED(PassengerHID, LoadDateTime),
+	FOREIGN KEY (PassengerHID) REFERENCES PassengerHUB (PassengerHID)
+);
+
+
+CREATE TABLE PreferredDishSAT (
+	-- Passenger HUB surrogate key
+	PassengerHID                            BIGINT NOT NULL,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
+	-- LoadDateTime
+	LoadDateTime                            TIMESTAMP,
+	-- Passenger has Preferred Dish
+	PreferredDish                           VARCHAR NOT NULL,
+	-- Primary index to PreferredDish SAT
 	PRIMARY KEY CLUSTERED(PassengerHID, LoadDateTime),
 	FOREIGN KEY (PassengerHID) REFERENCES PassengerHUB (PassengerHID)
 );

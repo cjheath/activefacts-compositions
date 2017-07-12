@@ -46,10 +46,12 @@ each Assigned Airplane is where
 
 // Passenger
 each Birth Date is written as DateTime;
+each Preferred Dish is written as String;
 
 each Passenger is identified by its ID;
 Passenger has one [satellite passenger name, point in time] Name;
 Passenger has one Birth Date;
+Passenger has one [satellite preferred dish, point in time] Preferred Dish;
 
 // Part
 each Part is identified by its ID;
