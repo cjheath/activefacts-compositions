@@ -403,7 +403,7 @@ module ActiveFacts
       end
 
       def prefer_natural_key building_natural_key, source_composite, target_composite
-        return false if building_natural_key && @link_composites.include?(source_composite)
+        return false if building_natural_key && (@link_composites.include?(source_composite) || @bdv_link_composites.include?(source_composite))
         building_natural_key && @hub_composites.include?(target_composite)
       end
 
