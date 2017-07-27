@@ -4,7 +4,7 @@
 <XMI xmlns:CWM="org.omg.CWM1.1" xmlns:CWMRDB="org.omg.CWM1.1/Relational" xmi.version="1.1">
   <XMI.header>
     <XMI.documentation>
-      <XMI.exporter>Infinuedo APRIMO</XMI.exporter>
+      <XMI.exporter>ActiveFacts</XMI.exporter>
       <XMI.exporterVersion>0.1</XMI.exporterVersion>
     </XMI.documentation>
     <XMI.metamodel xmi.name="CWM" xmi.version="1.1" />  </XMI.header>
@@ -147,11 +147,11 @@
 
             <CWMRDB:Table xmi.id="_47" name="EA_LeastLeast" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_49" name="CALeast" isNullable="columnNoNulls" visibility="public" type="_276" owner="_47" />
-                <CWMRDB:Column xmi.id="_48" name="EALeastID" isNullable="columnNoNulls" visibility="public" type="_277" owner="_47" />
+                <CWMRDB:Column xmi.id="_48" name="CALeast" isNullable="columnNoNulls" visibility="public" type="_276" owner="_47" />
+                <CWMRDB:Column xmi.id="_49" name="EALeastID" isNullable="columnNoNulls" visibility="public" type="_277" owner="_47" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_50" name="XPKEA_LeastLeast" visibility="public" namespace="_47" feature="_48">
+                <CWMRDB:PrimaryKey xmi.id="_50" name="XPKEA_LeastLeast" visibility="public" namespace="_47" feature="_49">
                 <CWM:UniqueKey.keyRelationship>
                  <CWM:KeyRelationship xmi.idref="_7"/>
                  <CWM:KeyRelationship xmi.idref="_31"/>
@@ -162,11 +162,11 @@
 
             <CWMRDB:Table xmi.id="_51" name="EA_LeastMany" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_53" name="CALeastMany" isNullable="columnNoNulls" visibility="public" type="_278" owner="_51" />
-                <CWMRDB:Column xmi.id="_52" name="EALeastManyID" isNullable="columnNoNulls" visibility="public" type="_279" owner="_51" />
+                <CWMRDB:Column xmi.id="_52" name="CALeastMany" isNullable="columnNoNulls" visibility="public" type="_278" owner="_51" />
+                <CWMRDB:Column xmi.id="_53" name="EALeastManyID" isNullable="columnNoNulls" visibility="public" type="_279" owner="_51" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_54" name="XPKEA_LeastMany" visibility="public" namespace="_51" feature="_52">
+                <CWMRDB:PrimaryKey xmi.id="_54" name="XPKEA_LeastMany" visibility="public" namespace="_51" feature="_53">
                 <CWM:UniqueKey.keyRelationship>
                  <CWM:KeyRelationship xmi.idref="_13"/>
                  <CWM:KeyRelationship xmi.idref="_36"/>
@@ -177,11 +177,11 @@
 
             <CWMRDB:Table xmi.id="_55" name="EA_LeastMost" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_57" name="CALeastMost" isNullable="columnNoNulls" visibility="public" type="_280" owner="_55" />
-                <CWMRDB:Column xmi.id="_56" name="EALeastMostID" isNullable="columnNoNulls" visibility="public" type="_281" owner="_55" />
+                <CWMRDB:Column xmi.id="_56" name="CALeastMost" isNullable="columnNoNulls" visibility="public" type="_280" owner="_55" />
+                <CWMRDB:Column xmi.id="_57" name="EALeastMostID" isNullable="columnNoNulls" visibility="public" type="_281" owner="_55" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_58" name="XPKEA_LeastMost" visibility="public" namespace="_55" feature="_56">
+                <CWMRDB:PrimaryKey xmi.id="_58" name="XPKEA_LeastMost" visibility="public" namespace="_55" feature="_57">
                 <CWM:UniqueKey.keyRelationship>
                  <CWM:KeyRelationship xmi.idref="_136"/>
                  <CWM:KeyRelationship xmi.idref="_244"/>
@@ -192,11 +192,11 @@
 
             <CWMRDB:Table xmi.id="_59" name="EA_LeastOne" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_61" name="CALeastOne" isNullable="columnNoNulls" visibility="public" type="_282" owner="_59" />
-                <CWMRDB:Column xmi.id="_60" name="EALeastOneID" isNullable="columnNoNulls" visibility="public" type="_283" owner="_59" />
+                <CWMRDB:Column xmi.id="_60" name="CALeastOne" isNullable="columnNoNulls" visibility="public" type="_282" owner="_59" />
+                <CWMRDB:Column xmi.id="_61" name="EALeastOneID" isNullable="columnNoNulls" visibility="public" type="_283" owner="_59" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_62" name="XPKEA_LeastOne" visibility="public" namespace="_59" feature="_60">
+                <CWMRDB:PrimaryKey xmi.id="_62" name="XPKEA_LeastOne" visibility="public" namespace="_59" feature="_61">
                 <CWM:UniqueKey.keyRelationship>
                  <CWM:KeyRelationship xmi.idref="_143"/>
                  <CWM:KeyRelationship xmi.idref="_249"/>
@@ -207,11 +207,11 @@
 
             <CWMRDB:Table xmi.id="_63" name="EA_ManyLeast" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_65" name="CAManyLeast" isNullable="columnNoNulls" visibility="public" type="_284" owner="_63" />
-                <CWMRDB:Column xmi.id="_64" name="EAManyLeastID" isNullable="columnNoNulls" visibility="public" type="_285" owner="_63" />
+                <CWMRDB:Column xmi.id="_64" name="CAManyLeast" isNullable="columnNoNulls" visibility="public" type="_284" owner="_63" />
+                <CWMRDB:Column xmi.id="_65" name="EAManyLeastID" isNullable="columnNoNulls" visibility="public" type="_285" owner="_63" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_66" name="XPKEA_ManyLeast" visibility="public" namespace="_63" feature="_64">
+                <CWMRDB:PrimaryKey xmi.id="_66" name="XPKEA_ManyLeast" visibility="public" namespace="_63" feature="_65">
                 <CWM:UniqueKey.keyRelationship>
                  <CWM:KeyRelationship xmi.idref="_19"/>
                  <CWM:KeyRelationship xmi.idref="_41"/>
@@ -222,11 +222,11 @@
 
             <CWMRDB:Table xmi.id="_67" name="EA_ManyMany" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_69" name="CAMany" isNullable="columnNoNulls" visibility="public" type="_286" owner="_67" />
-                <CWMRDB:Column xmi.id="_68" name="EAManyID" isNullable="columnNoNulls" visibility="public" type="_287" owner="_67" />
+                <CWMRDB:Column xmi.id="_68" name="CAMany" isNullable="columnNoNulls" visibility="public" type="_286" owner="_67" />
+                <CWMRDB:Column xmi.id="_69" name="EAManyID" isNullable="columnNoNulls" visibility="public" type="_287" owner="_67" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_70" name="XPKEA_ManyMany" visibility="public" namespace="_67" feature="_68">
+                <CWMRDB:PrimaryKey xmi.id="_70" name="XPKEA_ManyMany" visibility="public" namespace="_67" feature="_69">
                 <CWM:UniqueKey.keyRelationship>
                  <CWM:KeyRelationship xmi.idref="_25"/>
                  <CWM:KeyRelationship xmi.idref="_46"/>
@@ -237,11 +237,11 @@
 
             <CWMRDB:Table xmi.id="_71" name="EA_ManyMost" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_73" name="CAManyMost" isNullable="columnNoNulls" visibility="public" type="_288" owner="_71" />
-                <CWMRDB:Column xmi.id="_72" name="EAManyMostID" isNullable="columnNoNulls" visibility="public" type="_289" owner="_71" />
+                <CWMRDB:Column xmi.id="_72" name="CAManyMost" isNullable="columnNoNulls" visibility="public" type="_288" owner="_71" />
+                <CWMRDB:Column xmi.id="_73" name="EAManyMostID" isNullable="columnNoNulls" visibility="public" type="_289" owner="_71" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_74" name="XPKEA_ManyMost" visibility="public" namespace="_71" feature="_72">
+                <CWMRDB:PrimaryKey xmi.id="_74" name="XPKEA_ManyMost" visibility="public" namespace="_71" feature="_73">
                 <CWM:UniqueKey.keyRelationship>
                  <CWM:KeyRelationship xmi.idref="_158"/>
                  <CWM:KeyRelationship xmi.idref="_254"/>
@@ -252,11 +252,11 @@
 
             <CWMRDB:Table xmi.id="_75" name="EA_ManyOne" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_77" name="CAManyOne" isNullable="columnNoNulls" visibility="public" type="_290" owner="_75" />
-                <CWMRDB:Column xmi.id="_76" name="EAManyOneID" isNullable="columnNoNulls" visibility="public" type="_291" owner="_75" />
+                <CWMRDB:Column xmi.id="_76" name="CAManyOne" isNullable="columnNoNulls" visibility="public" type="_290" owner="_75" />
+                <CWMRDB:Column xmi.id="_77" name="EAManyOneID" isNullable="columnNoNulls" visibility="public" type="_291" owner="_75" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_78" name="XPKEA_ManyOne" visibility="public" namespace="_75" feature="_76">
+                <CWMRDB:PrimaryKey xmi.id="_78" name="XPKEA_ManyOne" visibility="public" namespace="_75" feature="_77">
                 <CWM:UniqueKey.keyRelationship>
                  <CWM:KeyRelationship xmi.idref="_165"/>
                  <CWM:KeyRelationship xmi.idref="_259"/>
@@ -267,39 +267,39 @@
 
             <CWMRDB:Table xmi.id="_79" name="EA_MostLeast" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_81" name="CAMostLeast" isNullable="columnNoNulls" visibility="public" type="_292" owner="_79" />
-                <CWMRDB:Column xmi.id="_80" name="EAMostLeastID" isNullable="columnNoNulls" visibility="public" type="_293" owner="_79" />
+                <CWMRDB:Column xmi.id="_80" name="CAMostLeast" isNullable="columnNoNulls" visibility="public" type="_292" owner="_79" />
+                <CWMRDB:Column xmi.id="_81" name="EAMostLeastID" isNullable="columnNoNulls" visibility="public" type="_293" owner="_79" />
                 <CWMRDB:Column xmi.id="_82" name="EBMostLeastID" isNullable="columnNullable" visibility="public" type="_294" owner="_79" />
                 <CWMRDB:Column xmi.id="_83" name="VBMostLeast" isNullable="columnNullable" visibility="public" type="_295" owner="_79" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_84" name="XPKEA_MostLeast" visibility="public" namespace="_79" feature="_80"/>
+                <CWMRDB:PrimaryKey xmi.id="_84" name="XPKEA_MostLeast" visibility="public" namespace="_79" feature="_81"/>
                 <CWMRDB:ForeignKey xmi.id="_85" name="R_85" visibility="public" namespace="_79" feature="_82" uniqueKey="_169" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_86" name="EA_MostMany" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_88" name="CAMostMany" isNullable="columnNoNulls" visibility="public" type="_296" owner="_86" />
-                <CWMRDB:Column xmi.id="_87" name="EAMostManyID" isNullable="columnNoNulls" visibility="public" type="_297" owner="_86" />
+                <CWMRDB:Column xmi.id="_87" name="CAMostMany" isNullable="columnNoNulls" visibility="public" type="_296" owner="_86" />
+                <CWMRDB:Column xmi.id="_88" name="EAMostManyID" isNullable="columnNoNulls" visibility="public" type="_297" owner="_86" />
                 <CWMRDB:Column xmi.id="_89" name="EBMostManyID" isNullable="columnNullable" visibility="public" type="_298" owner="_86" />
                 <CWMRDB:Column xmi.id="_90" name="VBMostMany" isNullable="columnNullable" visibility="public" type="_299" owner="_86" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_91" name="XPKEA_MostMany" visibility="public" namespace="_86" feature="_87"/>
+                <CWMRDB:PrimaryKey xmi.id="_91" name="XPKEA_MostMany" visibility="public" namespace="_86" feature="_88"/>
                 <CWMRDB:ForeignKey xmi.id="_92" name="R_92" visibility="public" namespace="_86" feature="_89" uniqueKey="_173" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_93" name="EA_MostMost" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_95" name="CAMost" isNullable="columnNoNulls" visibility="public" type="_300" owner="_93" />
-                <CWMRDB:Column xmi.id="_94" name="EAMostID" isNullable="columnNoNulls" visibility="public" type="_301" owner="_93" />
+                <CWMRDB:Column xmi.id="_94" name="CAMost" isNullable="columnNoNulls" visibility="public" type="_300" owner="_93" />
+                <CWMRDB:Column xmi.id="_95" name="EAMostID" isNullable="columnNoNulls" visibility="public" type="_301" owner="_93" />
                 <CWMRDB:Column xmi.id="_96" name="EBMostID" isNullable="columnNullable" visibility="public" type="_302" owner="_93" />
                 <CWMRDB:Column xmi.id="_97" name="VBMost" isNullable="columnNullable" visibility="public" type="_303" owner="_93" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_98" name="XPKEA_MostMost" visibility="public" namespace="_93" feature="_94"/>
+                <CWMRDB:PrimaryKey xmi.id="_98" name="XPKEA_MostMost" visibility="public" namespace="_93" feature="_95"/>
                 <CWM:UniqueKey xmi.id="_99" name="XPKEA_MostMost" visibility="public" namespace="_93" feature="_96"/>
                 <CWM:UniqueKey xmi.id="_100" name="XPKEA_MostMost" visibility="public" namespace="_93" feature="_97"/>
                 <CWMRDB:ForeignKey xmi.id="_101" name="R_101" visibility="public" namespace="_93" feature="_96" uniqueKey="_178" />
@@ -308,49 +308,49 @@
 
             <CWMRDB:Table xmi.id="_102" name="EA_MostOne" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_104" name="CAMostOne" isNullable="columnNoNulls" visibility="public" type="_304" owner="_102" />
-                <CWMRDB:Column xmi.id="_103" name="EAMostOneID" isNullable="columnNoNulls" visibility="public" type="_305" owner="_102" />
+                <CWMRDB:Column xmi.id="_103" name="CAMostOne" isNullable="columnNoNulls" visibility="public" type="_304" owner="_102" />
+                <CWMRDB:Column xmi.id="_104" name="EAMostOneID" isNullable="columnNoNulls" visibility="public" type="_305" owner="_102" />
                 <CWMRDB:Column xmi.id="_105" name="VBMostOne" isNullable="columnNullable" visibility="public" type="_306" owner="_102" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_106" name="XPKEA_MostOne" visibility="public" namespace="_102" feature="_103"/>
+                <CWMRDB:PrimaryKey xmi.id="_106" name="XPKEA_MostOne" visibility="public" namespace="_102" feature="_104"/>
                 <CWM:UniqueKey xmi.id="_107" name="XPKEA_MostOne" visibility="public" namespace="_102" feature="_105"/>
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_108" name="EA_OneLeast" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_110" name="CAOneLeast" isNullable="columnNoNulls" visibility="public" type="_307" owner="_108" />
-                <CWMRDB:Column xmi.id="_109" name="EAOneLeastID" isNullable="columnNoNulls" visibility="public" type="_308" owner="_108" />
+                <CWMRDB:Column xmi.id="_109" name="CAOneLeast" isNullable="columnNoNulls" visibility="public" type="_307" owner="_108" />
+                <CWMRDB:Column xmi.id="_110" name="EAOneLeastID" isNullable="columnNoNulls" visibility="public" type="_308" owner="_108" />
                 <CWMRDB:Column xmi.id="_111" name="EBOneLeastID" isNullable="columnNoNulls" visibility="public" type="_309" owner="_108" />
                 <CWMRDB:Column xmi.id="_112" name="VBOneLeast" isNullable="columnNoNulls" visibility="public" type="_310" owner="_108" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_113" name="XPKEA_OneLeast" visibility="public" namespace="_108" feature="_109"/>
+                <CWMRDB:PrimaryKey xmi.id="_113" name="XPKEA_OneLeast" visibility="public" namespace="_108" feature="_110"/>
                 <CWMRDB:ForeignKey xmi.id="_114" name="R_114" visibility="public" namespace="_108" feature="_111" uniqueKey="_183" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_115" name="EA_OneMany" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_117" name="CAOneMany" isNullable="columnNoNulls" visibility="public" type="_311" owner="_115" />
-                <CWMRDB:Column xmi.id="_116" name="EAOneManyID" isNullable="columnNoNulls" visibility="public" type="_312" owner="_115" />
+                <CWMRDB:Column xmi.id="_116" name="CAOneMany" isNullable="columnNoNulls" visibility="public" type="_311" owner="_115" />
+                <CWMRDB:Column xmi.id="_117" name="EAOneManyID" isNullable="columnNoNulls" visibility="public" type="_312" owner="_115" />
                 <CWMRDB:Column xmi.id="_118" name="EBOneManyID" isNullable="columnNoNulls" visibility="public" type="_313" owner="_115" />
                 <CWMRDB:Column xmi.id="_119" name="VBOneMany" isNullable="columnNoNulls" visibility="public" type="_314" owner="_115" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_120" name="XPKEA_OneMany" visibility="public" namespace="_115" feature="_116"/>
+                <CWMRDB:PrimaryKey xmi.id="_120" name="XPKEA_OneMany" visibility="public" namespace="_115" feature="_117"/>
                 <CWMRDB:ForeignKey xmi.id="_121" name="R_121" visibility="public" namespace="_115" feature="_118" uniqueKey="_187" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_122" name="EB_LeastLeast" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_124" name="CBLeast" isNullable="columnNoNulls" visibility="public" type="_315" owner="_122" />
-                <CWMRDB:Column xmi.id="_123" name="EBLeastID" isNullable="columnNoNulls" visibility="public" type="_316" owner="_122" />
+                <CWMRDB:Column xmi.id="_123" name="CBLeast" isNullable="columnNoNulls" visibility="public" type="_315" owner="_122" />
+                <CWMRDB:Column xmi.id="_124" name="EBLeastID" isNullable="columnNoNulls" visibility="public" type="_316" owner="_122" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_125" name="XPKEB_LeastLeast" visibility="public" namespace="_122" feature="_123">
+                <CWMRDB:PrimaryKey xmi.id="_125" name="XPKEB_LeastLeast" visibility="public" namespace="_122" feature="_124">
                 <CWM:UniqueKey.keyRelationship>
                  <CWM:KeyRelationship xmi.idref="_8"/>
                  <CWM:KeyRelationship xmi.idref="_204"/>
@@ -361,11 +361,11 @@
 
             <CWMRDB:Table xmi.id="_126" name="EB_LeastMany" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_128" name="CBLeastMany" isNullable="columnNoNulls" visibility="public" type="_317" owner="_126" />
-                <CWMRDB:Column xmi.id="_127" name="EBLeastManyID" isNullable="columnNoNulls" visibility="public" type="_318" owner="_126" />
+                <CWMRDB:Column xmi.id="_127" name="CBLeastMany" isNullable="columnNoNulls" visibility="public" type="_317" owner="_126" />
+                <CWMRDB:Column xmi.id="_128" name="EBLeastManyID" isNullable="columnNoNulls" visibility="public" type="_318" owner="_126" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_129" name="XPKEB_LeastMany" visibility="public" namespace="_126" feature="_127">
+                <CWMRDB:PrimaryKey xmi.id="_129" name="XPKEB_LeastMany" visibility="public" namespace="_126" feature="_128">
                 <CWM:UniqueKey.keyRelationship>
                  <CWM:KeyRelationship xmi.idref="_14"/>
                  <CWM:KeyRelationship xmi.idref="_209"/>
@@ -376,37 +376,37 @@
 
             <CWMRDB:Table xmi.id="_130" name="EB_LeastMost" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_132" name="CBLeastMost" isNullable="columnNoNulls" visibility="public" type="_319" owner="_130" />
-                <CWMRDB:Column xmi.id="_133" name="EALeastMostID" isNullable="columnNullable" visibility="public" type="_320" owner="_130" />
-                <CWMRDB:Column xmi.id="_131" name="EBLeastMostID" isNullable="columnNoNulls" visibility="public" type="_321" owner="_130" />
+                <CWMRDB:Column xmi.id="_131" name="CBLeastMost" isNullable="columnNoNulls" visibility="public" type="_319" owner="_130" />
+                <CWMRDB:Column xmi.id="_132" name="EALeastMostID" isNullable="columnNullable" visibility="public" type="_320" owner="_130" />
+                <CWMRDB:Column xmi.id="_133" name="EBLeastMostID" isNullable="columnNoNulls" visibility="public" type="_321" owner="_130" />
                 <CWMRDB:Column xmi.id="_134" name="VALeastMost" isNullable="columnNullable" visibility="public" type="_322" owner="_130" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_135" name="XPKEB_LeastMost" visibility="public" namespace="_130" feature="_131"/>
-                <CWMRDB:ForeignKey xmi.id="_136" name="R_136" visibility="public" namespace="_130" feature="_133" uniqueKey="_58" />
+                <CWMRDB:PrimaryKey xmi.id="_135" name="XPKEB_LeastMost" visibility="public" namespace="_130" feature="_133"/>
+                <CWMRDB:ForeignKey xmi.id="_136" name="R_136" visibility="public" namespace="_130" feature="_132" uniqueKey="_58" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_137" name="EB_LeastOne" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_139" name="CBLeastOne" isNullable="columnNoNulls" visibility="public" type="_323" owner="_137" />
-                <CWMRDB:Column xmi.id="_140" name="EALeastOneID" isNullable="columnNoNulls" visibility="public" type="_324" owner="_137" />
-                <CWMRDB:Column xmi.id="_138" name="EBLeastOneID" isNullable="columnNoNulls" visibility="public" type="_325" owner="_137" />
+                <CWMRDB:Column xmi.id="_138" name="CBLeastOne" isNullable="columnNoNulls" visibility="public" type="_323" owner="_137" />
+                <CWMRDB:Column xmi.id="_139" name="EALeastOneID" isNullable="columnNoNulls" visibility="public" type="_324" owner="_137" />
+                <CWMRDB:Column xmi.id="_140" name="EBLeastOneID" isNullable="columnNoNulls" visibility="public" type="_325" owner="_137" />
                 <CWMRDB:Column xmi.id="_141" name="VALeastOne" isNullable="columnNoNulls" visibility="public" type="_326" owner="_137" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_142" name="XPKEB_LeastOne" visibility="public" namespace="_137" feature="_138"/>
-                <CWMRDB:ForeignKey xmi.id="_143" name="R_143" visibility="public" namespace="_137" feature="_140" uniqueKey="_62" />
+                <CWMRDB:PrimaryKey xmi.id="_142" name="XPKEB_LeastOne" visibility="public" namespace="_137" feature="_140"/>
+                <CWMRDB:ForeignKey xmi.id="_143" name="R_143" visibility="public" namespace="_137" feature="_139" uniqueKey="_62" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_144" name="EB_ManyLeast" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_146" name="CBManyLeast" isNullable="columnNoNulls" visibility="public" type="_327" owner="_144" />
-                <CWMRDB:Column xmi.id="_145" name="EBManyLeastID" isNullable="columnNoNulls" visibility="public" type="_328" owner="_144" />
+                <CWMRDB:Column xmi.id="_145" name="CBManyLeast" isNullable="columnNoNulls" visibility="public" type="_327" owner="_144" />
+                <CWMRDB:Column xmi.id="_146" name="EBManyLeastID" isNullable="columnNoNulls" visibility="public" type="_328" owner="_144" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_147" name="XPKEB_ManyLeast" visibility="public" namespace="_144" feature="_145">
+                <CWMRDB:PrimaryKey xmi.id="_147" name="XPKEB_ManyLeast" visibility="public" namespace="_144" feature="_146">
                 <CWM:UniqueKey.keyRelationship>
                  <CWM:KeyRelationship xmi.idref="_20"/>
                  <CWM:KeyRelationship xmi.idref="_214"/>
@@ -417,11 +417,11 @@
 
             <CWMRDB:Table xmi.id="_148" name="EB_ManyMany" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_150" name="CBMany" isNullable="columnNoNulls" visibility="public" type="_329" owner="_148" />
-                <CWMRDB:Column xmi.id="_149" name="EBManyID" isNullable="columnNoNulls" visibility="public" type="_330" owner="_148" />
+                <CWMRDB:Column xmi.id="_149" name="CBMany" isNullable="columnNoNulls" visibility="public" type="_329" owner="_148" />
+                <CWMRDB:Column xmi.id="_150" name="EBManyID" isNullable="columnNoNulls" visibility="public" type="_330" owner="_148" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_151" name="XPKEB_ManyMany" visibility="public" namespace="_148" feature="_149">
+                <CWMRDB:PrimaryKey xmi.id="_151" name="XPKEB_ManyMany" visibility="public" namespace="_148" feature="_150">
                 <CWM:UniqueKey.keyRelationship>
                  <CWM:KeyRelationship xmi.idref="_26"/>
                  <CWM:KeyRelationship xmi.idref="_219"/>
@@ -432,37 +432,37 @@
 
             <CWMRDB:Table xmi.id="_152" name="EB_ManyMost" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_154" name="CBManyMost" isNullable="columnNoNulls" visibility="public" type="_331" owner="_152" />
-                <CWMRDB:Column xmi.id="_155" name="EAManyMostID" isNullable="columnNullable" visibility="public" type="_332" owner="_152" />
-                <CWMRDB:Column xmi.id="_153" name="EBManyMostID" isNullable="columnNoNulls" visibility="public" type="_333" owner="_152" />
+                <CWMRDB:Column xmi.id="_153" name="CBManyMost" isNullable="columnNoNulls" visibility="public" type="_331" owner="_152" />
+                <CWMRDB:Column xmi.id="_154" name="EAManyMostID" isNullable="columnNullable" visibility="public" type="_332" owner="_152" />
+                <CWMRDB:Column xmi.id="_155" name="EBManyMostID" isNullable="columnNoNulls" visibility="public" type="_333" owner="_152" />
                 <CWMRDB:Column xmi.id="_156" name="VAManyMost" isNullable="columnNullable" visibility="public" type="_334" owner="_152" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_157" name="XPKEB_ManyMost" visibility="public" namespace="_152" feature="_153"/>
-                <CWMRDB:ForeignKey xmi.id="_158" name="R_158" visibility="public" namespace="_152" feature="_155" uniqueKey="_74" />
+                <CWMRDB:PrimaryKey xmi.id="_157" name="XPKEB_ManyMost" visibility="public" namespace="_152" feature="_155"/>
+                <CWMRDB:ForeignKey xmi.id="_158" name="R_158" visibility="public" namespace="_152" feature="_154" uniqueKey="_74" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_159" name="EB_ManyOne" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_161" name="CBManyOne" isNullable="columnNoNulls" visibility="public" type="_335" owner="_159" />
-                <CWMRDB:Column xmi.id="_162" name="EAManyOneID" isNullable="columnNoNulls" visibility="public" type="_336" owner="_159" />
-                <CWMRDB:Column xmi.id="_160" name="EBManyOneID" isNullable="columnNoNulls" visibility="public" type="_337" owner="_159" />
+                <CWMRDB:Column xmi.id="_160" name="CBManyOne" isNullable="columnNoNulls" visibility="public" type="_335" owner="_159" />
+                <CWMRDB:Column xmi.id="_161" name="EAManyOneID" isNullable="columnNoNulls" visibility="public" type="_336" owner="_159" />
+                <CWMRDB:Column xmi.id="_162" name="EBManyOneID" isNullable="columnNoNulls" visibility="public" type="_337" owner="_159" />
                 <CWMRDB:Column xmi.id="_163" name="VAManyOne" isNullable="columnNoNulls" visibility="public" type="_338" owner="_159" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_164" name="XPKEB_ManyOne" visibility="public" namespace="_159" feature="_160"/>
-                <CWMRDB:ForeignKey xmi.id="_165" name="R_165" visibility="public" namespace="_159" feature="_162" uniqueKey="_78" />
+                <CWMRDB:PrimaryKey xmi.id="_164" name="XPKEB_ManyOne" visibility="public" namespace="_159" feature="_162"/>
+                <CWMRDB:ForeignKey xmi.id="_165" name="R_165" visibility="public" namespace="_159" feature="_161" uniqueKey="_78" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_166" name="EB_MostLeast" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_168" name="CBMostLeast" isNullable="columnNoNulls" visibility="public" type="_339" owner="_166" />
-                <CWMRDB:Column xmi.id="_167" name="EBMostLeastID" isNullable="columnNoNulls" visibility="public" type="_340" owner="_166" />
+                <CWMRDB:Column xmi.id="_167" name="CBMostLeast" isNullable="columnNoNulls" visibility="public" type="_339" owner="_166" />
+                <CWMRDB:Column xmi.id="_168" name="EBMostLeastID" isNullable="columnNoNulls" visibility="public" type="_340" owner="_166" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_169" name="XPKEB_MostLeast" visibility="public" namespace="_166" feature="_167">
+                <CWMRDB:PrimaryKey xmi.id="_169" name="XPKEB_MostLeast" visibility="public" namespace="_166" feature="_168">
                 <CWM:UniqueKey.keyRelationship>
                  <CWM:KeyRelationship xmi.idref="_85"/>
                  <CWM:KeyRelationship xmi.idref="_224"/>
@@ -473,11 +473,11 @@
 
             <CWMRDB:Table xmi.id="_170" name="EB_MostMany" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_172" name="CBMostMany" isNullable="columnNoNulls" visibility="public" type="_341" owner="_170" />
-                <CWMRDB:Column xmi.id="_171" name="EBMostManyID" isNullable="columnNoNulls" visibility="public" type="_342" owner="_170" />
+                <CWMRDB:Column xmi.id="_171" name="CBMostMany" isNullable="columnNoNulls" visibility="public" type="_341" owner="_170" />
+                <CWMRDB:Column xmi.id="_172" name="EBMostManyID" isNullable="columnNoNulls" visibility="public" type="_342" owner="_170" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_173" name="XPKEB_MostMany" visibility="public" namespace="_170" feature="_171">
+                <CWMRDB:PrimaryKey xmi.id="_173" name="XPKEB_MostMany" visibility="public" namespace="_170" feature="_172">
                 <CWM:UniqueKey.keyRelationship>
                  <CWM:KeyRelationship xmi.idref="_92"/>
                  <CWM:KeyRelationship xmi.idref="_229"/>
@@ -488,12 +488,12 @@
 
             <CWMRDB:Table xmi.id="_174" name="EB_MostMost" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_176" name="CBMost" isNullable="columnNoNulls" visibility="public" type="_343" owner="_174" />
-                <CWMRDB:Column xmi.id="_175" name="EBMostID" isNullable="columnNoNulls" visibility="public" type="_344" owner="_174" />
+                <CWMRDB:Column xmi.id="_175" name="CBMost" isNullable="columnNoNulls" visibility="public" type="_343" owner="_174" />
+                <CWMRDB:Column xmi.id="_176" name="EBMostID" isNullable="columnNoNulls" visibility="public" type="_344" owner="_174" />
                 <CWMRDB:Column xmi.id="_177" name="VAMost" isNullable="columnNullable" visibility="public" type="_345" owner="_174" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_178" name="XPKEB_MostMost" visibility="public" namespace="_174" feature="_175">
+                <CWMRDB:PrimaryKey xmi.id="_178" name="XPKEB_MostMost" visibility="public" namespace="_174" feature="_176">
                 <CWM:UniqueKey.keyRelationship>
                  <CWM:KeyRelationship xmi.idref="_101"/>
                 </CWM:UniqueKey.keyRelationship>
@@ -508,11 +508,11 @@
 
             <CWMRDB:Table xmi.id="_180" name="EB_OneLeast" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_182" name="CBOneLeast" isNullable="columnNoNulls" visibility="public" type="_346" owner="_180" />
-                <CWMRDB:Column xmi.id="_181" name="EBOneLeastID" isNullable="columnNoNulls" visibility="public" type="_347" owner="_180" />
+                <CWMRDB:Column xmi.id="_181" name="CBOneLeast" isNullable="columnNoNulls" visibility="public" type="_346" owner="_180" />
+                <CWMRDB:Column xmi.id="_182" name="EBOneLeastID" isNullable="columnNoNulls" visibility="public" type="_347" owner="_180" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_183" name="XPKEB_OneLeast" visibility="public" namespace="_180" feature="_181">
+                <CWMRDB:PrimaryKey xmi.id="_183" name="XPKEB_OneLeast" visibility="public" namespace="_180" feature="_182">
                 <CWM:UniqueKey.keyRelationship>
                  <CWM:KeyRelationship xmi.idref="_114"/>
                  <CWM:KeyRelationship xmi.idref="_234"/>
@@ -523,11 +523,11 @@
 
             <CWMRDB:Table xmi.id="_184" name="EB_OneMany" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_186" name="CBOneMany" isNullable="columnNoNulls" visibility="public" type="_348" owner="_184" />
-                <CWMRDB:Column xmi.id="_185" name="EBOneManyID" isNullable="columnNoNulls" visibility="public" type="_349" owner="_184" />
+                <CWMRDB:Column xmi.id="_185" name="CBOneMany" isNullable="columnNoNulls" visibility="public" type="_348" owner="_184" />
+                <CWMRDB:Column xmi.id="_186" name="EBOneManyID" isNullable="columnNoNulls" visibility="public" type="_349" owner="_184" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_187" name="XPKEB_OneMany" visibility="public" namespace="_184" feature="_185">
+                <CWMRDB:PrimaryKey xmi.id="_187" name="XPKEB_OneMany" visibility="public" namespace="_184" feature="_186">
                 <CWM:UniqueKey.keyRelationship>
                  <CWM:KeyRelationship xmi.idref="_121"/>
                  <CWM:KeyRelationship xmi.idref="_239"/>
@@ -538,177 +538,177 @@
 
             <CWMRDB:Table xmi.id="_188" name="EB_OneMost" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_190" name="CBOneMost" isNullable="columnNoNulls" visibility="public" type="_350" owner="_188" />
-                <CWMRDB:Column xmi.id="_189" name="EBOneMostID" isNullable="columnNoNulls" visibility="public" type="_351" owner="_188" />
+                <CWMRDB:Column xmi.id="_189" name="CBOneMost" isNullable="columnNoNulls" visibility="public" type="_350" owner="_188" />
+                <CWMRDB:Column xmi.id="_190" name="EBOneMostID" isNullable="columnNoNulls" visibility="public" type="_351" owner="_188" />
                 <CWMRDB:Column xmi.id="_191" name="VAOneMost" isNullable="columnNullable" visibility="public" type="_352" owner="_188" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_192" name="XPKEB_OneMost" visibility="public" namespace="_188" feature="_189"/>
+                <CWMRDB:PrimaryKey xmi.id="_192" name="XPKEB_OneMost" visibility="public" namespace="_188" feature="_190"/>
                 <CWM:UniqueKey xmi.id="_193" name="XPKEB_OneMost" visibility="public" namespace="_188" feature="_191"/>
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_194" name="EB_OneOne" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_196" name="CBOne" isNullable="columnNoNulls" visibility="public" type="_353" owner="_194" />
-                <CWMRDB:Column xmi.id="_195" name="EBOneID" isNullable="columnNoNulls" visibility="public" type="_354" owner="_194" />
+                <CWMRDB:Column xmi.id="_195" name="CBOne" isNullable="columnNoNulls" visibility="public" type="_353" owner="_194" />
+                <CWMRDB:Column xmi.id="_196" name="EBOneID" isNullable="columnNoNulls" visibility="public" type="_354" owner="_194" />
                 <CWMRDB:Column xmi.id="_197" name="VAOne" isNullable="columnNoNulls" visibility="public" type="_355" owner="_194" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_198" name="XPKEB_OneOne" visibility="public" namespace="_194" feature="_195"/>
+                <CWMRDB:PrimaryKey xmi.id="_198" name="XPKEB_OneOne" visibility="public" namespace="_194" feature="_196"/>
                 <CWM:UniqueKey xmi.id="_199" name="XPKEB_OneOne" visibility="public" namespace="_194" feature="_197"/>
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_200" name="VAEB_LeastLeast" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_202" name="EBLeastID" isNullable="columnNoNulls" visibility="public" type="_356" owner="_200" />
-                <CWMRDB:Column xmi.id="_201" name="VALeast" isNullable="columnNoNulls" visibility="public" type="_357" owner="_200" />
+                <CWMRDB:Column xmi.id="_201" name="EBLeastID" isNullable="columnNoNulls" visibility="public" type="_356" owner="_200" />
+                <CWMRDB:Column xmi.id="_202" name="VALeast" isNullable="columnNoNulls" visibility="public" type="_357" owner="_200" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
                 <CWMRDB:PrimaryKey xmi.id="_203" name="XPKVAEB_LeastLeast" visibility="public" namespace="_200">
                   <CWM:UniqueKey.feature>
-                    <CWM:StructuralFeature xmi.idref="_201"/>
                     <CWM:StructuralFeature xmi.idref="_202"/>
+                    <CWM:StructuralFeature xmi.idref="_201"/>
                   </CWM:UniqueKey.feature>
                 </CWMRDB:PrimaryKey>
-                <CWMRDB:ForeignKey xmi.id="_204" name="R_204" visibility="public" namespace="_200" feature="_202" uniqueKey="_125" />
+                <CWMRDB:ForeignKey xmi.id="_204" name="R_204" visibility="public" namespace="_200" feature="_201" uniqueKey="_125" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_205" name="VAEB_LeastMany" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_207" name="EBLeastManyID" isNullable="columnNoNulls" visibility="public" type="_358" owner="_205" />
-                <CWMRDB:Column xmi.id="_206" name="VALeastMany" isNullable="columnNoNulls" visibility="public" type="_359" owner="_205" />
+                <CWMRDB:Column xmi.id="_206" name="EBLeastManyID" isNullable="columnNoNulls" visibility="public" type="_358" owner="_205" />
+                <CWMRDB:Column xmi.id="_207" name="VALeastMany" isNullable="columnNoNulls" visibility="public" type="_359" owner="_205" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
                 <CWMRDB:PrimaryKey xmi.id="_208" name="XPKVAEB_LeastMany" visibility="public" namespace="_205">
                   <CWM:UniqueKey.feature>
-                    <CWM:StructuralFeature xmi.idref="_206"/>
                     <CWM:StructuralFeature xmi.idref="_207"/>
+                    <CWM:StructuralFeature xmi.idref="_206"/>
                   </CWM:UniqueKey.feature>
                 </CWMRDB:PrimaryKey>
-                <CWMRDB:ForeignKey xmi.id="_209" name="R_209" visibility="public" namespace="_205" feature="_207" uniqueKey="_129" />
+                <CWMRDB:ForeignKey xmi.id="_209" name="R_209" visibility="public" namespace="_205" feature="_206" uniqueKey="_129" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_210" name="VAEB_ManyLeast" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_212" name="EBManyLeastID" isNullable="columnNoNulls" visibility="public" type="_360" owner="_210" />
-                <CWMRDB:Column xmi.id="_211" name="VAManyLeast" isNullable="columnNoNulls" visibility="public" type="_361" owner="_210" />
+                <CWMRDB:Column xmi.id="_211" name="EBManyLeastID" isNullable="columnNoNulls" visibility="public" type="_360" owner="_210" />
+                <CWMRDB:Column xmi.id="_212" name="VAManyLeast" isNullable="columnNoNulls" visibility="public" type="_361" owner="_210" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
                 <CWMRDB:PrimaryKey xmi.id="_213" name="XPKVAEB_ManyLeast" visibility="public" namespace="_210">
                   <CWM:UniqueKey.feature>
-                    <CWM:StructuralFeature xmi.idref="_211"/>
                     <CWM:StructuralFeature xmi.idref="_212"/>
+                    <CWM:StructuralFeature xmi.idref="_211"/>
                   </CWM:UniqueKey.feature>
                 </CWMRDB:PrimaryKey>
-                <CWMRDB:ForeignKey xmi.id="_214" name="R_214" visibility="public" namespace="_210" feature="_212" uniqueKey="_147" />
+                <CWMRDB:ForeignKey xmi.id="_214" name="R_214" visibility="public" namespace="_210" feature="_211" uniqueKey="_147" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_215" name="VAEB_ManyMany" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_217" name="EBManyID" isNullable="columnNoNulls" visibility="public" type="_362" owner="_215" />
-                <CWMRDB:Column xmi.id="_216" name="VAMany" isNullable="columnNoNulls" visibility="public" type="_363" owner="_215" />
+                <CWMRDB:Column xmi.id="_216" name="EBManyID" isNullable="columnNoNulls" visibility="public" type="_362" owner="_215" />
+                <CWMRDB:Column xmi.id="_217" name="VAMany" isNullable="columnNoNulls" visibility="public" type="_363" owner="_215" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
                 <CWMRDB:PrimaryKey xmi.id="_218" name="XPKVAEB_ManyMany" visibility="public" namespace="_215">
                   <CWM:UniqueKey.feature>
-                    <CWM:StructuralFeature xmi.idref="_216"/>
                     <CWM:StructuralFeature xmi.idref="_217"/>
+                    <CWM:StructuralFeature xmi.idref="_216"/>
                   </CWM:UniqueKey.feature>
                 </CWMRDB:PrimaryKey>
-                <CWMRDB:ForeignKey xmi.id="_219" name="R_219" visibility="public" namespace="_215" feature="_217" uniqueKey="_151" />
+                <CWMRDB:ForeignKey xmi.id="_219" name="R_219" visibility="public" namespace="_215" feature="_216" uniqueKey="_151" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_220" name="VA_MostLeast" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_222" name="EBMostLeastID" isNullable="columnNullable" visibility="public" type="_364" owner="_220" />
-                <CWMRDB:Column xmi.id="_221" name="VAMostLeastValue" isNullable="columnNoNulls" visibility="public" type="_365" owner="_220" />
+                <CWMRDB:Column xmi.id="_221" name="EBMostLeastID" isNullable="columnNullable" visibility="public" type="_364" owner="_220" />
+                <CWMRDB:Column xmi.id="_222" name="VAMostLeastValue" isNullable="columnNoNulls" visibility="public" type="_365" owner="_220" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_223" name="XPKVA_MostLeast" visibility="public" namespace="_220" feature="_221"/>
-                <CWMRDB:ForeignKey xmi.id="_224" name="R_224" visibility="public" namespace="_220" feature="_222" uniqueKey="_169" />
+                <CWMRDB:PrimaryKey xmi.id="_223" name="XPKVA_MostLeast" visibility="public" namespace="_220" feature="_222"/>
+                <CWMRDB:ForeignKey xmi.id="_224" name="R_224" visibility="public" namespace="_220" feature="_221" uniqueKey="_169" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_225" name="VA_MostMany" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_227" name="EBMostManyID" isNullable="columnNullable" visibility="public" type="_366" owner="_225" />
-                <CWMRDB:Column xmi.id="_226" name="VAMostManyValue" isNullable="columnNoNulls" visibility="public" type="_367" owner="_225" />
+                <CWMRDB:Column xmi.id="_226" name="EBMostManyID" isNullable="columnNullable" visibility="public" type="_366" owner="_225" />
+                <CWMRDB:Column xmi.id="_227" name="VAMostManyValue" isNullable="columnNoNulls" visibility="public" type="_367" owner="_225" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_228" name="XPKVA_MostMany" visibility="public" namespace="_225" feature="_226"/>
-                <CWMRDB:ForeignKey xmi.id="_229" name="R_229" visibility="public" namespace="_225" feature="_227" uniqueKey="_173" />
+                <CWMRDB:PrimaryKey xmi.id="_228" name="XPKVA_MostMany" visibility="public" namespace="_225" feature="_227"/>
+                <CWMRDB:ForeignKey xmi.id="_229" name="R_229" visibility="public" namespace="_225" feature="_226" uniqueKey="_173" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_230" name="VA_OneLeast" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_232" name="EBOneLeastID" isNullable="columnNoNulls" visibility="public" type="_368" owner="_230" />
-                <CWMRDB:Column xmi.id="_231" name="VAOneLeastValue" isNullable="columnNoNulls" visibility="public" type="_369" owner="_230" />
+                <CWMRDB:Column xmi.id="_231" name="EBOneLeastID" isNullable="columnNoNulls" visibility="public" type="_368" owner="_230" />
+                <CWMRDB:Column xmi.id="_232" name="VAOneLeastValue" isNullable="columnNoNulls" visibility="public" type="_369" owner="_230" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_233" name="XPKVA_OneLeast" visibility="public" namespace="_230" feature="_231"/>
-                <CWMRDB:ForeignKey xmi.id="_234" name="R_234" visibility="public" namespace="_230" feature="_232" uniqueKey="_183" />
+                <CWMRDB:PrimaryKey xmi.id="_233" name="XPKVA_OneLeast" visibility="public" namespace="_230" feature="_232"/>
+                <CWMRDB:ForeignKey xmi.id="_234" name="R_234" visibility="public" namespace="_230" feature="_231" uniqueKey="_183" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_235" name="VA_OneMany" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_237" name="EBOneManyID" isNullable="columnNoNulls" visibility="public" type="_370" owner="_235" />
-                <CWMRDB:Column xmi.id="_236" name="VAOneManyValue" isNullable="columnNoNulls" visibility="public" type="_371" owner="_235" />
+                <CWMRDB:Column xmi.id="_236" name="EBOneManyID" isNullable="columnNoNulls" visibility="public" type="_370" owner="_235" />
+                <CWMRDB:Column xmi.id="_237" name="VAOneManyValue" isNullable="columnNoNulls" visibility="public" type="_371" owner="_235" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_238" name="XPKVA_OneMany" visibility="public" namespace="_235" feature="_236"/>
-                <CWMRDB:ForeignKey xmi.id="_239" name="R_239" visibility="public" namespace="_235" feature="_237" uniqueKey="_187" />
+                <CWMRDB:PrimaryKey xmi.id="_238" name="XPKVA_OneMany" visibility="public" namespace="_235" feature="_237"/>
+                <CWMRDB:ForeignKey xmi.id="_239" name="R_239" visibility="public" namespace="_235" feature="_236" uniqueKey="_187" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_240" name="VB_LeastMost" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_242" name="EALeastMostID" isNullable="columnNullable" visibility="public" type="_372" owner="_240" />
-                <CWMRDB:Column xmi.id="_241" name="VBLeastMostValue" isNullable="columnNoNulls" visibility="public" type="_373" owner="_240" />
+                <CWMRDB:Column xmi.id="_241" name="EALeastMostID" isNullable="columnNullable" visibility="public" type="_372" owner="_240" />
+                <CWMRDB:Column xmi.id="_242" name="VBLeastMostValue" isNullable="columnNoNulls" visibility="public" type="_373" owner="_240" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_243" name="XPKVB_LeastMost" visibility="public" namespace="_240" feature="_241"/>
-                <CWMRDB:ForeignKey xmi.id="_244" name="R_244" visibility="public" namespace="_240" feature="_242" uniqueKey="_58" />
+                <CWMRDB:PrimaryKey xmi.id="_243" name="XPKVB_LeastMost" visibility="public" namespace="_240" feature="_242"/>
+                <CWMRDB:ForeignKey xmi.id="_244" name="R_244" visibility="public" namespace="_240" feature="_241" uniqueKey="_58" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_245" name="VB_LeastOne" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_247" name="EALeastOneID" isNullable="columnNoNulls" visibility="public" type="_374" owner="_245" />
-                <CWMRDB:Column xmi.id="_246" name="VBLeastOneValue" isNullable="columnNoNulls" visibility="public" type="_375" owner="_245" />
+                <CWMRDB:Column xmi.id="_246" name="EALeastOneID" isNullable="columnNoNulls" visibility="public" type="_374" owner="_245" />
+                <CWMRDB:Column xmi.id="_247" name="VBLeastOneValue" isNullable="columnNoNulls" visibility="public" type="_375" owner="_245" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_248" name="XPKVB_LeastOne" visibility="public" namespace="_245" feature="_246"/>
-                <CWMRDB:ForeignKey xmi.id="_249" name="R_249" visibility="public" namespace="_245" feature="_247" uniqueKey="_62" />
+                <CWMRDB:PrimaryKey xmi.id="_248" name="XPKVB_LeastOne" visibility="public" namespace="_245" feature="_247"/>
+                <CWMRDB:ForeignKey xmi.id="_249" name="R_249" visibility="public" namespace="_245" feature="_246" uniqueKey="_62" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_250" name="VB_ManyMost" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_252" name="EAManyMostID" isNullable="columnNullable" visibility="public" type="_376" owner="_250" />
-                <CWMRDB:Column xmi.id="_251" name="VBManyMostValue" isNullable="columnNoNulls" visibility="public" type="_377" owner="_250" />
+                <CWMRDB:Column xmi.id="_251" name="EAManyMostID" isNullable="columnNullable" visibility="public" type="_376" owner="_250" />
+                <CWMRDB:Column xmi.id="_252" name="VBManyMostValue" isNullable="columnNoNulls" visibility="public" type="_377" owner="_250" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_253" name="XPKVB_ManyMost" visibility="public" namespace="_250" feature="_251"/>
-                <CWMRDB:ForeignKey xmi.id="_254" name="R_254" visibility="public" namespace="_250" feature="_252" uniqueKey="_74" />
+                <CWMRDB:PrimaryKey xmi.id="_253" name="XPKVB_ManyMost" visibility="public" namespace="_250" feature="_252"/>
+                <CWMRDB:ForeignKey xmi.id="_254" name="R_254" visibility="public" namespace="_250" feature="_251" uniqueKey="_74" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
             <CWMRDB:Table xmi.id="_255" name="VB_ManyOne" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_257" name="EAManyOneID" isNullable="columnNoNulls" visibility="public" type="_378" owner="_255" />
-                <CWMRDB:Column xmi.id="_256" name="VBManyOneValue" isNullable="columnNoNulls" visibility="public" type="_379" owner="_255" />
+                <CWMRDB:Column xmi.id="_256" name="EAManyOneID" isNullable="columnNoNulls" visibility="public" type="_378" owner="_255" />
+                <CWMRDB:Column xmi.id="_257" name="VBManyOneValue" isNullable="columnNoNulls" visibility="public" type="_379" owner="_255" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_258" name="XPKVB_ManyOne" visibility="public" namespace="_255" feature="_256"/>
-                <CWMRDB:ForeignKey xmi.id="_259" name="R_259" visibility="public" namespace="_255" feature="_257" uniqueKey="_78" />
+                <CWMRDB:PrimaryKey xmi.id="_258" name="XPKVB_ManyOne" visibility="public" namespace="_255" feature="_257"/>
+                <CWMRDB:ForeignKey xmi.id="_259" name="R_259" visibility="public" namespace="_255" feature="_256" uniqueKey="_78" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 

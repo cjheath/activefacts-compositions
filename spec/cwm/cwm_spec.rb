@@ -7,6 +7,8 @@ require 'bundler/setup' # Set up gems listed in the Gemfile.
 
 # require 'spec_helper'
 require 'activefacts/compositions/relational'
+require 'activefacts/compositions/staging'
+require 'activefacts/compositions/datavault'
 require 'activefacts/compositions/names'
 require 'activefacts/generator/doc/cwm'
 require 'activefacts/input/cql'
@@ -41,33 +43,39 @@ describe "CWM schema from CQL" do
     files = `git ls-files "#{dir}/*.cql"`.split(/\n/)
   end
   files.each do |cql_file|
-    it "produces the expected CWM for #{cql_file}" do
-      expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, expected_dir+'/\2.cwm.xmi')
-      actual = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, actual_dir+'/\2.cwm.xmi')
-      begin
-        expected_text = File.read(expected)
-      rescue Errno::ENOENT => exception
-      end
+    ['REL', 'STG'].each do |format|
+      it "produces the expected CWM for #{cql_file}" do
+        expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, expected_dir + '/\2' + "_#{format}.cwm.xmi")
+        actual = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, actual_dir + '/\2' + "_#{format}.cwm.xmi")
+        begin
+          expected_text = File.read(expected)
+        rescue Errno::ENOENT => exception
+        end
 
-      vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
-      vocabulary.finalise
-      compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, "test")
-      compositor.generate
+        vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
+        vocabulary.finalise
+        
+        compositor = case format
+        when 'REL' then ActiveFacts::Compositions::Relational.new(vocabulary.constellation, "test")
+        when 'STG' then ActiveFacts::Compositions::Staging.new(vocabulary.constellation, "test")
+        end
+        compositor.generate
 
-      output = ActiveFacts::Generators::Doc::CWM.new([compositor.composition]).generate
+        output = ActiveFacts::Generators::Doc::CWM.new([compositor.composition]).generate
 
-      # Save or delete the actual output file:
-      if expected_text != output
-        File.write(actual, output)
-      else
-        File.delete(actual) rescue nil
-      end
+        # Save or delete the actual output file:
+        if expected_text != output
+          File.write(actual, output)
+        else
+          File.delete(actual) rescue nil
+        end
 
-      if expected_text
-        expect(output).to be_like(expected_text), "Output #{actual} doesn't match expected #{expected}"
-      else
-        pending "Actual output in #{actual} can't be compared with missing expected file #{expected}"
-        expect(expected_text).to_not be_nil, "I don't know what to expect"
+        if expected_text
+          expect(output).to be_like(expected_text), "Output #{actual} doesn't match expected #{expected}"
+        else
+          pending "Actual output in #{actual} can't be compared with missing expected file #{expected}"
+          expect(expected_text).to_not be_nil, "I don't know what to expect"
+        end
       end
     end
   end

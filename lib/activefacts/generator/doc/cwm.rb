@@ -21,13 +21,9 @@ module ActiveFacts
         attr_accessor   :xmiid
       end
       
-      class ActiveFacts::Metamodel::Absorption      # for columns
+      class ActiveFacts::Metamodel::Component      # for columns
         attr_accessor   :xmiid
         attr_accessor   :index_xmiid
-      end
-      
-      class ActiveFacts::Metamodel::Indicator
-        attr_accessor   :xmiid
       end
       
       class ActiveFacts::Metamodel::Index           # for primary and unique indexes
@@ -36,11 +32,6 @@ module ActiveFacts
       
       class ActiveFacts::Metamodel::ForeignKey      # for foreign keys
         attr_accessor   :xmiid
-      end
-      
-      class ActiveFacts::Metamodel::ValueField
-        attr_accessor   :xmiid
-        attr_accessor   :index_xmiid
       end
       
       class CWM      
@@ -141,12 +132,14 @@ module ActiveFacts
         def populate_table_ids(table)
           tname = table_name(table)
           nsdef(table)
-          table.mapping.all_leaf.flat_map do |leaf|
+          table.mapping.all_leaf.flat_map.sort_by{|c| column_name(c)}.map do |leaf|
             # Absorbed empty subtypes appear as leaves
             next if leaf.is_a?(MM::Absorption) && leaf.parent_role.fact_type.is_a?(MM::TypeInheritance)
             nsdef(leaf)
           end
-          table.all_index.map do |index|
+          table.all_index.sort_by do |idx| 
+            idx.all_index_field.map { |ixf| ixf.component.xmiid }
+          end.map do |index|
             nsdef(index)
             index.all_index_field.map{|idf| idf.component.index_xmiid = index.xmiid}
           end
@@ -162,7 +155,7 @@ module ActiveFacts
           "<XMI xmlns:CWM=\"org.omg.CWM1.1\" xmlns:CWMRDB=\"org.omg.CWM1.1/Relational\" xmi.version=\"1.1\">\n" +
           "  <XMI.header>\n" +
           "    <XMI.documentation>\n" +
-          "      <XMI.exporter>Infinuedo APRIMO</XMI.exporter>\n" +
+          "      <XMI.exporter>ActiveFacts</XMI.exporter>\n" +
           "      <XMI.exporterVersion>0.1</XMI.exporterVersion>\n" +
           "    </XMI.documentation>\n" +
           "    <XMI.metamodel xmi.name=\"CWM\" xmi.version=\"1.1\" />" +
@@ -228,7 +221,9 @@ module ActiveFacts
 
           table_keys =
             indent(depth, "  <CWM:Namespace.ownedElement>") +
-            (table.all_index.map do |index|
+              (table.all_index.sort_by do |idx| 
+                idx.all_index_field.map { |ixf| ixf.component.xmiid }
+              end.map do |index|
                 generate_index(depth+2, table.xmiid, index, name, table.all_foreign_key_as_target_composite)
               end
             ) * "" +
