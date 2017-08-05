@@ -1,11 +1,33 @@
 #
 # ActiveFacts Compositions, DocGraph Compositor.
 #
-#       Computes an Optimal Normal Form (close to 5NF) docgraph schema.
+#       Computes an Document/Semantic Graph schema.
 #
-# Copyright (c) 2015 Clifford Heath. Read the LICENSE file.
+# Copyright (c) 2017 Factil Pty Ltd. Read the LICENSE file.
 #
 require "activefacts/compositions"
+
+module ActiveFacts
+  module Metamodel
+    class Composite
+      def is_document
+        @isa_document = true
+      end
+      
+      def is_document?
+        @isa_document
+      end
+      
+      def is_triple
+        @isa_triple = true
+      end
+      
+      def is_triple?
+        @isa_triple
+      end
+    end
+  end
+end
 
 module ActiveFacts
   module Compositions
@@ -270,8 +292,10 @@ module ActiveFacts
         composite = @constellation.Composite(mapping, composition: @composition)
         if candidate.is_document
           @document_composites[mapping.object_type] = composite
+          composite.is_document
         else
           @triple_composites[mapping.object_type] = composite
+          composite.is_triple
         end
       end
 
@@ -292,120 +316,6 @@ module ActiveFacts
           end
         end
       end
-
-      # def inject_surrogates
-      #   return if @document_composites.empty?
-      #
-      #   trace :surrogates, "Injecting any required surrogates" do
-      #     @document_composites.each do |key, composite|
-      #       next unless needs_surrogate(composite)
-      #       inject_surrogate composite
-      #     end
-      #   end
-      # end
-      #
-      # def surrogate_type
-      #   @surrogate_type ||= begin
-      #     surrogate_type_name = [true, '', 'true', 'yes', nil].include?(t = @option_surrogates) ? 'Auto Counter' : t
-      #     # REVISIT: Crappy: choose the first (currently always single)
-      #     vocabulary = @composition.all_composite.to_a[0].mapping.object_type.vocabulary
-      #     @constellation.ValueType(
-      #       vocabulary: vocabulary,
-      #       name: surrogate_type_name,
-      #       concept: [:new, :implication_rule => "surrogate injection"]
-      #     )
-      #   end
-      # end
-      #
-      # def inject_surrogate composite, extension = ' ID'
-      #   trace :surrogates, "Injecting surrogate for #{composite.inspect}" do
-      #     surrogate_component =
-      #       @constellation.SurrogateKey(
-      #         :new,
-      #         parent: composite.mapping,
-      #         name: composite.mapping.name+extension,
-      #         object_type: surrogate_type
-      #       )
-      #     index =
-      #       @constellation.Index(:new, composite: composite, is_unique: true,
-      #         presence_constraint: nil, composite_as_primary_index: composite)
-      #     @constellation.IndexField(access_path: index, ordinal: 0, component: surrogate_component)
-      #     composite.mapping.re_rank
-      #     surrogate_component
-      #   end
-      # end
-      #
-      # def needs_surrogate(composite)
-      #   object_type = composite.mapping.object_type
-      #   if MM::ValueType === object_type
-      #     trace :surrogates, "#{composite.inspect} is a ValueType that #{object_type.is_auto_assigned ? "is auto-assigned already" : "requires a surrogate" }"
-      #     return !object_type.is_auto_assigned
-      #   end
-      #
-      #   non_key_members, key_members = composite.mapping.all_member.reject do |member|
-      #     member.is_a?(MM::Absorption) and member.forward_absorption
-      #   end.partition do |member|
-      #     member.rank_key[0] > MM::Component::RANK_IDENT
-      #   end
-      #
-      #   non_fk_surrogate =
-      #     key_members.detect do |member|
-      #       next true unless member.is_a?(MM::Absorption)
-      #       next false if @document_composites[member.object_type] or @composition.all_full_absorption[member.object_type]       # It's a table or absorbed into one
-      #       true
-      #     end
-      #
-      #   if key_members.size > 1
-      #     # Multi-part identifiers are only allowed if:
-      #     # * each part is a foreign key (i.e. it's a join table),
-      #     # * there are no other properties (that might require updating) and
-      #     # * the object is not the target of a foreign key:
-      #     if non_fk_surrogate
-      #       trace :surrogates, "#{composite.inspect} has non-FK identifiers so requires a surrogate"
-      #       return true
-      #     end
-      #
-      #     if non_key_members.size > 0
-      #       trace :surrogates, "#{composite.inspect} has non-identifying fields so requires a surrogate"
-      #       return true
-      #     end
-      #
-      #     if @candidates[object_type].references_to.size > 0
-      #       trace :surrogates, "#{composite.inspect} is the target of at least one foreign key so requires a surrogate"
-      #       return true
-      #     end
-      #
-      #     trace :surrogates, "#{composite.inspect} is a join table that does NOT require a surrogate"
-      #     return false
-      #   end
-      #
-      #   # A single-part PK is replaced by a surrogate unless the single part is a surrogate, an FK to a surrogate, or is an Absorbed auto-assigned VT
-      #
-      #   key_member = key_members[0]
-      #   if !non_fk_surrogate
-      #     trace :surrogates, "#{composite.inspect} has an identifier that's an FK so does NOT require a surrogate"
-      #     return false
-      #   end
-      #
-      #   if key_member.is_a?(MM::SurrogateKey)
-      #     trace :surrogates, "#{composite.inspect} already has an injected SurrogateKey so does NOT require a surrogate"
-      #     return false
-      #   end
-      #   unless key_member.is_a?(MM::Absorption)
-      #     trace :surrogates, "#{composite.inspect} is identified by a non-Absorption so requires a surrogate"
-      #     return true
-      #   end
-      #   if key_member.object_type.is_a?(MM::EntityType)
-      #     trace :surrogates, "#{composite.inspect} is identified by another entity type so requires a surrogate"
-      #     return true
-      #   end
-      #   if key_member.object_type.is_auto_assigned
-      #     trace :surrogates, "#{composite.inspect} already has an auto-assigned key so does NOT require a surrogate"
-      #     return false
-      #   end
-      #   trace :surrogates, "#{composite.inspect} requires a surrogate"
-      #   return true
-      # end
 
       def clean_unused_mappings
         @candidates.keys.to_a.each do |object_type|
@@ -513,7 +423,7 @@ module ActiveFacts
           end
 
           # This is a nested structure, annotate as Nested, flip the member and absorb all
-          @constellation.Nesting(:new, absorption: member, ordinal: 0)
+          x = @constellation.Nesting(:new, absorption: member, ordinal: 0, index_role: member.child_role)
           member.flip!
           child_object_type = member.child_role.object_type
           child_mapping = @binary_mappings[child_object_type]
