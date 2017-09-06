@@ -1,6 +1,6 @@
 #
 # ActiveFacts Compositions, Metamodel aspect to create a textual summary of a composition and its Composites
-# 
+#
 # Copyright (c) 2015 Clifford Heath. Read the LICENSE file.
 #
 require "activefacts/metamodel"
@@ -13,10 +13,12 @@ module ActiveFacts
     class Composition
       def summary
         classify_constraints
-        "Summary of #{name}\n" +
-        all_composite.
-        sort_by{|composite| composite.mapping.name}.
-        flat_map do |composite|
+
+        vn = (v = constellation.Vocabulary.values[0]) ? v.version_number : nil
+        version_str = vn ? " version #{vn}" : ''
+
+        "Summary of #{name}#{version_str}\n" +
+        all_composite.sort_by{|composite| composite.mapping.name}.flat_map do |composite|
           composite.summary
         end*''
       end
@@ -36,12 +38,13 @@ module ActiveFacts
             # Build a display of the names in this absorption path, with FK and optional indicators
             path_names = leaf.path.map do |component|
                 is_mandatory = case component
-                  when Indicator
-                    false
-                  when Absorption
-                    component.parent_role.is_mandatory
-                  else
-                    true
+                  when Indicator; false
+                  when Absorption; component.parent_role.is_mandatory
+                  else; true
+                  end
+                is_unique = case component
+                  when Absorption; component.parent_role.is_unique
+                  else; true
                   end
 
                 if component.all_foreign_key_field.size > 0
@@ -51,8 +54,8 @@ module ActiveFacts
                 else
                   component.name
                 end +
-                  (is_mandatory ? '' : '?')
-              end*'->' 
+                  (is_mandatory ? '' : '?') + (is_unique ? '' : '*')
+              end*'->'
 
             # Build a symbolic representation of the index participation of this leaf
             pos = 0
@@ -63,8 +66,8 @@ module ActiveFacts
               end
               a
             end
-            if indexing.empty? 
-              indexing = '' 
+            if indexing.empty?
+              indexing = ''
             else
               indexing = "[#{indexing*','}]"
             end
