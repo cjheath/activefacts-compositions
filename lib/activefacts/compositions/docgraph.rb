@@ -13,15 +13,15 @@ module ActiveFacts
       def is_document
         @isa_document = true
       end
-      
+
       def is_document?
         @isa_document
       end
-      
+
       def is_triple
         @isa_triple = true
       end
-      
+
       def is_triple?
         @isa_triple
       end
@@ -37,7 +37,7 @@ module ActiveFacts
 
       def self.options
         {
-          surrogates: ['Boolean', "Inject a surrogate key into each table whose primary key is not already suitable as a foreign key"],
+          nested: ['Boolean', "Compose nested documents"],
           source: ['Boolean', "Generate composition for source schema"],
           target: ['Boolean', "Generate composition for target schema"],
           transform: ['Boolean', "Generate composition for transform schema"]
@@ -46,7 +46,7 @@ module ActiveFacts
 
       def initialize constellation, name, options = {}
         # Extract recognised options:
-        @option_surrogates = options.delete('surrogates')
+        @option_nested = options.delete('nested')
         super constellation, name, options
       end
 
@@ -59,7 +59,7 @@ module ActiveFacts
 
           # Apply any obvious document/graph factors
           assign_default_docgraph
-          
+
           # Figure out how best to absorb things to reduce the number of documents
           optimise_absorption
 
@@ -186,7 +186,7 @@ module ActiveFacts
                 trace :docgraph_optimiser, a.inspect
               end
             end
-            
+
             # Both of these conditions are not relevant for documents
             # if candidate.references_to.size > 1 and       # More than one place wants us
             #     non_identifying_refs_from.size > 0        # And we carry dependent values so cannot be absorbed
@@ -257,7 +257,7 @@ module ActiveFacts
       def top component
         component.parent ? top(component.parent) : component
       end
-      
+
       # Remove the unused reverse absorptions:
       def delete_reverse_absorptions
         # @binary_mappings.each do |object_type, mapping|
@@ -406,7 +406,7 @@ module ActiveFacts
             absorb_all(member, child_mapping, paths, stack)
             return
           end
-          
+
           absorb_all(member, child_mapping, paths, stack)
         end
       end
@@ -423,8 +423,9 @@ module ActiveFacts
           end
 
           # This is a nested structure, annotate as Nested, flip the member and absorb all
-          x = @constellation.Nesting(:new, absorption: member, ordinal: 0, index_role: member.child_role)
-          member.flip!
+          @constellation.Nesting(member, 0, index_role: member.child_role)
+
+          # member.flip!
           child_object_type = member.child_role.object_type
           child_mapping = @binary_mappings[child_object_type]
           absorb_all(member, child_mapping, paths, stack)
@@ -457,7 +458,7 @@ module ActiveFacts
           ordered = from.all_member.sort_by(&:ordinal)
           ordered.each do |member|
             trace :docgraph_properties, "... considering #{member.child_role.object_type.name}"
-            
+
             # Only proceed if there is no absorption loop and we are not jumping to another document
             if !absorption_loop(member, substack) && !@document_composites[member.child_role.object_type]
               unless top_level    # Top-level members are already instantiated
@@ -466,12 +467,10 @@ module ActiveFacts
               rel = paths.merge(relevant_paths(newpaths, member))
               augment_paths(rel, member)
 
-              if member.is_a?(MM::Absorption) && !member.forward_absorption && member.child_role.object_type.is_a?(MM::EntityType)
+              if member.is_a?(MM::Absorption) && !member.forward_absorption && member.parent_role.is_unique && member.child_role.object_type.is_a?(MM::EntityType)
                 # Only forward absorptions here please...
                 absorb_subdoc(mapping, member, rel, substack)
-              end
-              if member.is_a?(MM::Absorption) && member.forward_absorption && top_level
-                  # ! @document_composites[top(member.forward_absorption).object_type]
+              elsif member.is_a?(MM::Absorption) && (member.forward_absorption || !member.parent_role.is_unique) # && top_level
                 absorb_nested(mapping, member, rel, substack)
               end
             end
@@ -699,7 +698,7 @@ module ActiveFacts
             definitely_document
             return
           end
-          
+
           if o.concept.all_concept_annotation.detect{|ca| ca.mapping_annotation =~ TRIPLE_ANNOTATION}
             trace :docgraph_defaults, "#{o.name} is a triple because it's declared triple"
             definitely_triple
@@ -728,7 +727,7 @@ module ActiveFacts
               definitely_document
               return
             end
-            
+
             # its a triple if this is an objectified fact type that has a uniqueness constraint of size = 2
             if o.fact_type
               # List the UCs on this fact type:
@@ -738,7 +737,7 @@ module ActiveFacts
                     rr.role_sequence.all_presence_constraint.select { |pc| pc.max_frequency == 1 }
                   end
                 end.flatten.uniq
-            
+
               if all_uniqueness_constraints.detect do |uc|
                   (arr = uc.role_sequence.all_role_ref).size == 2 and arr[0].role.object_type.is_a?(MM::EntityType) and arr[1].role.object_type.is_a?(MM::EntityType)
                 end
@@ -747,7 +746,7 @@ module ActiveFacts
                 return
               end
             end
-            
+
             if !o.supertypes.empty?
               # We know that this entity type is not a separate or partitioned subtype, so a supertype that can absorb us does
               identifying_fact_type = o.all_type_inheritance_as_subtype.detect{|ti| ti.provides_identification}
