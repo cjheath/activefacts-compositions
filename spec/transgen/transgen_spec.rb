@@ -6,7 +6,7 @@ ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../../Gemfile', __FILE__)
 require 'bundler/setup' # Set up gems listed in the Gemfile.
 
 require 'activefacts/compositions/relational'
-require 'activefacts/generator/transregen'
+require 'activefacts/generator/transgen'
 require 'activefacts/input/cql'
 
 TG_CQL_DIR = Pathname.new(__FILE__+'/../cql').relative_path_from(Pathname(Dir.pwd)).to_s
@@ -24,7 +24,7 @@ RSpec::Matchers.define :be_like do |expected|
   diffable
 end
 
-describe "Transform regenerator from CQL" do
+describe "Transform generator from CQL" do
   dir = ENV['CQL_DIR'] || TG_CQL_DIR
   actual_dir = (ENV['CQL_DIR'] ? '' : TG_TEST_DIR+'/') + 'actual'
   expected_dir = (ENV['CQL_DIR'] ? '' : TG_TEST_DIR+'/') + 'expected'
@@ -45,7 +45,7 @@ describe "Transform regenerator from CQL" do
     compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, 'Staff_Personnel', {})
     compositor.generate
 
-    output = ActiveFacts::Generators::TransRegen.new([compositor.composition], options).generate
+    output = ActiveFacts::Generators::TransGen.new([compositor.composition], options).generate
 
     File.write(actual_file, output)
 
@@ -57,11 +57,11 @@ describe "Transform regenerator from CQL" do
     end
   end
 
-  it "produces the expected Transform Regeneration output for Staff_Personnel_gen.cql" do
+  it "produces the expected Transform generation output for Staff_Personnel_gen.cql" do
     cql_file = TG_CQL_DIR + '/' + 'Staff_Personnel_gen.cql'
     options = {}
-    expected_file = expected_dir + '/' + 'Staff_Personnel_regen.cql'
-    actual_file = actual_dir + '/' +'Staff_Personnel_regen.cql'
+    expected_file = expected_dir + '/' + 'Staff_Personnel_gen2.cql'
+    actual_file = actual_dir + '/' +'Staff_Personnel_gen2.cql'
     begin
       expected_text = File.read(expected_file)
     rescue Errno::ENOENT => exception
@@ -72,7 +72,7 @@ describe "Transform regenerator from CQL" do
     compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, 'Staff_Personnel_gen', {})
     compositor.generate
 
-    output = ActiveFacts::Generators::TransRegen.new([compositor.composition], options).generate
+    output = ActiveFacts::Generators::TransGen.new([compositor.composition], options).generate
 
     File.write(actual_file, output)
 

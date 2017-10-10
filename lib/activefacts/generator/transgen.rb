@@ -12,7 +12,7 @@ require 'activefacts/generator'
 
 module ActiveFacts
   module Generators
-    class TransRegen
+    class TransGen
       INDENT = "    "
       def self.options
         {
@@ -55,7 +55,7 @@ module ActiveFacts
       def generate_transform_rule composite
         existing_rules = @transform_topic.all_concept.select do |concept|
           tr = concept.transform_rule and
-            tr.compound_transform_matching.all_transform_target_ref.to_a[0].target_object_type == composite.mapping.object_type
+            tr.compound_matching.all_transform_target_ref.to_a[0].target_object_type == composite.mapping.object_type
         end.map {|concept| concept.transform_rule}
 
         if existing_rules.size > 0
@@ -101,24 +101,24 @@ module ActiveFacts
       # New transform rule
       #
       def generate_new_transform_rule composite
-        generate_compound_transform_matching(composite.mapping, 0, '') + ";\n"
+        generate_compound_matching(composite.mapping, 0, '') + ";\n"
       end
 
       def generate_transform_matching mapping, level, prefix
         if mapping.object_type.is_a?(ActiveFacts::Metamodel::ValueType)
-          generate_simple_transform_matching(mapping, level, prefix)
+          generate_simple_matching(mapping, level, prefix)
         else
-          generate_compound_transform_matching(mapping, level, prefix)
+          generate_compound_matching(mapping, level, prefix)
         end
       end
 
-      def generate_simple_transform_matching mapping, level, prefix
+      def generate_simple_matching mapping, level, prefix
         full_name = full_role_name(mapping)
         prefixed_name = (prefix.size > 0 ? prefix + ' . ' : '') + full_name
         indent("#{prefixed_name} <-- /* EXPR */", level)
       end
 
-      def generate_compound_transform_matching mapping, level, prefix
+      def generate_compound_matching mapping, level, prefix
         members = mapping.all_member.sort_by(&:ordinal).flatten
         prefixed_name = (prefix.size > 0 ? prefix + ' . ' : '') + full_role_name(mapping)
         if members.size == 1
@@ -136,9 +136,9 @@ module ActiveFacts
       # Regenerate existing transform rule
       #
       def regenerate_transform_rule(composite, transform_rule)
-        # regenerate_compound_transform_matching(composite.mapping, 0, '') + ";\n"
+        # regenerate_compound_matching(composite.mapping, 0, '') + ";\n"
       end
     end
-    publish_generator TransRegen
+    publish_generator TransGen
   end
 end
