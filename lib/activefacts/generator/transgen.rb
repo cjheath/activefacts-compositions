@@ -55,7 +55,7 @@ module ActiveFacts
       def generate_transform_rule composite
         existing_rules = @transform_topic.all_concept.select do |concept|
           tr = concept.transform_rule and
-            tr.compound_matching.all_transform_target_ref.to_a[0].target_object_type == composite.mapping.object_type
+            tr.compound_matching.all_transform_target_ref.to_a[0].object_type == composite.mapping.object_type
         end.map {|concept| concept.transform_rule}
 
         if existing_rules.size > 0
