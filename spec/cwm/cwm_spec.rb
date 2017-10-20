@@ -61,7 +61,7 @@ describe "CWM schema from CQL" do
         end
         compositor.generate
 
-        output = ActiveFacts::Generators::Doc::CWM.new([compositor.composition]).generate
+        output = ActiveFacts::Generators::Doc::CWM.new(compositor.composition).generate
 
         # Save or delete the actual output file:
         if expected_text != output

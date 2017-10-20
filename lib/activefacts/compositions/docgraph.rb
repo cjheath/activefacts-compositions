@@ -47,7 +47,7 @@ module ActiveFacts
       def initialize constellation, name, options = {}
         # Extract recognised options:
         @option_nested = options.delete('nested')
-        super constellation, name, options
+        super constellation, name, options, 'DocGraph'
       end
 
       def generate

@@ -78,7 +78,7 @@ describe "Surrogate absorption from CQL" do
         File.delete(actual) rescue nil
       end
 
-      ActiveFacts::Generators::Validate.new([compositor.composition]).generate do |component, problem|
+      ActiveFacts::Generators::Validate.new(compositor.composition).generate do |component, problem|
         expect("#{component.inspect}: #{problem}").to be_nil
       end
 

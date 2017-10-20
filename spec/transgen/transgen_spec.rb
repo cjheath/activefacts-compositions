@@ -30,6 +30,33 @@ describe "Transform generator from CQL" do
   expected_dir = (ENV['CQL_DIR'] ? '' : TG_TEST_DIR+'/') + 'expected'
   Dir.mkdir actual_dir unless Dir.exist? actual_dir
   
+  it "produces the expected Transform Generation output for Null_Person.cql" do
+    cql_file = TG_CQL_DIR + '/' + 'Null_Person.cql'
+    options = {}
+    expected_file = expected_dir + '/'+ 'Null_Person.cql'
+    actual_file = actual_dir + '/' + 'Null_Person.cql'
+    begin
+      expected_text = File.read(expected_file)
+    rescue Errno::ENOENT => exception
+    end
+
+    vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
+    vocabulary.finalise
+    compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, 'Person', {})
+    compositor.generate
+
+    output = ActiveFacts::Generators::TransGen.new(compositor.composition, options).generate
+
+    File.write(actual_file, output)
+
+    if expected_text
+      expect(output).to be_like(expected_text), "Output #{actual_file} doesn't match expected #{expected_file}"
+    else
+      pending "Actual output in #{actual_file} can't be compared with missing expected file #{expected_file}"
+      expect(expected_text).to_not be_nil, "I don't know what to expect"
+    end
+  end
+  
   it "produces the expected Transform Generation output for Staff_Personnel.cql" do
     cql_file = TG_CQL_DIR + '/' + 'Staff_Personnel.cql'
     options = {}
@@ -45,7 +72,7 @@ describe "Transform generator from CQL" do
     compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, 'Staff_Personnel', {})
     compositor.generate
 
-    output = ActiveFacts::Generators::TransGen.new([compositor.composition], options).generate
+    output = ActiveFacts::Generators::TransGen.new(compositor.composition, options).generate
 
     File.write(actual_file, output)
 
@@ -72,7 +99,7 @@ describe "Transform generator from CQL" do
     compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, 'Staff_Personnel_gen', {})
     compositor.generate
 
-    output = ActiveFacts::Generators::TransGen.new([compositor.composition], options).generate
+    output = ActiveFacts::Generators::TransGen.new(compositor.composition, options).generate
 
     File.write(actual_file, output)
 

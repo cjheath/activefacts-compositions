@@ -21,10 +21,10 @@ module ActiveFacts
         }
       end
 
-      def initialize constellation, name, options = {}
+      def initialize constellation, name, options = {}, compositor_name = 'Relational'
         # Extract recognised options:
         @option_surrogates = options.delete('surrogates')
-        super constellation, name, options
+        super constellation, name, options, compositor_name
       end
 
       def generate

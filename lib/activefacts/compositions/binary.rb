@@ -10,6 +10,10 @@ require "activefacts/compositions"
 module ActiveFacts
   module Compositions
     class Binary < Compositor
+      def initialize constellation, name, options = {}, compositor_name = 'Binary'
+        super constellation, name, options, compositor_name
+      end
+
       def self.options
         {}
       end

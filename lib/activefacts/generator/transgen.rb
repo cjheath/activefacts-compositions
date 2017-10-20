@@ -19,8 +19,8 @@ module ActiveFacts
         }
       end
 
-      def initialize compositions, options = {}
-        @composition = compositions[0]
+      def initialize composition, options = {}
+        @composition = composition
         @options = options
       end
 

@@ -50,7 +50,7 @@ describe "SQL schema with surrogates from CQL" do
       compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, "test", 'surrogates' => true)
       compositor.generate
 
-      output = ActiveFacts::Generators::SQL.new([compositor.composition]).generate
+      output = ActiveFacts::Generators::SQL.new(compositor.composition).generate
 
       # Save or delete the actual output file:
       if expected_text != output
