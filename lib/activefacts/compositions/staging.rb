@@ -24,7 +24,7 @@ module ActiveFacts
         @option_stg_name = options.delete('stgname') || 'STG'
         @option_stg_name.sub!(/^/,'+ ') unless @option_stg_name =~ /\+/
 
-        super constellation, name, options
+        super constellation, name, options, 'Staging'
 
       end
 

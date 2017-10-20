@@ -115,20 +115,18 @@ class SchemaCompositor
       exit 0 unless vocabulary
       vocabulary.finalise unless vocabulary == true
 
-      # Run one or more compositors
-      compositor_names = []
-      compositions = @compositors.map do |compositor_klass, modes, name|
-        compositor_names << name
-        compositor = compositor_klass.new(vocabulary.constellation, basename, modes)
-        compositor.generate
-        compositor.composition
+      # Run one compositor
+      if @compositors.size != 1
+        raise "Expected one compositor"
       end
+
+      compositor_klass, modes, option = @compositors[0]
+      compositor = compositor_klass.new(vocabulary.constellation, basename, modes)
+      compositor.generate
 
       # Run each generator
       @generators.each do |generator_klass, modes|
-        modes["src_compositor_name"] = compositor_names[0]
-        modes["targ_compositor_name"] = compositor_names[1] if compositions.size > 1
-        output = generator_klass.new(compositions, modes).generate
+        output = generator_klass.new(compositor.composition, modes).generate
         puts output if output
       end
     end

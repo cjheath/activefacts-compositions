@@ -42,9 +42,8 @@ module ActiveFacts
           }
         end
 
-        def initialize compositions, options = {}
-          raise "--cwm only processes a single composition" if compositions.size > 1
-          @composition = compositions[0]
+        def initialize composition, options = {}
+          @composition = composition
           @options = options
           @underscore = options.has_key?("underscore") ? (options['underscore'] || '_') : ''
 

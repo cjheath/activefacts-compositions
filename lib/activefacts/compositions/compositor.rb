@@ -25,9 +25,10 @@ module ActiveFacts
         }
       end
 
-      def initialize constellation, name, options = {}
+      def initialize constellation, name, options = {}, compositor_name
         @constellation = constellation
         @name = name
+        @compositor_name = compositor_name
         @options = options
         @option_source = options.delete('source')
         @option_target = options.delete('target')
@@ -43,7 +44,7 @@ module ActiveFacts
           @composition.retract
         end
 
-        @composition = @constellation.Composition(:new, :name => @name)
+        @composition = @constellation.Composition(:new, :name => @name, :compositor_name => @compositor_name)
         preload_preferred_identifiers
         populate_references
       end

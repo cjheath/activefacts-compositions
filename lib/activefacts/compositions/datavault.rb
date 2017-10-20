@@ -51,7 +51,7 @@ module ActiveFacts
         @option_ref_name = options.delete('refname') || 'REF'
         @option_ref_name.sub!(/^/,'+ ') unless @option_ref_name =~ /\+/
 
-        super constellation, name, options
+        super constellation, name, options, 'DataVault'
 
         @option_surrogates = true   # Always inject surrogates regardless of superclass
       end

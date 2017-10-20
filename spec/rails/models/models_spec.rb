@@ -51,7 +51,7 @@ describe "Rails Models from CQL" do
       compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, basename, "surrogates" => true)
       compositor.generate
 
-      output = ActiveFacts::Generators::Rails::Models.new([compositor.composition]).generate
+      output = ActiveFacts::Generators::Rails::Models.new(compositor.composition).generate
 
       # Save or delete the actual output file:
       if expected_text != output
