@@ -33,17 +33,17 @@ class SchemaCompositor
   def enumerate_available path
     trace :loading, "Enumerating under #{path.inspect}" do
       Loadable.new(path).
-      enumerate.
-      select do |filename|
-        begin
-          require(pathname = path+"/"+filename)
-          trace :loading, "Loaded #{pathname}"
-        rescue LoadError => e
-          trace :loading, "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
-        rescue Exception => e
-          $stderr.puts "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
+        enumerate.
+        select do |filename|
+          begin
+            require(pathname = path+"/"+filename)
+            trace :loading, "Loaded #{pathname}"
+          rescue LoadError => e
+            trace :loading, "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
+          rescue Exception => e
+            $stderr.puts "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
+          end
         end
-      end
     end
   end
 
@@ -109,9 +109,13 @@ class SchemaCompositor
         compositor.composition
       end
 
+      compositor_klass_names = @compositors.map do |compositor_klass, modes|
+        compositor_klass.name.sub(/ActiveFacts::[^:]+::/,'').gsub(/::/,'/')
+      end
+
       # Run each generator
       @generators.each do |generator_klass, modes|
-        output = generator_klass.new(compositions, modes).generate
+        output = generator_klass.new(compositions, modes, compositor_klass_names).generate
         puts output if output
       end
     end

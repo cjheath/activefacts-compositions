@@ -19,7 +19,7 @@ module ActiveFacts
           }
         end
 
-        def initialize compositions, options = {}
+        def initialize compositions, options = {}, compositor_klass_names = []
           raise "--graphviz only processes a single composition" if compositions.size > 1
           @composition = compositions[0]
           @options = options
