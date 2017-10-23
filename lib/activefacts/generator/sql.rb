@@ -195,12 +195,12 @@ module ActiveFacts
             MM::DataType.normalise_int_length('int', data_type_context.default_surrogate_length, value_constraint, data_type_context)[0]
           else
             v, = MM::DataType.normalise_int_length(type_name, length, value_constraint, data_type_context)
-            v
+            v   # The typename here has the appropriate length, don't return a length
           end
         when MM::DataType::TYPE_Real;
           ["FLOAT", data_type_context.default_length(type, type_name)]
-        when MM::DataType::TYPE_Decimal;  'DECIMAL'
-        when MM::DataType::TYPE_Money;    'DECIMAL'
+        when MM::DataType::TYPE_Decimal;  ['DECIMAL', length]
+        when MM::DataType::TYPE_Money;    ['DECIMAL', length]
         when MM::DataType::TYPE_Char;     [data_type_context.default_char_type, length || data_type_context.char_default_length]
         when MM::DataType::TYPE_String;   [data_type_context.default_varchar_type, length || data_type_context.varchar_default_length]
         when MM::DataType::TYPE_Text;     [data_type_context.default_text_type, length || 'MAX']
@@ -213,10 +213,10 @@ module ActiveFacts
           if length
             ['BINARY', length]
           else
-            'VARBINARY'
+            ['VARBINARY', length]
           end
         else
-          type_name
+          [type_name, length]
         end
       end
 

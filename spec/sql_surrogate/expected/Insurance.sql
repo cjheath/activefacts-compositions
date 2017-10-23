@@ -157,7 +157,7 @@ CREATE TABLE LostItem (
 	-- maybe Lost Item was purchased at purchase-Place
 	PurchasePlace                           VARCHAR NULL,
 	-- maybe Lost Item was purchased for purchase-Price
-	PurchasePrice                           DECIMAL NULL,
+	PurchasePrice                           DECIMAL(18, 2) NULL,
 	-- Primary index to Lost Item
 	PRIMARY KEY CLUSTERED(LostItemID),
 	-- Unique index to Lost Item over PresenceConstraint over (Incident, Lost Item Nr in "Lost Item was lost in Incident", "Lost Item has Lost Item Nr") occurs at most one time
@@ -243,7 +243,7 @@ CREATE TABLE Policy (
 	-- maybe Policy was sold by Authorised Rep that is a kind of Party that has Party ID
 	AuthorisedRepID                         BIGINT NULL,
 	-- maybe Policy has ITC Claimed
-	ITCClaimed                              DECIMAL NULL CHECK((ITCClaimed >= 0.0 AND ITCClaimed <= 100.0)),
+	ITCClaimed                              DECIMAL(18, 2) NULL CHECK((ITCClaimed >= 0.0 AND ITCClaimed <= 100.0)),
 	-- Primary index to Policy
 	PRIMARY KEY CLUSTERED(PolicyID),
 	-- Unique index to Policy over PresenceConstraint over (p_year, p_product, p_state, p_serial in "Policy was issued in Year", "Policy is for product having Product", "Policy issued in state having State", "Policy has Policy Serial") occurs at most one time
