@@ -347,7 +347,7 @@ module ActiveFacts
           # * there are no other columns (that might require updating) and
           # * the object is not the target of a foreign key:
           if non_fk_surrogate
-            trace :surrogates, "#{composite.inspect} has non-FK identifiers so requires a surrogate"
+            trace :surrogates, "#{composite.inspect} has non-FK identifiers (in #{key_members.inspect}) so requires a surrogate"
             return true
           end
 
@@ -389,7 +389,7 @@ module ActiveFacts
           trace :surrogates, "#{composite.inspect} already has an auto-assigned key so does NOT require a surrogate"
           return false
         end
-        trace :surrogates, "#{composite.inspect} requires a surrogate"
+        trace :surrogates, "#{composite.inspect} PK is #{key_member.inspect} which requires a surrogate"
         return true
       end
 
