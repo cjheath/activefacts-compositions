@@ -14,20 +14,19 @@ module ActiveFacts
   module Generators
     # Options are comma or space separated:
     # * delay_fks Leave all foreign keys until the end, not just those that contain forward-references
-    # * underscore 
+    # * underscore
     class SQL
       MM = ActiveFacts::Metamodel unless const_defined?(:MM)
       def self.options
         {
           delay_fks: ['Boolean', "Delay emitting all foreign keys until the bottom of the file"],
-          underscore: [String, "Use 'str' instead of underscore between words in table names"],
+          underscore: ['String', "Use 'str' instead of underscore between words in table names"],
           unicode: ['Boolean', "Use Unicode for all text fields by default"],
         }
       end
 
-      def initialize compositions, options = {}
-        raise "--sql only processes a single composition" if compositions.size > 1
-        @composition = compositions[0]
+      def initialize composition, options = {}
+        @composition = composition
         @options = options
         @delay_fks = options.delete "delay_fks"
         @underscore = options.has_key?("underscore") ? (options['underscore'] || '_') : ''

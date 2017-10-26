@@ -1,6 +1,6 @@
 #
 # ActiveFacts Compositions, Fundamental Compositor
-# 
+#
 #       All Compositors derive from this one, which can calculate the basic binary bi-directional mapping
 #
 #       The term "reference" used here means either an Absorption
@@ -19,13 +19,20 @@ module ActiveFacts
       attr_reader :options, :name, :composition
 
       def self.options
-        {}
+        {
+          source: ['Boolean', "Generate composition for source schema"],
+          target: ['Boolean', "Generate composition for target schema"]
+        }
       end
 
-      def initialize constellation, name, options = {}
+      def initialize constellation, name, options = {}, compositor_name
         @constellation = constellation
         @name = name
+        @compositor_name = compositor_name
         @options = options
+        @option_source = options.delete('source')
+        @option_target = options.delete('target')
+        @option_transform = options.delete('transform')
       end
 
       # Generate all Mappings into @binary_mappings for a binary composition of all ObjectTypes in this constellation
@@ -37,7 +44,7 @@ module ActiveFacts
           @composition.retract
         end
 
-        @composition = @constellation.Composition(:new, :name => @name)
+        @composition = @constellation.Composition(:new, :name => @name, :compositor_name => @compositor_name)
         preload_preferred_identifiers
         populate_references
       end
@@ -166,7 +173,7 @@ module ActiveFacts
             detect do |c|
                 (rr = c.role_sequence.all_role_ref.single) and
                 rr.role == role
-            end 
+            end
 
         if from_1 || fact_type.entity_type
           # This is a role in an objectified fact type

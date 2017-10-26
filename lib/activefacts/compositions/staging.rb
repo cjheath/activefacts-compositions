@@ -14,6 +14,8 @@ module ActiveFacts
       def self.options
         {
           stgname: ['String', "Suffix or pattern for naming staging tables. Include a + to insert the name. Default 'STG'"],
+          source: ['Boolean', "Generate composition for source schema"],
+          target: ['Boolean', "Generate composition for target schema"]
         }
       end
 
@@ -22,7 +24,7 @@ module ActiveFacts
         @option_stg_name = options.delete('stgname') || 'STG'
         @option_stg_name.sub!(/^/,'+ ') unless @option_stg_name =~ /\+/
 
-        super constellation, name, options
+        super constellation, name, options, 'Staging'
 
       end
 

@@ -13,3 +13,4 @@
 *.orig
 *.diff
 actual
+.byebug_history

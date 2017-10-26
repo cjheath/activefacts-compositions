@@ -1,7 +1,7 @@
 Summary of Countries
 Country Code STG
-	Country Code STG->RecordSource as "Record Source"
 	Country Code STG->Country Code Value[1.0] as "Country Code Value"
+	Country Code STG->RecordSource as "Record Source"
 	Country Code STG->LoadDateTime as "Load Date Time"
 Country STG
 	Country STG->RecordSource as "Record Source"

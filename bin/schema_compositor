@@ -14,6 +14,8 @@ require 'activefacts/compositions'
 require 'activefacts/generator'
 
 class SchemaCompositor
+  EXTENSIONS = ['fiml', 'fidl', 'fiql', 'cql']
+
   attr_reader :options
   attr_reader :compositors
   attr_reader :generators
@@ -52,14 +54,22 @@ class SchemaCompositor
     @compositors = []
     @generators = []
     @options.clone.each do |option, modes|
+
+      # Flip option and first mode if option is source or target
+      if option == 'source' || option == 'target'
+        compositor, flag = modes.shift
+        modes[option] = true
+        option = compositor
+      end
+
       if action = ActiveFacts::Compositions.compositors[option]
         options.delete(option)
         check_options(action, modes)
-        @compositors << [action, modes]
+        @compositors << [action, modes, option]
       elsif action = ActiveFacts::Generators.generators[option]
         options.delete(option)
         check_options(action, modes)
-        @generators << [action, modes]
+        @generators << [action, modes, option]
       else
         $stderr.puts "Action --#{option} is not recognised"
         exit 1
@@ -77,6 +87,9 @@ class SchemaCompositor
 
       # Load the correct file type input method
       pathname, basename, extension = * /(?:(.*)[\/\\])?(.*)\.([^.]*)$/.match(filename).captures
+      if EXTENSIONS.detect { |e| extension == e }
+        extension = "cql"
+      end
       input_handler = "activefacts/input/#{extension}"
       require input_handler
 
@@ -102,16 +115,18 @@ class SchemaCompositor
       exit 0 unless vocabulary
       vocabulary.finalise unless vocabulary == true
 
-      # Run one or more compositors
-      compositions = @compositors.map do |compositor_klass, modes|
-        compositor = compositor_klass.new(vocabulary.constellation, basename, modes)
-        compositor.generate
-        compositor.composition
+      # Run one compositor
+      if @compositors.size != 1
+        raise "Expected one compositor, use --help for a list"
       end
+
+      compositor_klass, modes, option = @compositors[0]
+      compositor = compositor_klass.new(vocabulary.constellation, basename, modes)
+      compositor.generate
 
       # Run each generator
       @generators.each do |generator_klass, modes|
-        output = generator_klass.new(compositions, modes).generate
+        output = generator_klass.new(compositor.composition, modes).generate
         puts output if output
       end
     end

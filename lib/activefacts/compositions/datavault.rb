@@ -10,6 +10,12 @@ require "activefacts/compositions/relational"
 module ActiveFacts
   module Compositions
     class DataVault < Relational
+      BDV_ANNOTATIONS = /same as link|hierarchy link|computed link|exploration link|computed satellite|point in time|bridge/
+      BDV_LINK_ANNOTATIONS = /same as link|hierarchy link|computed link|exploration link/
+      BDV_SAT_ANNOTATIONS = /computed satellite/
+      BDV_PIT_ANNOTATIONS = /point in time/
+      BDV_BRIDGE_ANNOTATIONS = /bridge/
+
     public
       def self.options
         {
@@ -19,7 +25,11 @@ module ActiveFacts
           hubname: ['String', "Suffix or pattern for naming hub tables. Include a + to insert the name. Default 'HUB'"],
           linkname: ['String', "Suffix or pattern for naming link tables. Include a + to insert the name. Default 'LINK'"],
           satname: ['String', "Suffix or pattern for naming satellite tables. Include a + to insert the name. Default 'SAT'"],
+          pitname: ['String', "Suffix or pattern for naming point in time tables. Include a + to insert the name. Default 'PIT'"],
+          bridgename: ['String', "Suffix or pattern for naming bridge tables. Include a + to insert the name. Default 'BRIDGE'"],
           refname: ['String', "Suffix or pattern for naming reference tables. Include a + to insert the name. Default '+'"],
+          source: ['Boolean', "Generate composition for source schema"],
+          target: ['Boolean', "Generate composition for target schema"],
         }
       end
 
@@ -34,10 +44,14 @@ module ActiveFacts
         @option_link_name.sub!(/^/,'+ ') unless @option_link_name =~ /\+/
         @option_sat_name = options.delete('satname') || 'SAT'
         @option_sat_name.sub!(/^/,'+ ') unless @option_sat_name =~ /\+/
+        @option_pit_name = options.delete('refname') || 'PIT'
+        @option_pit_name.sub!(/^/,'+ ') unless @option_ref_name =~ /\+/
+        @option_bridge_name = options.delete('refname') || 'BRIDGE'
+        @option_bridge_name.sub!(/^/,'+ ') unless @option_ref_name =~ /\+/
         @option_ref_name = options.delete('refname') || 'REF'
         @option_ref_name.sub!(/^/,'+ ') unless @option_ref_name =~ /\+/
 
-        super constellation, name, options
+        super constellation, name, options, 'DataVault'
 
         @option_surrogates = true   # Always inject surrogates regardless of superclass
       end
@@ -51,8 +65,18 @@ module ActiveFacts
 
       def composite_is_reference composite
         object_type = composite.mapping.object_type
-        object_type.concept.all_concept_annotation.detect{|ca| ca.mapping_annotation == 'static'} or
+        all_ca = object_type.concept.all_concept_annotation
+
+        all_ca.detect{|ca| ca.mapping_annotation == 'static'} or
           !object_type.is_a?(ActiveFacts::Metamodel::EntityType)
+      end
+
+      def composite_is_bdv composite
+        object_type = composite.mapping.object_type
+        all_ca = object_type.concept.all_concept_annotation
+
+        trace :datavault, "composite #{composite.mapping.name} annotations #{all_ca.map{|ca| ca.mapping_annotation} *' '}"
+        all_ca.detect{|ca| ca.mapping_annotation =~ BDV_ANNOTATIONS}
       end
 
       # Data Vaults need a surrogate key on every Hub and Link.
@@ -74,71 +98,148 @@ module ActiveFacts
       def classify_composites
         detect_reference_tables
 
-        trace :datavault, "Classify non-reference tables into hubs and links" do
+        @bdv_composites, @rdv_composites =
+          @non_reference_composites.partition { |composite| composite_is_bdv(composite) }
+
+        trace :datavault, "Classify non-reference composites into hubs, links, pits and bridges" do
           # Make an initial determination, then adjust for foreign keys to links afterwards
+          @hub_composites = []
+          @link_composites = []
+          @sat_composites = []
+          @bdv_link_composites = []
+          @bdv_sat_composites = []
+          @pit_composites = []
+          @bridge_composites = []
           @key_structure = {}
-          @link_composites, @hub_composites =
-            @non_reference_composites.
-            sort_by{|c| c.mapping.name}.
-            partition do |composite|
-              trace :datavault, "Decide whether #{composite.mapping.name} is a link or a hub" do
-                @key_structure[composite] =
-                  mapped_to =
-                  composite_key_structure composite
+          @links_as_hubs = {}
+          @pit_hub = {}
+          @pit_members = {}
+          @pit_satellite = {}
 
-                # It's a Link if the preferred identifier includes more than non_reference_composite.
-                mapped_to.compact.size > 1
-              end
-            end
+          rdv_classify_composites
+          bdv_classify_composites
 
-          trace :datavault, "Checking for foreign keys that reference links" do
-            # Links may never be the target of a foreign key.
-            # Any such links must be defined as hubs instead.
-            @links_as_hubs = {}
-            fk_dependencies_by_target = {}
-            fk_dependencies_by_source = {}
-            (@hub_composites+@link_composites).
-            each do |composite|
-              target_composites = enumerate_foreign_keys composite.mapping
-              target_composites.each do |target_composite|
-                next if @reference_composites.include?(target_composite)
-                (fk_dependencies_by_target[target_composite] ||= []) << composite
-                (fk_dependencies_by_source[composite] ||= []) << target_composite
-              end
-            end
-
-            fk_dependencies_by_target.keys.each do |target_composite|
-              if @link_composites.delete(target_composite)
-                trace :datavault, "Link #{target_composite.inspect} must be a hub because foreign keys reference it"
-                @hub_composites << target_composite
-                @links_as_hubs[target_composite] = true
-              end
-            end
-
-            begin
-              converted =
-                @link_composites.select do |composite|
-                  targets = fk_dependencies_by_source[composite]
-                  id_targets = composite_key_structure(composite).compact
-                  next if targets.size == id_targets.size
-                  trace :datavault, "Link #{composite.mapping.name} must be a hub because it has non-identifying FK references"
-                  @link_composites.delete(composite)
-                  @hub_composites << composite
-                  @links_as_hubs[composite] = true
-                end
-            end while converted.size > 0
-
+          trace :datavault_classification!, "Data Vault classification of composites:" do
+            trace :datavault, "Reference: #{@reference_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
+            trace :datavault, "Raw: #{@rdv_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
+            trace :datavault, "Business: #{@bdv_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
+            trace :datavault, "Hub: #{@hub_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
+            trace :datavault, "Link: #{@link_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
+            trace :datavault, "BDV Link: #{@bdv_link_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
+            trace :datavault, "BDV Sat: #{@bdv_sat_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
+            trace :datavault, "PIT: #{@pit_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
+            trace :datavault, "Bridge: #{@bridge_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
           end
+        end
+      end
+
+      def bdv_classify_composites
+        # Classify the business links and bridges
+        @bdv_composites.sort_by{|c| c.mapping.name}.each do |composite|
+          trace :datavault, "Decide whether #{composite.mapping.name} is a link or bridge"
+          object_type = composite.mapping.object_type
+          mapped_to = object_type.fact_type.all_role.to_a
+          trace :datavault, "#{composite.mapping.name} encloses foreign keys to #{mapped_to.inspect}" unless mapped_to.compact.empty?
+
+          all_ca = composite.mapping.object_type.concept.all_concept_annotation
+          if all_ca.detect{ |ca| ca.mapping_annotation =~ BDV_LINK_ANNOTATIONS}
+            @bdv_link_composites << composite
+          elsif all_ca.detect{ |ca| ca.mapping_annotation =~ BDV_BRIDGE_ANNOTATIONS}
+            @bridge_composites << composite
+          end
+        end
+
+        # Classify the point in time tables
+        @rdv_composites.sort_by{|c| c.mapping.name}.each do |composite|
+          trace :datavault, "Decide whether #{composite.mapping.name} has point in time table"
+
+          pit_members = composite.mapping.all_member.select do |member|
+            if member.is_a?(MM::Absorption)
+              if found_pit = check_pit(member)
+                trace :datavault, "Found PIT member #{member.child_role.object_type.name}"
+              end
+              found_pit
+            else
+              false
+            end
+          end
+
+          if pit_members.size > 0
+            pit_composite = create_pit(composite.mapping.name, composite)
+            @pit_composites << pit_composite
+            @pit_hub[pit_composite] = composite
+            @pit_members[pit_composite] = pit_members
+          end
+        end
+      end
+
+      def check_pit component
+        all_pc = component.parent_role.all_role_ref.map(&:role_sequence).uniq.flat_map(&:all_presence_constraint).uniq
+        all_pc.detect do |pc|
+          pc.concept.all_concept_annotation.detect{ |ca| ca.mapping_annotation =~ BDV_PIT_ANNOTATIONS}
+        end
+      end
+
+      # Create a new PIT for the same object_type as this composite
+      def create_pit name, composite
+        mapping = @constellation.Mapping(:new, name: name, object_type: composite.mapping.object_type)
+        pit_composite = @constellation.Composite(mapping, composition: @composition)
+      end
+
+      def rdv_classify_composites
+        @link_composites, @hub_composites =
+          @rdv_composites.
+          sort_by{|c| c.mapping.name}.
+          partition do |composite|
+            trace :datavault, "Decide whether #{composite.mapping.name} is a link or a hub" do
+              @key_structure[composite] =
+                mapped_to =
+                composite_key_structure composite
+
+              # It's a Link if the preferred identifier includes more than non_reference_composite.
+              mapped_to.compact.size > 1
+            end
+          end
+
+        trace :datavault, "Checking for foreign keys that reference links" do
+          # Links may never be the target of a foreign key.
+          # Any such links must be defined as hubs instead.
+
+          fk_dependencies_by_target = {}
+          fk_dependencies_by_source = {}
+          (@hub_composites+@link_composites).each do |composite|
+            target_composites = enumerate_foreign_keys composite.mapping
+            target_composites.each do |target_composite|
+              next if @reference_composites.include?(target_composite)
+              (fk_dependencies_by_target[target_composite] ||= []) << composite
+              (fk_dependencies_by_source[composite] ||= []) << target_composite
+            end
+          end
+
+          fk_dependencies_by_target.keys.each do |target_composite|
+            if @link_composites.delete(target_composite)
+              trace :datavault, "Link #{target_composite.inspect} must be a hub because foreign keys reference it"
+              @hub_composites << target_composite
+              @links_as_hubs[target_composite] = true
+            end
+          end
+
+          begin
+            converted =
+              @link_composites.select do |composite|
+                targets = fk_dependencies_by_source[composite]
+                id_targets = composite_key_structure(composite).compact
+                next if targets.size == id_targets.size
+                trace :datavault, "Link #{composite.mapping.name} must be a hub because it has non-identifying FK references"
+                @link_composites.delete(composite)
+                @hub_composites << composite
+                @links_as_hubs[composite] = true
+              end
+          end while converted.size > 0
 
           # Note: We may still have hubs whose identifiers contain foreign keys to one or more other hubs.
           # REVISIT: These foreign keys will be deleted so these hubs stand alone,
           # but have been re-instated as new links to the referenced hubs.
-        end
-
-        trace :datavault_classification!, "Data Vault classification of composites:" do
-          trace :datavault, "Reference: #{@reference_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
-          trace :datavault, "Hub: #{@hub_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
-          trace :datavault, "Link: #{@link_composites.map(&:mapping).map(&:object_type).map(&:name)*', '}"
         end
       end
 
@@ -148,58 +249,10 @@ module ActiveFacts
           initial_composites.partition { |composite| composite_is_reference(composite) }
       end
 
-      def devolve_all
-        delete_reference_table_foreign_keys
-
-        # For each hub and link, move each non-identifying member
-        # to a new satellite or promote it to a new link.
-
-        @non_reference_composites.
-        each do |composite|
-          devolve composite
-        end
-
-        rename_parents
-
-        inject_all_datetime_recordsource
-
-        unless @option_reference
-          if trace :reference_retraction
-            # Add a logger so we can trace the resultant retractions:
-            @constellation.loggers << proc do |*args|
-              trace :reference_retraction, args.inspect
-            end
-          end
-
-          @reference_composites.each do |rc|
-            trace :reference_retraction, "Retracting #{rc.inspect}" do
-              rc.retract
-            end
-          end
-          @reference_composites = []
-
-          @constellation.loggers.pop if trace :reference_retraction
-        end
-      end
-
-      def delete_reference_table_foreign_keys
-        trace :datavault, "Delete foreign keys to reference tables" do
-          # Delete all foreign keys to reference tables
-          @reference_composites.each do |composite|
-            composite.all_foreign_key_as_target_composite.each(&:retract)
-          end
-        end
-      end
-
-      def prefer_natural_key building_natural_key, source_composite, target_composite
-        return false if building_natural_key && @link_composites.include?(source_composite)
-        building_natural_key && @hub_composites.include?(target_composite)
-      end
-
       def composite_key_structure composite
         # We know that composite.mapping.object_type is an EntityType because all ValueType composites are reference tables
-
         object_type = composite.mapping.object_type
+
         mapped_to =
           object_type.preferred_identifier.role_sequence.all_role_ref_in_order.map do |role_ref|
             player = role_ref.role.object_type
@@ -232,6 +285,126 @@ module ActiveFacts
           end
 
         mapped_to
+      end
+
+      def devolve_all
+        delete_reference_table_foreign_keys
+
+        # For each hub and link, move each non-identifying member
+        # to a new satellite or promote it to a new link.
+        (@hub_composites + @link_composites).each do |composite|
+          devolve composite
+        end
+
+        # Rename parents for rdv and bdv
+        rename_parents
+
+        # inject datetime and record source for rdv hubs and links
+        inject_all_datetime_recordsource
+
+        unless @option_reference
+          if trace :reference_retraction
+            # Add a logger so we can trace the resultant retractions:
+            @constellation.loggers << proc do |*args|
+              trace :reference_retraction, args.inspect
+            end
+          end
+
+          @reference_composites.each do |rc|
+            trace :reference_retraction, "Retracting #{rc.inspect}" do
+              rc.retract
+            end
+          end
+          @reference_composites = []
+
+          @constellation.loggers.pop if trace :reference_retraction
+        end
+
+        # Devolve point in time tables, if any
+        @pit_composites.each do |composite|
+          devolve_pit(composite)
+        end
+
+      end
+
+      def devolve_pit(pit_composite)
+        # inject standard PIT components: surrogate key, hub hash key and snapshot date time
+        inject_surrogate(pit_composite)
+
+        hub_composite = @pit_hub[pit_composite]
+        hub_hash_field = hub_composite.primary_index.all_index_field.single.component
+        pit_hub_field = hub_hash_field.fork_to_new_parent(pit_composite.mapping)
+        date_field = @constellation.ValidFrom(:new,
+          parent: pit_composite.mapping,
+          name: "Snapshot"+datestamp_type_name,
+          object_type: datestamp_type
+        )
+
+        natural_index =
+          @constellation.Index(:new, composite: pit_composite, is_unique: true,
+            presence_constraint: nil, composite_as_natural_index: pit_composite #, composite_as_primary_index: pit_composite
+            )
+        @constellation.IndexField(access_path: natural_index, ordinal: 0, component: pit_hub_field)
+        @constellation.IndexField(access_path: natural_index, ordinal: 1, component: date_field)
+
+        # Add a foreign key to the hub
+        fk = @constellation.ForeignKey(
+            :new,
+            source_composite: pit_composite,
+            composite: hub_composite,
+            absorption: nil           # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+          )
+        @constellation.ForeignKeyField(foreign_key: fk, ordinal: 0, component: pit_hub_field)
+        # This should be filled in by complete_foreign_keys, but there is no Absorption
+        @constellation.IndexField(access_path: fk, ordinal: 0, component: hub_hash_field)
+
+        # inject hash and load date time for sats associated with all pit members
+        pit_members = @pit_members[pit_composite]
+        sat_composites = pit_members.map{|pm| @pit_satellite[pm]}.compact.uniq
+
+        sat_composites.each do |sat_composite|
+          sat_name = sat_composite.mapping.name
+          sat_hash_name = "#{sat_name}#{@option_id}"
+
+          src_hash_field = hub_hash_field.fork_to_new_parent(pit_composite.mapping)
+          src_hash_field.name = sat_hash_name
+          src_load_field = @constellation.ValidFrom(:new,
+            parent: pit_composite.mapping,
+            name: "#{sat_name} Load"+datestamp_type_name,
+            object_type: datestamp_type
+          )
+
+          sat_index_fields = sat_composite.primary_index.all_index_field.to_a
+          sat_hash_field = sat_index_fields[0].component
+          sat_load_field = sat_index_fields[1].component
+
+          # Add a foreign key to the satellite's primary key and load date time
+          fk = @constellation.ForeignKey(
+              :new,
+              source_composite: pit_composite,
+              composite: sat_composite,
+              absorption: nil           # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+            )
+          @constellation.ForeignKeyField(foreign_key: fk, ordinal: 0, component: src_hash_field)
+          @constellation.IndexField(access_path: fk, ordinal: 0, component: sat_hash_field)
+          @constellation.ForeignKeyField(foreign_key: fk, ordinal: 1, component: src_load_field)
+          @constellation.IndexField(access_path: fk, ordinal: 1, component: sat_load_field)
+        end
+        pit_composite.mapping.re_rank
+      end
+
+      def delete_reference_table_foreign_keys
+        trace :datavault, "Delete foreign keys to reference tables" do
+          # Delete all foreign keys to reference tables
+          @reference_composites.each do |composite|
+            composite.all_foreign_key_as_target_composite.each(&:retract)
+          end
+        end
+      end
+
+      def prefer_natural_key building_natural_key, source_composite, target_composite
+        return false if building_natural_key && (@link_composites.include?(source_composite) || @bdv_link_composites.include?(source_composite))
+        building_natural_key && @hub_composites.include?(target_composite)
       end
 
       # For each member of this composite, decide whether to devolve it to a satellite
@@ -273,12 +446,12 @@ module ActiveFacts
             # We may absorb a subtype that has no contents. There's no point moving these to a satellite.
             next if is_empty_inheritance member
 
-            satellite_name = name_satellite member
-            satellite = satellites[satellite_name]
-            unless satellite
-              satellite =
-              satellites[satellite_name] =
-                create_satellite satellite_name, composite
+            satellite_name = name_satellite(member)
+            if !(satellite = satellites[satellite_name])
+              satellite = satellites[satellite_name] = create_satellite(satellite_name, composite)
+              if member.is_a?(MM::Absorption) && check_pit(member)
+                @pit_satellite[member] = satellite
+              end
             end
 
             devolve_member_to_satellite satellite, member
@@ -332,20 +505,32 @@ module ActiveFacts
           satellite.classify_constraints
           satellite.all_local_constraint.map(&:local_constraint).each(&:retract)
           leaf_constraints = satellite.mapping.all_leaf.flat_map(&:all_leaf_constraint).map(&:leaf_constraint).each(&:retract)
+
+          if satellite.mapping.name =~ /Computed #{@option_sat_name}$/
+            @bdv_sat_composites << satellite
+          else
+            @sat_composites << satellite
+          end
         end
       end
 
       # Decide what to call a new satellite that will adopt this component
-      def name_satellite component
+      def satellite_base_name component
         satellite_name =
           if component.is_a?(MM::Absorption)
             pc = component.parent_role.base_role.uniqueness_constraint and
-            pc.concept.all_concept_annotation.map{|ca| ca.mapping_annotation =~ /^satellite *(.*)/ && $1}.compact.uniq[0]
+            pc.concept.all_concept_annotation.map do |ca|
+              ca.mapping_annotation =~ /^satellite *(.*)/ && $1 or
+              ca.mapping_annotation =~ /^computed satellite *(.*)/ && "#{$1} Computed"
+            end.compact.uniq[0]
           # REVISIT: How do we name the satellite for an Indicator? Add a Concept Annotation on the fact type?
           end
         satellite_name = satellite_name.words.capcase if satellite_name
-        satellite_name ||= component.root.mapping.name
-        satellite_name = apply_name(@option_sat_name, satellite_name)
+        satellite_name || component.root.mapping.name
+      end
+
+      def name_satellite component
+        apply_name(@option_sat_name, satellite_base_name(component))
       end
 
       # Create a new satellite for the same object_type as this composite
@@ -502,14 +687,23 @@ module ActiveFacts
       end
 
       def rename_parents
-        @link_composites.each do |composite|
-          composite.mapping.name = apply_name(@option_link_name, composite.mapping.name)
+        @reference_composites.each do |composite|
+          composite.mapping.name = apply_name(@option_ref_name, composite.mapping.name)
         end
         @hub_composites.each do |composite|
           composite.mapping.name = apply_name(@option_hub_name, composite.mapping.name)
         end
-        @reference_composites.each do |composite|
-          composite.mapping.name = apply_name(@option_ref_name, composite.mapping.name)
+        @link_composites.each do |composite|
+          composite.mapping.name = apply_name(@option_link_name, composite.mapping.name)
+        end
+        @bdv_link_composites.each do |composite|
+          composite.mapping.name = apply_name(@option_link_name, composite.mapping.name)
+        end
+        @pit_composites.each do |composite|
+          composite.mapping.name = apply_name(@option_pit_name, composite.mapping.name)
+        end
+        @bridge_composites.each do |composite|
+          composite.mapping.name = apply_name(@option_bridge_name, composite.mapping.name)
         end
       end
 

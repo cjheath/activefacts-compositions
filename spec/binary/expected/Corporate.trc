@@ -1,0 +1,862 @@
+# Mapping (top) of ABN
+#   0: Absorption (optional) in ABN of Company in "ABN is of Company" (reverse)
+# Mapping (top) of ACN
+#   0: Absorption (optional) in ACN of Company in "ACN is of Company" (reverse)
+# Mapping (top) of Address
+#   0: Absorption (existential) in Address of Suburb in "Address has Suburb" (forward)
+#   1: Absorption (existential) in Address of Street in "Address has Street" (forward)
+#   2: Absorption (multiple) in Address of Site in "Site involves Address" (reverse)
+# Mapping (top) of Allowed Response
+#   0: Absorption (existential) in Allowed Response of Question in "Allowed Response involves Question" (forward)
+#   1: Absorption (existential) in Allowed Response of String in "Allowed Response involves String" (forward)
+#   2: Absorption (mandatory) in Allowed Response of Sequence Nr in "Allowed Response has sequence-Nr" (forward)
+#   3: Absorption (optional) in Allowed Response of User Role in "Allowed Response requires follow-up by user acting in User Role" (forward)
+# Mapping (top) of Amount
+# Mapping (top) of Apprenticeship Application ID
+# Mapping (top) of Aptitude Test
+#   0: Absorption (existential) in Aptitude Test of Aptitude Test Name in "Aptitude Test has Aptitude Test Name" (forward)
+#   1: Absorption (multiple) in Aptitude Test of Aptitude Testing in "Aptitude Testing involves Aptitude Test" (reverse)
+# Mapping (top) of Aptitude Test Name
+#   0: Absorption (optional) in Aptitude Test Name of Aptitude Test in "Aptitude Test Name is of Aptitude Test" (reverse)
+# Mapping (top) of Aptitude Test Result
+#   0: Absorption (existential) in Aptitude Test Result of Aptitude Test Result Code in "Aptitude Test Result has Aptitude Test Result Code" (forward)
+#   1: Absorption (multiple) in Aptitude Test Result of Aptitude Testing in "Aptitude Testing yielded Aptitude Test Result" (reverse)
+# Mapping (top) of Aptitude Test Result Code
+#   0: Absorption (optional) in Aptitude Test Result Code of Aptitude Test Result in "Aptitude Test Result Code is of Aptitude Test Result" (reverse)
+# Mapping (top) of Aptitude Testing
+#   0: Absorption (existential) in Aptitude Testing of Candidate in "Aptitude Testing involves Candidate" (forward)
+#   1: Absorption (existential) in Aptitude Testing of Aptitude Test in "Aptitude Testing involves Aptitude Test" (forward)
+#   2: Absorption (mandatory) in Aptitude Testing of Date in "Aptitude Testing is booked on Date" (forward)
+#   3: Absorption (optional) in Aptitude Testing of Aptitude Test Result in "Aptitude Testing yielded Aptitude Test Result" (forward)
+#   4: Absorption (optional) in Aptitude Testing of Time in "Aptitude Testing is booked at Time" (forward)
+#   5: Absorption (multiple) in Aptitude Testing of File Note in "Aptitude Testing has File Note" (reverse)
+# Mapping (top) of Authentication Type
+#   0: Absorption (existential) in Authentication Type of Authentication Type Name in "Authentication Type has Authentication Type Name" (forward)
+#   1: Indicator "Authentication Type is sensitive" (as "Is Sensitive")
+#   2: Absorption (multiple) in Authentication Type of Party Authentication in "Party Authentication involves Authentication Type" (reverse)
+# Mapping (top) of Authentication Type Name
+#   0: Absorption (optional) in Authentication Type Name of Authentication Type in "Authentication Type Name is of Authentication Type" (reverse)
+# Mapping (top) of Authentication Value
+#   0: Absorption (multiple) in Authentication Value of Party Authentication in "Party Authentication involves Authentication Value" (reverse)
+# Mapping (top) of Authorization
+#   0: Absorption (existential) in Authorization of User in "Authorization involves User" (forward)
+#   1: Absorption (existential) in Authorization of User Role in "Authorization involves User Role" (forward)
+# Mapping (top) of Auto Counter
+# Mapping (top) of Candidate
+#   0: Absorption (supertype) in Candidate of Person in "Candidate is a kind of Person" (forward)
+#   1: Indicator "Candidate is prepared to re-locate" (as "Is Prepared To Re Locate")
+#   2: Absorption (optional) in Candidate of Birth Country in "Candidate was born in birth-Country" (forward)
+#   3: Absorption (optional) in Candidate of Candidate Status in "Candidate has Candidate Status" (forward)
+#   4: Absorption (optional) in Candidate of Conviction in "Conviction involves Candidate" (reverse)
+#   5: Absorption (optional) in Candidate of Final Year At School in "Candidate completed school in Year" (forward)
+#   6: Absorption (optional) in Candidate of Highest Completed School Yr Level in "Candidate has completed School Yr Level" (forward)
+#   7: Absorption (optional) in Candidate of Medical Examination in "Medical Examination involves Candidate" (reverse)
+#   8: Absorption (optional) in Candidate of Primarycitizenship Country in "Candidate has primarycitizenship-Country" (forward)
+#   9: Absorption (optional) in Candidate of Resume Document in "Candidate has resume-Document" (forward)
+#   10: Absorption (optional) in Candidate of School Achievement in "Candidate has School Achievement" (forward)
+#   11: Absorption (optional) in Candidate of School Attendance in "School Attendance involves Candidate" (reverse)
+#   12: Absorption (optional) in Candidate of Statusupdate Date in "Candidate had status update on statusupdate-Date" (forward)
+#   13: Absorption (optional) in Candidate of Work Experience in "Work Experience involves Candidate" (reverse)
+#   14: Absorption (optional) in Candidate of Year10 Subject Results Summary in "Candidate achieved year10-Subject Results Summary" (forward)
+#   15: Absorption (optional) in Candidate of Year11 Subject Results Summary in "Candidate achieved year11-Subject Results Summary" (forward)
+#   16: Absorption (optional) in Candidate of Year12 Subject Results Summary in "Candidate achieved year12-Subject Results Summary" (forward)
+#   17: Absorption (multiple) in Candidate of Aptitude Testing in "Aptitude Testing involves Candidate" (reverse)
+#   18: Absorption (multiple) in Candidate of Candidate Referral in "Candidate Referral involves Candidate" (reverse)
+#   19: Absorption (multiple) in Candidate of Candidate Travel Method in "Candidate Travel Method involves Candidate" (reverse)
+#   20: Absorption (multiple) in Candidate of Interview in "Interview involves Candidate" (reverse)
+#   21: Absorption (multiple) in Candidate of Language Spoken in "Language Spoken involves Candidate" (reverse)
+#   22: Absorption (multiple) in Candidate of Personal Characterisation in "Personal Characterisation involves Candidate" (reverse)
+#   23: Absorption (multiple) in Candidate of Personal Reference in "Candidate has Personal Reference" (reverse)
+#   24: Absorption (multiple) in Candidate of Previous Employment in "Previous Employment involves Candidate" (reverse)
+#   25: Absorption (multiple) in Candidate of Skills Certificate in "Skills Certificate involves Candidate" (reverse)
+# Mapping (top) of Candidate Referral
+#   0: Absorption (existential) in Candidate Referral of Candidate in "Candidate Referral involves Candidate" (forward)
+#   1: Absorption (existential) in Candidate Referral of Referral in "Candidate Referral involves Referral" (forward)
+# Mapping (top) of Candidate Status
+#   0: Absorption (multiple) in Candidate Status of Candidate in "Candidate has Candidate Status" (reverse)
+# Mapping (top) of Candidate Travel Method
+#   0: Absorption (existential) in Candidate Travel Method of Candidate in "Candidate Travel Method involves Candidate" (forward)
+#   1: Absorption (existential) in Candidate Travel Method of Travel Method in "Candidate Travel Method involves Travel Method" (forward)
+# Mapping (top) of Code
+#   0: Absorption (multiple) in Code of Skills Certification in "Skills Certification has certificate-Code" (reverse)
+# Mapping (top) of Comment
+#   0: Absorption (multiple) in Comment of Contact Report in "Contact Report has overall-Comment" (reverse)
+#   1: Absorption (multiple) in Comment of Contact Response in "Contact Response has Comment" (reverse)
+#   2: Absorption (multiple) in Comment of Correspondence in "Correspondence attracted Comment" (reverse)
+#   3: Absorption (multiple) in Comment of File Note in "File Note contains Comment" (reverse)
+#   4: Absorption (multiple) in Comment of File Note Template in "File Note Template contains Comment" (reverse)
+# Mapping (top) of Company
+#   0: Absorption (supertype) in Company of Party in "Company is a kind of Party" (forward)
+#   1: Absorption (mandatory) in Company of ABN in "Company has ABN" (forward)
+#   2: Absorption (mandatory) in Company of Legal Company Name in "Company has legal-Company Name" (forward)
+#   3: Absorption (optional) in Company of ACN in "Company has ACN" (forward)
+#   4: Absorption (optional) in Company of Trading Company Name in "Company uses trading-Company Name" (forward)
+#   5: Absorption (optional) in Company of Website URL in "Company has website-URL" (forward)
+#   6: Absorption (multiple) in Company of Department in "Company has Department" (reverse)
+#   7: Absorption (multiple) in Company of Work Experience in "Work Experience was with Company" (reverse)
+#   8: Absorption (subtype) in Company of Employer in "Company is an Employer" (forward)
+#   9: Absorption (subtype) in Company of Superannuation Company in "Company is a Superannuation Company" (forward)
+# Mapping (top) of Company Name
+#   0: Absorption (optional) in Company Name of Company in "trading-Company Name is of Company" (reverse)
+#   1: Absorption (optional) in Company Name of Legal Company in "legal-Company Name is of Company" (reverse)
+#   2: Absorption (optional) in Company Name of Previous Employer in "Company Name is of Previous Employer" (reverse)
+# Mapping (top) of Confirmation Token
+#   0: Absorption (multiple) in Confirmation Token of User in "User has Confirmation Token" (reverse)
+# Mapping (top) of Contact
+#   0: Absorption (existential) in Contact of Party in "Contact involves Party" (forward)
+#   1: Absorption (existential) in Contact of Date in "Contact involves Date" (forward)
+#   2: Indicator "Contact is cancelled" (as "Is Cancelled")
+#   3: Indicator "Contact is suspended" (as "Is Suspended")
+#   4: Absorption (mandatory) in Contact of Bookedfor Person in "Contact is booked for bookedfor-Person" (forward)
+#   5: Absorption (mandatory) in Contact of Contact Method in "Contact has Contact Method" (forward)
+#   6: Absorption (mandatory) in Contact of Contact Type in "Contact has Contact Type" (forward)
+#   7: Absorption (optional) in Contact of Actual Date Time in "Contact is booked at actual-Date Time" (forward)
+#   8: Absorption (optional) in Contact of Contact Report in "Contact has Contact Report" (forward)
+#   9: Absorption (optional) in Contact of Contacter in "Contact was carried out by Person" (forward)
+#   10: Absorption (optional) in Contact of Date Time in "Contact was carried out on Date Time" (forward)
+#   11: Absorption (optional) in Contact of Questionnaire in "Contact uses Questionnaire" (forward)
+#   12: Absorption (optional) in Contact of Scheduled Contact in "Contact was derived from Scheduled Contact" (forward)
+#   13: Absorption (multiple) in Contact of Correspondence in "Correspondence concerned Contact" (reverse)
+# Mapping (top) of Contact Interval
+#   0: Absorption (existential) in Contact Interval of Count in "Contact Interval involves Count" (forward)
+#   1: Absorption (existential) in Contact Interval of Contact Period in "Contact Interval involves Contact Period" (forward)
+#   2: Absorption (multiple) in Contact Interval of Scheduled Contact in "Scheduled Contact involves Contact Interval" (reverse)
+#   3: Absorption (multiple) in Contact Interval of Scheduled Contact in "Scheduled Contact repeats on repeat-Contact Interval" (reverse)
+# Mapping (top) of Contact Kind
+#   0: Absorption (multiple) in Contact Kind of Contact Role in "Contact Role involves Contact Kind" (reverse)
+#   1: Absorption (multiple) in Contact Kind of Contact Signature in "Contact Signature involves Contact Kind" (reverse)
+# Mapping (top) of Contact Method
+#   0: Absorption (existential) in Contact Method of Contact Method Name in "Contact Method has Contact Method Name" (forward)
+#   1: Absorption (multiple) in Contact Method of Contact in "Contact has Contact Method" (reverse)
+#   2: Absorption (multiple) in Contact Method of Scheduled Contact in "Scheduled Contact has Contact Method" (reverse)
+# Mapping (top) of Contact Method Name
+#   0: Absorption (optional) in Contact Method Name of Contact Method in "Contact Method Name is of Contact Method" (reverse)
+# Mapping (top) of Contact Period
+#   0: Absorption (multiple) in Contact Period of Contact Interval in "Contact Interval involves Contact Period" (reverse)
+# Mapping (top) of Contact Report
+#   0: Absorption (existential) in Contact Report of Contact in "Contact Report is for Contact" (reverse)
+#   1: Absorption (optional) in Contact Report of Completedby User in "Contact Report was lodged by completedby-User" (forward)
+#   2: Absorption (optional) in Contact Report of File Note in "Contact Report required follow-up File Note" (forward)
+#   3: Absorption (optional) in Contact Report of Overall Comment in "Contact Report has overall-Comment" (forward)
+#   4: Absorption (optional) in Contact Report of Placement in "Contact Report was made during Placement" (forward)
+#   5: Absorption (multiple) in Contact Report of Contact Response in "Contact Response involves Contact Report" (reverse)
+#   6: Absorption (multiple) in Contact Report of Contact Signature in "Contact Signature involves Contact Report" (reverse)
+# Mapping (top) of Contact Response
+#   0: Absorption (existential) in Contact Response of Contact Report in "Contact Response involves Contact Report" (forward)
+#   1: Absorption (existential) in Contact Response of Question in "Contact Response involves Question" (forward)
+#   2: Absorption (optional) in Contact Response of Comment in "Contact Response has Comment" (forward)
+# Mapping (top) of Contact Role
+#   0: Absorption (existential) in Contact Role of Person in "Contact Role involves Person" (forward)
+#   1: Absorption (existential) in Contact Role of Contact Kind in "Contact Role involves Contact Kind" (forward)
+#   2: Absorption (existential) in Contact Role of Department in "Contact Role involves Department" (forward)
+#   3: Indicator "Contact Role is primary" (as "Is Primary")
+#   4: Absorption (multiple) in Contact Role of Vacancy in "Vacancy has Contact Role" (reverse)
+# Mapping (top) of Contact Schedule
+#   0: Absorption (existential) in Contact Schedule of Contact Schedule Name in "Contact Schedule has Contact Schedule Name" (forward)
+#   1: Absorption (multiple) in Contact Schedule of Scheduled Contact in "Scheduled Contact involves Contact Schedule" (reverse)
+# Mapping (top) of Contact Schedule Name
+#   0: Absorption (optional) in Contact Schedule Name of Contact Schedule in "Contact Schedule Name is of Contact Schedule" (reverse)
+# Mapping (top) of Contact Signature
+#   0: Absorption (existential) in Contact Signature of Contact Report in "Contact Signature involves Contact Report" (forward)
+#   1: Absorption (existential) in Contact Signature of Digitised Signature in "Contact Signature involves Digitised Signature" (forward)
+#   2: Absorption (existential) in Contact Signature of Contact Kind in "Contact Signature involves Contact Kind" (forward)
+#   3: Absorption (mandatory) in Contact Signature of Date in "Contact Signature was applied on Date" (forward)
+#   4: Absorption (mandatory) in Contact Signature of Person in "Contact Signature was applied by Person" (forward)
+#   5: Absorption (optional) in Contact Signature of On Behalf Of in "Contact Signature was applied on behalf of Party" (forward)
+# Mapping (top) of Contact Type
+#   0: Absorption (existential) in Contact Type of Contact Type Name in "Contact Type has Contact Type Name" (forward)
+#   1: Absorption (multiple) in Contact Type of Contact in "Contact has Contact Type" (reverse)
+#   2: Absorption (multiple) in Contact Type of Scheduled Contact in "Scheduled Contact is of Contact Type" (reverse)
+# Mapping (top) of Contact Type Name
+#   0: Absorption (optional) in Contact Type Name of Contact Type in "Contact Type Name is of Contact Type" (reverse)
+# Mapping (top) of Conviction
+#   0: Absorption (existential) in Conviction of Candidate in "Conviction involves Candidate" (forward)
+#   1: Absorption (multiple) in Conviction of File Note in "Conviction has File Note" (reverse)
+# Mapping (top) of Correspondence
+#   0: Absorption (existential) in Correspondence of Party in "Correspondence involves Party" (forward)
+#   1: Absorption (existential) in Correspondence of DateMaybeTime in "Correspondence involves DateMaybeTime" (forward)
+#   2: Absorption (existential) in Correspondence of Correspondence Method in "Correspondence involves Correspondence Method" (forward)
+#   3: Indicator "follow-up to Correspondence is complete" (as "Follow Up To Is Complete")
+#   4: Absorption (optional) in Correspondence of Comment in "Correspondence attracted Comment" (forward)
+#   5: Absorption (optional) in Correspondence of Contact in "Correspondence concerned Contact" (forward)
+#   6: Absorption (optional) in Correspondence of Correspondence Template in "Correspondence was generated using Correspondence Template" (forward)
+#   7: Absorption (optional) in Correspondence of Follow-up Date in "Correspondence requires follow-up by follow-- up Date" (forward)
+#   8: Absorption (optional) in Correspondence of Purpose Name in "Correspondence has purpose-Name" (forward)
+#   9: Absorption (optional) in Correspondence of Received Document in "Correspondence has received-Document" (forward)
+#   10: Absorption (optional) in Correspondence of Sent Document in "Correspondence has sent-Document" (forward)
+#   11: Absorption (optional) in Correspondence of Staff Member in "Correspondence was handled by Person" (forward)
+# Mapping (top) of Correspondence Method
+#   0: Absorption (existential) in Correspondence Method of Correspondence Method Name in "Correspondence Method has Correspondence Method Name" (forward)
+#   1: Absorption (multiple) in Correspondence Method of Correspondence in "Correspondence involves Correspondence Method" (reverse)
+# Mapping (top) of Correspondence Method Name
+#   0: Absorption (optional) in Correspondence Method Name of Correspondence Method in "Correspondence Method Name is of Correspondence Method" (reverse)
+# Mapping (top) of Correspondence Template
+#   0: Absorption (existential) in Correspondence Template of Correspondence Template Name in "Correspondence Template has Correspondence Template Name" (forward)
+#   1: Absorption (multiple) in Correspondence Template of Correspondence in "Correspondence was generated using Correspondence Template" (reverse)
+# Mapping (top) of Correspondence Template Name
+#   0: Absorption (optional) in Correspondence Template Name of Correspondence Template in "Correspondence Template Name is of Correspondence Template" (reverse)
+# Mapping (top) of Count
+#   0: Absorption (multiple) in Count of Contact Interval in "Contact Interval involves Count" (reverse)
+#   1: Absorption (multiple) in Count of File Note Template in "File Note Template has followupdays-Count" (reverse)
+#   2: Absorption (multiple) in Count of User in "User has sign-- in Count" (reverse)
+#   3: Absorption (multiple) in Count of Vacancy in "Vacancy is for Count-apprentices" (reverse)
+# Mapping (top) of Country
+#   0: Absorption (existential) in Country of ISO3166Code3 in "Country has ISO3166Code3" (forward)
+#   1: Absorption (mandatory) in Country of Country Name in "Country is called Country Name" (forward)
+#   2: Absorption (mandatory) in Country of ISO3166Code2 in "Country has ISO3166Code2" (forward)
+#   3: Absorption (mandatory) in Country of ISO3166Numeric3 in "Country has ISO3166Numeric3" (forward)
+#   4: Absorption (multiple) in Country of Candidate in "Candidate was born in birth-Country" (reverse)
+#   5: Absorption (multiple) in Country of Candidate in "Candidate has primarycitizenship-Country" (reverse)
+#   6: Absorption (multiple) in Country of State in "Country includes State" (reverse)
+# Mapping (top) of Country Name
+#   0: Absorption (optional) in Country Name of Country in "Country Name is of Country" (reverse)
+# Mapping (top) of Dashboard
+#   0: Absorption (existential) in Dashboard of User in "Dashboard belongs to User" (forward)
+#   1: Absorption (multiple) in Dashboard of Dashboard Widget in "Dashboard Widget involves Dashboard" (reverse)
+# Mapping (top) of Dashboard Widget
+#   0: Absorption (existential) in Dashboard Widget of Dashboard in "Dashboard Widget involves Dashboard" (forward)
+#   1: Absorption (existential) in Dashboard Widget of Widget in "Dashboard Widget involves Widget" (forward)
+#   2: Indicator "Dashboard Widget is active" (as "Is Active")
+#   3: Absorption (mandatory) in Dashboard Widget of Created At in "Dashboard Widget was created at Date Time" (forward)
+#   4: Absorption (mandatory) in Dashboard Widget of Updated At in "Dashboard Widget was updated at Date Time" (forward)
+#   5: Absorption (mandatory) in Dashboard Widget of Weight Nr in "Dashboard Widget has weight-Nr" (forward)
+# Mapping (top) of Data Type
+#   0: Absorption (existential) in Data Type of Data Type Name in "Data Type has Data Type Name" (forward)
+#   1: Absorption (multiple) in Data Type of Settable Preference in "Settable Preference is of Data Type" (reverse)
+# Mapping (top) of Data Type Name
+#   0: Absorption (optional) in Data Type Name of Data Type in "Data Type Name is of Data Type" (reverse)
+# Mapping (top) of Data Value Restriction
+#   0: Absorption (multiple) in Data Value Restriction of Settable Preference in "Settable Preference is restricted by Data Value Restriction" (reverse)
+# Mapping (top) of Date
+#   0: Absorption (multiple) in Date of Aptitude Testing in "Aptitude Testing is booked on Date" (reverse)
+#   1: Absorption (multiple) in Date of Candidate in "Candidate had status update on statusupdate-Date" (reverse)
+#   2: Absorption (multiple) in Date of Contact in "Contact involves Date" (reverse)
+#   3: Absorption (multiple) in Date of Contact Signature in "Contact Signature was applied on Date" (reverse)
+#   4: Absorption (multiple) in Date of Correspondence in "Correspondence requires follow-up by follow-- up Date" (reverse)
+#   5: Absorption (multiple) in Date of DateMaybeTime in "DateMaybeTime has Date" (reverse)
+#   6: Absorption (multiple) in Date of Document in "Document was recorded on Date" (reverse)
+#   7: Absorption (multiple) in Date of File Note in "File Note was followed up on completion-Date" (reverse)
+#   8: Absorption (multiple) in Date of File Note in "File Note was created on created-Date" (reverse)
+#   9: Absorption (multiple) in Date of File Note in "File Note requires followup by followup-Date" (reverse)
+#   10: Absorption (multiple) in Date of Person in "Person was born on birth-Date" (reverse)
+#   11: Absorption (multiple) in Date of Placement in "Placement commences on commencement-Date" (reverse)
+#   12: Absorption (multiple) in Date of Placement in "Placement is complete on completion-Date" (reverse)
+#   13: Absorption (multiple) in Date of Placement in "Placement nominally ends on nominalend-Date" (reverse)
+#   14: Absorption (multiple) in Date of Placement in "Placement issued tools on toolissue-Date" (reverse)
+#   15: Absorption (multiple) in Date of Placement in "Placement tools were returned on toolreturn-Date" (reverse)
+#   16: Absorption (multiple) in Date of Placement Application in "Placement Application resulted from referral on Date" (reverse)
+#   17: Absorption (multiple) in Date of Placement Application in "Placement Application involves Date" (reverse)
+#   18: Absorption (multiple) in Date of Placement Application in "Placement Application was updated on Date" (reverse)
+#   19: Absorption (multiple) in Date of Reference Check in "Reference Check confirmed employment from commencement-Date" (reverse)
+#   20: Absorption (multiple) in Date of Reference Check in "Reference Check confirmed employment until completion-Date" (reverse)
+#   21: Absorption (multiple) in Date of Reference Check in "Reference Check was made on Date" (reverse)
+#   22: Absorption (multiple) in Date of Vacancy in "Vacancy applications close on Date" (reverse)
+#   23: Absorption (multiple) in Date of Vacancy in "Vacancy closes on closing-Date" (reverse)
+#   24: Absorption (multiple) in Date of Vacancy in "Vacancy must be filled by Date" (reverse)
+#   25: Absorption (multiple) in Date of Vacancy in "Vacancy starts on opening-Date" (reverse)
+#   26: Absorption (multiple) in Date of Vehicle Licence in "Vehicle Licence was obtained on obtained-Date" (reverse)
+# Mapping (top) of Date Time
+#   0: Absorption (multiple) in Date Time of Contact in "Contact is booked at actual-Date Time" (reverse)
+#   1: Absorption (multiple) in Date Time of Contact in "Contact was carried out on Date Time" (reverse)
+#   2: Absorption (multiple) in Date Time of Dashboard Widget in "Dashboard Widget was created at Date Time" (reverse)
+#   3: Absorption (multiple) in Date Time of Dashboard Widget in "Dashboard Widget was updated at Date Time" (reverse)
+#   4: Absorption (multiple) in Date Time of User in "User was sent confirmation request at Date Time" (reverse)
+#   5: Absorption (multiple) in Date Time of User in "User was confirmed at Date Time" (reverse)
+#   6: Absorption (multiple) in Date Time of User in "User is currently signed in at Date Time" (reverse)
+#   7: Absorption (multiple) in Date Time of User in "User previously signed in at Date Time" (reverse)
+#   8: Absorption (multiple) in Date Time of User in "User is remembered since Date Time" (reverse)
+#   9: Absorption (multiple) in Date Time of User in "User was sent password recovery token at Date Time" (reverse)
+#   10: Absorption (multiple) in Date Time of User Role in "User Role was created at Date Time" (reverse)
+#   11: Absorption (multiple) in Date Time of User Role in "User Role was updated at Date Time" (reverse)
+# Mapping (top) of DateMaybeTime
+#   0: Absorption (existential) in DateMaybeTime of Date in "DateMaybeTime has Date" (forward)
+#   1: Absorption (existential) in DateMaybeTime of Time in "DateMaybeTime has Time" (forward)
+#   2: Absorption (multiple) in DateMaybeTime of Correspondence in "Correspondence involves DateMaybeTime" (reverse)
+#   3: Absorption (multiple) in DateMaybeTime of Interview in "Interview involves DateMaybeTime" (reverse)
+# Mapping (top) of Demerit Points
+#   0: Absorption (multiple) in Demerit Points of Vehicle Licence in "Vehicle Licence has remaining-Demerit Points" (reverse)
+# Mapping (top) of Department
+#   0: Absorption (existential) in Department of Company in "Department is part of Company" (forward)
+#   1: Absorption (existential) in Department of Department Name in "Department is called Department Name" (forward)
+#   2: Absorption (optional) in Department of Parent Department in "Department belongs to parent-Department" (forward)
+#   3: Absorption (multiple) in Department of Contact Role in "Contact Role involves Department" (reverse)
+#   4: Absorption (multiple) in Department of Department in "parent-Department contains Department" (reverse)
+# Mapping (top) of Department Name
+#   0: Absorption (multiple) in Department Name of Department in "Department Name is of Department" (reverse)
+# Mapping (top) of Digitised Signature
+#   0: Absorption (multiple) in Digitised Signature of Contact Signature in "Contact Signature involves Digitised Signature" (reverse)
+# Mapping (top) of Document
+#   0: Absorption (existential) in Document of Document ID in "Document has Document ID" (forward)
+#   1: Indicator "Document is scanned" (as "Is Scanned")
+#   2: Absorption (mandatory) in Document of Document Format in "Document is in Document Format" (forward)
+#   3: Absorption (optional) in Document of Date in "Document was recorded on Date" (forward)
+#   4: Absorption (optional) in Document of Person in "Document was recorded by Person" (forward)
+#   5: Absorption (optional) in Document of URL in "Document is stored in URL" (forward)
+#   6: Absorption (multiple) in Document of Candidate in "Candidate has resume-Document" (reverse)
+#   7: Absorption (multiple) in Document of Correspondence in "Correspondence has received-Document" (reverse)
+#   8: Absorption (multiple) in Document of Correspondence in "Correspondence has sent-Document" (reverse)
+#   9: Absorption (multiple) in Document of File Note in "File Note has attached-Document" (reverse)
+# Mapping (top) of Document Format
+#   0: Absorption (existential) in Document Format of Document Format Code in "Document Format has Document Format Code" (forward)
+#   1: Absorption (multiple) in Document Format of Document in "Document Format is of Document" (reverse)
+# Mapping (top) of Document Format Code
+#   0: Absorption (optional) in Document Format Code of Document Format in "Document Format Code is of Document Format" (reverse)
+# Mapping (top) of Document ID
+#   0: Absorption (optional) in Document ID of Document in "Document ID is of Document" (reverse)
+# Mapping (top) of Driver
+#   0: Absorption (supertype) in Driver of Person in "Driver is a kind of Person" (reverse)
+#   1: Absorption (optional) in Driver of Vehicle Description in "Driver drives Vehicle Description" (forward)
+#   2: Absorption (optional) in Driver of Vehicle User Role in "Driver is Vehicle User Role of private vehicle" (forward)
+#   3: Absorption (multiple) in Driver of Vehicle Licence in "Vehicle Licence involves Driver" (reverse)
+# Mapping (top) of EmailAddress
+#   0: Absorption (optional) in EmailAddress of Unconfirmed User in "EmailAddress of User is unconfirmed" (reverse)
+#   1: Absorption (optional) in EmailAddress of User in "EmailAddress is of User" (reverse)
+#   2: Absorption (multiple) in EmailAddress of Person in "EmailAddress is used by Person" (reverse)
+# Mapping (top) of Employer
+#   0: Absorption (supertype) in Employer of Company in "Employer is a kind of Company" (reverse)
+#   1: Absorption (multiple) in Employer of Employment in "Employment involves Employer" (reverse)
+#   2: Absorption (multiple) in Employer of Interview in "Interview involves Employer" (reverse)
+#   3: Absorption (multiple) in Employer of Vacancy in "Employer has Vacancy" (reverse)
+# Mapping (top) of Employment
+#   0: Absorption (existential) in Employment of Employee in "Employment involves Person" (forward)
+#   1: Absorption (existential) in Employment of Employer in "Employment involves Employer" (forward)
+#   2: Indicator "Employment is as trainee" (as "Is As Trainee")
+#   3: Absorption (optional) in Employment of Job Title in "Employment confers Job Title" (forward)
+#   4: Absorption (optional) in Employment of PayrollNr in "Employment is under PayrollNr" (forward)
+#   5: Absorption (optional) in Employment of Work Site in "Employment is at work-Site" (forward)
+# Mapping (top) of Encrypted Password
+#   0: Absorption (multiple) in Encrypted Password of User in "Encrypted Password is of User" (reverse)
+# Mapping (top) of File Note
+#   0: Absorption (existential) in File Note of File Note ID in "File Note has File Note ID" (forward)
+#   1: Absorption (mandatory) in File Note of Comment in "File Note contains Comment" (forward)
+#   2: Absorption (mandatory) in File Note of Created Date in "File Note was created on created-Date" (forward)
+#   3: Absorption (mandatory) in File Note of File Note Type in "File Note is of File Note Type" (forward)
+#   4: Absorption (optional) in File Note of Aptitude Testing in "File Note applies to Aptitude Testing" (forward)
+#   5: Absorption (optional) in File Note of Attached Document in "File Note has attached-Document" (forward)
+#   6: Absorption (optional) in File Note of Completedby User in "File Note follow-up was completed by completedby-User" (forward)
+#   7: Absorption (optional) in File Note of Completion Date in "File Note was followed up on completion-Date" (forward)
+#   8: Absorption (optional) in File Note of Conviction in "File Note applies to Conviction" (forward)
+#   9: Absorption (optional) in File Note of File Note Template in "File Note is created from File Note Template" (forward)
+#   10: Absorption (optional) in File Note of Followup Date in "File Note requires followup by followup-Date" (forward)
+#   11: Absorption (optional) in File Note of Followup User in "File Note requires followup by followup-User" (forward)
+#   12: Absorption (optional) in File Note of Interview in "File Note applies to Interview" (forward)
+#   13: Absorption (optional) in File Note of Medical Examination in "File Note applies to Medical Examination" (forward)
+#   14: Absorption (optional) in File Note of Person in "File Note applies to Person" (forward)
+#   15: Absorption (optional) in File Note of Placement Application in "File Note applies to Placement Application" (forward)
+#   16: Absorption (optional) in File Note of Previous Employment in "File Note applies to Previous Employment" (forward)
+#   17: Absorption (optional) in File Note of Reference Check in "File Note applies to Reference Check" (forward)
+#   18: Absorption (optional) in File Note of School Achievement in "File Note applies to School Achievement" (forward)
+#   19: Absorption (optional) in File Note of Vacancy in "File Note applies to Vacancy" (forward)
+#   20: Absorption (multiple) in File Note of Contact Report in "Contact Report required follow-up File Note" (reverse)
+# Mapping (top) of File Note ID
+#   0: Absorption (optional) in File Note ID of File Note in "File Note ID is of File Note" (reverse)
+# Mapping (top) of File Note Template
+#   0: Absorption (existential) in File Note Template of File Note Template Name in "File Note Template has File Note Template Name" (forward)
+#   1: Indicator "File Note Template is published" (as "Is Published")
+#   2: Absorption (optional) in File Note Template of Comment in "File Note Template contains Comment" (forward)
+#   3: Absorption (optional) in File Note Template of Followup User in "File Note Template has followup-User" (forward)
+#   4: Absorption (optional) in File Note Template of Followupdays Count in "File Note Template has followupdays-Count" (forward)
+#   5: Absorption (optional) in File Note Template of Type Name in "File Note Template has type-Name" (forward)
+#   6: Absorption (multiple) in File Note Template of File Note in "File Note is created from File Note Template" (reverse)
+# Mapping (top) of File Note Template Name
+#   0: Absorption (optional) in File Note Template Name of File Note Template in "File Note Template Name is of File Note Template" (reverse)
+# Mapping (top) of File Note Type
+#   0: Absorption (multiple) in File Note Type of File Note in "File Note is of File Note Type" (reverse)
+# Mapping (top) of Gender
+#   0: Absorption (existential) in Gender of Gender Code in "Gender has Gender Code" (forward)
+#   1: Absorption (mandatory) in Gender of Gender Name in "Gender has gender-Name" (forward)
+#   2: Absorption (multiple) in Gender of Person in "Person is of Gender" (reverse)
+# Mapping (top) of Gender Code
+#   0: Absorption (optional) in Gender Code of Gender in "Gender Code is of Gender" (reverse)
+# Mapping (top) of ID
+# Mapping (top) of IP Address
+#   0: Absorption (multiple) in IP Address of User in "User is currently signed in from IP Address" (reverse)
+#   1: Absorption (multiple) in IP Address of User in "User previously signed in from IP Address" (reverse)
+# Mapping (top) of ISO3166Code2
+#   0: Absorption (mandatory) in ISO3166Code2 of Country in "ISO3166Code2 is of Country" (reverse)
+# Mapping (top) of ISO3166Code3
+#   0: Absorption (optional) in ISO3166Code3 of Country in "ISO3166Code3 is of Country" (reverse)
+# Mapping (top) of ISO3166Numeric3
+#   0: Absorption (mandatory) in ISO3166Numeric3 of Country in "ISO3166Numeric3 is of Country" (reverse)
+# Mapping (top) of Interview
+#   0: Absorption (existential) in Interview of Candidate in "Interview involves Candidate" (forward)
+#   1: Absorption (existential) in Interview of Employer in "Interview involves Employer" (forward)
+#   2: Absorption (existential) in Interview of DateMaybeTime in "Interview involves DateMaybeTime" (forward)
+#   3: Absorption (mandatory) in Interview of Person in "Interview was recorded by Person" (forward)
+#   4: Absorption (optional) in Interview of Interview Type in "Interview is of Interview Type" (forward)
+#   5: Absorption (optional) in Interview of Placement Application in "Interview is for Placement Application" (forward)
+#   6: Absorption (multiple) in Interview of File Note in "Interview has File Note" (reverse)
+# Mapping (top) of Interview Type
+#   0: Absorption (multiple) in Interview Type of Interview in "Interview is of Interview Type" (reverse)
+# Mapping (top) of Job Description
+#   0: Absorption (multiple) in Job Description of Vacancy in "Vacancy is described by Job Description" (reverse)
+# Mapping (top) of Job Title
+#   0: Absorption (existential) in Job Title of Job Title Name in "Job Title has Job Title Name" (forward)
+#   1: Absorption (multiple) in Job Title of Employment in "Employment confers Job Title" (reverse)
+#   2: Absorption (multiple) in Job Title of Personal Reference in "Personal Reference is for Job Title" (reverse)
+#   3: Absorption (multiple) in Job Title of Previous Employment in "Previous Employment was under Job Title" (reverse)
+#   4: Absorption (multiple) in Job Title of Vacancy in "Vacancy is for Job Title" (reverse)
+# Mapping (top) of Job Title Name
+#   0: Absorption (optional) in Job Title Name of Job Title in "Job Title Name is of Job Title" (reverse)
+# Mapping (top) of Language
+#   0: Absorption (existential) in Language of Language Name in "Language has Language Name" (forward)
+#   1: Absorption (multiple) in Language of Language Spoken in "Language Spoken involves Language" (reverse)
+# Mapping (top) of Language Name
+#   0: Absorption (optional) in Language Name of Language in "Language Name is of Language" (reverse)
+# Mapping (top) of Language Spoken
+#   0: Absorption (existential) in Language Spoken of Candidate in "Language Spoken involves Candidate" (forward)
+#   1: Absorption (existential) in Language Spoken of Language in "Language Spoken involves Language" (forward)
+# Mapping (top) of Medical Examination
+#   0: Absorption (existential) in Medical Examination of Candidate in "Medical Examination involves Candidate" (forward)
+#   1: Absorption (multiple) in Medical Examination of File Note in "Medical Examination has File Note" (reverse)
+# Mapping (top) of Money
+# Mapping (top) of Month
+#   0: Absorption (existential) in Month of Month Nr in "Month has Month Nr" (forward)
+#   1: Absorption (multiple) in Month of YearMaybeMonth in "YearMaybeMonth was in Month" (reverse)
+# Mapping (top) of Month Nr
+#   0: Absorption (optional) in Month Nr of Month in "Month Nr is of Month" (reverse)
+# Mapping (top) of Name
+#   0: Absorption (optional) in Name of User Role in "Name is of User Role" (reverse)
+#   1: Absorption (multiple) in Name of Correspondence in "Correspondence has purpose-Name" (reverse)
+#   2: Absorption (multiple) in Name of File Note Template in "File Note Template has type-Name" (reverse)
+#   3: Absorption (multiple) in Name of Gender in "Gender has gender-Name" (reverse)
+#   4: Absorption (multiple) in Name of Person in "family-Name is of Person" (reverse)
+#   5: Absorption (multiple) in Name of Person in "given-Name is of Person" (reverse)
+#   6: Absorption (multiple) in Name of Person in "middle-Name is of Person" (reverse)
+#   7: Absorption (multiple) in Name of Person in "preferred-Name is of Person" (reverse)
+#   8: Absorption (multiple) in Name of Personal Emergency Contact in "Personal Emergency Contact has Name" (reverse)
+#   9: Absorption (multiple) in Name of Personal Reference in "Personal Reference is by referee-Name" (reverse)
+#   10: Absorption (multiple) in Name of Questionnaire Section in "Questionnaire Section has section-Name" (reverse)
+#   11: Absorption (multiple) in Name of Reference Check in "Reference Check was with respondent-Name" (reverse)
+#   12: Absorption (multiple) in Name of Site in "Site has short-Name" (reverse)
+# Mapping (top) of Nr
+#   0: Absorption (multiple) in Nr of Allowed Response in "Allowed Response has sequence-Nr" (reverse)
+#   1: Absorption (multiple) in Nr of Dashboard Widget in "Dashboard Widget has weight-Nr" (reverse)
+#   2: Absorption (multiple) in Nr of Question in "Question has sequence-Nr" (reverse)
+#   3: Absorption (multiple) in Nr of Questionnaire Section in "section-Nr is of Questionnaire Section" (reverse)
+# Mapping (top) of Party
+#   0: Absorption (existential) in Party of Party ID in "Party has Party ID" (forward)
+#   1: Absorption (mandatory) in Party of Party Type in "Party is of Party Type" (forward)
+#   2: Absorption (multiple) in Party of Contact in "Contact involves Party" (reverse)
+#   3: Absorption (multiple) in Party of Contact Signature in "Contact Signature was applied on behalf of Party" (reverse)
+#   4: Absorption (multiple) in Party of Correspondence in "Correspondence involves Party" (reverse)
+#   5: Absorption (multiple) in Party of Party Authentication in "Party Authentication involves Party" (reverse)
+#   6: Absorption (multiple) in Party of Party Phone in "Party Phone involves Party" (reverse)
+#   7: Absorption (multiple) in Party of Site in "Site involves Party" (reverse)
+#   8: Absorption (subtype) in Party of Company in "Party is a Company" (reverse)
+#   9: Absorption (subtype) in Party of Person in "Party is a Person" (reverse)
+# Mapping (top) of Party Authentication
+#   0: Absorption (existential) in Party Authentication of Party in "Party Authentication involves Party" (forward)
+#   1: Absorption (existential) in Party Authentication of Authentication Type in "Party Authentication involves Authentication Type" (forward)
+#   2: Absorption (mandatory) in Party Authentication of Authentication Value in "Party Authentication involves Authentication Value" (forward)
+# Mapping (top) of Party ID
+#   0: Absorption (optional) in Party ID of Party in "Party ID is of Party" (reverse)
+# Mapping (top) of Party Phone
+#   0: Absorption (existential) in Party Phone of Party in "Party Phone involves Party" (forward)
+#   1: Absorption (existential) in Party Phone of Phone Role in "Party Phone involves Phone Role" (forward)
+#   2: Indicator "Party Phone can receive fax" (as "Can Receive Fax")
+#   3: Indicator "Party Phone can receive sms" (as "Can Receive Sms")
+#   4: Absorption (mandatory) in Party Phone of Phone Number in "Party Phone involves Phone Number" (forward)
+# Mapping (top) of Party Type
+#   0: Absorption (existential) in Party Type of Party Type Code in "Party Type has Party Type Code" (forward)
+#   1: Absorption (multiple) in Party Type of Party in "Party is of Party Type" (reverse)
+# Mapping (top) of Party Type Code
+#   0: Absorption (optional) in Party Type Code of Party Type in "Party Type Code is of Party Type" (reverse)
+# Mapping (top) of PayrollNr
+#   0: Absorption (multiple) in PayrollNr of Employment in "Employment is under PayrollNr" (reverse)
+# Mapping (top) of Person
+#   0: Absorption (supertype) in Person of Party in "Person is a kind of Party" (forward)
+#   1: Absorption (mandatory) in Person of Given Name in "Person is called given-Name" (forward)
+#   2: Absorption (optional) in Person of Birth Date in "Person was born on birth-Date" (forward)
+#   3: Absorption (optional) in Person of EmailAddress in "Person uses EmailAddress" (forward)
+#   4: Absorption (optional) in Person of Family Name in "Person has family-Name" (forward)
+#   5: Absorption (optional) in Person of Gender in "Person is of Gender" (forward)
+#   6: Absorption (optional) in Person of Middle Name in "Person has middle-Name" (forward)
+#   7: Absorption (optional) in Person of Photo in "Person has Photo" (forward)
+#   8: Absorption (optional) in Person of Preferred Name in "Person prefers preferred-Name" (forward)
+#   9: Absorption (optional) in Person of Salutation in "Person is addressed by Salutation" (forward)
+#   10: Absorption (multiple) in Person of Contact in "Contact is booked for bookedfor-Person" (reverse)
+#   11: Absorption (multiple) in Person of Contact in "Contact was carried out by Person" (reverse)
+#   12: Absorption (multiple) in Person of Contact Role in "Contact Role involves Person" (reverse)
+#   13: Absorption (multiple) in Person of Contact Signature in "Contact Signature was applied by Person" (reverse)
+#   14: Absorption (multiple) in Person of Correspondence in "Correspondence was handled by Person" (reverse)
+#   15: Absorption (multiple) in Person of Document in "Document was recorded by Person" (reverse)
+#   16: Absorption (multiple) in Person of Employment in "Employment involves Person" (reverse)
+#   17: Absorption (multiple) in Person of File Note in "Person has File Note" (reverse)
+#   18: Absorption (multiple) in Person of Interview in "Interview was recorded by Person" (reverse)
+#   19: Absorption (multiple) in Person of Personal Emergency Contact in "Personal Emergency Contact is for Person" (reverse)
+#   20: Absorption (multiple) in Person of Placement Application in "Placement Application was created by Person" (reverse)
+#   21: Absorption (multiple) in Person of Placement Application in "Placement Application involves Person" (reverse)
+#   22: Absorption (multiple) in Person of Placement Application in "Placement Application was updated by Person" (reverse)
+#   23: Absorption (multiple) in Person of Reference Check in "Reference Check was made by Person" (reverse)
+#   24: Absorption (multiple) in Person of Work Experience in "Work Experience has contact-Person" (reverse)
+#   25: Absorption (subtype) in Person of Candidate in "Person is a Candidate" (reverse)
+#   26: Absorption (subtype) in Person of Driver in "Person is a Driver" (forward)
+#   27: Absorption (subtype) in Person of User in "Person is a User" (reverse)
+#   28: Absorption (subtype) in Person of Worker in "Person is a Worker" (reverse)
+# Mapping (top) of Personal Characterisation
+#   0: Absorption (existential) in Personal Characterisation of Candidate in "Personal Characterisation involves Candidate" (forward)
+#   1: Absorption (existential) in Personal Characterisation of Personal Characteristic in "Personal Characterisation involves Personal Characteristic" (forward)
+# Mapping (top) of Personal Characteristic
+#   0: Absorption (existential) in Personal Characteristic of Personal Characteristic Name in "Personal Characteristic has Personal Characteristic Name" (forward)
+#   1: Absorption (multiple) in Personal Characteristic of Personal Characterisation in "Personal Characterisation involves Personal Characteristic" (reverse)
+# Mapping (top) of Personal Characteristic Name
+#   0: Absorption (optional) in Personal Characteristic Name of Personal Characteristic in "Personal Characteristic Name is of Personal Characteristic" (reverse)
+# Mapping (top) of Personal Emergency Contact
+#   0: Absorption (existential) in Personal Emergency Contact of Person in "Personal Emergency Contact is for Person" (forward)
+#   1: Absorption (existential) in Personal Emergency Contact of Contact Name in "Personal Emergency Contact has Name" (forward)
+#   2: Absorption (mandatory) in Personal Emergency Contact of Phone Number in "Personal Emergency Contact has Phone Number" (forward)
+#   3: Absorption (optional) in Personal Emergency Contact of Relationship in "Personal Emergency Contact has Relationship" (forward)
+# Mapping (top) of Personal Reference
+#   0: Absorption (existential) in Personal Reference of Candidate in "Personal Reference is for Candidate" (forward)
+#   1: Absorption (existential) in Personal Reference of Previous Employer in "Personal Reference is from Previous Employer" (forward)
+#   2: Absorption (existential) in Personal Reference of Referee Name in "Personal Reference is by referee-Name" (forward)
+#   3: Absorption (optional) in Personal Reference of Contact Phone Number in "Personal Reference has contact-Phone Number" (forward)
+#   4: Absorption (optional) in Personal Reference of Job Title in "Personal Reference is for Job Title" (forward)
+#   5: Absorption (optional) in Personal Reference of Reference Check in "Personal Reference was checked in Reference Check" (forward)
+# Mapping (top) of Phone Number
+#   0: Absorption (multiple) in Phone Number of Party Phone in "Party Phone involves Phone Number" (reverse)
+#   1: Absorption (multiple) in Phone Number of Personal Emergency Contact in "Personal Emergency Contact has Phone Number" (reverse)
+#   2: Absorption (multiple) in Phone Number of Personal Reference in "Personal Reference has contact-Phone Number" (reverse)
+# Mapping (top) of Phone Role
+#   0: Absorption (multiple) in Phone Role of Party Phone in "Party Phone involves Phone Role" (reverse)
+# Mapping (top) of Photo
+#   0: Absorption (existential) in Photo of Photo ID in "Photo has Photo ID" (forward)
+#   1: Absorption (multiple) in Photo of Person in "Photo is of Person" (reverse)
+# Mapping (top) of Photo ID
+#   0: Absorption (optional) in Photo ID of Photo in "Photo ID is of Photo" (reverse)
+# Mapping (top) of Placement
+#   0: Absorption (existential) in Placement of Worker in "Placement involves Worker" (forward)
+#   1: Absorption (existential) in Placement of Vacancy in "Placement involves Vacancy" (forward)
+#   2: Absorption (optional) in Placement of Commencement Date in "Placement commences on commencement-Date" (forward)
+#   3: Absorption (optional) in Placement of Completion Date in "Placement is complete on completion-Date" (forward)
+#   4: Absorption (optional) in Placement of Nominalend Date in "Placement nominally ends on nominalend-Date" (forward)
+#   5: Absorption (optional) in Placement of Placement Result in "Placement ended in Placement Result" (forward)
+#   6: Absorption (optional) in Placement of Placement Type in "Placement is of Placement Type" (forward)
+#   7: Absorption (optional) in Placement of Toolissue Date in "Placement issued tools on toolissue-Date" (forward)
+#   8: Absorption (optional) in Placement of Toolreturn Date in "Placement tools were returned on toolreturn-Date" (forward)
+#   9: Absorption (multiple) in Placement of Contact Report in "Contact Report was made during Placement" (reverse)
+# Mapping (top) of Placement Application
+#   0: Absorption (existential) in Placement Application of Person in "Placement Application involves Person" (forward)
+#   1: Absorption (existential) in Placement Application of Vacancy in "Placement Application involves Vacancy" (forward)
+#   2: Absorption (mandatory) in Placement Application of Date in "Placement Application involves Date" (forward)
+#   3: Absorption (optional) in Placement Application of Creator in "Placement Application was created by Person" (forward)
+#   4: Absorption (optional) in Placement Application of Date in "Placement Application resulted from referral on Date" (forward)
+#   5: Absorption (optional) in Placement Application of Last Updated Date in "Placement Application was updated on Date" (forward)
+#   6: Absorption (optional) in Placement Application of Placement Application Result in "Placement Application yielded Placement Application Result" (forward)
+#   7: Absorption (optional) in Placement Application of Updater in "Placement Application was updated by Person" (forward)
+#   8: Absorption (multiple) in Placement Application of File Note in "Placement Application has File Note" (reverse)
+#   9: Absorption (multiple) in Placement Application of Interview in "Placement Application results in Interview" (reverse)
+# Mapping (top) of Placement Application ID
+# Mapping (top) of Placement Application Result
+#   0: Absorption (existential) in Placement Application Result of Placement Application Result Code in "Placement Application Result has Placement Application Result Code" (forward)
+#   1: Absorption (multiple) in Placement Application Result of Placement Application in "Placement Application yielded Placement Application Result" (reverse)
+# Mapping (top) of Placement Application Result Code
+#   0: Absorption (optional) in Placement Application Result Code of Placement Application Result in "Placement Application Result Code is of Placement Application Result" (reverse)
+# Mapping (top) of Placement Result
+#   0: Absorption (existential) in Placement Result of Placement Result Code in "Placement Result has Placement Result Code" (forward)
+#   1: Absorption (multiple) in Placement Result of Placement in "Placement ended in Placement Result" (reverse)
+# Mapping (top) of Placement Result Code
+#   0: Absorption (optional) in Placement Result Code of Placement Result in "Placement Result Code is of Placement Result" (reverse)
+# Mapping (top) of Placement Type
+#   0: Absorption (existential) in Placement Type of Placement Type Code in "Placement Type has Placement Type Code" (forward)
+#   1: Absorption (multiple) in Placement Type of Placement in "Placement is of Placement Type" (reverse)
+# Mapping (top) of Placement Type Code
+#   0: Absorption (optional) in Placement Type Code of Placement Type in "Placement Type Code is of Placement Type" (reverse)
+# Mapping (top) of Postcode
+#   0: Absorption (multiple) in Postcode of Suburb in "Postcode is of Suburb" (reverse)
+# Mapping (top) of Preference Value
+#   0: Absorption (multiple) in Preference Value of User Preference in "User Preference involves Preference Value" (reverse)
+# Mapping (top) of Previous Employer
+#   0: Absorption (existential) in Previous Employer of Company Name in "Previous Employer has Company Name" (forward)
+#   1: Absorption (multiple) in Previous Employer of Personal Reference in "Personal Reference is from Previous Employer" (reverse)
+#   2: Absorption (multiple) in Previous Employer of Previous Employment in "Previous Employment involves Previous Employer" (reverse)
+# Mapping (top) of Previous Employment
+#   0: Absorption (existential) in Previous Employment of Candidate in "Previous Employment involves Candidate" (forward)
+#   1: Absorption (existential) in Previous Employment of Previous Employer in "Previous Employment involves Previous Employer" (forward)
+#   2: Absorption (optional) in Previous Employment of Employment End in "Previous Employment was until YearMaybeMonth" (forward)
+#   3: Absorption (optional) in Previous Employment of Employment Start in "Previous Employment was from YearMaybeMonth" (forward)
+#   4: Absorption (optional) in Previous Employment of Job Title in "Previous Employment was under Job Title" (forward)
+#   5: Absorption (multiple) in Previous Employment of File Note in "Previous Employment has File Note" (reverse)
+# Mapping (top) of Public Liability Cover ID
+# Mapping (top) of Question
+#   0: Absorption (existential) in Question of Questionnaire Section in "Question belongs to Questionnaire Section" (forward)
+#   1: Absorption (existential) in Question of Sequence Nr in "Question has sequence-Nr" (forward)
+#   2: Absorption (mandatory) in Question of Question String in "Question has question-String" (forward)
+#   3: Absorption (multiple) in Question of Allowed Response in "Allowed Response involves Question" (reverse)
+#   4: Absorption (multiple) in Question of Contact Response in "Contact Response involves Question" (reverse)
+# Mapping (top) of Questionnaire
+#   0: Absorption (existential) in Questionnaire of Questionnaire Name in "Questionnaire has Questionnaire Name" (forward)
+#   1: Absorption (multiple) in Questionnaire of Contact in "Questionnaire is used by Contact" (reverse)
+#   2: Absorption (multiple) in Questionnaire of Questionnaire Section in "Questionnaire has Questionnaire Section" (reverse)
+#   3: Absorption (multiple) in Questionnaire of Scheduled Contact in "Scheduled Contact uses Questionnaire" (reverse)
+# Mapping (top) of Questionnaire Name
+#   0: Absorption (optional) in Questionnaire Name of Questionnaire in "Questionnaire Name is of Questionnaire" (reverse)
+# Mapping (top) of Questionnaire Section
+#   0: Absorption (existential) in Questionnaire Section of Questionnaire in "Questionnaire Section belongs to Questionnaire" (forward)
+#   1: Absorption (existential) in Questionnaire Section of Section Nr in "Questionnaire Section has section-Nr" (forward)
+#   2: Absorption (mandatory) in Questionnaire Section of Section Name in "Questionnaire Section has section-Name" (forward)
+#   3: Absorption (multiple) in Questionnaire Section of Question in "Question belongs to Questionnaire Section" (reverse)
+# Mapping (top) of Reference Check
+#   0: Absorption (existential) in Reference Check of Personal Reference in "Reference Check checked Personal Reference" (reverse)
+#   1: Absorption (mandatory) in Reference Check of Date in "Reference Check was made on Date" (forward)
+#   2: Absorption (mandatory) in Reference Check of Person in "Reference Check was made by Person" (forward)
+#   3: Absorption (optional) in Reference Check of Commencement Date in "Reference Check confirmed employment from commencement-Date" (forward)
+#   4: Absorption (optional) in Reference Check of Completion Date in "Reference Check confirmed employment until completion-Date" (forward)
+#   5: Absorption (optional) in Reference Check of Respondent Name in "Reference Check was with respondent-Name" (forward)
+#   6: Absorption (multiple) in Reference Check of File Note in "Reference Check has File Note" (reverse)
+# Mapping (top) of Referral
+#   0: Absorption (existential) in Referral of Referral Name in "Referral has Referral Name" (forward)
+#   1: Absorption (multiple) in Referral of Candidate Referral in "Candidate Referral involves Referral" (reverse)
+# Mapping (top) of Referral Name
+#   0: Absorption (optional) in Referral Name of Referral in "Referral Name is of Referral" (reverse)
+# Mapping (top) of Relationship
+#   0: Absorption (existential) in Relationship of Relationship Code in "Relationship has Relationship Code" (forward)
+#   1: Absorption (multiple) in Relationship of Personal Emergency Contact in "Personal Emergency Contact has Relationship" (reverse)
+# Mapping (top) of Relationship Code
+#   0: Absorption (optional) in Relationship Code of Relationship in "Relationship Code is of Relationship" (reverse)
+# Mapping (top) of Reset Password Token
+#   0: Absorption (optional) in Reset Password Token of User in "Reset Password Token was sent to User" (reverse)
+# Mapping (top) of Resource
+#   0: Absorption (existential) in Resource of Resource ID in "Resource has Resource ID" (forward)
+#   1: Absorption (multiple) in Resource of User Role in "User Role covers Resource" (reverse)
+# Mapping (top) of Resource ID
+#   0: Absorption (optional) in Resource ID of Resource in "Resource ID is of Resource" (reverse)
+# Mapping (top) of Resource Type
+#   0: Absorption (multiple) in Resource Type of User Role in "User Role covers Resource Type" (reverse)
+# Mapping (top) of Salutation
+#   0: Absorption (existential) in Salutation of Salutation Code in "Salutation has Salutation Code" (forward)
+#   1: Absorption (multiple) in Salutation of Person in "Salutation applies to Person" (reverse)
+# Mapping (top) of Salutation Code
+#   0: Absorption (optional) in Salutation Code of Salutation in "Salutation Code is of Salutation" (reverse)
+# Mapping (top) of Scheduled Contact
+#   0: Absorption (existential) in Scheduled Contact of Contact Schedule in "Scheduled Contact involves Contact Schedule" (forward)
+#   1: Absorption (existential) in Scheduled Contact of Contact Interval in "Scheduled Contact involves Contact Interval" (forward)
+#   2: Indicator "Scheduled Contact is apprenticeship completion check" (as "Is Apprenticeship Completion Check")
+#   3: Absorption (optional) in Scheduled Contact of Contact Method in "Scheduled Contact has Contact Method" (forward)
+#   4: Absorption (optional) in Scheduled Contact of Contact Type in "Scheduled Contact is of Contact Type" (forward)
+#   5: Absorption (optional) in Scheduled Contact of Questionnaire in "Scheduled Contact uses Questionnaire" (forward)
+#   6: Absorption (optional) in Scheduled Contact of Repeat Contact Interval in "Scheduled Contact repeats on repeat-Contact Interval" (forward)
+#   7: Absorption (multiple) in Scheduled Contact of Contact in "Contact was derived from Scheduled Contact" (reverse)
+# Mapping (top) of School
+#   0: Absorption (existential) in School of School Name in "School has School Name" (forward)
+#   1: Absorption (multiple) in School of School Attendance in "School Attendance is at School" (reverse)
+# Mapping (top) of School Achievement
+#   0: Absorption (existential) in School Achievement of Candidate in "School Achievement is of Candidate" (reverse)
+#   1: Absorption (multiple) in School Achievement of File Note in "School Achievement has File Note" (reverse)
+# Mapping (top) of School Attendance
+#   0: Absorption (existential) in School Attendance of Candidate in "School Attendance involves Candidate" (forward)
+#   1: Absorption (optional) in School Attendance of Current School Yr Level in "School Attendance is at current-School Yr Level" (forward)
+#   2: Absorption (optional) in School Attendance of School in "School Attendance is at School" (forward)
+#   3: Absorption (optional) in School Attendance of Suburb in "School Attendance is in Suburb" (forward)
+# Mapping (top) of School Name
+#   0: Absorption (optional) in School Name of School in "School Name is of School" (reverse)
+# Mapping (top) of School Yr Level
+#   0: Absorption (existential) in School Yr Level of School Yr Level Nr in "School Yr Level has School Yr Level Nr" (forward)
+#   1: Absorption (multiple) in School Yr Level of Candidate in "Candidate has completed School Yr Level" (reverse)
+#   2: Absorption (multiple) in School Yr Level of School Attendance in "School Attendance is at current-School Yr Level" (reverse)
+# Mapping (top) of School Yr Level Nr
+#   0: Absorption (optional) in School Yr Level Nr of School Yr Level in "School Yr Level Nr is of School Yr Level" (reverse)
+# Mapping (top) of Search
+#   0: Absorption (existential) in Search of Search ID in "Search has Search ID" (forward)
+#   1: Indicator "Search is public" (as "Is Public")
+#   2: Absorption (mandatory) in Search of Search Title in "Search has Search Title" (forward)
+#   3: Absorption (mandatory) in Search of User in "Search was saved by User" (forward)
+#   4: Absorption (multiple) in Search of Search Filter in "Search Filter involves Search" (reverse)
+# Mapping (top) of Search Facet
+#   0: Absorption (existential) in Search Facet of Search Facet Name in "Search Facet has Search Facet Name" (forward)
+#   1: Absorption (multiple) in Search Facet of Search Filter in "Search Filter involves Search Facet" (reverse)
+# Mapping (top) of Search Facet Name
+#   0: Absorption (optional) in Search Facet Name of Search Facet in "Search Facet Name is of Search Facet" (reverse)
+# Mapping (top) of Search Facet Value
+#   0: Absorption (multiple) in Search Facet Value of Search Filter in "Search Filter involves Search Facet Value" (reverse)
+# Mapping (top) of Search Filter
+#   0: Absorption (existential) in Search Filter of Search in "Search Filter involves Search" (forward)
+#   1: Absorption (existential) in Search Filter of Search Facet in "Search Filter involves Search Facet" (forward)
+#   2: Absorption (mandatory) in Search Filter of Search Facet Value in "Search Filter involves Search Facet Value" (forward)
+# Mapping (top) of Search ID
+#   0: Absorption (optional) in Search ID of Search in "Search ID is of Search" (reverse)
+# Mapping (top) of Search Title
+#   0: Absorption (multiple) in Search Title of Search in "Search has Search Title" (reverse)
+# Mapping (top) of Settable Preference
+#   0: Absorption (existential) in Settable Preference of Settable Preference Name in "Settable Preference has Settable Preference Name" (forward)
+#   1: Absorption (mandatory) in Settable Preference of Data Type in "Settable Preference is of Data Type" (forward)
+#   2: Absorption (optional) in Settable Preference of Data Value Restriction in "Settable Preference is restricted by Data Value Restriction" (forward)
+#   3: Absorption (multiple) in Settable Preference of User Preference in "User Preference involves Settable Preference" (reverse)
+# Mapping (top) of Settable Preference Name
+#   0: Absorption (optional) in Settable Preference Name of Settable Preference in "Settable Preference Name is of Settable Preference" (reverse)
+# Mapping (top) of Signed Integer
+# Mapping (top) of Site
+#   0: Absorption (existential) in Site of Party in "Site involves Party" (forward)
+#   1: Absorption (existential) in Site of Site Usage in "Site involves Site Usage" (forward)
+#   2: Absorption (existential) in Site of Address in "Site involves Address" (forward)
+#   3: Absorption (optional) in Site of Short Name in "Site has short-Name" (forward)
+#   4: Absorption (multiple) in Site of Employment in "Employment is at work-Site" (reverse)
+#   5: Absorption (multiple) in Site of Vacancy in "Vacancy is at Site" (reverse)
+# Mapping (top) of Site ID
+# Mapping (top) of Site Usage
+#   0: Absorption (multiple) in Site Usage of Site in "Site involves Site Usage" (reverse)
+# Mapping (top) of Skills Certificate
+#   0: Absorption (existential) in Skills Certificate of Candidate in "Skills Certificate involves Candidate" (forward)
+#   1: Absorption (existential) in Skills Certificate of Skills Certification in "Skills Certificate involves Skills Certification" (forward)
+# Mapping (top) of Skills Certification
+#   0: Absorption (existential) in Skills Certification of Skills Certification Name in "Skills Certification has Skills Certification Name" (forward)
+#   1: Absorption (optional) in Skills Certification of Certificate Code in "Skills Certification has certificate-Code" (forward)
+#   2: Absorption (multiple) in Skills Certification of Skills Certificate in "Skills Certificate involves Skills Certification" (reverse)
+# Mapping (top) of Skills Certification Name
+#   0: Absorption (optional) in Skills Certification Name of Skills Certification in "Skills Certification Name is of Skills Certification" (reverse)
+# Mapping (top) of State
+#   0: Absorption (existential) in State of Country in "State is in Country" (forward)
+#   1: Absorption (existential) in State of State Code in "State has State Code" (forward)
+#   2: Absorption (mandatory) in State of State Name in "State has State Name" (forward)
+#   3: Absorption (multiple) in State of Suburb in "State includes Suburb" (reverse)
+# Mapping (top) of State Code
+#   0: Absorption (multiple) in State Code of State in "State Code is of State" (reverse)
+# Mapping (top) of State Name
+#   0: Absorption (optional) in State Name of State in "State Name is of State" (reverse)
+# Mapping (top) of Street
+#   0: Absorption (multiple) in Street of Address in "Address has Street" (reverse)
+# Mapping (top) of String
+#   0: Absorption (multiple) in String of Allowed Response in "Allowed Response involves String" (reverse)
+#   1: Absorption (multiple) in String of Question in "Question has question-String" (reverse)
+# Mapping (top) of Subject Results Summary
+#   0: Absorption (multiple) in Subject Results Summary of Candidate in "Candidate achieved year10-Subject Results Summary" (reverse)
+#   1: Absorption (multiple) in Subject Results Summary of Candidate in "Candidate achieved year11-Subject Results Summary" (reverse)
+#   2: Absorption (multiple) in Subject Results Summary of Candidate in "Candidate achieved year12-Subject Results Summary" (reverse)
+# Mapping (top) of Suburb
+#   0: Absorption (existential) in Suburb of State in "Suburb is in State" (forward)
+#   1: Absorption (existential) in Suburb of Suburb Name in "Suburb has Suburb Name" (forward)
+#   2: Absorption (existential) in Suburb of Postcode in "Suburb has Postcode" (forward)
+#   3: Absorption (multiple) in Suburb of Address in "Address has Suburb" (reverse)
+#   4: Absorption (multiple) in Suburb of School Attendance in "School Attendance is in Suburb" (reverse)
+# Mapping (top) of Suburb Name
+#   0: Absorption (multiple) in Suburb Name of Suburb in "Suburb Name is of Suburb" (reverse)
+# Mapping (top) of Superannuation Company
+#   0: Absorption (supertype) in Superannuation Company of Company in "Superannuation Company is a kind of Company" (reverse)
+# Mapping (top) of Time
+#   0: Absorption (multiple) in Time of Aptitude Testing in "Aptitude Testing is booked at Time" (reverse)
+#   1: Absorption (multiple) in Time of DateMaybeTime in "DateMaybeTime has Time" (reverse)
+# Mapping (top) of Time Basis
+#   0: Absorption (multiple) in Time Basis of Vacancy in "Vacancy has Time Basis" (reverse)
+# Mapping (top) of Time Division
+# Mapping (top) of Travel Method
+#   0: Absorption (existential) in Travel Method of Travel Method Code in "Travel Method has Travel Method Code" (forward)
+#   1: Absorption (multiple) in Travel Method of Candidate Travel Method in "Candidate Travel Method involves Travel Method" (reverse)
+# Mapping (top) of Travel Method Code
+#   0: Absorption (optional) in Travel Method Code of Travel Method in "Travel Method Code is of Travel Method" (reverse)
+# Mapping (top) of URL
+#   0: Absorption (optional) in URL of Document in "URL contains Document" (reverse)
+#   1: Absorption (multiple) in URL of Company in "website-URL is of Company" (reverse)
+# Mapping (top) of Unsigned Integer
+# Mapping (top) of User
+#   0: Absorption (supertype) in User of Person in "User is a kind of Person" (forward)
+#   1: Absorption (mandatory) in User of Dashboard in "User has Dashboard" (reverse)
+#   2: Absorption (mandatory) in User of Email in "User has EmailAddress" (forward)
+#   3: Absorption (mandatory) in User of Encrypted Password in "User has Encrypted Password" (forward)
+#   4: Absorption (mandatory) in User of Sign-in Count in "User has sign-- in Count" (forward)
+#   5: Absorption (optional) in User of Confirmation Sent At in "User was sent confirmation request at Date Time" (forward)
+#   6: Absorption (optional) in User of Confirmation Token in "User has Confirmation Token" (forward)
+#   7: Absorption (optional) in User of Confirmed At in "User was confirmed at Date Time" (forward)
+#   8: Absorption (optional) in User of Current Sign In At in "User is currently signed in at Date Time" (forward)
+#   9: Absorption (optional) in User of Current Sign In IP in "User is currently signed in from IP Address" (forward)
+#   10: Absorption (optional) in User of Last Sign In At in "User previously signed in at Date Time" (forward)
+#   11: Absorption (optional) in User of Last Sign In IP in "User previously signed in from IP Address" (forward)
+#   12: Absorption (optional) in User of Remember Created At in "User is remembered since Date Time" (forward)
+#   13: Absorption (optional) in User of Reset Password Sent At in "User was sent password recovery token at Date Time" (forward)
+#   14: Absorption (optional) in User of Reset Password Token in "User has Reset Password Token" (forward)
+#   15: Absorption (optional) in User of Unconfirmed Email in "User has unconfirmed-EmailAddress" (forward)
+#   16: Absorption (multiple) in User of Authorization in "Authorization involves User" (reverse)
+#   17: Absorption (multiple) in User of Contact Report in "Contact Report was lodged by completedby-User" (reverse)
+#   18: Absorption (multiple) in User of File Note in "File Note follow-up was completed by completedby-User" (reverse)
+#   19: Absorption (multiple) in User of File Note in "File Note requires followup by followup-User" (reverse)
+#   20: Absorption (multiple) in User of File Note Template in "File Note Template has followup-User" (reverse)
+#   21: Absorption (multiple) in User of Search in "User saved Search" (reverse)
+#   22: Absorption (multiple) in User of User Preference in "User Preference involves User" (reverse)
+# Mapping (top) of User Preference
+#   0: Absorption (existential) in User Preference of User in "User Preference involves User" (forward)
+#   1: Absorption (existential) in User Preference of Settable Preference in "User Preference involves Settable Preference" (forward)
+#   2: Absorption (mandatory) in User Preference of Preference Value in "User Preference involves Preference Value" (forward)
+# Mapping (top) of User Role
+#   0: Absorption (existential) in User Role of Name in "User Role has Name" (forward)
+#   1: Absorption (mandatory) in User Role of Created At in "User Role was created at Date Time" (forward)
+#   2: Absorption (optional) in User Role of Resource in "User Role covers Resource" (forward)
+#   3: Absorption (optional) in User Role of Resource Type in "User Role covers Resource Type" (forward)
+#   4: Absorption (optional) in User Role of Updated At in "User Role was updated at Date Time" (forward)
+#   5: Absorption (multiple) in User Role of Allowed Response in "Allowed Response requires follow-up by user acting in User Role" (reverse)
+#   6: Absorption (multiple) in User Role of Authorization in "Authorization involves User Role" (reverse)
+# Mapping (top) of Vacancy
+#   0: Absorption (existential) in Vacancy of Vacancy ID in "Vacancy has Vacancy ID" (forward)
+#   1: Indicator "Vacancy is for apprentice" (as "Is For Apprentice")
+#   2: Indicator "Vacancy is for trainee" (as "Is For Trainee")
+#   3: Absorption (mandatory) in Vacancy of Count Apprentices in "Vacancy is for Count-apprentices" (forward)
+#   4: Absorption (mandatory) in Vacancy of Employer in "Vacancy is with Employer" (forward)
+#   5: Absorption (mandatory) in Vacancy of Job Title in "Vacancy is for Job Title" (forward)
+#   6: Absorption (mandatory) in Vacancy of Vacancy Status in "Vacancy has Vacancy Status" (forward)
+#   7: Absorption (optional) in Vacancy of Application Closing Date in "Vacancy applications close on Date" (forward)
+#   8: Absorption (optional) in Vacancy of Closing Date in "Vacancy closes on closing-Date" (forward)
+#   9: Absorption (optional) in Vacancy of Contact Role in "Vacancy has Contact Role" (forward)
+#   10: Absorption (optional) in Vacancy of Fill By Date in "Vacancy must be filled by Date" (forward)
+#   11: Absorption (optional) in Vacancy of Job Description in "Vacancy is described by Job Description" (forward)
+#   12: Absorption (optional) in Vacancy of Opening Date in "Vacancy starts on opening-Date" (forward)
+#   13: Absorption (optional) in Vacancy of Site in "Vacancy is at Site" (forward)
+#   14: Absorption (optional) in Vacancy of Time Basis in "Vacancy has Time Basis" (forward)
+#   15: Absorption (multiple) in Vacancy of File Note in "Vacancy has File Note" (reverse)
+#   16: Absorption (multiple) in Vacancy of Placement in "Placement involves Vacancy" (reverse)
+#   17: Absorption (multiple) in Vacancy of Placement Application in "Placement Application involves Vacancy" (reverse)
+# Mapping (top) of Vacancy ID
+#   0: Absorption (optional) in Vacancy ID of Vacancy in "Vacancy ID is of Vacancy" (reverse)
+# Mapping (top) of Vacancy Status
+#   0: Absorption (existential) in Vacancy Status of Vacancy Status Code in "Vacancy Status has Vacancy Status Code" (forward)
+#   1: Absorption (multiple) in Vacancy Status of Vacancy in "Vacancy has Vacancy Status" (reverse)
+# Mapping (top) of Vacancy Status Code
+#   0: Absorption (optional) in Vacancy Status Code of Vacancy Status in "Vacancy Status Code is of Vacancy Status" (reverse)
+# Mapping (top) of Vehicle Description
+#   0: Absorption (multiple) in Vehicle Description of Driver in "Driver drives Vehicle Description" (reverse)
+# Mapping (top) of Vehicle Licence
+#   0: Absorption (existential) in Vehicle Licence of Driver in "Vehicle Licence involves Driver" (forward)
+#   1: Absorption (existential) in Vehicle Licence of Vehicle Licence Type in "Vehicle Licence involves Vehicle Licence Type" (forward)
+#   2: Indicator "Vehicle Licence is limited to automatic vehicles" (as "Is Limited To Automatic Vehicles")
+#   3: Absorption (optional) in Vehicle Licence of Obtained Date in "Vehicle Licence was obtained on obtained-Date" (forward)
+#   4: Absorption (optional) in Vehicle Licence of Remaining Demerit Points in "Vehicle Licence has remaining-Demerit Points" (forward)
+#   5: Absorption (optional) in Vehicle Licence of Vehicle Licence Number in "Vehicle Licence has Vehicle Licence Number" (forward)
+# Mapping (top) of Vehicle Licence Number
+#   0: Absorption (multiple) in Vehicle Licence Number of Vehicle Licence in "Vehicle Licence has Vehicle Licence Number" (reverse)
+# Mapping (top) of Vehicle Licence Type
+#   0: Absorption (existential) in Vehicle Licence Type of Vehicle Licence Type Name in "Vehicle Licence Type has Vehicle Licence Type Name" (forward)
+#   1: Absorption (multiple) in Vehicle Licence Type of Vehicle Licence in "Vehicle Licence involves Vehicle Licence Type" (reverse)
+# Mapping (top) of Vehicle Licence Type Name
+#   0: Absorption (optional) in Vehicle Licence Type Name of Vehicle Licence Type in "Vehicle Licence Type Name is of Vehicle Licence Type" (reverse)
+# Mapping (top) of Vehicle User Role
+#   0: Absorption (multiple) in Vehicle User Role of Driver in "Driver is Vehicle User Role of private vehicle" (reverse)
+# Mapping (top) of Widget
+#   0: Absorption (existential) in Widget of Widget Name in "Widget has Widget Name" (forward)
+#   1: Absorption (optional) in Widget of Partial Path in "Widget has Widget Path" (forward)
+#   2: Absorption (optional) in Widget of Widget Title in "Widget has Widget Title" (forward)
+#   3: Absorption (multiple) in Widget of Dashboard Widget in "Dashboard Widget involves Widget" (reverse)
+# Mapping (top) of Widget Name
+#   0: Absorption (optional) in Widget Name of Widget in "Widget Name is of Widget" (reverse)
+# Mapping (top) of Widget Path
+#   0: Absorption (multiple) in Widget Path of Widget in "Widget has Widget Path" (reverse)
+# Mapping (top) of Widget Title
+#   0: Absorption (multiple) in Widget Title of Widget in "Widget has Widget Title" (reverse)
+# Mapping (top) of Work Experience
+#   0: Absorption (existential) in Work Experience of Candidate in "Work Experience involves Candidate" (forward)
+#   1: Absorption (optional) in Work Experience of Company in "Work Experience was with Company" (forward)
+#   2: Absorption (optional) in Work Experience of Contact Person in "Work Experience has contact-Person" (forward)
+# Mapping (top) of Work Status
+#   0: Absorption (multiple) in Work Status of Worker in "Worker has Work Status" (reverse)
+# Mapping (top) of Worker
+#   0: Absorption (supertype) in Worker of Person in "Worker is a kind of Person" (forward)
+#   1: Absorption (mandatory) in Worker of Work Status in "Worker has Work Status" (forward)
+#   2: Absorption (multiple) in Worker of Placement in "Placement involves Worker" (reverse)
+# Mapping (top) of Year
+#   0: Absorption (existential) in Year of Year Nr in "Year has Year Nr" (forward)
+#   1: Absorption (multiple) in Year of Candidate in "Candidate completed school in Year" (reverse)
+#   2: Absorption (multiple) in Year of YearMaybeMonth in "YearMaybeMonth was in Year" (reverse)
+# Mapping (top) of Year Nr
+#   0: Absorption (optional) in Year Nr of Year in "Year Nr is of Year" (reverse)
+# Mapping (top) of YearMaybeMonth
+#   0: Absorption (existential) in YearMaybeMonth of Year in "YearMaybeMonth was in Year" (forward)
+#   1: Absorption (existential) in YearMaybeMonth of Month in "YearMaybeMonth was in Month" (forward)
+#   2: Absorption (multiple) in YearMaybeMonth of Previous Employment in "Previous Employment was until YearMaybeMonth" (reverse)
+#   3: Absorption (multiple) in YearMaybeMonth of Previous Employment in "Previous Employment was from YearMaybeMonth" (reverse)

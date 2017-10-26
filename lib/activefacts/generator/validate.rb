@@ -19,8 +19,8 @@ module ActiveFacts
         }
       end
 
-      def initialize compositions, options = {}
-        @compositions = compositions
+      def initialize composition, options = {}
+        @composition = composition
         @options = options
       end
 
@@ -34,7 +34,7 @@ module ActiveFacts
           end
         end
 
-        @compositions.each{ |composition| composition.validate(&report) }
+        @composition.validate(&report)
         nil
       end
     end

@@ -14,14 +14,17 @@ module ActiveFacts
 
       def self.options
         {
-          surrogates: ['Boolean', "Inject a surrogate key into each table whose primary key is not already suitable as a foreign key"]
+          surrogates: ['Boolean', "Inject a surrogate key into each table whose primary key is not already suitable as a foreign key"],
+          source: ['Boolean', "Generate composition for source schema"],
+          target: ['Boolean', "Generate composition for target schema"],
+          transform: ['Boolean', "Generate composition for transform schema"]
         }
       end
 
-      def initialize constellation, name, options = {}
+      def initialize constellation, name, options = {}, compositor_name = 'Relational'
         # Extract recognised options:
         @option_surrogates = options.delete('surrogates')
-        super constellation, name, options
+        super constellation, name, options, compositor_name
       end
 
       def generate
@@ -183,10 +186,10 @@ module ActiveFacts
                 next true if a.full_absorption && child_candidate.full_absorption.absorption != a
 
                 # If our counterpart is a full absorption, don't try to reverse that!
-                next false if (a.forward_absorption || a.reverse_absorption).full_absorption
+                next false if (aa = (a.forward_absorption || a.reverse_absorption)) && aa.full_absorption
 
                 # Otherwise the other end must already be a table or fully absorbed into one
-                next false unless child_candidate.is_table || child_candidate.full_absorption
+                next false unless child_candidate.nil? || child_candidate.is_table || child_candidate.full_absorption
 
                 next false unless a.child_role.is_unique && a.parent_role.is_unique   # Must be one-to-one
 

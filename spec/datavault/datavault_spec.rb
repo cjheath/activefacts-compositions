@@ -9,6 +9,7 @@ require 'spec_helper'
 require 'activefacts/compositions/datavault'
 require 'activefacts/compositions/names'
 require 'activefacts/generator/summary'
+require 'activefacts/generator/sql'
 require 'activefacts/input/cql'
 
 DV_CQL_DIR = Pathname.new(__FILE__+'/../../relational').relative_path_from(Pathname(Dir.pwd)).to_s
@@ -51,7 +52,7 @@ describe "DataVault schema from CQL" do
       compositor = ActiveFacts::Compositions::DataVault.new(vocabulary.constellation, basename)
       compositor.generate
 
-      output = ActiveFacts::Generators::Summary.new([compositor.composition]).generate
+      output = ActiveFacts::Generators::Summary.new(compositor.composition).generate
 
       # Save or delete the actual output file:
       if expected_text != output
@@ -68,4 +69,5 @@ describe "DataVault schema from CQL" do
       end
     end
   end
+
 end
