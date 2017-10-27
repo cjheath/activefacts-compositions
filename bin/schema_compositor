@@ -24,7 +24,7 @@ class SchemaCompositor
   def initialize argv
     @options = {}
     while argv[0] =~ /^-/
-      option, value = argv.shift.split(/=/, 2)
+      option, value = argv.shift.split(/[=:]/, 2)
       csv = (value =~ /,/ ? value.split(',') : Array(value))
       modes = csv.inject({}){|h,s| k, v = s.split(/=/, 2); h[k] = v || true; h }
       @options[option.sub(/^-*/,'')] = modes
@@ -142,7 +142,7 @@ class SchemaCompositor
     if options.empty?
       stream.puts "There are no options for --#{action_name action}"
     else
-      stream.puts "Options for --#{name} (say e.g. --#{action_name action}=option1=value,option2)"
+      stream.puts "Options for --#{name} (say e.g. --#{action_name action}:option1=value,option2)"
       options.keys.sort.each do |key|
         type, description = *options[key]
         tag =
@@ -184,7 +184,7 @@ sc.enumerate_available('activefacts/generator')
 if sc.options['help']
   puts "Available compositors:\n\t#{ActiveFacts::Compositions.compositors.keys.sort*"\n\t"}\n\n"
   puts "Available generators:\n\t#{ActiveFacts::Generators.generators.keys.sort*"\n\t"}\n\n"
-  puts "To get help for a particular action, follow it by =help, e.g. --relational=help"
+  puts "To get help for a particular action, follow it by =help, e.g. --relational:help"
   exit
 end
 
