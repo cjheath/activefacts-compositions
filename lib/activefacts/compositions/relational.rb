@@ -15,10 +15,7 @@ module ActiveFacts
       def self.options
         {
           surrogates: ['Boolean', "Inject a surrogate key into each table whose primary key is not already suitable as a foreign key"],
-          source: ['Boolean', "Generate composition for source schema"],
-          target: ['Boolean', "Generate composition for target schema"],
-          transform: ['Boolean', "Generate composition for transform schema"]
-        }
+        }.merge(Compositor.options)
       end
 
       def initialize constellation, name, options = {}, compositor_name = 'Relational'

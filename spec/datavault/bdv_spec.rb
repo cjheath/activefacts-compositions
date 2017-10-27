@@ -33,7 +33,10 @@ describe "Business DataVault schema from CQL" do
   Dir.mkdir actual_dir unless Dir.exist? actual_dir
 
   # Business Data Vault tests
-  file_and_options = [ {file: 'DV2book.cql', options: {'datavault' => 'raw'}}, {file: 'DV2bookBDV.cql', options: {'datavault' => 'business'}} ]
+  file_and_options = [
+    {file: 'DV2book.cql', options: {'restrict' => 'rdv'}},
+    {file: 'DV2bookBDV.cql', options: {'restrict' => 'bdv'}}
+  ]
   file_and_options.each do |file_and_option|
     cql_file = BDV_CQL_DIR + '/' + file_and_option[:file]
     options = file_and_option[:options]

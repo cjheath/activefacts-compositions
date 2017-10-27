@@ -20,8 +20,9 @@ module ActiveFacts
 
       def self.options
         {
-          source: ['Boolean', "Generate composition for source schema"],
-          target: ['Boolean', "Generate composition for target schema"]
+        #  source: ['Boolean', "Generate composition for source schema"],
+        #  target: ['Boolean', "Generate composition for target schema"],
+        #  transform: ['Boolean', "Generate composition for transform schema"]
         }
       end
 
@@ -30,9 +31,9 @@ module ActiveFacts
         @name = name
         @compositor_name = compositor_name
         @options = options
-        @option_source = options.delete('source')
-        @option_target = options.delete('target')
-        @option_transform = options.delete('transform')
+        # @option_source = options.delete('source')
+        # @option_target = options.delete('target')
+        # @option_transform = options.delete('transform')
       end
 
       # Generate all Mappings into @binary_mappings for a binary composition of all ObjectTypes in this constellation
@@ -112,9 +113,9 @@ module ActiveFacts
 
         @constellation.ObjectType.each do |key, object_type|
           trace :binarize, "Populating possible absorptions for #{object_type.name}" do
-            @binary_mappings[object_type]  # Ensure we create the top Mapping even if it has no references
 
             object_type.all_role.each do |role|
+              # Exclude fact types not in @schema_topics
               # Exclude base roles in objectified fact types (unless unary); just use link fact types
               next if role.fact_type.entity_type && role.fact_type.all_role.size != 1
               next if role.variable   # REVISIT: Continue to ignore roles in derived fact types?

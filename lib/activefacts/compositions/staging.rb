@@ -14,9 +14,8 @@ module ActiveFacts
       def self.options
         {
           stgname: ['String', "Suffix or pattern for naming staging tables. Include a + to insert the name. Default 'STG'"],
-          source: ['Boolean', "Generate composition for source schema"],
-          target: ['Boolean', "Generate composition for target schema"]
-        }
+        }.merge(Relational.options).
+        reject{|k,v| [:surrogates].include?(k) }
       end
 
       def initialize constellation, name, options = {}

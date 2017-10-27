@@ -28,9 +28,8 @@ module ActiveFacts
           pitname: ['String', "Suffix or pattern for naming point in time tables. Include a + to insert the name. Default 'PIT'"],
           bridgename: ['String', "Suffix or pattern for naming bridge tables. Include a + to insert the name. Default 'BRIDGE'"],
           refname: ['String', "Suffix or pattern for naming reference tables. Include a + to insert the name. Default '+'"],
-          source: ['Boolean', "Generate composition for source schema"],
-          target: ['Boolean', "Generate composition for target schema"],
-        }
+        }.merge(Relational.options).
+        reject{|k,v| [:surrogates].include?(k) }  # Datavault surrogates are not optional
       end
 
       def initialize constellation, name, options = {}
@@ -138,6 +137,7 @@ module ActiveFacts
         @bdv_composites.sort_by{|c| c.mapping.name}.each do |composite|
           trace :datavault, "Decide whether #{composite.mapping.name} is a link or bridge"
           object_type = composite.mapping.object_type
+          composite.composite_group = 'bdv'
           mapped_to = object_type.fact_type.all_role.to_a
           trace :datavault, "#{composite.mapping.name} encloses foreign keys to #{mapped_to.inspect}" unless mapped_to.compact.empty?
 
@@ -151,6 +151,7 @@ module ActiveFacts
 
         # Classify the point in time tables
         @rdv_composites.sort_by{|c| c.mapping.name}.each do |composite|
+          composite.composite_group = 'rdv'
           trace :datavault, "Decide whether #{composite.mapping.name} has point in time table"
 
           pit_members = composite.mapping.all_member.select do |member|
@@ -183,7 +184,7 @@ module ActiveFacts
       # Create a new PIT for the same object_type as this composite
       def create_pit name, composite
         mapping = @constellation.Mapping(:new, name: name, object_type: composite.mapping.object_type)
-        pit_composite = @constellation.Composite(mapping, composition: @composition)
+        @constellation.Composite(mapping, composition: @composition, composite_group: 'bdv')
       end
 
       def rdv_classify_composites
@@ -446,9 +447,10 @@ module ActiveFacts
             # We may absorb a subtype that has no contents. There's no point moving these to a satellite.
             next if is_empty_inheritance member
 
-            satellite_name = name_satellite(member)
+            satellite_name, is_computed = *name_satellite(member)
             if !(satellite = satellites[satellite_name])
               satellite = satellites[satellite_name] = create_satellite(satellite_name, composite)
+              satellite.composite_group = (is_computed ? 'bdv' : 'rdv')
               if member.is_a?(MM::Absorption) && check_pit(member)
                 @pit_satellite[member] = satellite
               end
@@ -506,7 +508,7 @@ module ActiveFacts
           satellite.all_local_constraint.map(&:local_constraint).each(&:retract)
           leaf_constraints = satellite.mapping.all_leaf.flat_map(&:all_leaf_constraint).map(&:leaf_constraint).each(&:retract)
 
-          if satellite.mapping.name =~ /Computed #{@option_sat_name}$/
+          if satellite.composite_group == 'bdv'
             @bdv_sat_composites << satellite
           else
             @sat_composites << satellite
@@ -515,22 +517,24 @@ module ActiveFacts
       end
 
       # Decide what to call a new satellite that will adopt this component
-      def satellite_base_name component
+      def satellite_base_name_and_type component
+        computed_name = nil
         satellite_name =
           if component.is_a?(MM::Absorption)
             pc = component.parent_role.base_role.uniqueness_constraint and
             pc.concept.all_concept_annotation.map do |ca|
-              ca.mapping_annotation =~ /^satellite *(.*)/ && $1 or
-              ca.mapping_annotation =~ /^computed satellite *(.*)/ && "#{$1} Computed"
+              computed_name = ca.mapping_annotation =~ /^computed satellite *(.*)/ && "#{$1} Computed"
+              ca.mapping_annotation =~ /^satellite *(.*)/ && $1 or computed_name
             end.compact.uniq[0]
           # REVISIT: How do we name the satellite for an Indicator? Add a Concept Annotation on the fact type?
           end
         satellite_name = satellite_name.words.capcase if satellite_name
-        satellite_name || component.root.mapping.name
+        [ satellite_name || component.root.mapping.name, computed_name ]
       end
 
       def name_satellite component
-        apply_name(@option_sat_name, satellite_base_name(component))
+        name, is_computed = *satellite_base_name_and_type(component)
+        [apply_name(@option_sat_name, name), is_computed != nil]
       end
 
       # Create a new satellite for the same object_type as this composite

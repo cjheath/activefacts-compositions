@@ -38,10 +38,7 @@ module ActiveFacts
       def self.options
         {
           nested: ['Boolean', "Compose nested documents"],
-          source: ['Boolean', "Generate composition for source schema"],
-          target: ['Boolean', "Generate composition for target schema"],
-          transform: ['Boolean', "Generate composition for transform schema"]
-        }
+        }.merge(Compositor.options)
       end
 
       def initialize constellation, name, options = {}

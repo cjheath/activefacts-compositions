@@ -22,6 +22,8 @@ module ActiveFacts
           delay_fks: ['Boolean', "Delay emitting all foreign keys until the bottom of the file"],
           underscore: ['String', "Use 'str' instead of underscore between words in table names"],
           unicode: ['Boolean', "Use Unicode for all text fields by default"],
+          # datavault: ['String', "Generate 'raw' or 'business' data vault tables"],
+          restrict: ['String', "Restrict generation to tables in the specified group (e.g. bdv, rdv)"]
         }
       end
 
@@ -31,17 +33,28 @@ module ActiveFacts
         @delay_fks = options.delete "delay_fks"
         @underscore = options.has_key?("underscore") ? (options['underscore'] || '_') : ''
         @unicode = options.delete "unicode"
+        @restrict = options.delete "restrict"
+        # Legacy option. Use restrict=bdv/rdv instead
+        @datavault = options.delete "datavault"
+        case @datavault
+        when "business"
+          @restrict = "bdv"
+        when "raw"
+          @restrict = "rdv"
+        end
       end
 
       def generate
         @tables_emitted = {}
         @delayed_foreign_keys = []
 
+        @composite_list = @composition.all_composite.sort_by{|composite| composite.mapping.name}
+        if @restrict
+          @composite_list.select!{|composite| g = composite.composite_group and g.name == @restrict}
+        end
+
         generate_schema +
-        @composition.
-        all_composite.
-        sort_by{|composite| composite.mapping.name}.
-        map{|composite| generate_table composite}*"\n" + "\n" +
+        @composite_list.map{|composite| generate_table composite}*"\n" + "\n" +
         @delayed_foreign_keys.sort*"\n"
       end
 
@@ -87,7 +100,9 @@ module ActiveFacts
           end.compact.sort +
           composite.all_foreign_key_as_source_composite.map do |fk|
             fk_text = generate_foreign_key fk
-            if !@delay_fks and @tables_emitted[fk.composite]
+            if !@delay_fks and  # We're not delaying foreign keys unnecessarily
+                @tables_emitted[fk.composite] ||          # Already done
+                !@composite_list.include?(fk.composite)   # Not going to be done
               fk_text
             else
               @delayed_foreign_keys <<
