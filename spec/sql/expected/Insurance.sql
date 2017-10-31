@@ -24,10 +24,10 @@ CREATE TABLE Asset (
 	-- maybe Asset is a Vehicle that maybe is subject to finance with Finance Institution that is a kind of Company that is a kind of Party that has Party ID
 	VehicleFinanceInstitutionID             BIGINT NULL,
 	-- Primary index to Asset over PresenceConstraint over (Asset ID in "Asset has Asset ID") occurs at most one time
-	PRIMARY KEY CLUSTERED(AssetID)
+	PRIMARY KEY(AssetID)
 );
 
-CREATE UNIQUE NONCLUSTERED INDEX AssetByVehicleVIN ON Asset(VehicleVIN) WHERE VehicleVIN IS NOT NULL;
+CREATE UNIQUE INDEX AssetByVehicleVIN ON Asset(VehicleVIN) WHERE VehicleVIN IS NOT NULL;
 
 
 CREATE TABLE Claim (
@@ -68,9 +68,9 @@ CREATE TABLE Claim (
 	-- maybe Lodgement involves Claim and maybe Lodgement was made at Date Time
 	LodgementDateTime                       TIMESTAMP NULL,
 	-- Primary index to Claim over PresenceConstraint over (Claim ID in "Claim has Claim ID") occurs at most one time
-	PRIMARY KEY CLUSTERED(ClaimID),
+	PRIMARY KEY(ClaimID),
 	-- Unique index to Claim over PresenceConstraint over (Policy, p_sequence in "Claim is on Policy", "Claim has Claim Sequence") occurs at most one time
-	UNIQUE NONCLUSTERED(PSequence, PolicyPYearNr, PolicyPProductCode, PolicyPStateCode, PolicyPSerial)
+	UNIQUE(PSequence, PolicyPYearNr, PolicyPProductCode, PolicyPStateCode, PolicyPSerial)
 );
 
 
@@ -80,7 +80,7 @@ CREATE TABLE ContractorAppointment (
 	-- Contractor Appointment involves Contractor that is a kind of Company that is a kind of Party that has Party ID
 	ContractorID                            BIGINT NOT NULL,
 	-- Primary index to Contractor Appointment over PresenceConstraint over (Claim, Contractor in "Claim involves Contractor") occurs at most one time
-	PRIMARY KEY CLUSTERED(ClaimID, ContractorID),
+	PRIMARY KEY(ClaimID, ContractorID),
 	FOREIGN KEY (ClaimID) REFERENCES Claim (ClaimID)
 );
 
@@ -99,7 +99,7 @@ CREATE TABLE Cover (
 	-- Cover involves Asset that has Asset ID
 	AssetID                                 BIGINT NOT NULL,
 	-- Primary index to Cover over PresenceConstraint over (Policy, Cover Type, Asset in "Policy provides Cover Type over Asset") occurs at most one time
-	PRIMARY KEY CLUSTERED(PolicyPYearNr, PolicyPProductCode, PolicyPStateCode, PolicyPSerial, CoverTypeCode, AssetID),
+	PRIMARY KEY(PolicyPYearNr, PolicyPProductCode, PolicyPStateCode, PolicyPSerial, CoverTypeCode, AssetID),
 	FOREIGN KEY (AssetID) REFERENCES Asset (AssetID)
 );
 
@@ -110,9 +110,9 @@ CREATE TABLE CoverType (
 	-- Cover Type has Cover Type Name
 	CoverTypeName                           VARCHAR NOT NULL,
 	-- Primary index to Cover Type over PresenceConstraint over (Cover Type Code in "Cover Type has Cover Type Code") occurs at most one time
-	PRIMARY KEY CLUSTERED(CoverTypeCode),
+	PRIMARY KEY(CoverTypeCode),
 	-- Unique index to Cover Type over PresenceConstraint over (Cover Type Name in "Cover Type has Cover Type Name") occurs at most one time
-	UNIQUE NONCLUSTERED(CoverTypeName)
+	UNIQUE(CoverTypeName)
 );
 
 
@@ -124,7 +124,7 @@ CREATE TABLE CoverWording (
 	-- Cover Wording involves start-Date
 	StartDate                               DATE NOT NULL,
 	-- Primary index to Cover Wording over PresenceConstraint over (Cover Type, Policy Wording, Start Date in "Cover Type used Policy Wording from start-Date") occurs at most one time
-	PRIMARY KEY CLUSTERED(CoverTypeCode, PolicyWordingText, StartDate),
+	PRIMARY KEY(CoverTypeCode, PolicyWordingText, StartDate),
 	FOREIGN KEY (CoverTypeCode) REFERENCES CoverType (CoverTypeCode)
 );
 
@@ -139,7 +139,7 @@ CREATE TABLE LossType (
 	-- maybe Loss Type implies Liability that has Liability Code
 	LiabilityCode                           CHARACTER(1) NULL CHECK(LiabilityCode = 'D' OR LiabilityCode = 'L' OR LiabilityCode = 'R' OR LiabilityCode = 'U'),
 	-- Primary index to Loss Type over PresenceConstraint over (Loss Type Code in "Loss Type has Loss Type Code") occurs at most one time
-	PRIMARY KEY CLUSTERED(LossTypeCode)
+	PRIMARY KEY(LossTypeCode)
 );
 
 
@@ -157,7 +157,7 @@ CREATE TABLE LostItem (
 	-- maybe Lost Item was purchased for purchase-Price
 	PurchasePrice                           DECIMAL(18, 2) NULL,
 	-- Primary index to Lost Item over PresenceConstraint over (Incident, Lost Item Nr in "Lost Item was lost in Incident", "Lost Item has Lost Item Nr") occurs at most one time
-	PRIMARY KEY CLUSTERED(IncidentClaimID, LostItemNr),
+	PRIMARY KEY(IncidentClaimID, LostItemNr),
 	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID)
 );
 
@@ -216,7 +216,7 @@ CREATE TABLE Party (
 	-- maybe Party is a Person that maybe has Occupation
 	PersonOccupation                        VARCHAR NULL,
 	-- Primary index to Party over PresenceConstraint over (Party ID in "Party has Party ID") occurs at most one time
-	PRIMARY KEY CLUSTERED(PartyID),
+	PRIMARY KEY(PartyID),
 	FOREIGN KEY (CompanyContactPersonID) REFERENCES Party (PartyID)
 );
 
@@ -239,7 +239,7 @@ CREATE TABLE Policy (
 	-- maybe Policy has ITC Claimed
 	ITCClaimed                              DECIMAL(18, 2) NULL CHECK((ITCClaimed >= 0.0 AND ITCClaimed <= 100.0)),
 	-- Primary index to Policy over PresenceConstraint over (p_year, p_product, p_state, p_serial in "Policy was issued in Year", "Policy is for product having Product", "Policy issued in state having State", "Policy has Policy Serial") occurs at most one time
-	PRIMARY KEY CLUSTERED(PYearNr, PProductCode, PStateCode, PSerial),
+	PRIMARY KEY(PYearNr, PProductCode, PStateCode, PSerial),
 	FOREIGN KEY (AuthorisedRepID) REFERENCES Party (PartyID),
 	FOREIGN KEY (InsuredID) REFERENCES Party (PartyID)
 );
@@ -253,13 +253,13 @@ CREATE TABLE Product (
 	-- maybe Product has Description
 	Description                             VARCHAR(1024) NULL,
 	-- Primary index to Product over PresenceConstraint over (Product Code in "Product has Product Code") occurs at most one time
-	PRIMARY KEY CLUSTERED(ProductCode)
+	PRIMARY KEY(ProductCode)
 );
 
-CREATE UNIQUE NONCLUSTERED INDEX ProductByAlias ON Product(Alias) WHERE Alias IS NOT NULL;
+CREATE UNIQUE INDEX ProductByAlias ON Product(Alias) WHERE Alias IS NOT NULL;
 
 
-CREATE UNIQUE NONCLUSTERED INDEX ProductByDescription ON Product(Description) WHERE Description IS NOT NULL;
+CREATE UNIQUE INDEX ProductByDescription ON Product(Description) WHERE Description IS NOT NULL;
 
 
 CREATE TABLE PropertyDamage (
@@ -280,19 +280,19 @@ CREATE TABLE PropertyDamage (
 	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID)
 );
 
-CREATE UNIQUE CLUSTERED INDEX PropertyDamageByIncidentClaimIDAddressStreetAddressCityAde19 ON PropertyDamage(IncidentClaimID, AddressStreet, AddressCity, AddressPostcode, AddressStateCode) WHERE IncidentClaimID IS NOT NULL AND AddressPostcode IS NOT NULL AND AddressStateCode IS NOT NULL;
+CREATE UNIQUE INDEX PropertyDamageByIncidentClaimIDAddressStreetAddressCityAde19 ON PropertyDamage(IncidentClaimID, AddressStreet, AddressCity, AddressPostcode, AddressStateCode) WHERE IncidentClaimID IS NOT NULL AND AddressPostcode IS NOT NULL AND AddressStateCode IS NOT NULL;
 
 
-CREATE TABLE [State] (
+CREATE TABLE "State" (
 	-- State has State Code
 	StateCode                               SMALLINT NOT NULL CHECK((StateCode >= 0 AND StateCode <= 9)),
 	-- maybe State has State Name
 	StateName                               VARCHAR(256) NULL,
 	-- Primary index to State over PresenceConstraint over (State Code in "State has State Code") occurs at most one time
-	PRIMARY KEY CLUSTERED(StateCode)
+	PRIMARY KEY(StateCode)
 );
 
-CREATE UNIQUE NONCLUSTERED INDEX StateByStateName ON [State](StateName) WHERE StateName IS NOT NULL;
+CREATE UNIQUE INDEX StateByStateName ON "State"(StateName) WHERE StateName IS NOT NULL;
 
 
 CREATE TABLE ThirdParty (
@@ -313,7 +313,7 @@ CREATE TABLE ThirdParty (
 	-- maybe Third Party vehicle is of Vehicle Type that maybe has Badge
 	VehicleTypeBadge                        VARCHAR NULL,
 	-- Primary index to Third Party over PresenceConstraint over (Person, Vehicle Incident in "Person was third party in Vehicle Incident") occurs at most one time
-	PRIMARY KEY CLUSTERED(PersonID, VehicleIncidentClaimID),
+	PRIMARY KEY(PersonID, VehicleIncidentClaimID),
 	FOREIGN KEY (InsurerID) REFERENCES Party (PartyID),
 	FOREIGN KEY (PersonID) REFERENCES Party (PartyID)
 );
@@ -327,7 +327,7 @@ CREATE TABLE UnderwritingDemerit (
 	-- maybe Underwriting Demerit occurred occurrence-Count times
 	OccurrenceCount                         INTEGER NULL,
 	-- Primary index to Underwriting Demerit over PresenceConstraint over (Vehicle Incident, Underwriting Question in "Vehicle Incident occurred despite Underwriting Demerit", "Underwriting Demerit has Underwriting Question") occurs at most one time
-	PRIMARY KEY CLUSTERED(VehicleIncidentClaimID, UnderwritingQuestionID)
+	PRIMARY KEY(VehicleIncidentClaimID, UnderwritingQuestionID)
 );
 
 
@@ -337,9 +337,9 @@ CREATE TABLE UnderwritingQuestion (
 	-- Underwriting Question has Text
 	Text                                    VARCHAR NOT NULL,
 	-- Primary index to Underwriting Question over PresenceConstraint over (Underwriting Question ID in "Underwriting Question has Underwriting Question ID") occurs at most one time
-	PRIMARY KEY CLUSTERED(UnderwritingQuestionID),
+	PRIMARY KEY(UnderwritingQuestionID),
 	-- Unique index to Underwriting Question over PresenceConstraint over (Text in "Text is of Underwriting Question") occurs at most one time
-	UNIQUE NONCLUSTERED(Text)
+	UNIQUE(Text)
 );
 
 
@@ -379,7 +379,7 @@ CREATE TABLE VehicleIncident (
 	-- maybe Vehicle Incident occurred during weather-Description
 	WeatherDescription                      VARCHAR(1024) NULL,
 	-- Primary index to Vehicle Incident over PresenceConstraint over (Incident in "Vehicle Incident is a kind of Incident") occurs at most one time
-	PRIMARY KEY CLUSTERED(IncidentClaimID),
+	PRIMARY KEY(IncidentClaimID),
 	FOREIGN KEY (DrivingPersonID) REFERENCES Party (PartyID),
 	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID),
 	FOREIGN KEY (LossTypeCode) REFERENCES LossType (LossTypeCode)
@@ -402,8 +402,8 @@ CREATE TABLE Witness (
 	-- maybe Witness has contact-Phone and Phone has Phone Nr
 	ContactPhoneNr                          VARCHAR NULL,
 	-- Primary index to Witness over PresenceConstraint over (Incident, Name in "Incident was independently witnessed by Witness", "Witness is called Name") occurs at most one time
-	PRIMARY KEY CLUSTERED(IncidentClaimID, Name),
-	FOREIGN KEY (AddressStateCode) REFERENCES [State] (StateCode),
+	PRIMARY KEY(IncidentClaimID, Name),
+	FOREIGN KEY (AddressStateCode) REFERENCES "State" (StateCode),
 	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID)
 );
 
@@ -417,7 +417,7 @@ ALTER TABLE Asset
 
 
 ALTER TABLE Claim
-	ADD FOREIGN KEY (IncidentAddressStateCode) REFERENCES [State] (StateCode);
+	ADD FOREIGN KEY (IncidentAddressStateCode) REFERENCES "State" (StateCode);
 
 
 ALTER TABLE Claim
@@ -441,11 +441,11 @@ ALTER TABLE Cover
 
 
 ALTER TABLE Party
-	ADD FOREIGN KEY (PersonAddressStateCode) REFERENCES [State] (StateCode);
+	ADD FOREIGN KEY (PersonAddressStateCode) REFERENCES "State" (StateCode);
 
 
 ALTER TABLE Party
-	ADD FOREIGN KEY (PostalAddressStateCode) REFERENCES [State] (StateCode);
+	ADD FOREIGN KEY (PostalAddressStateCode) REFERENCES "State" (StateCode);
 
 
 ALTER TABLE Policy
@@ -453,11 +453,11 @@ ALTER TABLE Policy
 
 
 ALTER TABLE Policy
-	ADD FOREIGN KEY (PStateCode) REFERENCES [State] (StateCode);
+	ADD FOREIGN KEY (PStateCode) REFERENCES "State" (StateCode);
 
 
 ALTER TABLE PropertyDamage
-	ADD FOREIGN KEY (AddressStateCode) REFERENCES [State] (StateCode);
+	ADD FOREIGN KEY (AddressStateCode) REFERENCES "State" (StateCode);
 
 
 ALTER TABLE ThirdParty

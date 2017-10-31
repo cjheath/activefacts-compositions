@@ -16,9 +16,9 @@ CREATE TABLE Company (
 	-- maybe Company has head office at Address that maybe is in Postcode
 	AddressPostcode                         VARCHAR NULL CHECK((AddressPostcode >= 1000 AND AddressPostcode <= 9999)),
 	-- Primary index to Company
-	PRIMARY KEY CLUSTERED(CompanyID),
+	PRIMARY KEY(CompanyID),
 	-- Unique index to Company over PresenceConstraint over (Company Name in "Company has Company Name") occurs at most one time
-	UNIQUE NONCLUSTERED(CompanyName)
+	UNIQUE(CompanyName)
 );
 
 
@@ -42,9 +42,9 @@ CREATE TABLE Person (
 	-- maybe Person lives at Address that maybe is in Postcode
 	AddressPostcode                         VARCHAR NULL CHECK((AddressPostcode >= 1000 AND AddressPostcode <= 9999)),
 	-- Primary index to Person
-	PRIMARY KEY CLUSTERED(PersonID),
+	PRIMARY KEY(PersonID),
 	-- Unique index to Person over PresenceConstraint over (Family, Given Names in "Person is of Family", "Person has Given Names") occurs at most one time
-	UNIQUE NONCLUSTERED(FamilyName, GivenNames)
+	UNIQUE(FamilyName, GivenNames)
 );
 
 

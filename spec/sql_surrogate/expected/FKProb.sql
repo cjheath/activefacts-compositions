@@ -4,9 +4,9 @@ CREATE TABLE OT (
 	-- OT is called Name
 	Name                                    VARCHAR NOT NULL,
 	-- Primary index to OT
-	PRIMARY KEY CLUSTERED(OTID),
+	PRIMARY KEY(OTID),
 	-- Unique index to OT over PresenceConstraint over (Name in "OT is called Name") occurs at most one time
-	UNIQUE NONCLUSTERED(Name)
+	UNIQUE(Name)
 );
 
 
@@ -18,9 +18,9 @@ CREATE TABLE VTP (
 	-- VTP involves Name
 	Name                                    VARCHAR NOT NULL,
 	-- Primary index to VTP
-	PRIMARY KEY CLUSTERED(VTPID),
+	PRIMARY KEY(VTPID),
 	-- Unique index to VTP over PresenceConstraint over (VT, Name in "VT has facet called Name") occurs at most one time
-	UNIQUE NONCLUSTERED(VTOTID, Name),
+	UNIQUE(VTOTID, Name),
 	FOREIGN KEY (VTOTID) REFERENCES OT (OTID)
 );
 
@@ -31,7 +31,7 @@ CREATE TABLE VTPRestriction (
 	-- VTPRestriction involves VTP
 	VTPID                                   BIGINT NOT NULL,
 	-- Primary index to VTPRestriction over PresenceConstraint over (VT, VTP in "VT receives VTP") occurs at most one time
-	PRIMARY KEY CLUSTERED(VTOTID, VTPID),
+	PRIMARY KEY(VTOTID, VTPID),
 	FOREIGN KEY (VTOTID) REFERENCES OT (OTID),
 	FOREIGN KEY (VTPID) REFERENCES VTP (VTPID)
 );

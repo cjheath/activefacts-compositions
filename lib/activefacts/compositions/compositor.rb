@@ -111,11 +111,16 @@ module ActiveFacts
         end
         @component_by_fact = {}
 
-        @constellation.ObjectType.each do |key, object_type|
+        trace :binarize, "Build binary bindings for full schema" do
+          @constellation.ObjectType.each do |key, object_type|
+            @binary_mappings[object_type]  # Ensure we create the top Mapping even if it has no references
+          end
+        end
+
+        @binary_mappings.each do |object_type, mapping|
           trace :binarize, "Populating possible absorptions for #{object_type.name}" do
 
             object_type.all_role.each do |role|
-              # Exclude fact types not in @schema_topics
               # Exclude base roles in objectified fact types (unless unary); just use link fact types
               next if role.fact_type.entity_type && role.fact_type.all_role.size != 1
               next if role.variable   # REVISIT: Continue to ignore roles in derived fact types?

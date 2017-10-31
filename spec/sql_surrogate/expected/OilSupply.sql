@@ -8,13 +8,13 @@ CREATE TABLE AcceptableSubstitution (
 	-- Acceptable Substitution involves Season
 	Season                                  VARCHAR(6) NOT NULL CHECK(Season = 'Autumn' OR Season = 'Spring' OR Season = 'Summer' OR Season = 'Winter'),
 	-- Primary index to Acceptable Substitution
-	PRIMARY KEY CLUSTERED(AcceptableSubstitutionID),
+	PRIMARY KEY(AcceptableSubstitutionID),
 	-- Unique index to Acceptable Substitution over PresenceConstraint over (Product, Alternate Product, Season in "Product may be substituted by alternate-Product in Season") occurs at most one time
-	UNIQUE NONCLUSTERED(ProductID, AlternateProductID, Season)
+	UNIQUE(ProductID, AlternateProductID, Season)
 );
 
 
-CREATE TABLE [Month] (
+CREATE TABLE "Month" (
 	-- Month surrogate key
 	MonthID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Month has Month Nr
@@ -22,9 +22,9 @@ CREATE TABLE [Month] (
 	-- Month is in Season
 	Season                                  VARCHAR(6) NOT NULL CHECK(Season = 'Autumn' OR Season = 'Spring' OR Season = 'Summer' OR Season = 'Winter'),
 	-- Primary index to Month
-	PRIMARY KEY CLUSTERED(MonthID),
+	PRIMARY KEY(MonthID),
 	-- Unique index to Month over PresenceConstraint over (Month Nr in "Month has Month Nr") occurs at most one time
-	UNIQUE NONCLUSTERED(MonthNr)
+	UNIQUE(MonthNr)
 );
 
 
@@ -34,9 +34,9 @@ CREATE TABLE Product (
 	-- Product has Product Name
 	ProductName                             VARCHAR NOT NULL,
 	-- Primary index to Product
-	PRIMARY KEY CLUSTERED(ProductID),
+	PRIMARY KEY(ProductID),
 	-- Unique index to Product over PresenceConstraint over (Product Name in "Product has Product Name") occurs at most one time
-	UNIQUE NONCLUSTERED(ProductName)
+	UNIQUE(ProductName)
 );
 
 
@@ -54,9 +54,9 @@ CREATE TABLE ProductionForecast (
 	-- maybe Production Forecast predicts Cost
 	Cost                                    DECIMAL NULL,
 	-- Primary index to Production Forecast
-	PRIMARY KEY CLUSTERED(ProductionForecastID),
+	PRIMARY KEY(ProductionForecastID),
 	-- Unique index to Production Forecast over PresenceConstraint over (Refinery, Supply Period, Product in "Refinery in Supply Period will make Product in Quantity") occurs one time
-	UNIQUE NONCLUSTERED(RefineryID, SupplyPeriodID, ProductID),
+	UNIQUE(RefineryID, SupplyPeriodID, ProductID),
 	FOREIGN KEY (ProductID) REFERENCES Product (ProductID)
 );
 
@@ -67,9 +67,9 @@ CREATE TABLE Refinery (
 	-- Refinery has Refinery Name
 	RefineryName                            VARCHAR(80) NOT NULL,
 	-- Primary index to Refinery
-	PRIMARY KEY CLUSTERED(RefineryID),
+	PRIMARY KEY(RefineryID),
 	-- Unique index to Refinery over PresenceConstraint over (Refinery Name in "Refinery has Refinery Name") occurs at most one time
-	UNIQUE NONCLUSTERED(RefineryName)
+	UNIQUE(RefineryName)
 );
 
 
@@ -79,9 +79,9 @@ CREATE TABLE Region (
 	-- Region has Region Name
 	RegionName                              VARCHAR NOT NULL,
 	-- Primary index to Region
-	PRIMARY KEY CLUSTERED(RegionID),
+	PRIMARY KEY(RegionID),
 	-- Unique index to Region over PresenceConstraint over (Region Name in "Region has Region Name") occurs at most one time
-	UNIQUE NONCLUSTERED(RegionName)
+	UNIQUE(RegionName)
 );
 
 
@@ -97,9 +97,9 @@ CREATE TABLE RegionalDemand (
 	-- Regional Demand involves Quantity
 	Quantity                                INTEGER NOT NULL,
 	-- Primary index to Regional Demand
-	PRIMARY KEY CLUSTERED(RegionalDemandID),
+	PRIMARY KEY(RegionalDemandID),
 	-- Unique index to Regional Demand over PresenceConstraint over (Region, Supply Period, Product in "Region in Supply Period will need Product in Quantity") occurs one time
-	UNIQUE NONCLUSTERED(RegionID, SupplyPeriodID, ProductID),
+	UNIQUE(RegionID, SupplyPeriodID, ProductID),
 	FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
 	FOREIGN KEY (RegionID) REFERENCES Region (RegionID)
 );
@@ -113,10 +113,10 @@ CREATE TABLE SupplyPeriod (
 	-- Supply Period is in Month
 	MonthID                                 BIGINT NOT NULL,
 	-- Primary index to Supply Period
-	PRIMARY KEY CLUSTERED(SupplyPeriodID),
+	PRIMARY KEY(SupplyPeriodID),
 	-- Unique index to Supply Period over PresenceConstraint over (Year, Month in "Supply Period is in Year", "Supply Period is in Month") occurs at most one time
-	UNIQUE NONCLUSTERED(YearNr, MonthID),
-	FOREIGN KEY (MonthID) REFERENCES [Month] (MonthID)
+	UNIQUE(YearNr, MonthID),
+	FOREIGN KEY (MonthID) REFERENCES "Month" (MonthID)
 );
 
 
@@ -132,9 +132,9 @@ CREATE TABLE TransportRoute (
 	-- maybe Transport Route incurs Cost per kl
 	Cost                                    DECIMAL NULL,
 	-- Primary index to Transport Route
-	PRIMARY KEY CLUSTERED(TransportRouteID),
+	PRIMARY KEY(TransportRouteID),
 	-- Unique index to Transport Route over PresenceConstraint over (Transport Mode, Refinery, Region in "Transport Mode transportation is available from Refinery to Region") occurs at most one time
-	UNIQUE NONCLUSTERED(TransportMode, RefineryID, RegionID),
+	UNIQUE(TransportMode, RefineryID, RegionID),
 	FOREIGN KEY (RefineryID) REFERENCES Refinery (RefineryID),
 	FOREIGN KEY (RegionID) REFERENCES Region (RegionID)
 );

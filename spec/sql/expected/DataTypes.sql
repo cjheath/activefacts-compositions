@@ -2,7 +2,7 @@ CREATE TABLE AAC_ET (
 	-- AAC_ET has Alternate Auto Counter
 	AlternateAutoCounter                    BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Primary index to AAC_ET over PresenceConstraint over (Alternate Auto Counter in "AAC_ET has Alternate Auto Counter") occurs at most one time
-	PRIMARY KEY CLUSTERED(AlternateAutoCounter)
+	PRIMARY KEY(AlternateAutoCounter)
 );
 
 
@@ -10,7 +10,7 @@ CREATE TABLE AG_ET (
 	-- AG_ET has Alternate Guid
 	AlternateGuid                           BINARY(16) NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Primary index to AG_ET over PresenceConstraint over (Alternate Guid in "AG_ET has Alternate Guid") occurs at most one time
-	PRIMARY KEY CLUSTERED(AlternateGuid)
+	PRIMARY KEY(AlternateGuid)
 );
 
 
@@ -112,7 +112,7 @@ CREATE TABLE Container (
 	-- Container has Fundamental Timestamp
 	FundamentalTimestamp                    TIMESTAMP NOT NULL,
 	-- Container has Int
-	[Int]                                   INTEGER NOT NULL CHECK(([Int] >= -2147483648 AND [Int] <= 2147483647)),
+	"Int"                                   INTEGER NOT NULL CHECK(("Int" >= -2147483648 AND "Int" <= 2147483647)),
 	-- Container has Int16
 	Int16                                   SMALLINT NOT NULL,
 	-- Container has Int32
@@ -124,7 +124,7 @@ CREATE TABLE Container (
 	-- Container has Int80
 	Int80                                   int NOT NULL,
 	-- Container has Large
-	[Large]                                 BIGINT NOT NULL CHECK(([Large] >= -9223372036854775808999 AND [Large] <= 9223372036854775807999)),
+	"Large"                                 BIGINT NOT NULL CHECK(("Large" >= -9223372036854775808999 AND "Large" <= 9223372036854775807999)),
 	-- Container has Quad
 	Quad                                    BIGINT NOT NULL CHECK((Quad >= -9223372036854775808 AND Quad <= 9223372036854775807)),
 	-- Container has Real32
@@ -150,7 +150,7 @@ CREATE TABLE Container (
 	-- Container has Word
 	Word                                    SMALLINT NOT NULL CHECK((Word >= -32768 AND Word <= 32767)),
 	-- Primary index to Container over PresenceConstraint over (Container Name in "Container has Container Name") occurs at most one time
-	PRIMARY KEY CLUSTERED(ContainerName)
+	PRIMARY KEY(ContainerName)
 );
 
 

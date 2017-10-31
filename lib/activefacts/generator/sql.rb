@@ -153,6 +153,10 @@ module ActiveFacts
         }"
       end
 
+      def index_kind(index)
+        ''
+      end
+
       def generate_index index, delayed_indices
         nullable_columns =
           index.all_index_field.select do |ixf|
@@ -162,16 +166,14 @@ module ActiveFacts
 
         primary = index.composite_as_primary_index && !contains_nullable_columns
         column_names =
-            index.all_index_field.map do |ixf|
-              column_name(ixf.component)
-            end
-        clustering =
-          (index.composite_as_primary_index ? ' CLUSTERED' : ' NONCLUSTERED')
+          index.all_index_field.map do |ixf|
+            column_name(ixf.component)
+          end
 
         if contains_nullable_columns
           table_name = safe_table_name(index.composite)
           delayed_indices <<
-            'CREATE UNIQUE'+clustering+' INDEX '+
+            'CREATE UNIQUE'+index_kind(index)+' INDEX '+
             escape("#{table_name(index.composite)}By#{column_names*''}", index_name_max) +
             " ON #{table_name}("+column_names.map{|n| escape(n, column_name_max)}*', ' +
             ") WHERE #{
@@ -184,7 +186,7 @@ module ActiveFacts
         else
           '-- '+index.inspect + "\n\t" +
           (primary ? 'PRIMARY KEY' : 'UNIQUE') +
-          clustering +
+          index_kind(index) +
           "(#{column_names.map{|n| escape(n, column_name_max)}*', '})"
         end
       end
@@ -290,6 +292,14 @@ module ActiveFacts
         "#{s};\n\n"
       end
 
+      def open_escape
+        '"'
+      end
+
+      def close_escape
+        '"'
+      end
+
       def escape s, max = table_name_max
         # Escape SQL keywords and non-identifiers
         if s.size > max
@@ -299,7 +309,7 @@ module ActiveFacts
         end
 
         if s =~ /[^A-Za-z0-9_]/ || is_reserved_word(s)
-          "[#{s}]"
+          "#{open_escape}#{s}#{close_escape}"
         else
           s
         end

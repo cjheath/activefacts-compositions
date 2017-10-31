@@ -4,9 +4,9 @@ CREATE TABLE Author (
 	-- Author is called Name
 	AuthorName                              VARCHAR(64) NOT NULL,
 	-- Primary index to Author over PresenceConstraint over (Author Id in "Author has Author Id") occurs at most one time
-	PRIMARY KEY CLUSTERED(AuthorId),
+	PRIMARY KEY(AuthorId),
 	-- Unique index to Author over PresenceConstraint over (Author Name in "author-Name is of Author") occurs at most one time
-	UNIQUE NONCLUSTERED(AuthorName)
+	UNIQUE(AuthorName)
 );
 
 
@@ -24,7 +24,7 @@ CREATE TABLE Comment (
 	-- Comment is on Paragraph that involves Ordinal
 	ParagraphOrdinal                        INTEGER NOT NULL,
 	-- Primary index to Comment over PresenceConstraint over (Comment Id in "Comment has Comment Id") occurs at most one time
-	PRIMARY KEY CLUSTERED(CommentId),
+	PRIMARY KEY(CommentId),
 	FOREIGN KEY (AuthorId) REFERENCES Author (AuthorId)
 );
 
@@ -39,7 +39,7 @@ CREATE TABLE Paragraph (
 	-- Paragraph contains Content that has Text
 	ContentText                             VARCHAR(MAX) NOT NULL,
 	-- Primary index to Paragraph over PresenceConstraint over (Post, Ordinal in "Post includes Ordinal paragraph") occurs at most one time
-	PRIMARY KEY CLUSTERED(PostId, Ordinal)
+	PRIMARY KEY(PostId, Ordinal)
 );
 
 
@@ -51,7 +51,7 @@ CREATE TABLE Post (
 	-- Post belongs to Topic that has Topic Id
 	TopicId                                 BIGINT NOT NULL,
 	-- Primary index to Post over PresenceConstraint over (Post Id in "Post has Post Id") occurs at most one time
-	PRIMARY KEY CLUSTERED(PostId),
+	PRIMARY KEY(PostId),
 	FOREIGN KEY (AuthorId) REFERENCES Author (AuthorId)
 );
 
@@ -64,9 +64,9 @@ CREATE TABLE Topic (
 	-- maybe Topic belongs to parent-Topic and Topic has Topic Id
 	ParentTopicId                           BIGINT NULL,
 	-- Primary index to Topic over PresenceConstraint over (Topic Id in "Topic has Topic Id") occurs at most one time
-	PRIMARY KEY CLUSTERED(TopicId),
+	PRIMARY KEY(TopicId),
 	-- Unique index to Topic over PresenceConstraint over (Topic Name in "Topic is called topic-Name") occurs at most one time
-	UNIQUE NONCLUSTERED(TopicName),
+	UNIQUE(TopicName),
 	FOREIGN KEY (ParentTopicId) REFERENCES Topic (TopicId)
 );
 

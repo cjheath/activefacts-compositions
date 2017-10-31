@@ -4,7 +4,7 @@ CREATE TABLE AllocatableCinemaSection (
 	-- AllocatableCinemaSection involves Section that has Section Name
 	SectionName                             VARCHAR NOT NULL,
 	-- Primary index to AllocatableCinemaSection over PresenceConstraint over (Cinema, Section in "Cinema provides allocated seating in Section") occurs at most one time
-	PRIMARY KEY CLUSTERED(CinemaID, SectionName)
+	PRIMARY KEY(CinemaID, SectionName)
 );
 
 
@@ -36,9 +36,9 @@ CREATE TABLE Booking (
 	-- maybe Booking is for seats in Section that has Section Name
 	SectionName                             VARCHAR NULL,
 	-- Primary index to Booking over PresenceConstraint over (Booking Nr in "Booking has Booking Nr") occurs at most one time
-	PRIMARY KEY CLUSTERED(BookingNr),
+	PRIMARY KEY(BookingNr),
 	-- Unique index to Booking over PresenceConstraint over (Person, Session in "Person booked Session for Number of places") occurs one time
-	UNIQUE NONCLUSTERED(PersonID, SessionCinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute)
+	UNIQUE(PersonID, SessionCinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute)
 );
 
 
@@ -48,9 +48,9 @@ CREATE TABLE Cinema (
 	-- Cinema has Name
 	Name                                    VARCHAR NOT NULL,
 	-- Primary index to Cinema over PresenceConstraint over (Cinema ID in "Cinema has Cinema ID") occurs at most one time
-	PRIMARY KEY CLUSTERED(CinemaID),
+	PRIMARY KEY(CinemaID),
 	-- Unique index to Cinema over PresenceConstraint over (Name in "Cinema has Name") occurs at most one time
-	UNIQUE NONCLUSTERED(Name)
+	UNIQUE(Name)
 );
 
 
@@ -62,10 +62,10 @@ CREATE TABLE Film (
 	-- maybe Film was made in Year that has Year Nr
 	YearNr                                  INTEGER NULL CHECK((YearNr >= 1900 AND YearNr <= 9999)),
 	-- Primary index to Film over PresenceConstraint over (Film ID in "Film has Film ID") occurs at most one time
-	PRIMARY KEY CLUSTERED(FilmID)
+	PRIMARY KEY(FilmID)
 );
 
-CREATE UNIQUE NONCLUSTERED INDEX FilmByNameYearNr ON Film(Name, YearNr) WHERE YearNr IS NOT NULL;
+CREATE UNIQUE INDEX FilmByNameYearNr ON Film(Name, YearNr) WHERE YearNr IS NOT NULL;
 
 
 CREATE TABLE Person (
@@ -76,10 +76,10 @@ CREATE TABLE Person (
 	-- maybe Person has login-Name
 	LoginName                               VARCHAR NULL,
 	-- Primary index to Person over PresenceConstraint over (Person ID in "Person has Person ID") occurs at most one time
-	PRIMARY KEY CLUSTERED(PersonID)
+	PRIMARY KEY(PersonID)
 );
 
-CREATE UNIQUE NONCLUSTERED INDEX PersonByLoginName ON Person(LoginName) WHERE LoginName IS NOT NULL;
+CREATE UNIQUE INDEX PersonByLoginName ON Person(LoginName) WHERE LoginName IS NOT NULL;
 
 
 CREATE TABLE PlacesPaid (
@@ -90,7 +90,7 @@ CREATE TABLE PlacesPaid (
 	-- Places Paid involves Number
 	Number                                  SMALLINT NOT NULL CHECK(Number >= 1),
 	-- Primary index to Places Paid over PresenceConstraint over (Booking, Payment Method in "Number of places for Booking have been paid for by Payment Method") occurs one time
-	PRIMARY KEY CLUSTERED(BookingNr, PaymentMethodCode),
+	PRIMARY KEY(BookingNr, PaymentMethodCode),
 	FOREIGN KEY (BookingNr) REFERENCES Booking (BookingNr)
 );
 
@@ -105,7 +105,7 @@ CREATE TABLE Seat (
 	-- maybe Seat is in Section that has Section Name
 	SectionName                             VARCHAR NULL,
 	-- Primary index to Seat over PresenceConstraint over (Row, Seat Number in "Seat is in Row", "Seat has Seat Number") occurs at most one time
-	PRIMARY KEY CLUSTERED(RowCinemaID, RowNr, SeatNumber),
+	PRIMARY KEY(RowCinemaID, RowNr, SeatNumber),
 	FOREIGN KEY (RowCinemaID) REFERENCES Cinema (CinemaID)
 );
 
@@ -120,13 +120,13 @@ CREATE TABLE SeatAllocation (
 	-- Seat Allocation involves allocated-Seat and Seat has Seat Number
 	AllocatedSeatNumber                     SMALLINT NOT NULL,
 	-- Primary index to Seat Allocation over PresenceConstraint over (Booking, Allocated Seat in "Booking has allocated-Seat") occurs at most one time
-	PRIMARY KEY CLUSTERED(BookingNr, AllocatedSeatRowCinemaID, AllocatedSeatRowNr, AllocatedSeatNumber),
+	PRIMARY KEY(BookingNr, AllocatedSeatRowCinemaID, AllocatedSeatRowNr, AllocatedSeatNumber),
 	FOREIGN KEY (AllocatedSeatRowCinemaID, AllocatedSeatRowNr, AllocatedSeatNumber) REFERENCES Seat (RowCinemaID, RowNr, SeatNumber),
 	FOREIGN KEY (BookingNr) REFERENCES Booking (BookingNr)
 );
 
 
-CREATE TABLE [Session] (
+CREATE TABLE "Session" (
 	-- Session involves Cinema that has Cinema ID
 	CinemaID                                BIGINT NOT NULL,
 	-- Session involves Session Time that is in Year that has Year Nr
@@ -146,7 +146,7 @@ CREATE TABLE [Session] (
 	-- Session involves Film that has Film ID
 	FilmID                                  BIGINT NOT NULL,
 	-- Primary index to Session over PresenceConstraint over (Cinema, Session Time in "Cinema shows Film on Session Time") occurs one time
-	PRIMARY KEY CLUSTERED(CinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute),
+	PRIMARY KEY(CinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute),
 	FOREIGN KEY (CinemaID) REFERENCES Cinema (CinemaID),
 	FOREIGN KEY (FilmID) REFERENCES Film (FilmID)
 );
@@ -172,7 +172,7 @@ CREATE TABLE TicketPricing (
 	-- Ticket Pricing involves Price
 	Price                                   DECIMAL NOT NULL,
 	-- Primary index to Ticket Pricing over PresenceConstraint over (Session Time, Cinema, Section, High Demand in "tickets on Session Time at Cinema in Section for High Demand have Price") occurs one time
-	PRIMARY KEY CLUSTERED(SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute, CinemaID, SectionName, HighDemand),
+	PRIMARY KEY(SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute, CinemaID, SectionName, HighDemand),
 	FOREIGN KEY (CinemaID) REFERENCES Cinema (CinemaID)
 );
 
@@ -186,5 +186,5 @@ ALTER TABLE Booking
 
 
 ALTER TABLE Booking
-	ADD FOREIGN KEY (SessionCinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute) REFERENCES [Session] (CinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute);
+	ADD FOREIGN KEY (SessionCinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute) REFERENCES "Session" (CinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute);
 

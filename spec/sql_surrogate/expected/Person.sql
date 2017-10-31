@@ -6,9 +6,9 @@ CREATE TABLE Person (
 	-- Person has given-Name
 	GivenName                               VARCHAR NOT NULL,
 	-- Primary index to Person
-	PRIMARY KEY CLUSTERED(PersonID),
+	PRIMARY KEY(PersonID),
 	-- Unique index to Person over PresenceConstraint over (Family Name, Given Name in "Person has family-Name", "Person has given-Name") occurs at most one time
-	UNIQUE NONCLUSTERED(FamilyName, GivenName)
+	UNIQUE(FamilyName, GivenName)
 );
 
 

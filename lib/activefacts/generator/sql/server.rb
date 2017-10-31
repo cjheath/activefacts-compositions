@@ -83,6 +83,18 @@ module ActiveFacts
           "#{s}\nGO\n"
         end
 
+        def open_escape
+          '['
+        end
+
+        def close_escape
+          ']'
+        end
+
+        def index_kind(index)
+          (index.composite_as_primary_index ? ' CLUSTERED' : ' NONCLUSTERED')
+        end
+
         class SQLServerDataTypeContext < SQLDataTypeContext
           def integer_ranges
             [

@@ -8,13 +8,13 @@ CREATE TABLE Country (
 	-- Country has ISO3166Numeric3
 	ISO3166Numeric3                         INTEGER NOT NULL,
 	-- Primary index to Country over PresenceConstraint over (ISO3166Code3 in "Country has ISO3166Code3") occurs at most one time
-	PRIMARY KEY CLUSTERED(ISO3166Code3),
+	PRIMARY KEY(ISO3166Code3),
 	-- Unique index to Country over PresenceConstraint over (Country Name in "Country is called Country Name") occurs at most one time
-	UNIQUE NONCLUSTERED(CountryName),
+	UNIQUE(CountryName),
 	-- Unique index to Country over PresenceConstraint over (ISO3166Code2 in "Country has ISO3166Code2") occurs one time
-	UNIQUE NONCLUSTERED(ISO3166Code2),
+	UNIQUE(ISO3166Code2),
 	-- Unique index to Country over PresenceConstraint over (ISO3166Numeric3 in "Country has ISO3166Numeric3") occurs one time
-	UNIQUE NONCLUSTERED(ISO3166Numeric3)
+	UNIQUE(ISO3166Numeric3)
 );
 
 

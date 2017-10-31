@@ -4,7 +4,7 @@ CREATE TABLE Attendance (
 	-- Attendance involves Meeting
 	MeetingID                               BIGINT NOT NULL,
 	-- Primary index to Attendance over PresenceConstraint over (Attendee, Meeting in "Person attended Meeting") occurs at most one time
-	PRIMARY KEY CLUSTERED(AttendeePersonID, MeetingID)
+	PRIMARY KEY(AttendeePersonID, MeetingID)
 );
 
 
@@ -16,9 +16,9 @@ CREATE TABLE Company (
 	-- Company Is Listed
 	IsListed                                BOOLEAN,
 	-- Primary index to Company
-	PRIMARY KEY CLUSTERED(CompanyID),
+	PRIMARY KEY(CompanyID),
 	-- Unique index to Company over PresenceConstraint over (Company Name in "Company is called Company Name") occurs at most one time
-	UNIQUE NONCLUSTERED(CompanyName)
+	UNIQUE(CompanyName)
 );
 
 
@@ -32,9 +32,9 @@ CREATE TABLE Directorship (
 	-- Directorship began on appointment-Date
 	AppointmentDate                         DATE NOT NULL,
 	-- Primary index to Directorship
-	PRIMARY KEY CLUSTERED(DirectorshipID),
+	PRIMARY KEY(DirectorshipID),
 	-- Unique index to Directorship over PresenceConstraint over (Director, Company in "Person directs Company") occurs at most one time
-	UNIQUE NONCLUSTERED(DirectorPersonID, CompanyID),
+	UNIQUE(DirectorPersonID, CompanyID),
 	FOREIGN KEY (CompanyID) REFERENCES Company (CompanyID)
 );
 
@@ -51,9 +51,9 @@ CREATE TABLE Employee (
 	-- maybe Employee is a Manager that Is Ceo
 	ManagerIsCeo                            BOOLEAN,
 	-- Primary index to Employee
-	PRIMARY KEY CLUSTERED(EmployeeID),
+	PRIMARY KEY(EmployeeID),
 	-- Unique index to Employee over PresenceConstraint over (Employee Nr in "Employee has Employee Nr") occurs at most one time
-	UNIQUE NONCLUSTERED(EmployeeNr),
+	UNIQUE(EmployeeNr),
 	FOREIGN KEY (CompanyID) REFERENCES Company (CompanyID),
 	FOREIGN KEY (ManagerEmployeeID) REFERENCES Employee (EmployeeID)
 );
@@ -65,7 +65,7 @@ CREATE TABLE Employment (
 	-- Employment involves Employee
 	EmployeeID                              BIGINT NOT NULL,
 	-- Primary index to Employment over PresenceConstraint over (Person, Employee in "Person works as Employee") occurs at most one time
-	PRIMARY KEY CLUSTERED(PersonID, EmployeeID),
+	PRIMARY KEY(PersonID, EmployeeID),
 	FOREIGN KEY (EmployeeID) REFERENCES Employee (EmployeeID)
 );
 
@@ -76,13 +76,13 @@ CREATE TABLE Meeting (
 	-- Meeting is held by Company
 	CompanyID                               BIGINT NOT NULL,
 	-- Meeting is held on Date
-	[Date]                                  DATE NOT NULL,
+	"Date"                                  DATE NOT NULL,
 	-- Is Board Meeting
 	IsBoardMeeting                          BOOLEAN,
 	-- Primary index to Meeting
-	PRIMARY KEY CLUSTERED(MeetingID),
+	PRIMARY KEY(MeetingID),
 	-- Unique index to Meeting over PresenceConstraint over (Company, Date, Is Board Meeting in "Meeting is held by Company", "Meeting is held on Date", "Meeting is board meeting") occurs at most one time
-	UNIQUE NONCLUSTERED(CompanyID, [Date], IsBoardMeeting),
+	UNIQUE(CompanyID, "Date", IsBoardMeeting),
 	FOREIGN KEY (CompanyID) REFERENCES Company (CompanyID)
 );
 
@@ -97,10 +97,10 @@ CREATE TABLE Person (
 	-- maybe Person was born on birth-Date
 	BirthDate                               DATE NULL CHECK(BirthDate >= '1900/01/01'),
 	-- Primary index to Person
-	PRIMARY KEY CLUSTERED(PersonID)
+	PRIMARY KEY(PersonID)
 );
 
-CREATE UNIQUE NONCLUSTERED INDEX PersonByGivenNameFamilyName ON Person(GivenName, FamilyName) WHERE FamilyName IS NOT NULL;
+CREATE UNIQUE INDEX PersonByGivenNameFamilyName ON Person(GivenName, FamilyName) WHERE FamilyName IS NOT NULL;
 
 
 ALTER TABLE Attendance

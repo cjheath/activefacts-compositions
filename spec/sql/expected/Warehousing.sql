@@ -10,7 +10,7 @@ CREATE TABLE BackOrderAllocation (
 	-- Back Order Allocation is for Quantity
 	Quantity                                INTEGER NOT NULL,
 	-- Primary index to Back Order Allocation over PresenceConstraint over (Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item") occurs at most one time
-	PRIMARY KEY CLUSTERED(PurchaseOrderItemPurchaseOrderID, PurchaseOrderItemProductID, SalesOrderItemSalesOrderID, SalesOrderItemProductID)
+	PRIMARY KEY(PurchaseOrderItemPurchaseOrderID, PurchaseOrderItemProductID, SalesOrderItemSalesOrderID, SalesOrderItemProductID)
 );
 
 
@@ -24,7 +24,7 @@ CREATE TABLE Bin (
 	-- maybe Warehouse contains Bin and Warehouse has Warehouse ID
 	WarehouseID                             BIGINT NULL,
 	-- Primary index to Bin over PresenceConstraint over (Bin ID in "Bin has Bin ID") occurs at most one time
-	PRIMARY KEY CLUSTERED(BinID)
+	PRIMARY KEY(BinID)
 );
 
 
@@ -44,7 +44,7 @@ CREATE TABLE DispatchItem (
 	-- maybe Dispatch Item is for Transfer Request that has Transfer Request ID
 	TransferRequestID                       BIGINT NULL,
 	-- Primary index to Dispatch Item over PresenceConstraint over (Dispatch Item ID in "Dispatch Item has Dispatch Item ID") occurs at most one time
-	PRIMARY KEY CLUSTERED(DispatchItemID)
+	PRIMARY KEY(DispatchItemID)
 );
 
 
@@ -52,7 +52,7 @@ CREATE TABLE Party (
 	-- Party has Party ID
 	PartyID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Primary index to Party over PresenceConstraint over (Party ID in "Party has Party ID") occurs at most one time
-	PRIMARY KEY CLUSTERED(PartyID)
+	PRIMARY KEY(PartyID)
 );
 
 
@@ -60,7 +60,7 @@ CREATE TABLE Product (
 	-- Product has Product ID
 	ProductID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Primary index to Product over PresenceConstraint over (Product ID in "Product has Product ID") occurs at most one time
-	PRIMARY KEY CLUSTERED(ProductID)
+	PRIMARY KEY(ProductID)
 );
 
 
@@ -72,7 +72,7 @@ CREATE TABLE PurchaseOrder (
 	-- Purchase Order is to Warehouse that has Warehouse ID
 	WarehouseID                             BIGINT NOT NULL,
 	-- Primary index to Purchase Order over PresenceConstraint over (Purchase Order ID in "Purchase Order has Purchase Order ID") occurs at most one time
-	PRIMARY KEY CLUSTERED(PurchaseOrderID),
+	PRIMARY KEY(PurchaseOrderID),
 	FOREIGN KEY (SupplierID) REFERENCES Party (PartyID)
 );
 
@@ -85,7 +85,7 @@ CREATE TABLE PurchaseOrderItem (
 	-- Purchase Order Item is in Quantity
 	Quantity                                INTEGER NOT NULL,
 	-- Primary index to Purchase Order Item over PresenceConstraint over (Purchase Order, Product in "Purchase Order includes Purchase Order Item", "Purchase Order Item is for Product") occurs at most one time
-	PRIMARY KEY CLUSTERED(PurchaseOrderID, ProductID),
+	PRIMARY KEY(PurchaseOrderID, ProductID),
 	FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
 	FOREIGN KEY (PurchaseOrderID) REFERENCES PurchaseOrder (PurchaseOrderID)
 );
@@ -107,7 +107,7 @@ CREATE TABLE ReceivedItem (
 	-- maybe Received Item is for Transfer Request that has Transfer Request ID
 	TransferRequestID                       BIGINT NULL,
 	-- Primary index to Received Item over PresenceConstraint over (Received Item ID in "Received Item has Received Item ID") occurs at most one time
-	PRIMARY KEY CLUSTERED(ReceivedItemID),
+	PRIMARY KEY(ReceivedItemID),
 	FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
 	FOREIGN KEY (PurchaseOrderItemPurchaseOrderID, PurchaseOrderItemProductID) REFERENCES PurchaseOrderItem (PurchaseOrderID, ProductID)
 );
@@ -121,7 +121,7 @@ CREATE TABLE SalesOrder (
 	-- Sales Order is from Warehouse that has Warehouse ID
 	WarehouseID                             BIGINT NOT NULL,
 	-- Primary index to Sales Order over PresenceConstraint over (Sales Order ID in "Sales Order has Sales Order ID") occurs at most one time
-	PRIMARY KEY CLUSTERED(SalesOrderID),
+	PRIMARY KEY(SalesOrderID),
 	FOREIGN KEY (CustomerID) REFERENCES Party (PartyID)
 );
 
@@ -134,7 +134,7 @@ CREATE TABLE SalesOrderItem (
 	-- Sales Order Item is in Quantity
 	Quantity                                INTEGER NOT NULL,
 	-- Primary index to Sales Order Item over PresenceConstraint over (Sales Order, Product in "Sales Order includes Sales Order Item", "Sales Order Item is for Product") occurs at most one time
-	PRIMARY KEY CLUSTERED(SalesOrderID, ProductID),
+	PRIMARY KEY(SalesOrderID, ProductID),
 	FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
 	FOREIGN KEY (SalesOrderID) REFERENCES SalesOrder (SalesOrderID)
 );
@@ -152,7 +152,7 @@ CREATE TABLE TransferRequest (
 	-- Transfer Request is to To Warehouse and Warehouse has Warehouse ID
 	ToWarehouseID                           BIGINT NOT NULL,
 	-- Primary index to Transfer Request over PresenceConstraint over (Transfer Request ID in "Transfer Request has Transfer Request ID") occurs at most one time
-	PRIMARY KEY CLUSTERED(TransferRequestID),
+	PRIMARY KEY(TransferRequestID),
 	FOREIGN KEY (ProductID) REFERENCES Product (ProductID)
 );
 
@@ -161,7 +161,7 @@ CREATE TABLE Warehouse (
 	-- Warehouse has Warehouse ID
 	WarehouseID                             BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Primary index to Warehouse over PresenceConstraint over (Warehouse ID in "Warehouse has Warehouse ID") occurs at most one time
-	PRIMARY KEY CLUSTERED(WarehouseID)
+	PRIMARY KEY(WarehouseID)
 );
 
 
