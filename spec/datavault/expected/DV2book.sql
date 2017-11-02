@@ -8,9 +8,9 @@ CREATE TABLE AirlineHUB (
 	-- LoadDateTime
 	LoadDateTime                            TIMESTAMP,
 	-- Primary index to Airline HUB
-	PRIMARY KEY CLUSTERED(AirlineHID),
+	PRIMARY KEY(AirlineHID),
 	-- Unique index to Airline HUB over PresenceConstraint over (Airline ID in "Airline has Airline ID") occurs at most one time
-	UNIQUE NONCLUSTERED(AirlineID)
+	UNIQUE(AirlineID)
 );
 
 
@@ -24,7 +24,7 @@ CREATE TABLE AirlineSAT (
 	-- maybe Airline has Flight Code
 	FlightCode                              BIGINT NULL,
 	-- Primary index to Airline SAT
-	PRIMARY KEY CLUSTERED(AirlineHID, LoadDateTime),
+	PRIMARY KEY(AirlineHID, LoadDateTime),
 	FOREIGN KEY (AirlineHID) REFERENCES AirlineHUB (AirlineHID)
 );
 
@@ -39,9 +39,9 @@ CREATE TABLE AirplaneHUB (
 	-- LoadDateTime
 	LoadDateTime                            TIMESTAMP,
 	-- Primary index to Airplane HUB
-	PRIMARY KEY CLUSTERED(AirplaneHID),
+	PRIMARY KEY(AirplaneHID),
 	-- Unique index to Airplane HUB over PresenceConstraint over (Tail Number in "Airplane has Tail Number") occurs one time
-	UNIQUE NONCLUSTERED(TailNumber)
+	UNIQUE(TailNumber)
 );
 
 
@@ -57,9 +57,9 @@ CREATE TABLE AirplanePartLINK (
 	-- LoadDateTime
 	LoadDateTime                            TIMESTAMP,
 	-- Primary index to Airplane Part LINK
-	PRIMARY KEY CLUSTERED(AirplanePartHID),
+	PRIMARY KEY(AirplanePartHID),
 	-- Unique index to Airplane Part LINK over PresenceConstraint over (Airplane, Part in "Airplane has Part") occurs at most one time
-	UNIQUE NONCLUSTERED(AirplaneHID, PartHID),
+	UNIQUE(AirplaneHID, PartHID),
 	FOREIGN KEY (AirplaneHID) REFERENCES AirplaneHUB (AirplaneHID)
 );
 
@@ -74,9 +74,9 @@ CREATE TABLE AirportHUB (
 	-- LoadDateTime
 	LoadDateTime                            TIMESTAMP,
 	-- Primary index to Airport HUB
-	PRIMARY KEY CLUSTERED(AirportHID),
+	PRIMARY KEY(AirportHID),
 	-- Unique index to Airport HUB over PresenceConstraint over (Airport Name in "Airport has Airport Name") occurs at most one time
-	UNIQUE NONCLUSTERED(AirportName)
+	UNIQUE(AirportName)
 );
 
 
@@ -100,7 +100,7 @@ CREATE TABLE AirportSAT (
 	-- maybe Airport has Website URL
 	WebsiteURL                              VARCHAR(128) NULL,
 	-- Primary index to Airport SAT
-	PRIMARY KEY CLUSTERED(AirportHID, LoadDateTime),
+	PRIMARY KEY(AirportHID, LoadDateTime),
 	FOREIGN KEY (AirportHID) REFERENCES AirportHUB (AirportHID)
 );
 
@@ -117,9 +117,9 @@ CREATE TABLE AssignedAirplaneLINK (
 	-- LoadDateTime
 	LoadDateTime                            TIMESTAMP,
 	-- Primary index to Assigned Airplane LINK
-	PRIMARY KEY CLUSTERED(AssignedAirplaneHID),
+	PRIMARY KEY(AssignedAirplaneHID),
 	-- Unique index to Assigned Airplane LINK over PresenceConstraint over (Airplane, Connection in "Airplane is assigned to Connection") occurs at most one time
-	UNIQUE NONCLUSTERED(AirplaneHID, ConnectionHID),
+	UNIQUE(AirplaneHID, ConnectionHID),
 	FOREIGN KEY (AirplaneHID) REFERENCES AirplaneHUB (AirplaneHID)
 );
 
@@ -136,9 +136,9 @@ CREATE TABLE BookingLINK (
 	-- LoadDateTime
 	LoadDateTime                            TIMESTAMP,
 	-- Primary index to Booking LINK
-	PRIMARY KEY CLUSTERED(BookingHID),
+	PRIMARY KEY(BookingHID),
 	-- Unique index to Booking LINK over PresenceConstraint over (Passenger, Sales Agent in "Passenger books flight with Sales Agent") occurs at most one time
-	UNIQUE NONCLUSTERED(PassengerHID, SalesAgentHID)
+	UNIQUE(PassengerHID, SalesAgentHID)
 );
 
 
@@ -158,9 +158,9 @@ CREATE TABLE ConnectionHUB (
 	-- LoadDateTime
 	LoadDateTime                            TIMESTAMP,
 	-- Primary index to Connection HUB
-	PRIMARY KEY CLUSTERED(ConnectionHID),
+	PRIMARY KEY(ConnectionHID),
 	-- Unique index to Connection HUB over PresenceConstraint over (Airline, Origin Airport, Destination Airport, Flight Number in "Airline flies from origin-Airport to destination-Airport with flight Flight Number") occurs at most one time
-	UNIQUE NONCLUSTERED(AirlineID, OriginAirportName, DestinationAirportName, FlightNumber)
+	UNIQUE(AirlineID, OriginAirportName, DestinationAirportName, FlightNumber)
 );
 
 
@@ -176,9 +176,9 @@ CREATE TABLE FixedBaseOperatorLINK (
 	-- LoadDateTime
 	LoadDateTime                            TIMESTAMP,
 	-- Primary index to Fixed Base Operator LINK
-	PRIMARY KEY CLUSTERED(FixedBaseOperatorHID),
+	PRIMARY KEY(FixedBaseOperatorHID),
 	-- Unique index to Fixed Base Operator LINK over PresenceConstraint over (Airline, Airport in "Airline flies from Airport") occurs at most one time
-	UNIQUE NONCLUSTERED(AirlineHID, AirportHID),
+	UNIQUE(AirlineHID, AirportHID),
 	FOREIGN KEY (AirlineHID) REFERENCES AirlineHUB (AirlineHID),
 	FOREIGN KEY (AirportHID) REFERENCES AirportHUB (AirportHID)
 );
@@ -194,9 +194,9 @@ CREATE TABLE PartHUB (
 	-- LoadDateTime
 	LoadDateTime                            TIMESTAMP,
 	-- Primary index to Part HUB
-	PRIMARY KEY CLUSTERED(PartHID),
+	PRIMARY KEY(PartHID),
 	-- Unique index to Part HUB over PresenceConstraint over (Part ID in "Part has Part ID") occurs at most one time
-	UNIQUE NONCLUSTERED(PartID)
+	UNIQUE(PartID)
 );
 
 
@@ -210,7 +210,7 @@ CREATE TABLE PartSAT (
 	-- Part is built by Manufacturer that has Manufacturer ID
 	ManufacturerID                          BIGINT NOT NULL,
 	-- Primary index to Part SAT
-	PRIMARY KEY CLUSTERED(PartHID, LoadDateTime),
+	PRIMARY KEY(PartHID, LoadDateTime),
 	FOREIGN KEY (PartHID) REFERENCES PartHUB (PartHID)
 );
 
@@ -225,9 +225,9 @@ CREATE TABLE PassengerHUB (
 	-- LoadDateTime
 	LoadDateTime                            TIMESTAMP,
 	-- Primary index to Passenger HUB
-	PRIMARY KEY CLUSTERED(PassengerHID),
+	PRIMARY KEY(PassengerHID),
 	-- Unique index to Passenger HUB over PresenceConstraint over (Passenger ID in "Passenger has Passenger ID") occurs at most one time
-	UNIQUE NONCLUSTERED(PassengerID)
+	UNIQUE(PassengerID)
 );
 
 
@@ -241,7 +241,7 @@ CREATE TABLE PassengerSAT (
 	-- Passenger has Birth Date
 	BirthDate                               TIMESTAMP NOT NULL,
 	-- Primary index to Passenger SAT
-	PRIMARY KEY CLUSTERED(PassengerHID, LoadDateTime),
+	PRIMARY KEY(PassengerHID, LoadDateTime),
 	FOREIGN KEY (PassengerHID) REFERENCES PassengerHUB (PassengerHID)
 );
 
@@ -256,7 +256,7 @@ CREATE TABLE PassengerNameSAT (
 	-- Passenger has Name
 	Name                                    VARCHAR(48) NOT NULL,
 	-- Primary index to PassengerName SAT
-	PRIMARY KEY CLUSTERED(PassengerHID, LoadDateTime),
+	PRIMARY KEY(PassengerHID, LoadDateTime),
 	FOREIGN KEY (PassengerHID) REFERENCES PassengerHUB (PassengerHID)
 );
 
@@ -271,7 +271,7 @@ CREATE TABLE PreferredDishSAT (
 	-- Passenger has Preferred Dish
 	PreferredDish                           VARCHAR NOT NULL,
 	-- Primary index to PreferredDish SAT
-	PRIMARY KEY CLUSTERED(PassengerHID, LoadDateTime),
+	PRIMARY KEY(PassengerHID, LoadDateTime),
 	FOREIGN KEY (PassengerHID) REFERENCES PassengerHUB (PassengerHID)
 );
 
@@ -286,9 +286,9 @@ CREATE TABLE SalesAgentHUB (
 	-- LoadDateTime
 	LoadDateTime                            TIMESTAMP,
 	-- Primary index to Sales Agent HUB
-	PRIMARY KEY CLUSTERED(SalesAgentHID),
+	PRIMARY KEY(SalesAgentHID),
 	-- Unique index to Sales Agent HUB over PresenceConstraint over (Sales Agent Name in "Sales Agent has Sales Agent Name") occurs at most one time
-	UNIQUE NONCLUSTERED(SalesAgentName)
+	UNIQUE(SalesAgentName)
 );
 
 
