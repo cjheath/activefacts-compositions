@@ -697,6 +697,14 @@ module ActiveFacts
         newpaths.values.select{|ix| ix.all_index_field.size == 0}.each(&:retract)
       end
 
+      # We include the subtype role of a TypeInheritance if
+      # it provides_identification or the subtype is not partitioned
+      def included_subtype role
+        role == role.fact_type.subtype_role &&
+          !role.object_type.is_partitioned &&
+          role.fact_type.provides_identification
+      end
+
       # Find all PresenceConstraints to index the object in this Mapping
       def find_uniqueness_constraints mapping
         return [] unless mapping.object_type.is_a?(MM::EntityType)
@@ -704,11 +712,11 @@ module ActiveFacts
         start_roles =
             mapping.
             object_type.
-            all_role_transitive.        # Includes objectification roles for objectified fact types
+            all_role.        # Includes objectification roles for objectified fact types
             select do |role|
               (role.is_unique ||                # Must be unique on near role
                 role.fact_type.is_unary) &&     # Or be a unary role
-              !(role.fact_type.is_a?(MM::TypeInheritance) && role == role.fact_type.supertype_role) # allow roles as subtype
+              (!role.fact_type.is_a?(MM::TypeInheritance) || included_subtype(role))
             end.
             map(&:counterpart).         # (Same role if it's a unary)
             compact.                    # Ignore nil counterpart of a role in an n-ary

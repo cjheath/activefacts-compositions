@@ -1,26 +1,26 @@
-# Full relational composition
+# Full Relational composition
 #   Composite Mapping (top) of A
 #     Columns
 #       Mapping (top) of A
-#          Absorption (existential) in A of A Id in "A has A Id"
-#          Absorption (optional) in A of C (full) in "C has A"
-#            Absorption (optional) in C of A in "C is of A"
-#              Absorption (existential) in A of A Id in "A has A Id"
-#          Absorption (optional) in A of D in "A is of D"
-#            Absorption (existential) in D of B in "D has B"
-#              Absorption (existential) in B of B Id in "B has B Id"
-#          Absorption (optional) in A of E (full) in "E has A"
-#            Absorption (optional) in E of C in "E is of C"
-#              Absorption (existential) in C of A in "C has A"
-#                Absorption (existential) in A of A Id in "A has A Id"
+#         0: Absorption (existential) in A of A Id in "A has A Id"
+#         1: Absorption (optional) in A of C (full) in "C has A"
+#           0: Absorption (optional) in C of A in "C is of A"
+#             0: Absorption (existential) in A of A Id in "A has A Id"
+#         2: Absorption (optional) in A of D in "A is of D"
+#           0: Absorption (existential) in D of B in "D has B"
+#             0: Absorption (existential) in B of B Id in "B has B Id"
+#         3: Absorption (optional) in A of E (full) in "E has A"
+#           0: Absorption (optional) in E of C in "E is of C"
+#             0: Absorption (existential) in C of A in "C has A"
+#               0: Absorption (existential) in A of A Id in "A has A Id"
 #     Indices
-#       Primary index to A over PresenceConstraint over (A-Id) occurs at most one time
+#       Primary index to A over PresenceConstraint over (A Id in "A has A Id") occurs at most one time
 #         IndexField part 0 in A references Absorption (existential) in A of A Id in "A has A Id"
-#       Unique index to A over PresenceConstraint over (A) occurs one time
+#       Unique index to A over PresenceConstraint over (A in "A has C") occurs one time
 #         IndexField part 0 in A references Absorption (existential) in A of A Id in "A has A Id"
-#       Unique index to A over PresenceConstraint over (C) occurs one time
+#       Unique index to A over PresenceConstraint over (C in "C has E") occurs one time
 #         IndexField part 0 in A references Absorption (existential) in A of A Id in "A has A Id"
-#       Unique index to A over PresenceConstraint over (D) occurs one time
+#       Unique index to A over PresenceConstraint over (D in "D has A") occurs one time
 #         IndexField part 0 in A references Absorption (existential) in B of B Id in "B has B Id"
 #     Foreign keys inbound
 #       Foreign Key from A to A over Absorption (optional) in C of A in "C is of A"
@@ -51,28 +51,28 @@
 #   Composite Mapping (top) of B
 #     Columns
 #       Mapping (top) of B
-#          Absorption (existential) in B of B Id in "B has B Id"
-#          Absorption (optional) in B of A in "B is of A"
-#            Absorption (existential) in A of A Id in "A has A Id"
-#          Absorption (optional) in B of D (full) in "D has B"
-#            Absorption (optional) in D of B in "D is of B"
-#              Absorption (existential) in B of B Id in "B has B Id"
-#            Absorption (optional) in D of C in "D is of C"
-#              Absorption (existential) in C of A in "C has A"
-#                Absorption (existential) in A of A Id in "A has A Id"
-#          Absorption (optional) in B of E in "B is of E"
-#            Absorption (existential) in E of A in "E has A"
-#              Absorption (existential) in A of A Id in "A has A Id"
+#         0: Absorption (existential) in B of B Id in "B has B Id"
+#         1: Absorption (optional) in B of A in "B is of A"
+#           0: Absorption (existential) in A of A Id in "A has A Id"
+#         2: Absorption (optional) in B of D (full) in "D has B"
+#           0: Absorption (optional) in D of B in "D is of B"
+#             0: Absorption (existential) in B of B Id in "B has B Id"
+#           1: Absorption (optional) in D of C in "D is of C"
+#             0: Absorption (existential) in C of A in "C has A"
+#               0: Absorption (existential) in A of A Id in "A has A Id"
+#         3: Absorption (optional) in B of E in "B is of E"
+#           0: Absorption (existential) in E of A in "E has A"
+#             0: Absorption (existential) in A of A Id in "A has A Id"
 #     Indices
-#       Primary index to B over PresenceConstraint over (B-Id) occurs at most one time
+#       Primary index to B over PresenceConstraint over (B Id in "B has B Id") occurs at most one time
 #         IndexField part 0 in B references Absorption (existential) in B of B Id in "B has B Id"
-#       Unique index to B over PresenceConstraint over (A) occurs one time
+#       Unique index to B over PresenceConstraint over (A in "A has B") occurs one time
 #         IndexField part 0 in B references Absorption (existential) in A of A Id in "A has A Id"
-#       Unique index to B over PresenceConstraint over (C) occurs one time
+#       Unique index to B over PresenceConstraint over (C in "C has D") occurs one time
 #         IndexField part 0 in B references Absorption (existential) in A of A Id in "A has A Id"
-#       Unique index to B over PresenceConstraint over (E) occurs one time
+#       Unique index to B over PresenceConstraint over (E in "E has B") occurs one time
 #         IndexField part 0 in B references Absorption (existential) in A of A Id in "A has A Id"
-#       Unique index to B over PresenceConstraint over (B) occurs one time
+#       Unique index to B over PresenceConstraint over (B in "B has D") occurs one time
 #         IndexField part 0 in B references Absorption (existential) in B of B Id in "B has B Id"
 #     Foreign keys inbound
 #       Foreign Key from A to B over Absorption (optional) in A of D in "A is of D"

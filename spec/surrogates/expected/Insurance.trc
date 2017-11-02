@@ -532,8 +532,6 @@
 #     Indices
 #       Primary index to Vehicle
 #         IndexField part 0 in Vehicle references SurrogateKey (surrogate) in Vehicle of Vehicle ID
-#       Unique index to Vehicle over PresenceConstraint over (Asset in "Vehicle is a kind of Asset") occurs at most one time
-#         IndexField part 0 in Vehicle references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
 #       Unique index to Vehicle over PresenceConstraint over (VIN in "Vehicle has VIN") occurs at most one time
 #         IndexField part 0 in Vehicle references Absorption (existential) in Vehicle of VIN in "Vehicle has VIN"
 #     Foreign keys outbound

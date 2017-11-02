@@ -376,8 +376,6 @@ CREATE TABLE Vehicle (
 	FinanceInstitutionID                    BIGINT NULL,
 	-- Primary index to Vehicle
 	PRIMARY KEY(VehicleID),
-	-- Unique index to Vehicle over PresenceConstraint over (Asset in "Vehicle is a kind of Asset") occurs at most one time
-	UNIQUE(AssetID),
 	-- Unique index to Vehicle over PresenceConstraint over (VIN in "Vehicle has VIN") occurs at most one time
 	UNIQUE(VIN),
 	FOREIGN KEY (AssetID) REFERENCES Asset (AssetID),

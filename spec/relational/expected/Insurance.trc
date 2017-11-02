@@ -543,8 +543,6 @@
 #     Indices
 #       Primary index to Vehicle over PresenceConstraint over (VIN in "Vehicle has VIN") occurs at most one time
 #         IndexField part 0 in Vehicle references Absorption (existential) in Vehicle of VIN in "Vehicle has VIN"
-#       Unique index to Vehicle over PresenceConstraint over (Asset in "Vehicle is a kind of Asset") occurs at most one time
-#         IndexField part 0 in Vehicle references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
 #     Foreign keys outbound
 #       Foreign Key from Vehicle to Party over Absorption (optional) in Vehicle of Dealer in "Vehicle was sold by Dealer"
 #         ForeignKeyField part 0 in Vehicle is Absorption (existential) in Party of Party ID in "Party has Party ID"

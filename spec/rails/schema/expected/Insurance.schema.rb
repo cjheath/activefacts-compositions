@@ -207,7 +207,6 @@ ActiveRecord::Schema.define(version: 20000000000000) do
     t.column "finance_institution_id", :integer, null: true
   end
 
-  add_index "vehicles", ["asset_id"], name: :index_vehicles_on_asset_id, unique: true
   add_index "vehicles", ["vin"], name: :index_vehicles_on_vin, unique: true
 
   create_table "vehicle_incidents", id: false, force: true do |t|

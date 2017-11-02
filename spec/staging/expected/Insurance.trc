@@ -186,9 +186,9 @@ Vehicle Incident STG
 	Vehicle Incident STG->Towed Location? as "Towed Location"
 	Vehicle Incident STG->Weather Description? as "Weather Description"
 Vehicle STG
-	Vehicle STG->{Asset}->[Asset ID][1.0] as "Asset ID"
+	Vehicle STG->{Asset}->[Asset ID] as "Asset ID"
 	Vehicle STG->RecordSource as "Record Source"
-	Vehicle STG->VIN[2.0] as "VIN"
+	Vehicle STG->VIN[1.0] as "VIN"
 	Vehicle STG->LoadDateTime as "Load Date Time"
 	Vehicle STG->Has Commercial Registration? as "Has Commercial Registration"
 	Vehicle STG->Model Year->Year Nr as "Model Year Nr"

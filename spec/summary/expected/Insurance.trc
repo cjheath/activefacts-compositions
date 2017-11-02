@@ -134,8 +134,8 @@ Underwriting Question
 	Underwriting Question->Underwriting Question ID[1.0] as "Underwriting Question ID"
 	Underwriting Question->Text[2.0] as "Text"
 Vehicle
-	Vehicle->{Asset}->[Asset ID][1.0] as "Asset ID"
-	Vehicle->VIN[2.0] as "VIN"
+	Vehicle->{Asset}->[Asset ID] as "Asset ID"
+	Vehicle->VIN[1.0] as "VIN"
 	Vehicle->Has Commercial Registration? as "Has Commercial Registration"
 	Vehicle->Model Year->Year Nr as "Model Year Nr"
 		### restricted to {1900..2100}
