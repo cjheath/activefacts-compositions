@@ -137,7 +137,7 @@ Underwriting Question is identified by its ID;
 Text is of at most one Underwriting Question,
 	Underwriting Question has one Text;
 
-Vehicle is a kind of Asset identified by VIN where
+Vehicle is a kind of Asset identified by VIN [separate] where
 	Vehicle has one VIN,
 	VIN is of at most one Vehicle;
 Registration is of Vehicle,

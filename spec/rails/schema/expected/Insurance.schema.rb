@@ -8,20 +8,7 @@ ActiveRecord::Schema.define(version: 20000000000000) do
 
   create_table "assets", id: false, force: true do |t|
     t.column "asset_id", :primary_key, null: false
-    t.column "vehicle_vin", :integer, null: true
-    t.column "vehicle_has_commercial_registration", :boolean, null: true
-    t.column "vehicle_model_year_nr", :integer, null: true
-    t.column "vehicle_registration_nr", :string, limit: 8, null: true
-    t.column "vehicle_type_make", :string, null: true
-    t.column "vehicle_type_model", :string, null: true
-    t.column "vehicle_type_badge", :string, null: true
-    t.column "vehicle_colour", :string, null: true
-    t.column "vehicle_dealer_id", :integer, null: true
-    t.column "vehicle_engine_number", :string, null: true
-    t.column "vehicle_finance_institution_id", :integer, null: true
   end
-
-  add_index "assets", ["vehicle_vin"], name: :index_assets_on_vehicle_vin
 
   create_table "claims", id: false, force: true do |t|
     t.column "claim_id", :primary_key, null: false
@@ -204,6 +191,25 @@ ActiveRecord::Schema.define(version: 20000000000000) do
 
   add_index "underwriting_questions", ["text"], name: :index_underwriting_questions_on_text, unique: true
 
+  create_table "vehicles", id: false, force: true do |t|
+    t.column "vehicle_id", :primary_key, null: false
+    t.column "asset_id", :integer, null: false
+    t.column "vin", :integer, null: false
+    t.column "has_commercial_registration", :boolean, null: true
+    t.column "model_year_nr", :integer, null: false
+    t.column "registration_nr", :string, limit: 8, null: false
+    t.column "vehicle_type_make", :string, null: false
+    t.column "vehicle_type_model", :string, null: false
+    t.column "vehicle_type_badge", :string, null: true
+    t.column "colour", :string, null: true
+    t.column "dealer_id", :integer, null: true
+    t.column "engine_number", :string, null: true
+    t.column "finance_institution_id", :integer, null: true
+  end
+
+  add_index "vehicles", ["asset_id"], name: :index_vehicles_on_asset_id, unique: true
+  add_index "vehicles", ["vin"], name: :index_vehicles_on_vin, unique: true
+
   create_table "vehicle_incidents", id: false, force: true do |t|
     t.column "incident_claim_id", :integer, null: false
     t.column "occurred_while_being_driven", :boolean, null: true
@@ -238,8 +244,6 @@ ActiveRecord::Schema.define(version: 20000000000000) do
   add_index "witnesses", ["incident_claim_id", "name"], name: :index_witnesses_on_incident_claim_id_name, unique: true
 
   unless ENV["EXCLUDE_FKS"]
-    add_foreign_key :assets, :parties, column: :vehicle_dealer_id, primary_key: :party_id, on_delete: :cascade
-    add_foreign_key :assets, :parties, column: :vehicle_finance_institution_id, primary_key: :party_id, on_delete: :cascade
     add_foreign_key :claims, :parties, column: :lodgement_person_id, primary_key: :party_id, on_delete: :cascade
     add_foreign_key :claims, :policies, column: :policy_id, primary_key: :policy_id, on_delete: :cascade
     add_foreign_key :claims, :states, column: :incident_address_state_id, primary_key: :state_id, on_delete: :cascade
@@ -267,10 +271,11 @@ ActiveRecord::Schema.define(version: 20000000000000) do
     add_foreign_key :vehicle_incidents, :claims, column: :incident_claim_id, primary_key: :claim_id, on_delete: :cascade
     add_foreign_key :vehicle_incidents, :loss_types, column: :loss_type_id, primary_key: :loss_type_id, on_delete: :cascade
     add_foreign_key :vehicle_incidents, :parties, column: :driving_person_id, primary_key: :party_id, on_delete: :cascade
+    add_foreign_key :vehicles, :assets, column: :asset_id, primary_key: :asset_id, on_delete: :cascade
+    add_foreign_key :vehicles, :parties, column: :dealer_id, primary_key: :party_id, on_delete: :cascade
+    add_foreign_key :vehicles, :parties, column: :finance_institution_id, primary_key: :party_id, on_delete: :cascade
     add_foreign_key :witnesses, :claims, column: :incident_claim_id, primary_key: :claim_id, on_delete: :cascade
     add_foreign_key :witnesses, :states, column: :address_state_id, primary_key: :state_id, on_delete: :cascade
-    add_index :assets, [:vehicle_dealer_id], unique: false, name: :index_assets_on_vehicle_dealer_id
-    add_index :assets, [:vehicle_finance_institution_id], unique: false, name: :index_assets_on_vehicle_finance_institution_id
     add_index :claims, [:incident_address_state_id], unique: false, name: :index_claims_on_incident_address_state_id
     add_index :claims, [:lodgement_person_id], unique: false, name: :index_claims_on_lodgement_person_id
     add_index :claims, [:policy_id], unique: false, name: :index_claims_on_policy_id
@@ -290,6 +295,8 @@ ActiveRecord::Schema.define(version: 20000000000000) do
     add_index :underwriting_demerits, [:underwriting_question_id], unique: false, name: :index_underwriting_demerits_on_underwriting_question_id
     add_index :vehicle_incidents, [:driving_person_id], unique: false, name: :index_vehicle_incidents_on_driving_person_id
     add_index :vehicle_incidents, [:loss_type_id], unique: false, name: :index_vehicle_incidents_on_loss_type_id
+    add_index :vehicles, [:dealer_id], unique: false, name: :index_vehicles_on_dealer_id
+    add_index :vehicles, [:finance_institution_id], unique: false, name: :index_vehicles_on_finance_institution_id
     add_index :witnesses, [:address_state_id], unique: false, name: :index_witnesses_on_address_state_id
   end
 end

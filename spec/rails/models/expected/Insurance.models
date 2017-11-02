@@ -3,16 +3,13 @@ module Asset
   included do
     self.primary_key = 'asset_id'
 
-    # maybe Asset is a Vehicle that maybe was sold by Dealer
-    belongs_to :vehicle_dealer, :class_name => 'Party', :foreign_key => :vehicle_dealer_id
-
-    # maybe Asset is a Vehicle that maybe is subject to finance with Finance Institution
-    belongs_to :vehicle_finance_institution, :class_name => 'Party', :foreign_key => :vehicle_finance_institution_id
-
     # Cover involves Asset
     has_many :covers, :class_name => 'Cover', :foreign_key => :asset_id, :dependent => :destroy
     has_many :policies, :through => :covers
     has_many :cover_types, :through => :covers
+
+    # Vehicle is a kind of Asset
+    has_one :vehicle, :class_name => 'Vehicle', :foreign_key => :asset_id, :dependent => :destroy
 
   end
 end
@@ -156,12 +153,6 @@ module Party
     # maybe Party is a Person that maybe lives at Address that maybe is in State
     belongs_to :person_address_state, :class_name => 'State', :foreign_key => :person_address_state_id
 
-    # maybe Asset is a Vehicle that maybe was sold by Dealer
-    has_many :assets, :class_name => 'Asset', :foreign_key => :vehicle_dealer_id, :dependent => :destroy
-
-    # maybe Asset is a Vehicle that maybe is subject to finance with Finance Institution
-    has_many :assets, :class_name => 'Asset', :foreign_key => :vehicle_finance_institution_id, :dependent => :destroy
-
     # maybe Lodgement involves Claim and Lodgement involves Person
     has_many :claims, :class_name => 'Claim', :foreign_key => :lodgement_person_id, :dependent => :destroy
 
@@ -183,6 +174,12 @@ module Party
 
     # maybe Third Party is insured by Insurer
     has_many :third_parties, :class_name => 'ThirdParty', :foreign_key => :insurer_id, :dependent => :destroy
+
+    # maybe Vehicle was sold by Dealer
+    has_many :vehicles, :class_name => 'Vehicle', :foreign_key => :dealer_id, :dependent => :destroy
+
+    # maybe Vehicle is subject to finance with Finance Institution
+    has_many :vehicles, :class_name => 'Vehicle', :foreign_key => :finance_institution_id, :dependent => :destroy
 
     # maybe Driving involves Vehicle Incident and Driving was by Person
     has_many :vehicle_incidents, :class_name => 'VehicleIncident', :foreign_key => :driving_person_id, :dependent => :destroy
@@ -323,6 +320,29 @@ module UnderwritingQuestion
     has_many :underwriting_demerits, :class_name => 'UnderwritingDemerit', :foreign_key => :underwriting_question_id, :dependent => :destroy
 
     validates :text, :presence => true
+  end
+end
+
+module Vehicle
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'vehicle_id'
+
+    # Vehicle is a kind of Asset
+    belongs_to :asset, :foreign_key => :asset_id
+
+    # maybe Vehicle was sold by Dealer
+    belongs_to :dealer, :class_name => 'Party', :foreign_key => :dealer_id
+
+    # maybe Vehicle is subject to finance with Finance Institution
+    belongs_to :finance_institution, :class_name => 'Party', :foreign_key => :finance_institution_id
+
+    validates :asset_id, :presence => true
+    validates :vin, :presence => true
+    validates :model_year_nr, :presence => true
+    validates :registration_nr, :presence => true
+    validates :vehicle_type_make, :presence => true
+    validates :vehicle_type_model, :presence => true
   end
 end
 

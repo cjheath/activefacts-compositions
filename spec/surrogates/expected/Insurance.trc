@@ -3,42 +3,16 @@
 #     Columns
 #       Mapping (top) of Asset
 #         0: Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
-#         1: Absorption (subtype) in Asset of Vehicle (full) in "Asset is a Vehicle"
-#           0: Absorption (existential) in Vehicle of VIN in "Vehicle has VIN"
-#           1: Indicator "Vehicle has commercial registration" (as "Has Commercial Registration")
-#           2: Absorption (mandatory) in Vehicle of Model Year in "Vehicle is of model-Year"
-#             0: Absorption (existential) in Model Year of Year Nr in "Year has Year Nr"
-#           3: Absorption (mandatory) in Vehicle of Registration in "Vehicle has Registration"
-#             0: Absorption (existential) in Registration of Registration Nr in "Registration has Registration Nr"
-#           4: Absorption (mandatory) in Vehicle of Vehicle Type in "Vehicle is of Vehicle Type"
-#             0: Absorption (existential) in Vehicle Type of Make in "Vehicle Type is of Make"
-#             1: Absorption (existential) in Vehicle Type of Model in "Vehicle Type is of Model"
-#             2: Absorption (existential) in Vehicle Type of Badge in "Vehicle Type has Badge"
-#           5: Absorption (optional) in Vehicle of Colour in "Vehicle is of Colour"
-#           6: Absorption (optional) in Vehicle of Dealer in "Vehicle was sold by Dealer"
-#             0: Absorption (supertype) in Dealer of Party in "Dealer is a kind of Party"
-#               0: Absorption (existential) in Party of Party ID in "Party has Party ID"
-#           7: Absorption (optional) in Vehicle of Engine Number in "Vehicle has Engine Number"
-#           8: Absorption (optional) in Vehicle of Finance Institution in "Vehicle is subject to finance with Finance Institution"
-#             0: Absorption (supertype) in Finance Institution of Company in "Finance Institution is a kind of Company"
-#               0: Absorption (supertype) in Company of Party in "Company is a kind of Party"
-#                 0: Absorption (existential) in Party of Party ID in "Party has Party ID"
 #     Indices
 #       Primary index to Asset over PresenceConstraint over (Asset ID in "Asset has Asset ID") occurs at most one time
 #         IndexField part 0 in Asset references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
-#       Unique index to Asset over PresenceConstraint over (VIN in "Vehicle has VIN") occurs at most one time
-#         IndexField part 0 in Asset references Absorption (existential) in Vehicle of VIN in "Vehicle has VIN"
 #     Foreign keys inbound
 #       Foreign Key from Cover to Asset over Absorption (existential) in Cover of Asset in "Cover involves Asset"
 #         ForeignKeyField part 0 in Cover is Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
 #         IndexField part 0 in Asset references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
-#     Foreign keys outbound
-#       Foreign Key from Asset to Party over Absorption (optional) in Vehicle of Dealer in "Vehicle was sold by Dealer"
-#         ForeignKeyField part 0 in Asset is Absorption (existential) in Party of Party ID in "Party has Party ID"
-#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
-#       Foreign Key from Asset to Party over Absorption (optional) in Vehicle of Finance Institution in "Vehicle is subject to finance with Finance Institution"
-#         ForeignKeyField part 0 in Asset is Absorption (existential) in Party of Party ID in "Party has Party ID"
-#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Vehicle to Asset over Absorption (supertype) in Vehicle of Asset in "Vehicle is a kind of Asset"
+#         ForeignKeyField part 0 in Vehicle is Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#         IndexField part 0 in Asset references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
 #   Composite Mapping (top) of Claim
 #     Columns
 #       Mapping (top) of Claim
@@ -278,12 +252,6 @@
 #       Primary index to Party over PresenceConstraint over (Party ID in "Party has Party ID") occurs at most one time
 #         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
 #     Foreign keys inbound
-#       Foreign Key from Asset to Party over Absorption (optional) in Vehicle of Dealer in "Vehicle was sold by Dealer"
-#         ForeignKeyField part 0 in Asset is Absorption (existential) in Party of Party ID in "Party has Party ID"
-#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
-#       Foreign Key from Asset to Party over Absorption (optional) in Vehicle of Finance Institution in "Vehicle is subject to finance with Finance Institution"
-#         ForeignKeyField part 0 in Asset is Absorption (existential) in Party of Party ID in "Party has Party ID"
-#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
 #       Foreign Key from Claim to Party over Absorption (mandatory) in Lodgement of Person in "Lodgement involves Person"
 #         ForeignKeyField part 0 in Claim is Absorption (existential) in Party of Party ID in "Party has Party ID"
 #         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
@@ -304,6 +272,12 @@
 #         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
 #       Foreign Key from Third Party to Party over Absorption (optional) in Third Party of Insurer in "Third Party is insured by Insurer"
 #         ForeignKeyField part 0 in Third Party is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Vehicle to Party over Absorption (optional) in Vehicle of Dealer in "Vehicle was sold by Dealer"
+#         ForeignKeyField part 0 in Vehicle is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Vehicle to Party over Absorption (optional) in Vehicle of Finance Institution in "Vehicle is subject to finance with Finance Institution"
+#         ForeignKeyField part 0 in Vehicle is Absorption (existential) in Party of Party ID in "Party has Party ID"
 #         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
 #       Foreign Key from Vehicle Incident to Party over Absorption (mandatory) in Driving of Person in "Driving was by Person"
 #         ForeignKeyField part 0 in Vehicle Incident is Absorption (existential) in Party of Party ID in "Party has Party ID"
@@ -530,6 +504,48 @@
 #       Foreign Key from Underwriting Demerit to Underwriting Question over Absorption (existential) in Underwriting Demerit of Underwriting Question in "Underwriting Demerit has Underwriting Question"
 #         ForeignKeyField part 0 in Underwriting Demerit is Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
 #         IndexField part 0 in Underwriting Question references Absorption (existential) in Underwriting Question of Underwriting Question ID in "Underwriting Question has Underwriting Question ID"
+#   Composite Mapping (top) of Vehicle
+#     Columns
+#       Mapping (top) of Vehicle
+#         0: SurrogateKey (surrogate) in Vehicle of Vehicle ID
+#         1: Absorption (supertype) in Vehicle of Asset in "Vehicle is a kind of Asset"
+#           0: Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#         2: Absorption (existential) in Vehicle of VIN in "Vehicle has VIN"
+#         3: Indicator "Vehicle has commercial registration" (as "Has Commercial Registration")
+#         4: Absorption (mandatory) in Vehicle of Model Year in "Vehicle is of model-Year"
+#           0: Absorption (existential) in Model Year of Year Nr in "Year has Year Nr"
+#         5: Absorption (mandatory) in Vehicle of Registration in "Vehicle has Registration"
+#           0: Absorption (existential) in Registration of Registration Nr in "Registration has Registration Nr"
+#         6: Absorption (mandatory) in Vehicle of Vehicle Type in "Vehicle is of Vehicle Type"
+#           0: Absorption (existential) in Vehicle Type of Make in "Vehicle Type is of Make"
+#           1: Absorption (existential) in Vehicle Type of Model in "Vehicle Type is of Model"
+#           2: Absorption (existential) in Vehicle Type of Badge in "Vehicle Type has Badge"
+#         7: Absorption (optional) in Vehicle of Colour in "Vehicle is of Colour"
+#         8: Absorption (optional) in Vehicle of Dealer in "Vehicle was sold by Dealer"
+#           0: Absorption (supertype) in Dealer of Party in "Dealer is a kind of Party"
+#             0: Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         9: Absorption (optional) in Vehicle of Engine Number in "Vehicle has Engine Number"
+#         10: Absorption (optional) in Vehicle of Finance Institution in "Vehicle is subject to finance with Finance Institution"
+#           0: Absorption (supertype) in Finance Institution of Company in "Finance Institution is a kind of Company"
+#             0: Absorption (supertype) in Company of Party in "Company is a kind of Party"
+#               0: Absorption (existential) in Party of Party ID in "Party has Party ID"
+#     Indices
+#       Primary index to Vehicle
+#         IndexField part 0 in Vehicle references SurrogateKey (surrogate) in Vehicle of Vehicle ID
+#       Unique index to Vehicle over PresenceConstraint over (Asset in "Vehicle is a kind of Asset") occurs at most one time
+#         IndexField part 0 in Vehicle references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#       Unique index to Vehicle over PresenceConstraint over (VIN in "Vehicle has VIN") occurs at most one time
+#         IndexField part 0 in Vehicle references Absorption (existential) in Vehicle of VIN in "Vehicle has VIN"
+#     Foreign keys outbound
+#       Foreign Key from Vehicle to Party over Absorption (optional) in Vehicle of Dealer in "Vehicle was sold by Dealer"
+#         ForeignKeyField part 0 in Vehicle is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Vehicle to Party over Absorption (optional) in Vehicle of Finance Institution in "Vehicle is subject to finance with Finance Institution"
+#         ForeignKeyField part 0 in Vehicle is Absorption (existential) in Party of Party ID in "Party has Party ID"
+#         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
+#       Foreign Key from Vehicle to Asset over Absorption (supertype) in Vehicle of Asset in "Vehicle is a kind of Asset"
+#         ForeignKeyField part 0 in Vehicle is Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
+#         IndexField part 0 in Asset references Absorption (existential) in Asset of Asset ID in "Asset has Asset ID"
 #   Composite Mapping (top) of Vehicle Incident
 #     Columns
 #       Mapping (top) of Vehicle Incident

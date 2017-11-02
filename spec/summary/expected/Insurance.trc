@@ -1,18 +1,6 @@
 Summary of test
 Asset
 	Asset->Asset ID[1.0] as "Asset ID"
-	Asset->Vehicle?->VIN[2.0] as "Vehicle VIN"
-	Asset->Vehicle?->Has Commercial Registration? as "Vehicle Has Commercial Registration"
-	Asset->Vehicle?->Model Year->Year Nr as "Vehicle Model Year Nr"
-		### restricted to {1900..2100}
-	Asset->Vehicle?->Registration->Registration Nr as "Vehicle Registration Nr"
-	Asset->Vehicle?->Vehicle Type->Make as "Vehicle Type Make"
-	Asset->Vehicle?->Vehicle Type->Model as "Vehicle Type Model"
-	Asset->Vehicle?->Vehicle Type->Badge? as "Vehicle Type Badge"
-	Asset->Vehicle?->Colour? as "Vehicle Colour"
-	Asset->Vehicle?->{Dealer}?->Party->[Party ID] as "Vehicle Dealer ID"
-	Asset->Vehicle?->Engine Number? as "Vehicle Engine Number"
-	Asset->Vehicle?->{Finance Institution}?->Company->Party->[Party ID] as "Vehicle Finance Institution ID"
 Claim
 	Claim->Claim ID[1.0] as "Claim ID"
 	Claim->P_sequence[2.0] as "P Sequence"
@@ -145,6 +133,20 @@ Underwriting Demerit
 Underwriting Question
 	Underwriting Question->Underwriting Question ID[1.0] as "Underwriting Question ID"
 	Underwriting Question->Text[2.0] as "Text"
+Vehicle
+	Vehicle->{Asset}->[Asset ID][1.0] as "Asset ID"
+	Vehicle->VIN[2.0] as "VIN"
+	Vehicle->Has Commercial Registration? as "Has Commercial Registration"
+	Vehicle->Model Year->Year Nr as "Model Year Nr"
+		### restricted to {1900..2100}
+	Vehicle->Registration->Registration Nr as "Registration Nr"
+	Vehicle->Vehicle Type->Make as "Vehicle Type Make"
+	Vehicle->Vehicle Type->Model as "Vehicle Type Model"
+	Vehicle->Vehicle Type->Badge? as "Vehicle Type Badge"
+	Vehicle->Colour? as "Colour"
+	Vehicle->{Dealer}?->Party->[Party ID] as "Dealer ID"
+	Vehicle->Engine Number? as "Engine Number"
+	Vehicle->{Finance Institution}?->Company->Party->[Party ID] as "Finance Institution ID"
 Vehicle Incident
 	Vehicle Incident->{Incident}->Claim->[Claim ID][1.0] as "Incident Claim ID"
 	Vehicle Incident->Occurred While Being Driven? as "Occurred While Being Driven"

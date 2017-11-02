@@ -1,33 +1,9 @@
 CREATE TABLE Asset (
 	-- Asset has Asset ID
 	AssetID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-	-- maybe Asset is a Vehicle that has VIN
-	VehicleVIN                              INTEGER NULL,
-	-- maybe Asset is a Vehicle that Has Commercial Registration
-	VehicleHasCommercialRegistration        BOOLEAN,
-	-- maybe Asset is a Vehicle that is of model-Year and Year has Year Nr
-	VehicleModelYearNr                      INTEGER NULL,
-	-- maybe Asset is a Vehicle that has Registration that has Registration Nr
-	VehicleRegistrationNr                   CHARACTER(8) NULL,
-	-- maybe Asset is a Vehicle that is of Vehicle Type that is of Make
-	VehicleTypeMake                         VARCHAR NULL,
-	-- maybe Asset is a Vehicle that is of Vehicle Type that is of Model
-	VehicleTypeModel                        VARCHAR NULL,
-	-- maybe Asset is a Vehicle that is of Vehicle Type that maybe has Badge
-	VehicleTypeBadge                        VARCHAR NULL,
-	-- maybe Asset is a Vehicle that maybe is of Colour
-	VehicleColour                           VARCHAR NULL,
-	-- maybe Asset is a Vehicle that maybe was sold by Dealer that is a kind of Party that has Party ID
-	VehicleDealerID                         BIGINT NULL,
-	-- maybe Asset is a Vehicle that maybe has Engine Number
-	VehicleEngineNumber                     VARCHAR NULL,
-	-- maybe Asset is a Vehicle that maybe is subject to finance with Finance Institution that is a kind of Company that is a kind of Party that has Party ID
-	VehicleFinanceInstitutionID             BIGINT NULL,
 	-- Primary index to Asset over PresenceConstraint over (Asset ID in "Asset has Asset ID") occurs at most one time
 	PRIMARY KEY(AssetID)
 );
-
-CREATE UNIQUE INDEX AssetByVehicleVIN ON Asset(VehicleVIN) WHERE VehicleVIN IS NOT NULL;
 
 
 CREATE TABLE Claim (
@@ -343,6 +319,41 @@ CREATE TABLE UnderwritingQuestion (
 );
 
 
+CREATE TABLE Vehicle (
+	-- Vehicle is a kind of Asset that has Asset ID
+	AssetID                                 BIGINT NOT NULL,
+	-- Vehicle has VIN
+	VIN                                     INTEGER NOT NULL,
+	-- Vehicle Has Commercial Registration
+	HasCommercialRegistration               BOOLEAN,
+	-- Vehicle is of model-Year and Year has Year Nr
+	ModelYearNr                             INTEGER NOT NULL,
+	-- Vehicle has Registration that has Registration Nr
+	RegistrationNr                          CHARACTER(8) NOT NULL,
+	-- Vehicle is of Vehicle Type that is of Make
+	VehicleTypeMake                         VARCHAR NOT NULL,
+	-- Vehicle is of Vehicle Type that is of Model
+	VehicleTypeModel                        VARCHAR NOT NULL,
+	-- Vehicle is of Vehicle Type that maybe has Badge
+	VehicleTypeBadge                        VARCHAR NULL,
+	-- maybe Vehicle is of Colour
+	Colour                                  VARCHAR NULL,
+	-- maybe Vehicle was sold by Dealer that is a kind of Party that has Party ID
+	DealerID                                BIGINT NULL,
+	-- maybe Vehicle has Engine Number
+	EngineNumber                            VARCHAR NULL,
+	-- maybe Vehicle is subject to finance with Finance Institution that is a kind of Company that is a kind of Party that has Party ID
+	FinanceInstitutionID                    BIGINT NULL,
+	-- Primary index to Vehicle over PresenceConstraint over (VIN in "Vehicle has VIN") occurs at most one time
+	PRIMARY KEY(VIN),
+	-- Unique index to Vehicle over PresenceConstraint over (Asset in "Vehicle is a kind of Asset") occurs at most one time
+	UNIQUE(AssetID),
+	FOREIGN KEY (AssetID) REFERENCES Asset (AssetID),
+	FOREIGN KEY (DealerID) REFERENCES Party (PartyID),
+	FOREIGN KEY (FinanceInstitutionID) REFERENCES Party (PartyID)
+);
+
+
 CREATE TABLE VehicleIncident (
 	-- Vehicle Incident is a kind of Incident that is of Claim that has Claim ID
 	IncidentClaimID                         BIGINT NOT NULL,
@@ -406,14 +417,6 @@ CREATE TABLE Witness (
 	FOREIGN KEY (AddressStateCode) REFERENCES "State" (StateCode),
 	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID)
 );
-
-
-ALTER TABLE Asset
-	ADD FOREIGN KEY (VehicleDealerID) REFERENCES Party (PartyID);
-
-
-ALTER TABLE Asset
-	ADD FOREIGN KEY (VehicleFinanceInstitutionID) REFERENCES Party (PartyID);
 
 
 ALTER TABLE Claim
