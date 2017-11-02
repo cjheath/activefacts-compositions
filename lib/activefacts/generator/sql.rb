@@ -429,7 +429,13 @@ module ActiveFacts
       end
 
       def column_name component
-        component.column_name.capcase
+        if @underscore == '_'
+          component.column_name.snakecase
+        elsif @underscore == ''
+          component.column_name.capcase
+        else
+          component.column_name.snakecase.gsub('_', @underscore)
+        end
       end
 
     end
