@@ -750,8 +750,8 @@ module ActiveFacts
         trace :relational_paths?, "Adding #{new_pcs.size} new indices for presence constraints on #{mapping.inspect}" do
           new_pcs.each do |pc|
             newpaths[pc] = index = @constellation.Index(:new, composite: mapping.root, is_unique: true, presence_constraint: pc)
-            if mapping.object_type.preferred_identifier == pc and
-                !@composition.all_full_absorption[mapping.object_type] and
+            if mapping.root.mapping.object_type.preferred_identifier == pc and
+                !@composition.all_full_absorption[mapping.object_type] and  # REVISIT: This clause might now be unnecessary
                 !mapping.root.natural_index
               mapping.root.natural_index = index
               mapping.root.primary_index ||= index    # Not if we have a surrogate already
