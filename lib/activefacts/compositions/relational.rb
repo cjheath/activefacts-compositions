@@ -37,6 +37,9 @@ module ActiveFacts
           # Figure out how best to absorb things to reduce the number of tables
           optimise_absorption
 
+          # If we have partitioned subtypes, make that happen
+          enact_partitioning
+
           # Actually make a Composite object for each table:
           make_composites
 
@@ -224,6 +227,17 @@ module ActiveFacts
             end
 
             false   # Otherwise we failed to make a decision about this object type
+          end
+        end
+      end
+
+      def enact_partitioning
+        @constellation.EntityType.each do |key, object_type|
+          sti = object_type.all_type_inheritance_as_supertype
+          if sti.size > 0 && sti.size == sti.select{|ti| ti.assimilation == 'partitioned'}.size
+            trace :relational_optimiser, "Supertype #{object_type.name} is fully partitioned so not a table"
+            candidate = @candidates[object_type]
+            candidate.definitely_not_table
           end
         end
       end
@@ -561,11 +575,13 @@ module ActiveFacts
       # This member is an Absorption. Process it recursively, absorbing all its members or just a key
       # depending on whether the absorbed object is a Composite (or absorbed into one) or not.
       def absorb_nested mapping, member, paths
-        # Should we absorb a foreign key or the whole contents?
+        # Is this where we absorb a partitioned supertype?
+        is_partitioned = (ft = member.child_role.fact_type).is_a?(MM::TypeInheritance) && ft.assimilation == 'partitioned'
 
+        # Should we absorb a foreign key or the whole contents?
         child_object_type = member.child_role.object_type
         child_mapping = @binary_mappings[child_object_type]
-        if child_mapping.composite
+        if child_mapping.composite && !is_partitioned
           trace :relational_columns?, "Absorbing FK to #{member.child_role.name} in #{member.inspect_reading}" do
             paths[member] = @constellation.ForeignKey(:new, source_composite: mapping.root, composite: child_mapping.composite, absorption: member)
             absorb_key member, child_mapping, paths
@@ -594,6 +610,7 @@ module ActiveFacts
           return
         end
 
+        # REVISIT: if is_partitioned, don't absorb sibling subtypes!
         trace :relational_columns?, "Absorbing all of #{member.child_role.name} in #{member.inspect_reading}" do
           absorb_all member, child_mapping, paths
         end
@@ -651,7 +668,7 @@ module ActiveFacts
 
         pcs = []
         newpaths = {}
-        if mapping.composite || mapping.full_absorption
+        if mapping.composite || mapping.full_absorption || mapping.parent_role.fact_type.is_a?(MM::TypeInheritance)
           pcs = find_uniqueness_constraints(mapping)
 
           # Don't build an index from the same PresenceConstraint twice on the same composite (e.g. for a subtype)
@@ -676,6 +693,7 @@ module ActiveFacts
           end
         end
 
+        # Delete indexes that accrued no fields:
         newpaths.values.select{|ix| ix.all_index_field.size == 0}.each(&:retract)
       end
 
