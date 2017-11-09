@@ -1,0 +1,53 @@
+# Full Relational composition
+#   Composite Mapping (top) of Base
+#     Columns
+#       Mapping (top) of Base
+#         0: Absorption (existential) in Base of Base GUID in "Base has Base GUID"
+#         1: Absorption (mandatory) in Base of Base Val in "Base has base-Val"
+#     Indices
+#       Primary index to Base over PresenceConstraint over (Base GUID in "Base has Base GUID") occurs at most one time
+#         IndexField part 0 in Base references Absorption (existential) in Base of Base GUID in "Base has Base GUID"
+#     Foreign keys inbound
+#       Foreign Key from Separate to Base over Absorption (supertype) in Separate of Base in "Separate is a kind of Base"
+#         ForeignKeyField part 0 in Separate is Absorption (existential) in Base of Base GUID in "Base has Base GUID"
+#         IndexField part 0 in Base references Absorption (existential) in Base of Base GUID in "Base has Base GUID"
+#   Composite Mapping (top) of Partition
+#     Columns
+#       Mapping (top) of Partition
+#         0: Absorption (supertype) in Partition of Base in "Partition is a kind of Base"
+#           0: Absorption (existential) in Base of Base GUID in "Base has Base GUID"
+#           1: Absorption (mandatory) in Base of Base Val in "Base has base-Val"
+#         1: Absorption (mandatory) in Partition of Part Val in "Partition has part-Val"
+#     Indices
+#       Unique index to Partition over PresenceConstraint over (Base GUID in "Base has Base GUID") occurs at most one time
+#         IndexField part 0 in Partition references Absorption (existential) in Base of Base GUID in "Base has Base GUID"
+#   Composite Mapping (top) of PartitionInd
+#     Columns
+#       Mapping (top) of PartitionInd
+#         0: SurrogateKey (surrogate) in PartitionInd of PartitionInd ID
+#         1: Absorption (supertype) in PartitionInd of Base in "PartitionInd is a kind of Base"
+#           0: Absorption (existential) in Base of Base GUID in "Base has Base GUID"
+#           1: Absorption (mandatory) in Base of Base Val in "Base has base-Val"
+#         2: Absorption (existential) in PartitionInd of PartitionInd Key in "PartitionInd has PartitionInd Key"
+#         3: Absorption (subtype) in PartitionInd of AbsorbedPart (full) in "PartitionInd is an AbsorbedPart"
+#           0: Absorption (mandatory) in AbsorbedPart of Abs Part Val in "AbsorbedPart has abs- part Val"
+#     Indices
+#       Primary index to PartitionInd
+#         IndexField part 0 in PartitionInd references SurrogateKey (surrogate) in PartitionInd of PartitionInd ID
+#       Unique index to PartitionInd over PresenceConstraint over (Base GUID in "Base has Base GUID") occurs at most one time
+#         IndexField part 0 in PartitionInd references Absorption (existential) in Base of Base GUID in "Base has Base GUID"
+#       Unique index to PartitionInd over PresenceConstraint over (PartitionInd Key in "PartitionInd has PartitionInd Key") occurs at most one time
+#         IndexField part 0 in PartitionInd references Absorption (existential) in PartitionInd of PartitionInd Key in "PartitionInd has PartitionInd Key"
+#   Composite Mapping (top) of Separate
+#     Columns
+#       Mapping (top) of Separate
+#         0: Absorption (supertype) in Separate of Base in "Separate is a kind of Base"
+#           0: Absorption (existential) in Base of Base GUID in "Base has Base GUID"
+#         1: Absorption (mandatory) in Separate of Sep Val in "Separate has sep-Val"
+#     Indices
+#       Primary index to Separate over PresenceConstraint over (Base in "Separate is a kind of Base") occurs at most one time
+#         IndexField part 0 in Separate references Absorption (existential) in Base of Base GUID in "Base has Base GUID"
+#     Foreign keys outbound
+#       Foreign Key from Separate to Base over Absorption (supertype) in Separate of Base in "Separate is a kind of Base"
+#         ForeignKeyField part 0 in Separate is Absorption (existential) in Base of Base GUID in "Base has Base GUID"
+#         IndexField part 0 in Base references Absorption (existential) in Base of Base GUID in "Base has Base GUID"
