@@ -143,7 +143,7 @@ module ActiveFacts
         "\t#{column_name}#{padding}#{column_type leaf, column_name}"
       end
 
-      def auto_assign_type
+      def auto_assign_modifier
         ' GENERATED ALWAYS AS IDENTITY'
       end
 
@@ -152,7 +152,7 @@ module ActiveFacts
         options ||= {}
         length = options[:length]
         value_constraint = options[:value_constraint]
-        type_name, length = normalise_type(type_name, length, value_constraint)
+        type_name, length = normalise_type(type_name, length, value_constraint, options)
 
         "#{
           type_name
@@ -161,7 +161,9 @@ module ActiveFacts
         }#{
           ((options[:mandatory] ? ' NOT' : '') + ' NULL') if options.has_key?(:mandatory)
         }#{
-          auto_assign_type if a = options[:auto_assign] && a != 'assert'
+          options[:default] || ''
+        }#{
+          auto_assign_modifier if a = options[:auto_assign] && a != 'assert'
         }#{
           check_clause(column_name, value_constraint) if value_constraint
         }"
@@ -215,14 +217,20 @@ module ActiveFacts
       end
 
       # Return SQL type and (modified?) length for the passed base type
-      def normalise_type(type_name, length, value_constraint)
+      def normalise_type(type_name, length, value_constraint, options)
         type = MM::DataType.normalise(type_name)
 
         case type
         when MM::DataType::TYPE_Boolean;  data_type_context.boolean_type
         when MM::DataType::TYPE_Integer
-          if type_name =~ /^Auto ?Counter$/i
-            MM::DataType.normalise_int_length('int', data_type_context.default_surrogate_length, value_constraint, data_type_context)[0]
+          # The :auto_assign key is set for auto-assigned types, but with a nil value in foreign keys
+          if options.has_key?(:auto_assign)
+            MM::DataType.normalise_int_length(
+              'int',
+              data_type_context.default_surrogate_length,
+              value_constraint,
+              data_type_context
+            )[0]
           else
             v, = MM::DataType.normalise_int_length(type_name, length, value_constraint, data_type_context)
             v   # The typename here has the appropriate length, don't return a length

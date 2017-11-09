@@ -28,7 +28,7 @@ module ActiveFacts
           SQLServerDataTypeContext.new
         end
 
-        def auto_assign_type
+        def auto_assign_modifier
           ' IDENTITY'
         end
 
