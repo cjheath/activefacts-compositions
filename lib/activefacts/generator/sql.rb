@@ -20,10 +20,12 @@ module ActiveFacts
       def self.options
         {
           delay_fks: ['Boolean', "Delay emitting all foreign keys until the bottom of the file"],
-          underscore: ['String', "Use 'str' instead of underscore between words in table names"],
+          restrict: ['String', "Restrict generation to tables in the specified group (e.g. bdv, rdv)"],
+          joiner: ['String', "Use 'str' instead of the default joiner between words in table and column names"],
           unicode: ['Boolean', "Use Unicode for all text fields by default"],
-          # datavault: ['String', "Generate 'raw' or 'business' data vault tables"],
-          restrict: ['String', "Restrict generation to tables in the specified group (e.g. bdv, rdv)"]
+          tables: [%w{cap title camel snake shout}, "Case to use for table names"],
+          columns: [%w{cap title camel snake shout}, "Case to use for table names"],
+          # Legacy: datavault: ['String', "Generate 'raw' or 'business' data vault tables"],
         }
       end
 
@@ -31,9 +33,18 @@ module ActiveFacts
         @composition = composition
         @options = options
         @delay_fks = options.delete "delay_fks"
-        @underscore = options.has_key?("underscore") ? (options['underscore'] || '_') : ''
         @unicode = options.delete "unicode"
         @restrict = options.delete "restrict"
+
+        # Name configuration options:
+        @joiner = options.delete('joiner')
+        @table_joiner = options.has_key?('tables') ? @joiner : nil
+        @table_case = ((options.delete('tables') || 'cap') + 'words').to_sym
+        @table_joiner ||= [:snakewords, :shoutwords].include?(@table_case) ? '_' : ''
+        @column_joiner = options.has_key?('columns') ? @joiner : nil
+        @column_case = ((options.delete('columns') || 'cap') + 'words').to_sym
+        @column_joiner ||= [:snakewords, :shoutwords].include?(@column_case) ? '_' : ''
+
         # Legacy option. Use restrict=bdv/rdv instead
         @datavault = options.delete "datavault"
         case @datavault
@@ -425,17 +436,12 @@ module ActiveFacts
       end
 
       def table_name composite
-        composite.mapping.name.gsub(' ', @underscore)
+        composite.mapping.name.words.send(@table_case)*@table_joiner
       end
 
       def column_name component
-        if @underscore == '_'
-          component.column_name.snakecase
-        elsif @underscore == ''
-          component.column_name.capcase
-        else
-          component.column_name.snakecase.gsub('_', @underscore)
-        end
+        words = component.column_name.send(@column_case)
+        words*@column_joiner
       end
 
     end
