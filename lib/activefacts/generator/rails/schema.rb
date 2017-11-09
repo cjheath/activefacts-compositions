@@ -88,6 +88,11 @@ module ActiveFacts
         def generate_composite composite
           ar_table_name = composite.rails.plural_name
 
+          pi = composite.primary_index
+          unless pi
+            warn "Warning: Cannot generate schema for #{composite.mapping.name} because it has no primary key"
+            return nil
+          end
           pk = composite.primary_index.all_index_field.to_a
           if pk[0].component.is_auto_assigned
             identity_column = pk[0].component
