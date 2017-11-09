@@ -251,7 +251,12 @@ module ActiveFacts
         when MM::DataType::TYPE_DateTime; 'TIMESTAMP'
         when MM::DataType::TYPE_Timestamp;'TIMESTAMP'
         when MM::DataType::TYPE_Binary;
-          length ||= 16 if type_name =~ /^(guid|uuid)$/i
+          if type_name =~ /^(guid|uuid)$/i && (!length || length == 16)
+            length ||= 16
+            if ![nil, ''].include?(options[:auto_assign])
+              options.delete(:auto_assign)  # Don't auto-assign foreign keys
+            end
+          end
           if length
             ['BINARY', length]
           else

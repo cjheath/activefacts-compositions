@@ -3,15 +3,23 @@
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160802181940) do
+ActiveRecord::Schema.define(version: 20000000000000) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "aac_ets", id: false, force: true do |t|
     t.column "alternate_auto_counter", :primary_key, null: false
   end
 
+  create_table "aac_subs", id: false, force: true do |t|
+    t.column "aac_et_alternate_auto_counter", :integer, null: false
+  end
+
   create_table "ag_ets", id: false, force: true do |t|
     t.column "alternate_guid", :uuid, default: 'gen_random_uuid()', primary_key: true, null: false
+  end
+
+  create_table "ag_subs", id: false, force: true do |t|
+    t.column "ag_et_alternate_guid", :uuid, null: false
   end
 
   create_table "containers", id: false, force: true do |t|
@@ -88,5 +96,7 @@ ActiveRecord::Schema.define(version: 20160802181940) do
   add_index "containers", ["container_name"], name: :index_containers_on_container_name, unique: true
 
   unless ENV["EXCLUDE_FKS"]
+    add_foreign_key :aac_subs, :aac_ets, column: :aac_et_alternate_auto_counter, primary_key: :alternate_auto_counter, on_delete: :cascade
+    add_foreign_key :ag_subs, :ag_ets, column: :ag_et_alternate_guid, primary_key: :alternate_guid, on_delete: :cascade
   end
 end

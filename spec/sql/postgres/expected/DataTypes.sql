@@ -8,11 +8,29 @@ CREATE TABLE aac_et (
 );
 
 
+CREATE TABLE aac_sub (
+	-- AAC_Sub is a kind of AAC_ET that has Alternate Auto Counter
+	aac_et_alternate_auto_counter           BIGINT NOT NULL,
+	-- Primary index to AAC_Sub over PresenceConstraint over (AAC_ET in "AAC_Sub is a kind of AAC_ET") occurs at most one time
+	PRIMARY KEY(aac_et_alternate_auto_counter),
+	FOREIGN KEY (aac_et_alternate_auto_counter) REFERENCES aac_et (alternate_auto_counter)
+);
+
+
 CREATE TABLE ag_et (
 	-- AG_ET has Alternate Guid
 	alternate_guid                          UUID NOT NULL DEFAULT 'gen_random_uuid()',
 	-- Primary index to AG_ET over PresenceConstraint over (Alternate Guid in "AG_ET has Alternate Guid") occurs at most one time
 	PRIMARY KEY(alternate_guid)
+);
+
+
+CREATE TABLE ag_sub (
+	-- AG_Sub is a kind of AG_ET that has Alternate Guid
+	ag_et_alternate_guid                    UUID NOT NULL,
+	-- Primary index to AG_Sub over PresenceConstraint over (AG_ET in "AG_Sub is a kind of AG_ET") occurs at most one time
+	PRIMARY KEY(ag_et_alternate_guid),
+	FOREIGN KEY (ag_et_alternate_guid) REFERENCES ag_et (alternate_guid)
 );
 
 

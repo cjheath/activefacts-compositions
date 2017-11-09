@@ -3,10 +3,18 @@ AAC_ET STG
 	AAC_ET STG->RecordSource as "Record Source"
 	AAC_ET STG->Alternate Auto Counter[1.0] as "Alternate Auto Counter"
 	AAC_ET STG->LoadDateTime as "Load Date Time"
+AAC_Sub STG
+	AAC_Sub STG->{AAC_ET}->[Alternate Auto Counter][1.0] as "AAC ET Alternate Auto Counter"
+	AAC_Sub STG->RecordSource as "Record Source"
+	AAC_Sub STG->LoadDateTime as "Load Date Time"
 AG_ET STG
 	AG_ET STG->RecordSource as "Record Source"
 	AG_ET STG->Alternate Guid[1.0] as "Alternate Guid"
 	AG_ET STG->LoadDateTime as "Load Date Time"
+AG_Sub STG
+	AG_Sub STG->{AG_ET}->[Alternate Guid][1.0] as "AG ET Alternate Guid"
+	AG_Sub STG->RecordSource as "Record Source"
+	AG_Sub STG->LoadDateTime as "Load Date Time"
 Container STG
 	Container STG->RecordSource as "Record Source"
 	Container STG->Container Name[1.0] as "Container Name"
