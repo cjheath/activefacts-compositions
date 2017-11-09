@@ -1,4 +1,4 @@
-CREATE TABLE AAC_ET (
+CREATE TABLE AACET (
 	-- AAC_ET has Alternate Auto Counter
 	AlternateAutoCounter                    BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Primary index to AAC_ET over PresenceConstraint over (Alternate Auto Counter in "AAC_ET has Alternate Auto Counter") occurs at most one time
@@ -6,7 +6,7 @@ CREATE TABLE AAC_ET (
 );
 
 
-CREATE TABLE AG_ET (
+CREATE TABLE AGET (
 	-- AG_ET has Alternate Guid
 	AlternateGuid                           BINARY(16) NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Primary index to AG_ET over PresenceConstraint over (Alternate Guid in "AG_ET has Alternate Guid") occurs at most one time
