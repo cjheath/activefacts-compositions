@@ -3,6 +3,10 @@
 #
 # Copyright (c) 2009-2016 Clifford Heath. Read the LICENSE file.
 #
+# Reserved words for various versions of the standard gathered from:
+# http://developer.mimer.se/validator/sql-reserved-words.tml
+# https://www.postgresql.org/docs/9.5/static/sql-keywords-appendix.html
+#
 require 'digest/sha1'
 require 'activefacts/metamodel'
 require 'activefacts/metamodel/datatypes'

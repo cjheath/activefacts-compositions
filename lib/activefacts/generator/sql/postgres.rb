@@ -1,7 +1,10 @@
 #
-#       ActiveFacts Standard SQL Schema Generator
+#       ActiveFacts PostgreSQL Schema Generator
 #
-# Copyright (c) 2009-2016 Clifford Heath. Read the LICENSE file.
+# Copyright (c) 2017 Clifford Heath. Read the LICENSE file.
+#
+# Reserved words gathered from:
+# https://www.postgresql.org/docs/9.5/static/sql-keywords-appendix.html
 #
 require 'digest/sha1'
 require 'activefacts/metamodel'
@@ -29,7 +32,7 @@ module ActiveFacts
         end
 
         def data_type_context
-          PostgresqlDataTypeContext.new
+          PostgresDataTypeContext.new
         end
 
         def auto_assign_modifier
@@ -127,7 +130,7 @@ module ActiveFacts
           ''
         end
 
-        class PostgresqlDataTypeContext < SQLDataTypeContext
+        class PostgresDataTypeContext < SQLDataTypeContext
           def integer_ranges
             super
           end

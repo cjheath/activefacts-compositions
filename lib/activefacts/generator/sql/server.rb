@@ -1,7 +1,10 @@
 #
-#       ActiveFacts Standard SQL Schema Generator
+#       ActiveFacts SQL Server Schema Generator
 #
 # Copyright (c) 2009-2016 Clifford Heath. Read the LICENSE file.
+#
+# Reserved words gathered from:
+# https://technet.microsoft.com/en-us/library/ms189822(v=sql.110).aspx
 #
 require 'digest/sha1'
 require 'activefacts/metamodel'
