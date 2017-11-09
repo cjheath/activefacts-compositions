@@ -154,11 +154,14 @@ class SchemaCompositor
             ' num'
           when Pathname
             ' file'
+	  when Array
+	    " { #{type.map(&:to_s)*' | '} }"
           else
             ' str'
           end
 
-        stream.puts "\t#{tag}#{' '*(24-tag.size)}#{description}"
+	spaces = (s = 24-tag.size) < 2 ? 2 : s
+        stream.puts "\t#{tag}#{' '*spaces}#{description}"
       end
     end
   end
