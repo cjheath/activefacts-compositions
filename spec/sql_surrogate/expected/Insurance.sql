@@ -275,7 +275,7 @@ CREATE TABLE PropertyDamage (
 CREATE UNIQUE INDEX PropertyDamageByIncidentClaimIDAddressStreetAddressCityAd0ba ON PropertyDamage(IncidentClaimID, AddressStreet, AddressCity, AddressPostcode, AddressStateID) WHERE IncidentClaimID IS NOT NULL AND AddressPostcode IS NOT NULL AND AddressStateID IS NOT NULL;
 
 
-CREATE TABLE "State" (
+CREATE TABLE State (
 	-- State surrogate key
 	StateID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- State has State Code
@@ -288,7 +288,7 @@ CREATE TABLE "State" (
 	UNIQUE(StateCode)
 );
 
-CREATE UNIQUE INDEX StateByStateName ON "State"(StateName) WHERE StateName IS NOT NULL;
+CREATE UNIQUE INDEX StateByStateName ON State(StateName) WHERE StateName IS NOT NULL;
 
 
 CREATE TABLE ThirdParty (
@@ -448,13 +448,13 @@ CREATE TABLE Witness (
 	PRIMARY KEY(WitnessID),
 	-- Unique index to Witness over PresenceConstraint over (Incident, Name in "Incident was independently witnessed by Witness", "Witness is called Name") occurs at most one time
 	UNIQUE(IncidentClaimID, Name),
-	FOREIGN KEY (AddressStateID) REFERENCES "State" (StateID),
+	FOREIGN KEY (AddressStateID) REFERENCES State (StateID),
 	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID)
 );
 
 
 ALTER TABLE Claim
-	ADD FOREIGN KEY (IncidentAddressStateID) REFERENCES "State" (StateID);
+	ADD FOREIGN KEY (IncidentAddressStateID) REFERENCES State (StateID);
 
 
 ALTER TABLE Claim
@@ -478,11 +478,11 @@ ALTER TABLE Cover
 
 
 ALTER TABLE Party
-	ADD FOREIGN KEY (PersonAddressStateID) REFERENCES "State" (StateID);
+	ADD FOREIGN KEY (PersonAddressStateID) REFERENCES State (StateID);
 
 
 ALTER TABLE Party
-	ADD FOREIGN KEY (PostalAddressStateID) REFERENCES "State" (StateID);
+	ADD FOREIGN KEY (PostalAddressStateID) REFERENCES State (StateID);
 
 
 ALTER TABLE Policy
@@ -490,11 +490,11 @@ ALTER TABLE Policy
 
 
 ALTER TABLE Policy
-	ADD FOREIGN KEY (PStateID) REFERENCES "State" (StateID);
+	ADD FOREIGN KEY (PStateID) REFERENCES State (StateID);
 
 
 ALTER TABLE PropertyDamage
-	ADD FOREIGN KEY (AddressStateID) REFERENCES "State" (StateID);
+	ADD FOREIGN KEY (AddressStateID) REFERENCES State (StateID);
 
 
 ALTER TABLE ThirdParty

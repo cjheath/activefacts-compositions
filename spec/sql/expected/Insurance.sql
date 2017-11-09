@@ -259,7 +259,7 @@ CREATE TABLE PropertyDamage (
 CREATE UNIQUE INDEX PropertyDamageByIncidentClaimIDAddressStreetAddressCityAde19 ON PropertyDamage(IncidentClaimID, AddressStreet, AddressCity, AddressPostcode, AddressStateCode) WHERE IncidentClaimID IS NOT NULL AND AddressPostcode IS NOT NULL AND AddressStateCode IS NOT NULL;
 
 
-CREATE TABLE "State" (
+CREATE TABLE State (
 	-- State has State Code
 	StateCode                               SMALLINT NOT NULL CHECK((StateCode >= 0 AND StateCode <= 9)),
 	-- maybe State has State Name
@@ -268,7 +268,7 @@ CREATE TABLE "State" (
 	PRIMARY KEY(StateCode)
 );
 
-CREATE UNIQUE INDEX StateByStateName ON "State"(StateName) WHERE StateName IS NOT NULL;
+CREATE UNIQUE INDEX StateByStateName ON State(StateName) WHERE StateName IS NOT NULL;
 
 
 CREATE TABLE ThirdParty (
@@ -412,13 +412,13 @@ CREATE TABLE Witness (
 	ContactPhoneNr                          VARCHAR NULL,
 	-- Primary index to Witness over PresenceConstraint over (Incident, Name in "Incident was independently witnessed by Witness", "Witness is called Name") occurs at most one time
 	PRIMARY KEY(IncidentClaimID, Name),
-	FOREIGN KEY (AddressStateCode) REFERENCES "State" (StateCode),
+	FOREIGN KEY (AddressStateCode) REFERENCES State (StateCode),
 	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID)
 );
 
 
 ALTER TABLE Claim
-	ADD FOREIGN KEY (IncidentAddressStateCode) REFERENCES "State" (StateCode);
+	ADD FOREIGN KEY (IncidentAddressStateCode) REFERENCES State (StateCode);
 
 
 ALTER TABLE Claim
@@ -442,11 +442,11 @@ ALTER TABLE Cover
 
 
 ALTER TABLE Party
-	ADD FOREIGN KEY (PersonAddressStateCode) REFERENCES "State" (StateCode);
+	ADD FOREIGN KEY (PersonAddressStateCode) REFERENCES State (StateCode);
 
 
 ALTER TABLE Party
-	ADD FOREIGN KEY (PostalAddressStateCode) REFERENCES "State" (StateCode);
+	ADD FOREIGN KEY (PostalAddressStateCode) REFERENCES State (StateCode);
 
 
 ALTER TABLE Policy
@@ -454,11 +454,11 @@ ALTER TABLE Policy
 
 
 ALTER TABLE Policy
-	ADD FOREIGN KEY (PStateCode) REFERENCES "State" (StateCode);
+	ADD FOREIGN KEY (PStateCode) REFERENCES State (StateCode);
 
 
 ALTER TABLE PropertyDamage
-	ADD FOREIGN KEY (AddressStateCode) REFERENCES "State" (StateCode);
+	ADD FOREIGN KEY (AddressStateCode) REFERENCES State (StateCode);
 
 
 ALTER TABLE ThirdParty
