@@ -1,0 +1,67 @@
+Summary of OilSupply
+Acceptable Substitution STG
+	Acceptable Substitution STG->RecordSource as "Record Source"
+	Acceptable Substitution STG->{Product}->[Product Name][1.0] as "Product Name"
+	Acceptable Substitution STG->{Alternate Product}->[Product Name][1.1] as "Alternate Product Name"
+	Acceptable Substitution STG->Season[1.2] as "Season"
+	Acceptable Substitution STG->LoadTime as "Load Time"
+	Acceptable Substitution STG->{Batch}->[Batch ID] as "Batch ID"
+	### RingConstraint(AcyclicIntransitive: Product, Product in Product may be substituted by alternate-Product in Season)
+Batch
+	Batch->Batch ID[1.0] as "Batch ID"
+	Batch->Start DateTime as "Start Date Time"
+Month STG
+	Month STG->RecordSource as "Record Source"
+	Month STG->Month Nr[1.0] as "Month Nr"
+		### restricted to {1..12}
+	Month STG->LoadTime as "Load Time"
+	Month STG->{Batch}->[Batch ID] as "Batch ID"
+	Month STG->Season as "Season"
+Product STG
+	Product STG->RecordSource as "Record Source"
+	Product STG->Product Name[1.0] as "Product Name"
+	Product STG->LoadTime as "Load Time"
+	Product STG->{Batch}->[Batch ID] as "Batch ID"
+Production Forecast STG
+	Production Forecast STG->RecordSource as "Record Source"
+	Production Forecast STG->{Refinery}->[Refinery Name][1.0] as "Refinery Name"
+	Production Forecast STG->{Supply Period}->Year->[Year Nr][1.1] as "Supply Period Year Nr"
+	Production Forecast STG->{Supply Period}->Month->[Month Nr][1.2] as "Supply Period Month Nr"
+	Production Forecast STG->{Product}->[Product Name][1.3] as "Product Name"
+	Production Forecast STG->LoadTime as "Load Time"
+	Production Forecast STG->{Batch}->[Batch ID] as "Batch ID"
+	Production Forecast STG->Quantity as "Quantity"
+	Production Forecast STG->Cost? as "Cost"
+Refinery STG
+	Refinery STG->RecordSource as "Record Source"
+	Refinery STG->Refinery Name[1.0] as "Refinery Name"
+	Refinery STG->LoadTime as "Load Time"
+	Refinery STG->{Batch}->[Batch ID] as "Batch ID"
+Region STG
+	Region STG->RecordSource as "Record Source"
+	Region STG->Region Name[1.0] as "Region Name"
+	Region STG->LoadTime as "Load Time"
+	Region STG->{Batch}->[Batch ID] as "Batch ID"
+Regional Demand STG
+	Regional Demand STG->RecordSource as "Record Source"
+	Regional Demand STG->{Region}->[Region Name][1.0] as "Region Name"
+	Regional Demand STG->{Supply Period}->Year->[Year Nr][1.1] as "Supply Period Year Nr"
+	Regional Demand STG->{Supply Period}->Month->[Month Nr][1.2] as "Supply Period Month Nr"
+	Regional Demand STG->{Product}->[Product Name][1.3] as "Product Name"
+	Regional Demand STG->LoadTime as "Load Time"
+	Regional Demand STG->{Batch}->[Batch ID] as "Batch ID"
+	Regional Demand STG->Quantity as "Quantity"
+Supply Period STG
+	Supply Period STG->RecordSource as "Record Source"
+	Supply Period STG->Year->Year Nr[1.0] as "Year Nr"
+	Supply Period STG->{Month}->[Month Nr][1.1] as "Month Nr"
+	Supply Period STG->LoadTime as "Load Time"
+	Supply Period STG->{Batch}->[Batch ID] as "Batch ID"
+Transport Route STG
+	Transport Route STG->RecordSource as "Record Source"
+	Transport Route STG->Transport Mode[1.0] as "Transport Mode"
+	Transport Route STG->{Refinery}->[Refinery Name][1.1] as "Refinery Name"
+	Transport Route STG->{Region}->[Region Name][1.2] as "Region Name"
+	Transport Route STG->LoadTime as "Load Time"
+	Transport Route STG->{Batch}->[Batch ID] as "Batch ID"
+	Transport Route STG->Cost? as "Cost"

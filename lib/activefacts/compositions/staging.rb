@@ -30,7 +30,16 @@ module ActiveFacts
         @option_stg_name.sub!(/^/,'+ ') unless @option_stg_name =~ /\+/
 
         super constellation, name, options, 'Staging'
+      end
 
+      def generate
+        create_loadbatch if @option_loadbatch
+        super
+      end
+
+      def inject_value_fields
+        super
+        inject_loadbatch_relationships
       end
 
       def inject_all_datetime_recordsource
@@ -39,6 +48,7 @@ module ActiveFacts
 
         trace :staging, "Injecting load datetime and record source" do
           @composition.all_composite.each do |composite|
+            next if composite.mapping.object_type.name == @option_loadbatch
             inject_datetime_recordsource composite.mapping
             composite.mapping.re_rank
           end
