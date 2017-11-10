@@ -23,6 +23,10 @@ module ActiveFacts
           })
         end
 
+        def initialize composition, options = {}
+          super(composition, options)
+        end
+
         def table_name_max
           128
         end
@@ -35,7 +39,7 @@ module ActiveFacts
           ' IDENTITY'
         end
 
-        def normalise_type(type_name, length, value_constraint)
+        def normalise_type(type_name, length, value_constraint, options)
           return ['UNIQUEIDENTIFIER', 16] if type_name =~ /^(guid|uuid)$/i
 
           type = MM::DataType.normalise(type_name)
