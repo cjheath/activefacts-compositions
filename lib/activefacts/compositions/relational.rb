@@ -73,8 +73,8 @@ module ActiveFacts
       end
 
       def make_candidates
-        @candidates = @binary_mappings.inject({}) do |hash, (absorption, mapping)|
-          hash[mapping.object_type] = Candidate.new(self, mapping)
+        @candidates = @binary_mappings.inject(@candidates || {}) do |hash, (absorption, mapping)|
+          hash[mapping.object_type] ||= Candidate.new(self, mapping)
           hash
         end
       end
