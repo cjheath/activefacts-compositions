@@ -40,7 +40,7 @@ CREATE TABLE container (
 	-- Container has Alternate Auto Counter
 	alternate_auto_counter                  BIGINT NOT NULL,
 	-- Container has Alternate Auto Time Stamp
-	alternate_auto_time_stamp               DATETIME NOT NULL,
+	alternate_auto_time_stamp               TIMESTAMP NOT NULL,
 	-- Container has Alternate Big Int
 	alternate_big_int                       BIGINT NOT NULL,
 	-- Container has Alternate Bit
@@ -50,7 +50,7 @@ CREATE TABLE container (
 	-- Container has Alternate Currency
 	alternate_currency                      MONEY NOT NULL,
 	-- Container has Alternate Date Time
-	alternate_date_time                     DATETIME NOT NULL,
+	alternate_date_time                     TIMESTAMP NOT NULL,
 	-- Container has Alternate Double
 	alternate_double                        FLOAT(53) NOT NULL,
 	-- Container has Alternate Fixed Length Text
@@ -80,7 +80,7 @@ CREATE TABLE container (
 	-- Container has Alternate Small Int
 	alternate_small_int                     SMALLINT NOT NULL,
 	-- Container has Alternate Time Stamp
-	alternate_time_stamp                    DATETIME NOT NULL,
+	alternate_time_stamp                    TIMESTAMP NOT NULL,
 	-- Container has Alternate Tiny Int
 	alternate_tiny_int                      SMALLINT NOT NULL,
 	-- Container has Alternate Unsigned
@@ -114,7 +114,7 @@ CREATE TABLE container (
 	-- Container has Fundamental Date
 	fundamental_date                        DATE NOT NULL,
 	-- Container has Fundamental DateTime
-	fundamental_date_time                   DATETIME NOT NULL,
+	fundamental_date_time                   TIMESTAMP NOT NULL,
 	-- Container has Fundamental Decimal
 	fundamental_decimal                     DECIMAL NOT NULL,
 	-- Container has Fundamental Integer
@@ -130,7 +130,7 @@ CREATE TABLE container (
 	-- Container has Fundamental Time
 	fundamental_time                        TIME NOT NULL,
 	-- Container has Fundamental Timestamp
-	fundamental_timestamp                   DATETIME NOT NULL,
+	fundamental_timestamp                   TIMESTAMP NOT NULL,
 	-- Container has Int
 	"int"                                   INTEGER NOT NULL CHECK(("int" >= -2147483648 AND "int" <= 2147483647)),
 	-- Container has Int16

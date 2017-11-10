@@ -1,4 +1,4 @@
-CREATE TABLE AAC_ET (
+CREATE TABLE AACET (
 	-- AAC_ET has Alternate Auto Counter
 	AlternateAutoCounter                    BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Primary index to AAC_ET over PresenceConstraint over (Alternate Auto Counter in "AAC_ET has Alternate Auto Counter") occurs at most one time
@@ -6,11 +6,29 @@ CREATE TABLE AAC_ET (
 );
 
 
-CREATE TABLE AG_ET (
+CREATE TABLE AACSub (
+	-- AAC_Sub is a kind of AAC_ET that has Alternate Auto Counter
+	AACETAlternateAutoCounter               BIGINT NOT NULL,
+	-- Primary index to AAC_Sub over PresenceConstraint over (AAC_ET in "AAC_Sub is a kind of AAC_ET") occurs at most one time
+	PRIMARY KEY(AACETAlternateAutoCounter),
+	FOREIGN KEY (AACETAlternateAutoCounter) REFERENCES AACET (AlternateAutoCounter)
+);
+
+
+CREATE TABLE AGET (
 	-- AG_ET has Alternate Guid
-	AlternateGuid                           BINARY(16) NOT NULL GENERATED ALWAYS AS IDENTITY,
+	AlternateGuid                           BINARY(16) NOT NULL,
 	-- Primary index to AG_ET over PresenceConstraint over (Alternate Guid in "AG_ET has Alternate Guid") occurs at most one time
 	PRIMARY KEY(AlternateGuid)
+);
+
+
+CREATE TABLE AGSub (
+	-- AG_Sub is a kind of AG_ET that has Alternate Guid
+	AGETAlternateGuid                       BINARY(16) NOT NULL,
+	-- Primary index to AG_Sub over PresenceConstraint over (AG_ET in "AG_Sub is a kind of AG_ET") occurs at most one time
+	PRIMARY KEY(AGETAlternateGuid),
+	FOREIGN KEY (AGETAlternateGuid) REFERENCES AGET (AlternateGuid)
 );
 
 

@@ -2,7 +2,7 @@ Summary of CinemaTickets
 Allocatable Cinema Section Involves Cinema LINK
 	Allocatable Cinema Section Involves Cinema LINK->Allocatable Cinema Section Involves Cinema HID[1.0] as "Allocatable Cinema Section Involves Cinema HID"
 	Allocatable Cinema Section Involves Cinema LINK->RecordSource as "Record Source"
-	Allocatable Cinema Section Involves Cinema LINK->LoadDateTime as "Load Date Time"
+	Allocatable Cinema Section Involves Cinema LINK->LoadTime as "Load Time"
 	Allocatable Cinema Section Involves Cinema LINK->[AllocatableCinemaSection HID][2.0] as "Allocatable Cinema Section HID"
 	Allocatable Cinema Section Involves Cinema LINK->[Cinema HID][2.1] as "Cinema HID"
 AllocatableCinemaSection HUB
@@ -10,28 +10,28 @@ AllocatableCinemaSection HUB
 	AllocatableCinemaSection HUB->RecordSource as "Record Source"
 	AllocatableCinemaSection HUB->Cinema->Cinema ID[2.0] as "Cinema ID"
 	AllocatableCinemaSection HUB->Section->Section Name[2.1] as "Section Name"
-	AllocatableCinemaSection HUB->LoadDateTime as "Load Date Time"
+	AllocatableCinemaSection HUB->LoadTime as "Load Time"
 Booking HUB
 	Booking HUB->Booking HID[1.0] as "Booking HID"
 	Booking HUB->RecordSource as "Record Source"
 	Booking HUB->Booking Nr[2.0] as "Booking Nr"
-	Booking HUB->LoadDateTime as "Load Date Time"
+	Booking HUB->LoadTime as "Load Time"
 Booking Involves Person LINK
 	Booking Involves Person LINK->Booking Involves Person HID[1.0] as "Booking Involves Person HID"
 	Booking Involves Person LINK->RecordSource as "Record Source"
-	Booking Involves Person LINK->LoadDateTime as "Load Date Time"
+	Booking Involves Person LINK->LoadTime as "Load Time"
 	Booking Involves Person LINK->[Booking HID][2.0] as "Booking HID"
 	Booking Involves Person LINK->{Person}->[Person HID][2.1] as "Person HID"
 Booking Involves Session LINK
 	Booking Involves Session LINK->Booking Involves Session HID[1.0] as "Booking Involves Session HID"
 	Booking Involves Session LINK->RecordSource as "Record Source"
-	Booking Involves Session LINK->LoadDateTime as "Load Date Time"
+	Booking Involves Session LINK->LoadTime as "Load Time"
 	Booking Involves Session LINK->[Booking HID][2.0] as "Booking HID"
 	Booking Involves Session LINK->{Session}->[Session HID][2.1] as "Session HID"
 Booking SAT
 	Booking SAT->[Booking HID][1.0] as "Booking HID"
 	Booking SAT->RecordSource as "Record Source"
-	Booking SAT->LoadDateTime[1.1] as "Load Date Time"
+	Booking SAT->LoadTime[1.1] as "Load Time"
 	Booking SAT->Tickets For Booking Have Been Issued? as "Tickets For Booking Have Been Issued"
 	Booking SAT->Number as "Number"
 	Booking SAT->Address?->Address Text as "Address Text"
@@ -41,32 +41,32 @@ Cinema HUB
 	Cinema HUB->Cinema HID[1.0] as "Cinema HID"
 	Cinema HUB->RecordSource as "Record Source"
 	Cinema HUB->Cinema ID[2.0] as "Cinema ID"
-	Cinema HUB->LoadDateTime as "Load Date Time"
+	Cinema HUB->LoadTime as "Load Time"
 Cinema SAT
 	Cinema SAT->[Cinema HID][1.0] as "Cinema HID"
 	Cinema SAT->RecordSource as "Record Source"
-	Cinema SAT->LoadDateTime[1.1] as "Load Date Time"
+	Cinema SAT->LoadTime[1.1] as "Load Time"
 	Cinema SAT->Name as "Name"
 Film HUB
 	Film HUB->Film HID[1.0] as "Film HID"
 	Film HUB->RecordSource as "Record Source"
 	Film HUB->Film ID[2.0] as "Film ID"
-	Film HUB->LoadDateTime as "Load Date Time"
+	Film HUB->LoadTime as "Load Time"
 Film SAT
 	Film SAT->[Film HID][1.0] as "Film HID"
 	Film SAT->RecordSource as "Record Source"
-	Film SAT->LoadDateTime[1.1] as "Load Date Time"
+	Film SAT->LoadTime[1.1] as "Load Time"
 	Film SAT->Name as "Name"
 	Film SAT->Year?->Year Nr as "Year Nr"
 Person HUB
 	Person HUB->Person HID[1.0] as "Person HID"
 	Person HUB->RecordSource as "Record Source"
 	Person HUB->Person ID[2.0] as "Person ID"
-	Person HUB->LoadDateTime as "Load Date Time"
+	Person HUB->LoadTime as "Load Time"
 Person SAT
 	Person SAT->[Person HID][1.0] as "Person HID"
 	Person SAT->RecordSource as "Record Source"
-	Person SAT->LoadDateTime[1.1] as "Load Date Time"
+	Person SAT->LoadTime[1.1] as "Load Time"
 	Person SAT->Encrypted Password? as "Encrypted Password"
 	Person SAT->Login Name? as "Login Name"
 Places Paid HUB
@@ -75,25 +75,25 @@ Places Paid HUB
 	Places Paid HUB->Booking->Booking Nr[2.0] as "Booking Nr"
 	Places Paid HUB->Payment Method->Payment Method Code[2.1] as "Payment Method Code"
 		### restricted to {'Card', 'Cash', 'Gift Voucher', 'Loyalty Voucher'}
-	Places Paid HUB->LoadDateTime as "Load Date Time"
+	Places Paid HUB->LoadTime as "Load Time"
 ### SubsetConstraint((Booking in "Booking has allocated-Seat") only if (Booking in "Number of places for Booking have been paid for by Payment Method"))
 Places Paid Involves Booking LINK
 	Places Paid Involves Booking LINK->Places Paid Involves Booking HID[1.0] as "Places Paid Involves Booking HID"
 	Places Paid Involves Booking LINK->RecordSource as "Record Source"
-	Places Paid Involves Booking LINK->LoadDateTime as "Load Date Time"
+	Places Paid Involves Booking LINK->LoadTime as "Load Time"
 	Places Paid Involves Booking LINK->[Booking HID][2.1] as "Booking HID"
 	Places Paid Involves Booking LINK->[Places Paid HID][2.0] as "Places Paid HID"
 Places Paid SAT
 	Places Paid SAT->[Places Paid HID][1.0] as "Places Paid HID"
 	Places Paid SAT->RecordSource as "Record Source"
-	Places Paid SAT->LoadDateTime[1.1] as "Load Date Time"
+	Places Paid SAT->LoadTime[1.1] as "Load Time"
 	Places Paid SAT->Number as "Number"
 Seat Allocation LINK
 	Seat Allocation LINK->Seat Allocation HID[1.0] as "Seat Allocation HID"
 	Seat Allocation LINK->RecordSource as "Record Source"
 	Seat Allocation LINK->{Booking}->[Booking HID][2.0] as "Booking HID"
 	Seat Allocation LINK->{Allocated Seat}->[Seat HID][2.1] as "Allocated Seat HID"
-	Seat Allocation LINK->LoadDateTime as "Load Date Time"
+	Seat Allocation LINK->LoadTime as "Load Time"
 ### SubsetConstraint((Booking in "Booking has allocated-Seat") only if (Booking in "Number of places for Booking have been paid for by Payment Method"))
 ### SubsetConstraint((Cinema, Allocated Seat in "Cinema shows Film on Session Time", "Booking has allocated-Seat") only if (Cinema, Seat in "Row is in Cinema", "Seat is in Row"))
 Seat HUB
@@ -102,12 +102,12 @@ Seat HUB
 	Seat HUB->Row->Cinema->Cinema ID[2.0] as "Row Cinema ID"
 	Seat HUB->Row->Row Nr[2.1] as "Row Nr"
 	Seat HUB->Seat Number[2.2] as "Seat Number"
-	Seat HUB->LoadDateTime as "Load Date Time"
+	Seat HUB->LoadTime as "Load Time"
 ### SubsetConstraint((Cinema, Allocated Seat in "Cinema shows Film on Session Time", "Booking has allocated-Seat") only if (Cinema, Seat in "Row is in Cinema", "Seat is in Row"))
 Seat SAT
 	Seat SAT->[Seat HID][1.0] as "Seat HID"
 	Seat SAT->RecordSource as "Record Source"
-	Seat SAT->LoadDateTime[1.1] as "Load Date Time"
+	Seat SAT->LoadTime[1.1] as "Load Time"
 	Seat SAT->Section?->Section Name as "Section Name"
 Session HUB
 	Session HUB->Session HID[1.0] as "Session HID"
@@ -118,24 +118,24 @@ Session HUB
 	Session HUB->Session Time->Day[2.3] as "Session Time Day"
 	Session HUB->Session Time->Hour[2.4] as "Session Time Hour"
 	Session HUB->Session Time->Minute[2.5] as "Session Time Minute"
-	Session HUB->LoadDateTime as "Load Date Time"
+	Session HUB->LoadTime as "Load Time"
 ### SubsetConstraint((Cinema, Allocated Seat in "Cinema shows Film on Session Time", "Booking has allocated-Seat") only if (Cinema, Seat in "Row is in Cinema", "Seat is in Row"))
 Session Involves Cinema LINK
 	Session Involves Cinema LINK->Session Involves Cinema HID[1.0] as "Session Involves Cinema HID"
 	Session Involves Cinema LINK->RecordSource as "Record Source"
-	Session Involves Cinema LINK->LoadDateTime as "Load Date Time"
+	Session Involves Cinema LINK->LoadTime as "Load Time"
 	Session Involves Cinema LINK->[Cinema HID][2.1] as "Cinema HID"
 	Session Involves Cinema LINK->[Session HID][2.0] as "Session HID"
 Session Involves Film LINK
 	Session Involves Film LINK->Session Involves Film HID[1.0] as "Session Involves Film HID"
 	Session Involves Film LINK->RecordSource as "Record Source"
-	Session Involves Film LINK->LoadDateTime as "Load Date Time"
+	Session Involves Film LINK->LoadTime as "Load Time"
 	Session Involves Film LINK->{Film}->[Film HID][2.1] as "Film HID"
 	Session Involves Film LINK->[Session HID][2.0] as "Session HID"
 Session SAT
 	Session SAT->[Session HID][1.0] as "Session HID"
 	Session SAT->RecordSource as "Record Source"
-	Session SAT->LoadDateTime[1.1] as "Load Date Time"
+	Session SAT->LoadTime[1.1] as "Load Time"
 	Session SAT->Is High Demand? as "Is High Demand"
 	Session SAT->Uses Allocated Seating? as "Uses Allocated Seating"
 Ticket Pricing HUB
@@ -149,15 +149,15 @@ Ticket Pricing HUB
 	Ticket Pricing HUB->Cinema->Cinema ID[2.5] as "Cinema ID"
 	Ticket Pricing HUB->Section->Section Name[2.6] as "Section Name"
 	Ticket Pricing HUB->High Demand[2.7] as "High Demand"
-	Ticket Pricing HUB->LoadDateTime as "Load Date Time"
+	Ticket Pricing HUB->LoadTime as "Load Time"
 Ticket Pricing Involves Cinema LINK
 	Ticket Pricing Involves Cinema LINK->Ticket Pricing Involves Cinema HID[1.0] as "Ticket Pricing Involves Cinema HID"
 	Ticket Pricing Involves Cinema LINK->RecordSource as "Record Source"
-	Ticket Pricing Involves Cinema LINK->LoadDateTime as "Load Date Time"
+	Ticket Pricing Involves Cinema LINK->LoadTime as "Load Time"
 	Ticket Pricing Involves Cinema LINK->[Cinema HID][2.1] as "Cinema HID"
 	Ticket Pricing Involves Cinema LINK->[Ticket Pricing HID][2.0] as "Ticket Pricing HID"
 Ticket Pricing SAT
 	Ticket Pricing SAT->[Ticket Pricing HID][1.0] as "Ticket Pricing HID"
 	Ticket Pricing SAT->RecordSource as "Record Source"
-	Ticket Pricing SAT->LoadDateTime[1.1] as "Load Date Time"
+	Ticket Pricing SAT->LoadTime[1.1] as "Load Time"
 	Ticket Pricing SAT->Price as "Price"
