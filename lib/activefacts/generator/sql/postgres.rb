@@ -64,8 +64,8 @@ module ActiveFacts
               super
             end
           when MM::DataType::TYPE_Money;    'MONEY'
-          when MM::DataType::TYPE_DateTime; 'DATETIME'
-          when MM::DataType::TYPE_Timestamp;'DATETIME'
+          when MM::DataType::TYPE_DateTime; 'TIMESTAMP'
+          when MM::DataType::TYPE_Timestamp;'TIMESTAMP'
           when MM::DataType::TYPE_Binary;
             if length && length <= 8192
               super
