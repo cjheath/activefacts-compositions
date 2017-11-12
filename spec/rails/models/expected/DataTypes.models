@@ -3,6 +3,21 @@ module AACEt
   included do
     self.primary_key = 'alternate_auto_counter'
 
+    # AAC_Sub is a kind of AAC_ET
+    has_one :aac_sub, :class_name => 'AACSub', :foreign_key => :aac_et_alternate_auto_counter, :dependent => :destroy
+
+  end
+end
+
+module AACSub
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'aac_et_alternate_auto_counter'
+
+    # AAC_Sub is a kind of AAC_ET
+    belongs_to :aac_et, :foreign_key => :aac_et_alternate_auto_counter
+
+    validates :aac_et_alternate_auto_counter, :presence => true
   end
 end
 
@@ -11,6 +26,21 @@ module AGEt
   included do
     self.primary_key = 'alternate_guid'
 
+    # AG_Sub is a kind of AG_ET
+    has_one :ag_sub, :class_name => 'AGSub', :foreign_key => :ag_et_alternate_guid, :dependent => :destroy
+
+  end
+end
+
+module AGSub
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'ag_et_alternate_guid'
+
+    # AG_Sub is a kind of AG_ET
+    belongs_to :ag_et, :foreign_key => :ag_et_alternate_guid
+
+    validates :ag_et_alternate_guid, :presence => true
   end
 end
 

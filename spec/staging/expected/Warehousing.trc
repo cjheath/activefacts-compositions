@@ -5,20 +5,20 @@ Back Order Allocation STG
 	Back Order Allocation STG->{Purchase Order Item}->Product->[Product ID][1.1] as "Purchase Order Item Product ID"
 	Back Order Allocation STG->{Sales Order Item}->Sales Order->[Sales Order ID][1.2] as "Sales Order Item Sales Order ID"
 	Back Order Allocation STG->{Sales Order Item}->Product->[Product ID][1.3] as "Sales Order Item Product ID"
-	Back Order Allocation STG->LoadDateTime as "Load Date Time"
+	Back Order Allocation STG->LoadTime as "Load Time"
 	Back Order Allocation STG->Quantity as "Quantity"
 ### SubsetConstraint((Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item") only if (Purchase Order Item, Sales Order Item in "Purchase Order Item is for Product", "Sales Order Item is for Product"))
 Bin STG
 	Bin STG->RecordSource as "Record Source"
 	Bin STG->Bin ID[1.0] as "Bin ID"
-	Bin STG->LoadDateTime as "Load Date Time"
+	Bin STG->LoadTime as "Load Time"
 	Bin STG->Quantity as "Quantity"
 	Bin STG->{Product}?->[Product ID] as "Product ID"
 	Bin STG->{Warehouse}?->[Warehouse ID] as "Warehouse ID"
 Dispatch Item STG
 	Dispatch Item STG->RecordSource as "Record Source"
 	Dispatch Item STG->Dispatch Item ID[1.0] as "Dispatch Item ID"
-	Dispatch Item STG->LoadDateTime as "Load Date Time"
+	Dispatch Item STG->LoadTime as "Load Time"
 	Dispatch Item STG->{Product}->[Product ID] as "Product ID"
 	Dispatch Item STG->Quantity as "Quantity"
 	Dispatch Item STG->Dispatch?->Dispatch ID as "Dispatch ID"
@@ -29,30 +29,30 @@ Dispatch Item STG
 Party STG
 	Party STG->RecordSource as "Record Source"
 	Party STG->Party ID[1.0] as "Party ID"
-	Party STG->LoadDateTime as "Load Date Time"
+	Party STG->LoadTime as "Load Time"
 	Party STG->Customer? as "Customer"
 	Party STG->Supplier? as "Supplier"
 Product STG
 	Product STG->RecordSource as "Record Source"
 	Product STG->Product ID[1.0] as "Product ID"
-	Product STG->LoadDateTime as "Load Date Time"
+	Product STG->LoadTime as "Load Time"
 Purchase Order Item STG
 	Purchase Order Item STG->RecordSource as "Record Source"
 	Purchase Order Item STG->{Purchase Order}->[Purchase Order ID][1.0] as "Purchase Order ID"
 	Purchase Order Item STG->{Product}->[Product ID][1.1] as "Product ID"
-	Purchase Order Item STG->LoadDateTime as "Load Date Time"
+	Purchase Order Item STG->LoadTime as "Load Time"
 	Purchase Order Item STG->Quantity as "Quantity"
 ### SubsetConstraint((Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item") only if (Purchase Order Item, Sales Order Item in "Purchase Order Item is for Product", "Sales Order Item is for Product"))
 Purchase Order STG
 	Purchase Order STG->RecordSource as "Record Source"
 	Purchase Order STG->Purchase Order ID[1.0] as "Purchase Order ID"
-	Purchase Order STG->LoadDateTime as "Load Date Time"
+	Purchase Order STG->LoadTime as "Load Time"
 	Purchase Order STG->{Supplier}->Party->[Party ID] as "Supplier ID"
 	Purchase Order STG->{Warehouse}->[Warehouse ID] as "Warehouse ID"
 Received Item STG
 	Received Item STG->RecordSource as "Record Source"
 	Received Item STG->Received Item ID[1.0] as "Received Item ID"
-	Received Item STG->LoadDateTime as "Load Date Time"
+	Received Item STG->LoadTime as "Load Time"
 	Received Item STG->{Product}->[Product ID] as "Product ID"
 	Received Item STG->Quantity as "Quantity"
 	Received Item STG->{Purchase Order Item}?->Purchase Order->[Purchase Order ID] as "Purchase Order Item Purchase Order ID"
@@ -64,19 +64,19 @@ Sales Order Item STG
 	Sales Order Item STG->RecordSource as "Record Source"
 	Sales Order Item STG->{Sales Order}->[Sales Order ID][1.0] as "Sales Order ID"
 	Sales Order Item STG->{Product}->[Product ID][1.1] as "Product ID"
-	Sales Order Item STG->LoadDateTime as "Load Date Time"
+	Sales Order Item STG->LoadTime as "Load Time"
 	Sales Order Item STG->Quantity as "Quantity"
 ### SubsetConstraint((Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item") only if (Purchase Order Item, Sales Order Item in "Purchase Order Item is for Product", "Sales Order Item is for Product"))
 Sales Order STG
 	Sales Order STG->RecordSource as "Record Source"
 	Sales Order STG->Sales Order ID[1.0] as "Sales Order ID"
-	Sales Order STG->LoadDateTime as "Load Date Time"
+	Sales Order STG->LoadTime as "Load Time"
 	Sales Order STG->{Customer}->Party->[Party ID] as "Customer ID"
 	Sales Order STG->{Warehouse}->[Warehouse ID] as "Warehouse ID"
 Transfer Request STG
 	Transfer Request STG->RecordSource as "Record Source"
 	Transfer Request STG->Transfer Request ID[1.0] as "Transfer Request ID"
-	Transfer Request STG->LoadDateTime as "Load Date Time"
+	Transfer Request STG->LoadTime as "Load Time"
 	Transfer Request STG->{From Warehouse}->[Warehouse ID] as "From Warehouse ID"
 	Transfer Request STG->{Product}->[Product ID] as "Product ID"
 	Transfer Request STG->Quantity as "Quantity"
@@ -84,4 +84,4 @@ Transfer Request STG
 Warehouse STG
 	Warehouse STG->RecordSource as "Record Source"
 	Warehouse STG->Warehouse ID[1.0] as "Warehouse ID"
-	Warehouse STG->LoadDateTime as "Load Date Time"
+	Warehouse STG->LoadTime as "Load Time"

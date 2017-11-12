@@ -1,23 +1,45 @@
 Summary of DataTypes
+AAC Sub Is A Kind Of AAC ET LINK
+	AAC Sub Is A Kind Of AAC ET LINK->AAC Sub Is A Kind Of AAC ET HID[1.0] as "AAC Sub Is A Kind Of AAC ET HID"
+	AAC Sub Is A Kind Of AAC ET LINK->RecordSource as "Record Source"
+	AAC Sub Is A Kind Of AAC ET LINK->LoadTime as "Load Time"
+	AAC Sub Is A Kind Of AAC ET LINK->[AAC_ET HID][2.1] as "AAC ET HID"
+	AAC Sub Is A Kind Of AAC ET LINK->[AAC_Sub HID][2.0] as "AAC Sub HID"
 AAC_ET HUB
 	AAC_ET HUB->AAC_ET HID[1.0] as "AAC ET HID"
 	AAC_ET HUB->RecordSource as "Record Source"
 	AAC_ET HUB->Alternate Auto Counter[2.0] as "Alternate Auto Counter"
-	AAC_ET HUB->LoadDateTime as "Load Date Time"
+	AAC_ET HUB->LoadTime as "Load Time"
+AAC_Sub HUB
+	AAC_Sub HUB->AAC_Sub HID[1.0] as "AAC Sub HID"
+	AAC_Sub HUB->AAC_ET->Alternate Auto Counter[2.0] as "AAC ET Alternate Auto Counter"
+	AAC_Sub HUB->RecordSource as "Record Source"
+	AAC_Sub HUB->LoadTime as "Load Time"
+AG Sub Is A Kind Of AG ET LINK
+	AG Sub Is A Kind Of AG ET LINK->AG Sub Is A Kind Of AG ET HID[1.0] as "AG Sub Is A Kind Of AG ET HID"
+	AG Sub Is A Kind Of AG ET LINK->RecordSource as "Record Source"
+	AG Sub Is A Kind Of AG ET LINK->LoadTime as "Load Time"
+	AG Sub Is A Kind Of AG ET LINK->[AG_ET HID][2.1] as "AG ET HID"
+	AG Sub Is A Kind Of AG ET LINK->[AG_Sub HID][2.0] as "AG Sub HID"
 AG_ET HUB
 	AG_ET HUB->AG_ET HID[1.0] as "AG ET HID"
 	AG_ET HUB->RecordSource as "Record Source"
 	AG_ET HUB->Alternate Guid[2.0] as "Alternate Guid"
-	AG_ET HUB->LoadDateTime as "Load Date Time"
+	AG_ET HUB->LoadTime as "Load Time"
+AG_Sub HUB
+	AG_Sub HUB->AG_Sub HID[1.0] as "AG Sub HID"
+	AG_Sub HUB->AG_ET->Alternate Guid[2.0] as "AG ET Alternate Guid"
+	AG_Sub HUB->RecordSource as "Record Source"
+	AG_Sub HUB->LoadTime as "Load Time"
 Container HUB
 	Container HUB->Container HID[1.0] as "Container HID"
 	Container HUB->RecordSource as "Record Source"
 	Container HUB->Container Name[2.0] as "Container Name"
-	Container HUB->LoadDateTime as "Load Date Time"
+	Container HUB->LoadTime as "Load Time"
 Container SAT
 	Container SAT->[Container HID][1.0] as "Container HID"
 	Container SAT->RecordSource as "Record Source"
-	Container SAT->LoadDateTime[1.1] as "Load Date Time"
+	Container SAT->LoadTime[1.1] as "Load Time"
 	Container SAT->Alternate Auto Counter as "Alternate Auto Counter"
 	Container SAT->Alternate Auto Time Stamp as "Alternate Auto Time Stamp"
 	Container SAT->Alternate Big Int as "Alternate Big Int"

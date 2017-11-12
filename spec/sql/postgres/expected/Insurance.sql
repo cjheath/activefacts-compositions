@@ -30,13 +30,13 @@ CREATE TABLE claim (
 	-- maybe Claim concerns Incident that relates to loss at Address that maybe is in State that has State Code
 	incident_address_state_code             SMALLINT NULL,
 	-- maybe Claim concerns Incident that relates to loss on Date Time
-	incident_date_time                      DATETIME NULL,
+	incident_date_time                      TIMESTAMP NULL,
 	-- maybe Claim concerns Incident that maybe is covered by Police Report that maybe was to officer-Name
 	incident_officer_name                   VARCHAR(256) NULL,
 	-- maybe Claim concerns Incident that maybe is covered by Police Report that maybe has police-Report Nr
 	incident_police_report_nr               INTEGER NULL,
 	-- maybe Claim concerns Incident that maybe is covered by Police Report that maybe was on report-Date Time
-	incident_report_date_time               DATETIME NULL,
+	incident_report_date_time               TIMESTAMP NULL,
 	-- maybe Claim concerns Incident that maybe is covered by Police Report that maybe was by reporter-Name
 	incident_reporter_name                  VARCHAR(256) NULL,
 	-- maybe Claim concerns Incident that maybe is covered by Police Report that maybe was at station-Name
@@ -44,7 +44,7 @@ CREATE TABLE claim (
 	-- maybe Lodgement involves Claim and Lodgement involves Person that is a kind of Party that has Party ID
 	lodgement_person_id                     BIGINT NULL,
 	-- maybe Lodgement involves Claim and maybe Lodgement was made at Date Time
-	lodgement_date_time                     DATETIME NULL,
+	lodgement_date_time                     TIMESTAMP NULL,
 	-- Primary index to Claim over PresenceConstraint over (Claim ID in "Claim has Claim ID") occurs at most one time
 	PRIMARY KEY(claim_id),
 	-- Unique index to Claim over PresenceConstraint over (Policy, p_sequence in "Claim is on Policy", "Claim has Claim Sequence") occurs at most one time

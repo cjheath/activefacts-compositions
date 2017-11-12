@@ -44,14 +44,6 @@ module ActiveFacts
         end
 
         def normalise_type(type_name, length, value_constraint, options)
-          if type_name =~ /^(guid|uuid)$/i
-            if ![nil, ''].include?(options[:auto_assign])
-              options[:default] = " DEFAULT SYS_GUID()"
-              options.delete(:auto_assign)
-            end
-            return ['RAW', 32]
-          end
-
           type = MM::DataType.normalise(type_name)
           case type
           when MM::DataType::TYPE_Integer
@@ -65,10 +57,13 @@ module ActiveFacts
           when MM::DataType::TYPE_Timestamp;'DATETIME'
           when MM::DataType::TYPE_Binary;
             if type_name =~ /^(guid|uuid)$/i && (!length || length == 16)
-              ['RAW', 32]
-            else
-              ['LOB', length]
+              if ![nil, ''].include?(options[:auto_assign])
+                options[:default] = " DEFAULT SYS_GUID()"
+                options.delete(:auto_assign)
+              end
+              return ['RAW', 32]
             end
+            ['LOB', length]
           else
             super
           end

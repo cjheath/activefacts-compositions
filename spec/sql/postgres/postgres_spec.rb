@@ -1,5 +1,5 @@
 #
-# Test the relational composition from CQL files by comparing generated SQL output
+# Test the relational composition from CQL files by comparing generated Postgres SQL output
 #
 
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../../Gemfile', __FILE__)
@@ -11,8 +11,8 @@ require 'activefacts/compositions/names'
 require 'activefacts/generator/sql/postgres'
 require 'activefacts/input/cql'
 
-POSTGRESQL_CQL_DIR = Pathname.new(__FILE__+'/../../../relational').relative_path_from(Pathname(Dir.pwd)).to_s
-POSTGRESQL_TEST_DIR = Pathname.new(__FILE__+'/..').relative_path_from(Pathname(Dir.pwd)).to_s
+POSTGRES_CQL_DIR = Pathname.new(__FILE__+'/../../../relational').relative_path_from(Pathname(Dir.pwd)).to_s
+POSTGRES_TEST_DIR = Pathname.new(__FILE__+'/..').relative_path_from(Pathname(Dir.pwd)).to_s
 
 RSpec::Matchers.define :be_like do |expected|
   match do |actual|
@@ -26,10 +26,10 @@ RSpec::Matchers.define :be_like do |expected|
   diffable
 end
 
-describe "PostgreSQL schema from CQL" do
-  dir = ENV['CQL_DIR'] || POSTGRESQL_CQL_DIR
-  actual_dir = (ENV['CQL_DIR'] ? '' : POSTGRESQL_TEST_DIR+'/') + 'actual'
-  expected_dir = (ENV['CQL_DIR'] ? '' : POSTGRESQL_TEST_DIR+'/') + 'expected'
+describe "Postgres schema from CQL" do
+  dir = ENV['CQL_DIR'] || POSTGRES_CQL_DIR
+  actual_dir = (ENV['CQL_DIR'] ? '' : POSTGRES_TEST_DIR+'/') + 'actual'
+  expected_dir = (ENV['CQL_DIR'] ? '' : POSTGRES_TEST_DIR+'/') + 'expected'
   Dir.mkdir actual_dir unless Dir.exist? actual_dir
   if f = ENV['TEST_FILES']
     files = Dir[dir+"/#{f}*.cql"]
@@ -37,7 +37,7 @@ describe "PostgreSQL schema from CQL" do
     files = `git ls-files "#{dir}/*.cql"`.split(/\n/)
   end
   files.each do |cql_file|
-    it "produces the expected PostgreSQL for #{cql_file}" do
+    it "produces the expected Postgres for #{cql_file}" do
       expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, expected_dir+'/\2.sql')
       actual = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, actual_dir+'/\2.sql')
       begin

@@ -8,11 +8,29 @@ CREATE TABLE aac_et (
 );
 
 
+CREATE TABLE aac_sub (
+	-- AAC_Sub is a kind of AAC_ET that has Alternate Auto Counter
+	aac_et_alternate_auto_counter           BIGINT NOT NULL,
+	-- Primary index to AAC_Sub over PresenceConstraint over (AAC_ET in "AAC_Sub is a kind of AAC_ET") occurs at most one time
+	PRIMARY KEY(aac_et_alternate_auto_counter),
+	FOREIGN KEY (aac_et_alternate_auto_counter) REFERENCES aac_et (alternate_auto_counter)
+);
+
+
 CREATE TABLE ag_et (
 	-- AG_ET has Alternate Guid
 	alternate_guid                          UUID NOT NULL DEFAULT 'gen_random_uuid()',
 	-- Primary index to AG_ET over PresenceConstraint over (Alternate Guid in "AG_ET has Alternate Guid") occurs at most one time
 	PRIMARY KEY(alternate_guid)
+);
+
+
+CREATE TABLE ag_sub (
+	-- AG_Sub is a kind of AG_ET that has Alternate Guid
+	ag_et_alternate_guid                    UUID NOT NULL,
+	-- Primary index to AG_Sub over PresenceConstraint over (AG_ET in "AG_Sub is a kind of AG_ET") occurs at most one time
+	PRIMARY KEY(ag_et_alternate_guid),
+	FOREIGN KEY (ag_et_alternate_guid) REFERENCES ag_et (alternate_guid)
 );
 
 
@@ -22,7 +40,7 @@ CREATE TABLE container (
 	-- Container has Alternate Auto Counter
 	alternate_auto_counter                  BIGINT NOT NULL,
 	-- Container has Alternate Auto Time Stamp
-	alternate_auto_time_stamp               DATETIME NOT NULL,
+	alternate_auto_time_stamp               TIMESTAMP NOT NULL,
 	-- Container has Alternate Big Int
 	alternate_big_int                       BIGINT NOT NULL,
 	-- Container has Alternate Bit
@@ -32,7 +50,7 @@ CREATE TABLE container (
 	-- Container has Alternate Currency
 	alternate_currency                      MONEY NOT NULL,
 	-- Container has Alternate Date Time
-	alternate_date_time                     DATETIME NOT NULL,
+	alternate_date_time                     TIMESTAMP NOT NULL,
 	-- Container has Alternate Double
 	alternate_double                        FLOAT(53) NOT NULL,
 	-- Container has Alternate Fixed Length Text
@@ -62,7 +80,7 @@ CREATE TABLE container (
 	-- Container has Alternate Small Int
 	alternate_small_int                     SMALLINT NOT NULL,
 	-- Container has Alternate Time Stamp
-	alternate_time_stamp                    DATETIME NOT NULL,
+	alternate_time_stamp                    TIMESTAMP NOT NULL,
 	-- Container has Alternate Tiny Int
 	alternate_tiny_int                      SMALLINT NOT NULL,
 	-- Container has Alternate Unsigned
@@ -96,7 +114,7 @@ CREATE TABLE container (
 	-- Container has Fundamental Date
 	fundamental_date                        DATE NOT NULL,
 	-- Container has Fundamental DateTime
-	fundamental_date_time                   DATETIME NOT NULL,
+	fundamental_date_time                   TIMESTAMP NOT NULL,
 	-- Container has Fundamental Decimal
 	fundamental_decimal                     DECIMAL NOT NULL,
 	-- Container has Fundamental Integer
@@ -112,7 +130,7 @@ CREATE TABLE container (
 	-- Container has Fundamental Time
 	fundamental_time                        TIME NOT NULL,
 	-- Container has Fundamental Timestamp
-	fundamental_timestamp                   DATETIME NOT NULL,
+	fundamental_timestamp                   TIMESTAMP NOT NULL,
 	-- Container has Int
 	"int"                                   INTEGER NOT NULL CHECK(("int" >= -2147483648 AND "int" <= 2147483647)),
 	-- Container has Int16

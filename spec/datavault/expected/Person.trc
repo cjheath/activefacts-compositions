@@ -4,4 +4,4 @@ Person HUB
 	Person HUB->RecordSource as "Record Source"
 	Person HUB->Family Name[2.0] as "Family Name"
 	Person HUB->Given Name[2.1] as "Given Name"
-	Person HUB->LoadDateTime as "Load Date Time"
+	Person HUB->LoadTime as "Load Time"

@@ -183,6 +183,10 @@ each AAC_ET is identified by Alternate Auto Counter where
     AAC_ET has one Alternate Auto Counter,
     Alternate Auto Counter is of at most one AAC_ET;
 
+each AAC_Sub is a kind of AAC_ET [separate];
+
 each AG_ET is identified by Alternate Guid where
     AG_ET has one Alternate Guid,
     Alternate Guid is of at most one AG_ET;
+
+each AG_Sub is a kind of AG_ET [separate];

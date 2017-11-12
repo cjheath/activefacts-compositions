@@ -23,10 +23,6 @@ module ActiveFacts
           })
         end
 
-        def initialize composition, options = {}
-          super(composition, options)
-        end
-
         def table_name_max
           128
         end
@@ -40,14 +36,19 @@ module ActiveFacts
         end
 
         def normalise_type(type_name, length, value_constraint, options)
-          return ['UNIQUEIDENTIFIER', 16] if type_name =~ /^(guid|uuid)$/i
-
           type = MM::DataType.normalise(type_name)
           case type
           when MM::DataType::TYPE_Money;    'MONEY'
           when MM::DataType::TYPE_DateTime; 'DATETIME'
           when MM::DataType::TYPE_Timestamp;'DATETIME'
           when MM::DataType::TYPE_Binary;
+            if type_name =~ /^(guid|uuid)$/i && (!length || length == 16)
+              if ![nil, ''].include?(options[:auto_assign])
+                options[:default] = ' DEFAULT NEWID()'
+                options.delete(:auto_assign)
+              end
+              return 'UNIQUEIDENTIFIER'
+            end
             if length && length <= 8192
               super
             else

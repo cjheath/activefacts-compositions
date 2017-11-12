@@ -6,10 +6,14 @@
 # Copyright (c) 2015 Clifford Heath. Read the LICENSE file.
 #
 require "activefacts/compositions/relational"
+require "activefacts/compositions/traits/datavault"
 
 module ActiveFacts
   module Compositions
     class DataVault < Relational
+      extend Traits::DataVault
+      include Traits::DataVault
+
       BDV_ANNOTATIONS = /same as link|hierarchy link|computed link|exploration link|computed satellite|point in time|bridge/
       BDV_LINK_ANNOTATIONS = /same as link|hierarchy link|computed link|exploration link/
       BDV_SAT_ANNOTATIONS = /computed satellite/
@@ -18,9 +22,9 @@ module ActiveFacts
 
     public
       def self.options
-        {
+        datavault_options.
+        merge({
           reference: ['Boolean', "Emit the reference (static) tables as well. Default is to omit them"],
-          datestamp: ['String', "Use this data type for date stamps"],
           id: ['String', "Append this to data vault surrogate keys (default HID)"],
           hubname: ['String', "Suffix or pattern for naming hub tables. Include a + to insert the name. Default 'HUB'"],
           linkname: ['String', "Suffix or pattern for naming link tables. Include a + to insert the name. Default 'LINK'"],
@@ -28,14 +32,15 @@ module ActiveFacts
           pitname: ['String', "Suffix or pattern for naming point in time tables. Include a + to insert the name. Default 'PIT'"],
           bridgename: ['String', "Suffix or pattern for naming bridge tables. Include a + to insert the name. Default 'BRIDGE'"],
           refname: ['String', "Suffix or pattern for naming reference tables. Include a + to insert the name. Default '+'"],
-        }.merge(Relational.options).
+        }).
+        merge(Relational.options).
         reject{|k,v| [:surrogates].include?(k) }  # Datavault surrogates are not optional
       end
 
       def initialize constellation, name, options = {}
         # Extract recognised options:
+        datavault_initialize options
         @option_reference = options.delete('reference')
-        @option_datestamp = options.delete('datestamp')
         @option_id = ' ' + (options.delete('id') || 'HID')
         @option_hub_name = options.delete('hubname') || 'HUB'
         @option_hub_name.sub!(/^/,'+ ') unless @option_hub_name =~ /\+/
@@ -288,7 +293,7 @@ module ActiveFacts
         mapped_to
       end
 
-      def devolve_all
+      def apply_schema_transformations
         delete_reference_table_foreign_keys
 
         # For each hub and link, move each non-identifying member
@@ -298,7 +303,7 @@ module ActiveFacts
         end
 
         # Rename parents for rdv and bdv
-        rename_parents
+        apply_composite_name_pattern
 
         # inject datetime and record source for rdv hubs and links
         inject_all_datetime_recordsource
@@ -690,7 +695,7 @@ module ActiveFacts
         pattern.sub(/\+/, name)
       end
 
-      def rename_parents
+      def apply_composite_name_pattern
         @reference_composites.each do |composite|
           composite.mapping.name = apply_name(@option_ref_name, composite.mapping.name)
         end

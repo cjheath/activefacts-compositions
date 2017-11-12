@@ -10,6 +10,9 @@ module DataTypes
     one_to_one      :alternate_auto_counter, mandatory: true  # AAC_ET has Alternate Auto Counter, see AlternateAutoCounter#aac_et
   end
 
+  class AACSub < AACET
+  end
+
   class AlternateGuid < Guid
     value_type
   end
@@ -17,6 +20,9 @@ module DataTypes
   class AGET
     identified_by   :alternate_guid
     one_to_one      :alternate_guid, mandatory: true    # AG_ET has Alternate Guid, see AlternateGuid#ag_et
+  end
+
+  class AGSub < AGET
   end
 
   class AlternateAutoTimeStamp < AutoTimeStamp

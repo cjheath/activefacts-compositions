@@ -40,14 +40,6 @@ module ActiveFacts
         end
 
         def normalise_type(type_name, length, value_constraint, options)
-          if type_name =~ /^(guid|uuid)$/i
-            if ![nil, ''].include?(options[:auto_assign])
-              options[:default] = " DEFAULT UNHEX(REPLACE(UUID(),'-',''))"
-              options.delete(:auto_assign)
-            end
-            return ['BINARY', 16]
-          end
-
           type = MM::DataType.normalise(type_name)
           case type
           when MM::DataType::TYPE_Integer
@@ -60,6 +52,14 @@ module ActiveFacts
           when MM::DataType::TYPE_DateTime; 'DATETIME'
           when MM::DataType::TYPE_Timestamp;'DATETIME'
           when MM::DataType::TYPE_Binary;
+            if type_name =~ /^(guid|uuid)$/i && (!length || length == 16)
+              if ![nil, ''].include?(options[:auto_assign])
+                options[:default] = " DEFAULT UNHEX(REPLACE(UUID(),'-',''))"
+                options.delete(:auto_assign)  # Don't auto-assign foreign keys
+              end
+              return ['BINARY', 16]
+            end
+
             super type_name, length, value_constraint, options
             # MySQL has various non-standard blob types also
           else
@@ -170,9 +170,9 @@ module ActiveFacts
         class MySQLDataTypeContext < SQLDataTypeContext
           def integer_ranges
             [
-              ['TINYINT', -2**7, 2**7-1, 8], 
-              ['TINYINT UNSIGNED', 0, 2**8-1, 8], 
-              ['MEDIUMINT', -2**23, 2**23-1, 24], 
+              ['TINYINT', -2**7, 2**7-1],
+              ['TINYINT UNSIGNED', 0, 2**8-1], 
+              ['MEDIUMINT', -2**23, 2**23-1], 
             ] + super
           end
 

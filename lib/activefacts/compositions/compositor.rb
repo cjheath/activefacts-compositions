@@ -20,9 +20,6 @@ module ActiveFacts
 
       def self.options
         {
-        #  source: ['Boolean', "Generate composition for source schema"],
-        #  target: ['Boolean', "Generate composition for target schema"],
-        #  transform: ['Boolean', "Generate composition for transform schema"]
         }
       end
 
@@ -50,16 +47,11 @@ module ActiveFacts
         populate_references
       end
 
-    private
-      # Preferred identifiers are cached, but the process produces trace output
-      # that appears in the "tutti" mode used in testing. This precludes that.
-      def preload_preferred_identifiers
-        @constellation.EntityType.map{|k, et| et.preferred_identifier }
-      end
+      def populate_reference role
+        return if (@reference_populated ||= {})[role]
+        @reference_populated[role] = true
 
-      def populate_reference object_type, role
         parent = @binary_mappings[role.object_type]
-
         return if role.fact_type.all_role.size > 2
         if role.fact_type.all_role.size != 1
           counterpart = role.counterpart
@@ -97,7 +89,16 @@ module ActiveFacts
             )
           @component_by_fact[role.fact_type] = a  # For completeness, in case a subclass uses it
         end
+        @reference_populated[role] = a
         trace :binarize, "Populating #{a.inspect}"
+      end
+
+    private
+
+      # Preferred identifiers are cached, but the process produces trace output
+      # that appears in the "tutti" mode used in testing. This precludes that.
+      def preload_preferred_identifiers
+        @constellation.EntityType.map{|k, et| et.preferred_identifier }
       end
 
       def populate_references
@@ -124,7 +125,7 @@ module ActiveFacts
               # Exclude base roles in objectified fact types (unless unary); just use link fact types
               next if role.fact_type.entity_type && role.fact_type.all_role.size != 1
               next if role.variable   # REVISIT: Continue to ignore roles in derived fact types?
-              populate_reference object_type, role
+              populate_reference role
             end
             if object_type.is_a?(ActiveFacts::Metamodel::ValueType)
               # This requires a change in the metamodel to use TypeInheritance for ValueTypes
@@ -198,6 +199,7 @@ module ActiveFacts
         end
       end
 
+    public
       # Display the primitive binary mapping:
       def show_references
         trace :composition, "Displaying the mappings:" do

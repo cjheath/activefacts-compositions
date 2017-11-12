@@ -50,8 +50,8 @@ CREATE TABLE PassengerPIT (
 	-- Unique index to Passenger PIT
 	UNIQUE(PassengerHID, SnapshotDateTime),
 	FOREIGN KEY (PassengerHID) REFERENCES PassengerHUB (PassengerHID),
-	FOREIGN KEY (PassengerNameSATHID, PassengerNameSATLoadDateTime) REFERENCES PassengerNameSAT (PassengerHID, LoadDateTime),
-	FOREIGN KEY (PreferredDishSATHID, PreferredDishSATLoadDateTime) REFERENCES PreferredDishSAT (PassengerHID, LoadDateTime)
+	FOREIGN KEY (PassengerNameSATHID, PassengerNameSATLoadDateTime) REFERENCES PassengerNameSAT (PassengerHID, LoadTime),
+	FOREIGN KEY (PreferredDishSATHID, PreferredDishSATLoadDateTime) REFERENCES PreferredDishSAT (PassengerHID, LoadTime)
 );
 
 
@@ -92,12 +92,12 @@ CREATE TABLE PassengerComputedSAT (
 	PassengerHID                            BIGINT NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- Passenger has Age
 	Age                                     INTEGER NOT NULL,
 	-- Primary index to PassengerComputed SAT
-	PRIMARY KEY(PassengerHID, LoadDateTime),
+	PRIMARY KEY(PassengerHID, LoadTime),
 	FOREIGN KEY (PassengerHID) REFERENCES PassengerHUB (PassengerHID)
 );
 

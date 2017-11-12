@@ -5,8 +5,8 @@ CREATE TABLE AirlineHUB (
 	RecordSource                            VARCHAR NOT NULL,
 	-- Airline has Airline ID
 	AirlineID                               BIGINT NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- Primary index to Airline HUB
 	PRIMARY KEY(AirlineHID),
 	-- Unique index to Airline HUB over PresenceConstraint over (Airline ID in "Airline has Airline ID") occurs at most one time
@@ -19,12 +19,12 @@ CREATE TABLE AirlineSAT (
 	AirlineHID                              BIGINT NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- maybe Airline has Flight Code
 	FlightCode                              BIGINT NULL,
 	-- Primary index to Airline SAT
-	PRIMARY KEY(AirlineHID, LoadDateTime),
+	PRIMARY KEY(AirlineHID, LoadTime),
 	FOREIGN KEY (AirlineHID) REFERENCES AirlineHUB (AirlineHID)
 );
 
@@ -36,8 +36,8 @@ CREATE TABLE AirplaneHUB (
 	RecordSource                            VARCHAR NOT NULL,
 	-- Airplane has Tail Number
 	TailNumber                              VARCHAR(12) NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- Primary index to Airplane HUB
 	PRIMARY KEY(AirplaneHID),
 	-- Unique index to Airplane HUB over PresenceConstraint over (Tail Number in "Airplane has Tail Number") occurs one time
@@ -54,8 +54,8 @@ CREATE TABLE AirplanePartLINK (
 	AirplaneHID                             BIGINT NOT NULL,
 	-- Airplane Part involves Part
 	PartHID                                 BIGINT NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- Primary index to Airplane Part LINK
 	PRIMARY KEY(AirplanePartHID),
 	-- Unique index to Airplane Part LINK over PresenceConstraint over (Airplane, Part in "Airplane has Part") occurs at most one time
@@ -71,8 +71,8 @@ CREATE TABLE AirportHUB (
 	RecordSource                            VARCHAR NOT NULL,
 	-- Airport has Airport Name
 	AirportName                             VARCHAR(48) NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- Primary index to Airport HUB
 	PRIMARY KEY(AirportHID),
 	-- Unique index to Airport HUB over PresenceConstraint over (Airport Name in "Airport has Airport Name") occurs at most one time
@@ -85,8 +85,8 @@ CREATE TABLE AirportSAT (
 	AirportHID                              BIGINT NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- Airport has at Telephone Number
 	TelephoneNumber                         VARCHAR(12) NOT NULL,
 	-- maybe Airport is Latitude
@@ -100,7 +100,7 @@ CREATE TABLE AirportSAT (
 	-- maybe Airport has Website URL
 	WebsiteURL                              VARCHAR(128) NULL,
 	-- Primary index to Airport SAT
-	PRIMARY KEY(AirportHID, LoadDateTime),
+	PRIMARY KEY(AirportHID, LoadTime),
 	FOREIGN KEY (AirportHID) REFERENCES AirportHUB (AirportHID)
 );
 
@@ -114,8 +114,8 @@ CREATE TABLE AssignedAirplaneLINK (
 	AirplaneHID                             BIGINT NOT NULL,
 	-- Assigned Airplane involves Connection
 	ConnectionHID                           BIGINT NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- Primary index to Assigned Airplane LINK
 	PRIMARY KEY(AssignedAirplaneHID),
 	-- Unique index to Assigned Airplane LINK over PresenceConstraint over (Airplane, Connection in "Airplane is assigned to Connection") occurs at most one time
@@ -133,8 +133,8 @@ CREATE TABLE BookingLINK (
 	PassengerHID                            BIGINT NOT NULL,
 	-- Booking involves Sales Agent
 	SalesAgentHID                           BIGINT NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- Primary index to Booking LINK
 	PRIMARY KEY(BookingHID),
 	-- Unique index to Booking LINK over PresenceConstraint over (Passenger, Sales Agent in "Passenger books flight with Sales Agent") occurs at most one time
@@ -155,8 +155,8 @@ CREATE TABLE ConnectionHUB (
 	DestinationAirportName                  VARCHAR(48) NOT NULL,
 	-- Connection involves Flight Number
 	FlightNumber                            VARCHAR(12) NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- Primary index to Connection HUB
 	PRIMARY KEY(ConnectionHID),
 	-- Unique index to Connection HUB over PresenceConstraint over (Airline, Origin Airport, Destination Airport, Flight Number in "Airline flies from origin-Airport to destination-Airport with flight Flight Number") occurs at most one time
@@ -173,8 +173,8 @@ CREATE TABLE FixedBaseOperatorLINK (
 	AirlineHID                              BIGINT NOT NULL,
 	-- Fixed Base Operator involves Airport
 	AirportHID                              BIGINT NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- Primary index to Fixed Base Operator LINK
 	PRIMARY KEY(FixedBaseOperatorHID),
 	-- Unique index to Fixed Base Operator LINK over PresenceConstraint over (Airline, Airport in "Airline flies from Airport") occurs at most one time
@@ -191,8 +191,8 @@ CREATE TABLE PartHUB (
 	RecordSource                            VARCHAR NOT NULL,
 	-- Part has Part ID
 	PartID                                  BIGINT NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- Primary index to Part HUB
 	PRIMARY KEY(PartHID),
 	-- Unique index to Part HUB over PresenceConstraint over (Part ID in "Part has Part ID") occurs at most one time
@@ -205,12 +205,12 @@ CREATE TABLE PartSAT (
 	PartHID                                 BIGINT NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- Part is built by Manufacturer that has Manufacturer ID
 	ManufacturerID                          BIGINT NOT NULL,
 	-- Primary index to Part SAT
-	PRIMARY KEY(PartHID, LoadDateTime),
+	PRIMARY KEY(PartHID, LoadTime),
 	FOREIGN KEY (PartHID) REFERENCES PartHUB (PartHID)
 );
 
@@ -222,8 +222,8 @@ CREATE TABLE PassengerHUB (
 	RecordSource                            VARCHAR NOT NULL,
 	-- Passenger has Passenger ID
 	PassengerID                             BIGINT NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- Primary index to Passenger HUB
 	PRIMARY KEY(PassengerHID),
 	-- Unique index to Passenger HUB over PresenceConstraint over (Passenger ID in "Passenger has Passenger ID") occurs at most one time
@@ -236,12 +236,12 @@ CREATE TABLE PassengerSAT (
 	PassengerHID                            BIGINT NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- Passenger has Birth Date
 	BirthDate                               TIMESTAMP NOT NULL,
 	-- Primary index to Passenger SAT
-	PRIMARY KEY(PassengerHID, LoadDateTime),
+	PRIMARY KEY(PassengerHID, LoadTime),
 	FOREIGN KEY (PassengerHID) REFERENCES PassengerHUB (PassengerHID)
 );
 
@@ -251,12 +251,12 @@ CREATE TABLE PassengerNameSAT (
 	PassengerHID                            BIGINT NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- Passenger has Name
 	Name                                    VARCHAR(48) NOT NULL,
 	-- Primary index to PassengerName SAT
-	PRIMARY KEY(PassengerHID, LoadDateTime),
+	PRIMARY KEY(PassengerHID, LoadTime),
 	FOREIGN KEY (PassengerHID) REFERENCES PassengerHUB (PassengerHID)
 );
 
@@ -266,12 +266,12 @@ CREATE TABLE PreferredDishSAT (
 	PassengerHID                            BIGINT NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- Passenger has Preferred Dish
 	PreferredDish                           VARCHAR NOT NULL,
 	-- Primary index to PreferredDish SAT
-	PRIMARY KEY(PassengerHID, LoadDateTime),
+	PRIMARY KEY(PassengerHID, LoadTime),
 	FOREIGN KEY (PassengerHID) REFERENCES PassengerHUB (PassengerHID)
 );
 
@@ -283,8 +283,8 @@ CREATE TABLE SalesAgentHUB (
 	RecordSource                            VARCHAR NOT NULL,
 	-- Sales Agent has Sales Agent Name
 	SalesAgentName                          VARCHAR(48) NOT NULL,
-	-- LoadDateTime
-	LoadDateTime                            TIMESTAMP,
+	-- LoadTime
+	LoadTime                                TIMESTAMP,
 	-- Primary index to Sales Agent HUB
 	PRIMARY KEY(SalesAgentHID),
 	-- Unique index to Sales Agent HUB over PresenceConstraint over (Sales Agent Name in "Sales Agent has Sales Agent Name") occurs at most one time

@@ -2,7 +2,7 @@ Summary of Country
 Country STG
 	Country STG->RecordSource as "Record Source"
 	Country STG->ISO3166Code3[1.0] as "ISO3166 Code3"
-	Country STG->LoadDateTime as "Load Date Time"
+	Country STG->LoadTime as "Load Time"
 	Country STG->Country Name[2.0] as "Country Name"
 	Country STG->ISO3166Code2[3.0] as "ISO3166 Code2"
 	Country STG->ISO3166Numeric3[4.0] as "ISO3166 Numeric3"
