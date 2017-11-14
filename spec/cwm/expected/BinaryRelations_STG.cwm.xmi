@@ -15,10 +15,10 @@
           <CWM:Namespace.ownedElement>
             <CWMRDB:Table xmi.id="_3" name="EAEB_LeastLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_4" name="EALeastID" isNullable="columnNoNulls" visibility="public" type="_358" owner="_3" />
-                <CWMRDB:Column xmi.id="_5" name="EBLeastID" isNullable="columnNoNulls" visibility="public" type="_359" owner="_3" />
-                <CWMRDB:Column xmi.id="_6" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_360" owner="_3" />
-                <CWMRDB:Column xmi.id="_7" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_361" owner="_3" />
+                <CWMRDB:Column xmi.id="_4" name="EALeastID" isNullable="columnNoNulls" visibility="public" type="_325" owner="_3" />
+                <CWMRDB:Column xmi.id="_5" name="EBLeastID" isNullable="columnNoNulls" visibility="public" type="_326" owner="_3" />
+                <CWMRDB:Column xmi.id="_6" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_327" owner="_3" />
+                <CWMRDB:Column xmi.id="_7" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_328" owner="_3" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
                 <CWMRDB:PrimaryKey xmi.id="_8" name="XPKEAEB_LeastLeastSTG" visibility="public" namespace="_3">
@@ -27,786 +27,665 @@
                     <CWM:StructuralFeature xmi.idref="_5"/>
                   </CWM:UniqueKey.feature>
                 </CWMRDB:PrimaryKey>
-                <CWMRDB:ForeignKey xmi.id="_9" name="R_9" visibility="public" namespace="_3" feature="_4" uniqueKey="_68" />
-                <CWMRDB:ForeignKey xmi.id="_10" name="R_10" visibility="public" namespace="_3" feature="_5" uniqueKey="_171" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
-            <CWMRDB:Table xmi.id="_11" name="EAEB_LeastManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+            <CWMRDB:Table xmi.id="_9" name="EAEB_LeastManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_12" name="EALeastManyID" isNullable="columnNoNulls" visibility="public" type="_362" owner="_11" />
-                <CWMRDB:Column xmi.id="_13" name="EBLeastManyID" isNullable="columnNoNulls" visibility="public" type="_363" owner="_11" />
-                <CWMRDB:Column xmi.id="_14" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_364" owner="_11" />
-                <CWMRDB:Column xmi.id="_15" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_365" owner="_11" />
+                <CWMRDB:Column xmi.id="_10" name="EALeastManyID" isNullable="columnNoNulls" visibility="public" type="_329" owner="_9" />
+                <CWMRDB:Column xmi.id="_11" name="EBLeastManyID" isNullable="columnNoNulls" visibility="public" type="_330" owner="_9" />
+                <CWMRDB:Column xmi.id="_12" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_331" owner="_9" />
+                <CWMRDB:Column xmi.id="_13" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_332" owner="_9" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_16" name="XPKEAEB_LeastManySTG" visibility="public" namespace="_11">
+                <CWMRDB:PrimaryKey xmi.id="_14" name="XPKEAEB_LeastManySTG" visibility="public" namespace="_9">
                   <CWM:UniqueKey.feature>
-                    <CWM:StructuralFeature xmi.idref="_12"/>
-                    <CWM:StructuralFeature xmi.idref="_13"/>
+                    <CWM:StructuralFeature xmi.idref="_10"/>
+                    <CWM:StructuralFeature xmi.idref="_11"/>
                   </CWM:UniqueKey.feature>
                 </CWMRDB:PrimaryKey>
-                <CWMRDB:ForeignKey xmi.id="_17" name="R_17" visibility="public" namespace="_11" feature="_12" uniqueKey="_74" />
-                <CWMRDB:ForeignKey xmi.id="_18" name="R_18" visibility="public" namespace="_11" feature="_13" uniqueKey="_177" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
-            <CWMRDB:Table xmi.id="_19" name="EAEB_ManyLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+            <CWMRDB:Table xmi.id="_15" name="EAEB_ManyLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_20" name="EAManyLeastID" isNullable="columnNoNulls" visibility="public" type="_366" owner="_19" />
-                <CWMRDB:Column xmi.id="_21" name="EBManyLeastID" isNullable="columnNoNulls" visibility="public" type="_367" owner="_19" />
-                <CWMRDB:Column xmi.id="_22" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_368" owner="_19" />
-                <CWMRDB:Column xmi.id="_23" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_369" owner="_19" />
+                <CWMRDB:Column xmi.id="_16" name="EAManyLeastID" isNullable="columnNoNulls" visibility="public" type="_333" owner="_15" />
+                <CWMRDB:Column xmi.id="_17" name="EBManyLeastID" isNullable="columnNoNulls" visibility="public" type="_334" owner="_15" />
+                <CWMRDB:Column xmi.id="_18" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_335" owner="_15" />
+                <CWMRDB:Column xmi.id="_19" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_336" owner="_15" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_24" name="XPKEAEB_ManyLeastSTG" visibility="public" namespace="_19">
+                <CWMRDB:PrimaryKey xmi.id="_20" name="XPKEAEB_ManyLeastSTG" visibility="public" namespace="_15">
                   <CWM:UniqueKey.feature>
-                    <CWM:StructuralFeature xmi.idref="_20"/>
-                    <CWM:StructuralFeature xmi.idref="_21"/>
+                    <CWM:StructuralFeature xmi.idref="_16"/>
+                    <CWM:StructuralFeature xmi.idref="_17"/>
                   </CWM:UniqueKey.feature>
                 </CWMRDB:PrimaryKey>
-                <CWMRDB:ForeignKey xmi.id="_25" name="R_25" visibility="public" namespace="_19" feature="_20" uniqueKey="_92" />
-                <CWMRDB:ForeignKey xmi.id="_26" name="R_26" visibility="public" namespace="_19" feature="_21" uniqueKey="_201" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
-            <CWMRDB:Table xmi.id="_27" name="EAEB_ManyManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+            <CWMRDB:Table xmi.id="_21" name="EAEB_ManyManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_28" name="EAManyID" isNullable="columnNoNulls" visibility="public" type="_370" owner="_27" />
-                <CWMRDB:Column xmi.id="_29" name="EBManyID" isNullable="columnNoNulls" visibility="public" type="_371" owner="_27" />
-                <CWMRDB:Column xmi.id="_30" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_372" owner="_27" />
-                <CWMRDB:Column xmi.id="_31" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_373" owner="_27" />
+                <CWMRDB:Column xmi.id="_22" name="EAManyID" isNullable="columnNoNulls" visibility="public" type="_337" owner="_21" />
+                <CWMRDB:Column xmi.id="_23" name="EBManyID" isNullable="columnNoNulls" visibility="public" type="_338" owner="_21" />
+                <CWMRDB:Column xmi.id="_24" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_339" owner="_21" />
+                <CWMRDB:Column xmi.id="_25" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_340" owner="_21" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_32" name="XPKEAEB_ManyManySTG" visibility="public" namespace="_27">
+                <CWMRDB:PrimaryKey xmi.id="_26" name="XPKEAEB_ManyManySTG" visibility="public" namespace="_21">
+                  <CWM:UniqueKey.feature>
+                    <CWM:StructuralFeature xmi.idref="_22"/>
+                    <CWM:StructuralFeature xmi.idref="_23"/>
+                  </CWM:UniqueKey.feature>
+                </CWMRDB:PrimaryKey>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_27" name="EAVB_LeastLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_28" name="EALeastID" isNullable="columnNoNulls" visibility="public" type="_341" owner="_27" />
+                <CWMRDB:Column xmi.id="_29" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_342" owner="_27" />
+                <CWMRDB:Column xmi.id="_30" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_343" owner="_27" />
+                <CWMRDB:Column xmi.id="_31" name="VBLeast" isNullable="columnNoNulls" visibility="public" type="_344" owner="_27" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_32" name="XPKEAVB_LeastLeastSTG" visibility="public" namespace="_27">
                   <CWM:UniqueKey.feature>
                     <CWM:StructuralFeature xmi.idref="_28"/>
-                    <CWM:StructuralFeature xmi.idref="_29"/>
+                    <CWM:StructuralFeature xmi.idref="_31"/>
                   </CWM:UniqueKey.feature>
                 </CWMRDB:PrimaryKey>
-                <CWMRDB:ForeignKey xmi.id="_33" name="R_33" visibility="public" namespace="_27" feature="_28" uniqueKey="_98" />
-                <CWMRDB:ForeignKey xmi.id="_34" name="R_34" visibility="public" namespace="_27" feature="_29" uniqueKey="_207" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
-            <CWMRDB:Table xmi.id="_35" name="EAVB_LeastLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+            <CWMRDB:Table xmi.id="_33" name="EAVB_LeastManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_36" name="EALeastID" isNullable="columnNoNulls" visibility="public" type="_374" owner="_35" />
-                <CWMRDB:Column xmi.id="_37" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_375" owner="_35" />
-                <CWMRDB:Column xmi.id="_38" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_376" owner="_35" />
-                <CWMRDB:Column xmi.id="_39" name="VBLeast" isNullable="columnNoNulls" visibility="public" type="_377" owner="_35" />
+                <CWMRDB:Column xmi.id="_34" name="EALeastManyID" isNullable="columnNoNulls" visibility="public" type="_345" owner="_33" />
+                <CWMRDB:Column xmi.id="_35" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_346" owner="_33" />
+                <CWMRDB:Column xmi.id="_36" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_347" owner="_33" />
+                <CWMRDB:Column xmi.id="_37" name="VBLeastMany" isNullable="columnNoNulls" visibility="public" type="_348" owner="_33" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_40" name="XPKEAVB_LeastLeastSTG" visibility="public" namespace="_35">
+                <CWMRDB:PrimaryKey xmi.id="_38" name="XPKEAVB_LeastManySTG" visibility="public" namespace="_33">
                   <CWM:UniqueKey.feature>
-                    <CWM:StructuralFeature xmi.idref="_36"/>
-                    <CWM:StructuralFeature xmi.idref="_39"/>
+                    <CWM:StructuralFeature xmi.idref="_34"/>
+                    <CWM:StructuralFeature xmi.idref="_37"/>
                   </CWM:UniqueKey.feature>
                 </CWMRDB:PrimaryKey>
-                <CWMRDB:ForeignKey xmi.id="_41" name="R_41" visibility="public" namespace="_35" feature="_36" uniqueKey="_68" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
-            <CWMRDB:Table xmi.id="_42" name="EAVB_LeastManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+            <CWMRDB:Table xmi.id="_39" name="EAVB_ManyLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_43" name="EALeastManyID" isNullable="columnNoNulls" visibility="public" type="_378" owner="_42" />
-                <CWMRDB:Column xmi.id="_44" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_379" owner="_42" />
-                <CWMRDB:Column xmi.id="_45" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_380" owner="_42" />
-                <CWMRDB:Column xmi.id="_46" name="VBLeastMany" isNullable="columnNoNulls" visibility="public" type="_381" owner="_42" />
+                <CWMRDB:Column xmi.id="_40" name="EAManyLeastID" isNullable="columnNoNulls" visibility="public" type="_349" owner="_39" />
+                <CWMRDB:Column xmi.id="_41" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_350" owner="_39" />
+                <CWMRDB:Column xmi.id="_42" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_351" owner="_39" />
+                <CWMRDB:Column xmi.id="_43" name="VBManyLeast" isNullable="columnNoNulls" visibility="public" type="_352" owner="_39" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_47" name="XPKEAVB_LeastManySTG" visibility="public" namespace="_42">
+                <CWMRDB:PrimaryKey xmi.id="_44" name="XPKEAVB_ManyLeastSTG" visibility="public" namespace="_39">
                   <CWM:UniqueKey.feature>
+                    <CWM:StructuralFeature xmi.idref="_40"/>
                     <CWM:StructuralFeature xmi.idref="_43"/>
+                  </CWM:UniqueKey.feature>
+                </CWMRDB:PrimaryKey>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_45" name="EAVB_ManyManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_46" name="EAManyID" isNullable="columnNoNulls" visibility="public" type="_353" owner="_45" />
+                <CWMRDB:Column xmi.id="_47" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_354" owner="_45" />
+                <CWMRDB:Column xmi.id="_48" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_355" owner="_45" />
+                <CWMRDB:Column xmi.id="_49" name="VBMany" isNullable="columnNoNulls" visibility="public" type="_356" owner="_45" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_50" name="XPKEAVB_ManyManySTG" visibility="public" namespace="_45">
+                  <CWM:UniqueKey.feature>
                     <CWM:StructuralFeature xmi.idref="_46"/>
+                    <CWM:StructuralFeature xmi.idref="_49"/>
                   </CWM:UniqueKey.feature>
                 </CWMRDB:PrimaryKey>
-                <CWMRDB:ForeignKey xmi.id="_48" name="R_48" visibility="public" namespace="_42" feature="_43" uniqueKey="_74" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
-            <CWMRDB:Table xmi.id="_49" name="EAVB_ManyLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+            <CWMRDB:Table xmi.id="_51" name="EA_LeastLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_50" name="EAManyLeastID" isNullable="columnNoNulls" visibility="public" type="_382" owner="_49" />
-                <CWMRDB:Column xmi.id="_51" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_383" owner="_49" />
-                <CWMRDB:Column xmi.id="_52" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_384" owner="_49" />
-                <CWMRDB:Column xmi.id="_53" name="VBManyLeast" isNullable="columnNoNulls" visibility="public" type="_385" owner="_49" />
+                <CWMRDB:Column xmi.id="_52" name="CALeast" isNullable="columnNoNulls" visibility="public" type="_357" owner="_51" />
+                <CWMRDB:Column xmi.id="_53" name="EALeastID" isNullable="columnNoNulls" visibility="public" type="_358" owner="_51" />
+                <CWMRDB:Column xmi.id="_54" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_359" owner="_51" />
+                <CWMRDB:Column xmi.id="_55" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_360" owner="_51" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_54" name="XPKEAVB_ManyLeastSTG" visibility="public" namespace="_49">
+                <CWMRDB:PrimaryKey xmi.id="_56" name="XPKEA_LeastLeastSTG" visibility="public" namespace="_51" feature="_53"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_57" name="EA_LeastManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_58" name="CALeastMany" isNullable="columnNoNulls" visibility="public" type="_361" owner="_57" />
+                <CWMRDB:Column xmi.id="_59" name="EALeastManyID" isNullable="columnNoNulls" visibility="public" type="_362" owner="_57" />
+                <CWMRDB:Column xmi.id="_60" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_363" owner="_57" />
+                <CWMRDB:Column xmi.id="_61" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_364" owner="_57" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_62" name="XPKEA_LeastManySTG" visibility="public" namespace="_57" feature="_59"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_63" name="EA_LeastMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_64" name="CALeastMost" isNullable="columnNoNulls" visibility="public" type="_365" owner="_63" />
+                <CWMRDB:Column xmi.id="_65" name="EALeastMostID" isNullable="columnNoNulls" visibility="public" type="_366" owner="_63" />
+                <CWMRDB:Column xmi.id="_66" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_367" owner="_63" />
+                <CWMRDB:Column xmi.id="_67" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_368" owner="_63" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_68" name="XPKEA_LeastMostSTG" visibility="public" namespace="_63" feature="_65"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_69" name="EA_LeastOneSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_70" name="CALeastOne" isNullable="columnNoNulls" visibility="public" type="_369" owner="_69" />
+                <CWMRDB:Column xmi.id="_71" name="EALeastOneID" isNullable="columnNoNulls" visibility="public" type="_370" owner="_69" />
+                <CWMRDB:Column xmi.id="_72" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_371" owner="_69" />
+                <CWMRDB:Column xmi.id="_73" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_372" owner="_69" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_74" name="XPKEA_LeastOneSTG" visibility="public" namespace="_69" feature="_71"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_75" name="EA_ManyLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_76" name="CAManyLeast" isNullable="columnNoNulls" visibility="public" type="_373" owner="_75" />
+                <CWMRDB:Column xmi.id="_77" name="EAManyLeastID" isNullable="columnNoNulls" visibility="public" type="_374" owner="_75" />
+                <CWMRDB:Column xmi.id="_78" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_375" owner="_75" />
+                <CWMRDB:Column xmi.id="_79" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_376" owner="_75" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_80" name="XPKEA_ManyLeastSTG" visibility="public" namespace="_75" feature="_77"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_81" name="EA_ManyManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_82" name="CAMany" isNullable="columnNoNulls" visibility="public" type="_377" owner="_81" />
+                <CWMRDB:Column xmi.id="_83" name="EAManyID" isNullable="columnNoNulls" visibility="public" type="_378" owner="_81" />
+                <CWMRDB:Column xmi.id="_84" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_379" owner="_81" />
+                <CWMRDB:Column xmi.id="_85" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_380" owner="_81" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_86" name="XPKEA_ManyManySTG" visibility="public" namespace="_81" feature="_83"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_87" name="EA_ManyMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_88" name="CAManyMost" isNullable="columnNoNulls" visibility="public" type="_381" owner="_87" />
+                <CWMRDB:Column xmi.id="_89" name="EAManyMostID" isNullable="columnNoNulls" visibility="public" type="_382" owner="_87" />
+                <CWMRDB:Column xmi.id="_90" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_383" owner="_87" />
+                <CWMRDB:Column xmi.id="_91" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_384" owner="_87" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_92" name="XPKEA_ManyMostSTG" visibility="public" namespace="_87" feature="_89"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_93" name="EA_ManyOneSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_94" name="CAManyOne" isNullable="columnNoNulls" visibility="public" type="_385" owner="_93" />
+                <CWMRDB:Column xmi.id="_95" name="EAManyOneID" isNullable="columnNoNulls" visibility="public" type="_386" owner="_93" />
+                <CWMRDB:Column xmi.id="_96" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_387" owner="_93" />
+                <CWMRDB:Column xmi.id="_97" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_388" owner="_93" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_98" name="XPKEA_ManyOneSTG" visibility="public" namespace="_93" feature="_95"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_99" name="EA_MostLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_100" name="CAMostLeast" isNullable="columnNoNulls" visibility="public" type="_389" owner="_99" />
+                <CWMRDB:Column xmi.id="_101" name="EAMostLeastID" isNullable="columnNoNulls" visibility="public" type="_390" owner="_99" />
+                <CWMRDB:Column xmi.id="_102" name="EBMostLeastID" isNullable="columnNullable" visibility="public" type="_391" owner="_99" />
+                <CWMRDB:Column xmi.id="_103" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_392" owner="_99" />
+                <CWMRDB:Column xmi.id="_104" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_393" owner="_99" />
+                <CWMRDB:Column xmi.id="_105" name="VBMostLeast" isNullable="columnNullable" visibility="public" type="_394" owner="_99" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_106" name="XPKEA_MostLeastSTG" visibility="public" namespace="_99" feature="_101"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_107" name="EA_MostManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_108" name="CAMostMany" isNullable="columnNoNulls" visibility="public" type="_395" owner="_107" />
+                <CWMRDB:Column xmi.id="_109" name="EAMostManyID" isNullable="columnNoNulls" visibility="public" type="_396" owner="_107" />
+                <CWMRDB:Column xmi.id="_110" name="EBMostManyID" isNullable="columnNullable" visibility="public" type="_397" owner="_107" />
+                <CWMRDB:Column xmi.id="_111" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_398" owner="_107" />
+                <CWMRDB:Column xmi.id="_112" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_399" owner="_107" />
+                <CWMRDB:Column xmi.id="_113" name="VBMostMany" isNullable="columnNullable" visibility="public" type="_400" owner="_107" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_114" name="XPKEA_MostManySTG" visibility="public" namespace="_107" feature="_109"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_115" name="EA_MostMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_116" name="CAMost" isNullable="columnNoNulls" visibility="public" type="_401" owner="_115" />
+                <CWMRDB:Column xmi.id="_117" name="EAMostID" isNullable="columnNoNulls" visibility="public" type="_402" owner="_115" />
+                <CWMRDB:Column xmi.id="_118" name="EBMostID" isNullable="columnNullable" visibility="public" type="_403" owner="_115" />
+                <CWMRDB:Column xmi.id="_119" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_404" owner="_115" />
+                <CWMRDB:Column xmi.id="_120" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_405" owner="_115" />
+                <CWMRDB:Column xmi.id="_121" name="VBMost" isNullable="columnNullable" visibility="public" type="_406" owner="_115" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_122" name="XPKEA_MostMostSTG" visibility="public" namespace="_115" feature="_117"/>
+                <CWM:UniqueKey xmi.id="_123" name="XPKEA_MostMostSTG" visibility="public" namespace="_115" feature="_118"/>
+                <CWM:UniqueKey xmi.id="_124" name="XPKEA_MostMostSTG" visibility="public" namespace="_115" feature="_121"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_125" name="EA_MostOneSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_126" name="CAMostOne" isNullable="columnNoNulls" visibility="public" type="_407" owner="_125" />
+                <CWMRDB:Column xmi.id="_127" name="EAMostOneID" isNullable="columnNoNulls" visibility="public" type="_408" owner="_125" />
+                <CWMRDB:Column xmi.id="_128" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_409" owner="_125" />
+                <CWMRDB:Column xmi.id="_129" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_410" owner="_125" />
+                <CWMRDB:Column xmi.id="_130" name="VBMostOne" isNullable="columnNullable" visibility="public" type="_411" owner="_125" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_131" name="XPKEA_MostOneSTG" visibility="public" namespace="_125" feature="_127"/>
+                <CWM:UniqueKey xmi.id="_132" name="XPKEA_MostOneSTG" visibility="public" namespace="_125" feature="_130"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_133" name="EA_OneLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_134" name="CAOneLeast" isNullable="columnNoNulls" visibility="public" type="_412" owner="_133" />
+                <CWMRDB:Column xmi.id="_135" name="EAOneLeastID" isNullable="columnNoNulls" visibility="public" type="_413" owner="_133" />
+                <CWMRDB:Column xmi.id="_136" name="EBOneLeastID" isNullable="columnNoNulls" visibility="public" type="_414" owner="_133" />
+                <CWMRDB:Column xmi.id="_137" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_415" owner="_133" />
+                <CWMRDB:Column xmi.id="_138" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_416" owner="_133" />
+                <CWMRDB:Column xmi.id="_139" name="VBOneLeast" isNullable="columnNoNulls" visibility="public" type="_417" owner="_133" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_140" name="XPKEA_OneLeastSTG" visibility="public" namespace="_133" feature="_135"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_141" name="EA_OneManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_142" name="CAOneMany" isNullable="columnNoNulls" visibility="public" type="_418" owner="_141" />
+                <CWMRDB:Column xmi.id="_143" name="EAOneManyID" isNullable="columnNoNulls" visibility="public" type="_419" owner="_141" />
+                <CWMRDB:Column xmi.id="_144" name="EBOneManyID" isNullable="columnNoNulls" visibility="public" type="_420" owner="_141" />
+                <CWMRDB:Column xmi.id="_145" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_421" owner="_141" />
+                <CWMRDB:Column xmi.id="_146" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_422" owner="_141" />
+                <CWMRDB:Column xmi.id="_147" name="VBOneMany" isNullable="columnNoNulls" visibility="public" type="_423" owner="_141" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_148" name="XPKEA_OneManySTG" visibility="public" namespace="_141" feature="_143"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_149" name="EB_LeastLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_150" name="CBLeast" isNullable="columnNoNulls" visibility="public" type="_424" owner="_149" />
+                <CWMRDB:Column xmi.id="_151" name="EBLeastID" isNullable="columnNoNulls" visibility="public" type="_425" owner="_149" />
+                <CWMRDB:Column xmi.id="_152" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_426" owner="_149" />
+                <CWMRDB:Column xmi.id="_153" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_427" owner="_149" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_154" name="XPKEB_LeastLeastSTG" visibility="public" namespace="_149" feature="_151"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_155" name="EB_LeastManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_156" name="CBLeastMany" isNullable="columnNoNulls" visibility="public" type="_428" owner="_155" />
+                <CWMRDB:Column xmi.id="_157" name="EBLeastManyID" isNullable="columnNoNulls" visibility="public" type="_429" owner="_155" />
+                <CWMRDB:Column xmi.id="_158" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_430" owner="_155" />
+                <CWMRDB:Column xmi.id="_159" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_431" owner="_155" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_160" name="XPKEB_LeastManySTG" visibility="public" namespace="_155" feature="_157"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_161" name="EB_LeastMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_162" name="CBLeastMost" isNullable="columnNoNulls" visibility="public" type="_432" owner="_161" />
+                <CWMRDB:Column xmi.id="_163" name="EALeastMostID" isNullable="columnNullable" visibility="public" type="_433" owner="_161" />
+                <CWMRDB:Column xmi.id="_164" name="EBLeastMostID" isNullable="columnNoNulls" visibility="public" type="_434" owner="_161" />
+                <CWMRDB:Column xmi.id="_165" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_435" owner="_161" />
+                <CWMRDB:Column xmi.id="_166" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_436" owner="_161" />
+                <CWMRDB:Column xmi.id="_167" name="VALeastMost" isNullable="columnNullable" visibility="public" type="_437" owner="_161" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_168" name="XPKEB_LeastMostSTG" visibility="public" namespace="_161" feature="_164"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_169" name="EB_LeastOneSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_170" name="CBLeastOne" isNullable="columnNoNulls" visibility="public" type="_438" owner="_169" />
+                <CWMRDB:Column xmi.id="_171" name="EALeastOneID" isNullable="columnNoNulls" visibility="public" type="_439" owner="_169" />
+                <CWMRDB:Column xmi.id="_172" name="EBLeastOneID" isNullable="columnNoNulls" visibility="public" type="_440" owner="_169" />
+                <CWMRDB:Column xmi.id="_173" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_441" owner="_169" />
+                <CWMRDB:Column xmi.id="_174" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_442" owner="_169" />
+                <CWMRDB:Column xmi.id="_175" name="VALeastOne" isNullable="columnNoNulls" visibility="public" type="_443" owner="_169" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_176" name="XPKEB_LeastOneSTG" visibility="public" namespace="_169" feature="_172"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_177" name="EB_ManyLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_178" name="CBManyLeast" isNullable="columnNoNulls" visibility="public" type="_444" owner="_177" />
+                <CWMRDB:Column xmi.id="_179" name="EBManyLeastID" isNullable="columnNoNulls" visibility="public" type="_445" owner="_177" />
+                <CWMRDB:Column xmi.id="_180" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_446" owner="_177" />
+                <CWMRDB:Column xmi.id="_181" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_447" owner="_177" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_182" name="XPKEB_ManyLeastSTG" visibility="public" namespace="_177" feature="_179"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_183" name="EB_ManyManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_184" name="CBMany" isNullable="columnNoNulls" visibility="public" type="_448" owner="_183" />
+                <CWMRDB:Column xmi.id="_185" name="EBManyID" isNullable="columnNoNulls" visibility="public" type="_449" owner="_183" />
+                <CWMRDB:Column xmi.id="_186" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_450" owner="_183" />
+                <CWMRDB:Column xmi.id="_187" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_451" owner="_183" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_188" name="XPKEB_ManyManySTG" visibility="public" namespace="_183" feature="_185"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_189" name="EB_ManyMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_190" name="CBManyMost" isNullable="columnNoNulls" visibility="public" type="_452" owner="_189" />
+                <CWMRDB:Column xmi.id="_191" name="EAManyMostID" isNullable="columnNullable" visibility="public" type="_453" owner="_189" />
+                <CWMRDB:Column xmi.id="_192" name="EBManyMostID" isNullable="columnNoNulls" visibility="public" type="_454" owner="_189" />
+                <CWMRDB:Column xmi.id="_193" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_455" owner="_189" />
+                <CWMRDB:Column xmi.id="_194" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_456" owner="_189" />
+                <CWMRDB:Column xmi.id="_195" name="VAManyMost" isNullable="columnNullable" visibility="public" type="_457" owner="_189" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_196" name="XPKEB_ManyMostSTG" visibility="public" namespace="_189" feature="_192"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_197" name="EB_ManyOneSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_198" name="CBManyOne" isNullable="columnNoNulls" visibility="public" type="_458" owner="_197" />
+                <CWMRDB:Column xmi.id="_199" name="EAManyOneID" isNullable="columnNoNulls" visibility="public" type="_459" owner="_197" />
+                <CWMRDB:Column xmi.id="_200" name="EBManyOneID" isNullable="columnNoNulls" visibility="public" type="_460" owner="_197" />
+                <CWMRDB:Column xmi.id="_201" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_461" owner="_197" />
+                <CWMRDB:Column xmi.id="_202" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_462" owner="_197" />
+                <CWMRDB:Column xmi.id="_203" name="VAManyOne" isNullable="columnNoNulls" visibility="public" type="_463" owner="_197" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_204" name="XPKEB_ManyOneSTG" visibility="public" namespace="_197" feature="_200"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_205" name="EB_MostLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_206" name="CBMostLeast" isNullable="columnNoNulls" visibility="public" type="_464" owner="_205" />
+                <CWMRDB:Column xmi.id="_207" name="EBMostLeastID" isNullable="columnNoNulls" visibility="public" type="_465" owner="_205" />
+                <CWMRDB:Column xmi.id="_208" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_466" owner="_205" />
+                <CWMRDB:Column xmi.id="_209" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_467" owner="_205" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_210" name="XPKEB_MostLeastSTG" visibility="public" namespace="_205" feature="_207"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_211" name="EB_MostManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_212" name="CBMostMany" isNullable="columnNoNulls" visibility="public" type="_468" owner="_211" />
+                <CWMRDB:Column xmi.id="_213" name="EBMostManyID" isNullable="columnNoNulls" visibility="public" type="_469" owner="_211" />
+                <CWMRDB:Column xmi.id="_214" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_470" owner="_211" />
+                <CWMRDB:Column xmi.id="_215" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_471" owner="_211" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_216" name="XPKEB_MostManySTG" visibility="public" namespace="_211" feature="_213"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_217" name="EB_MostMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_218" name="CBMost" isNullable="columnNoNulls" visibility="public" type="_472" owner="_217" />
+                <CWMRDB:Column xmi.id="_219" name="EBMostID" isNullable="columnNoNulls" visibility="public" type="_473" owner="_217" />
+                <CWMRDB:Column xmi.id="_220" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_474" owner="_217" />
+                <CWMRDB:Column xmi.id="_221" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_475" owner="_217" />
+                <CWMRDB:Column xmi.id="_222" name="VAMost" isNullable="columnNullable" visibility="public" type="_476" owner="_217" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_223" name="XPKEB_MostMostSTG" visibility="public" namespace="_217" feature="_219"/>
+                <CWM:UniqueKey xmi.id="_224" name="XPKEB_MostMostSTG" visibility="public" namespace="_217" feature="_222"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_225" name="EB_OneLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_226" name="CBOneLeast" isNullable="columnNoNulls" visibility="public" type="_477" owner="_225" />
+                <CWMRDB:Column xmi.id="_227" name="EBOneLeastID" isNullable="columnNoNulls" visibility="public" type="_478" owner="_225" />
+                <CWMRDB:Column xmi.id="_228" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_479" owner="_225" />
+                <CWMRDB:Column xmi.id="_229" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_480" owner="_225" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_230" name="XPKEB_OneLeastSTG" visibility="public" namespace="_225" feature="_227"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_231" name="EB_OneManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_232" name="CBOneMany" isNullable="columnNoNulls" visibility="public" type="_481" owner="_231" />
+                <CWMRDB:Column xmi.id="_233" name="EBOneManyID" isNullable="columnNoNulls" visibility="public" type="_482" owner="_231" />
+                <CWMRDB:Column xmi.id="_234" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_483" owner="_231" />
+                <CWMRDB:Column xmi.id="_235" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_484" owner="_231" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_236" name="XPKEB_OneManySTG" visibility="public" namespace="_231" feature="_233"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_237" name="EB_OneMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_238" name="CBOneMost" isNullable="columnNoNulls" visibility="public" type="_485" owner="_237" />
+                <CWMRDB:Column xmi.id="_239" name="EBOneMostID" isNullable="columnNoNulls" visibility="public" type="_486" owner="_237" />
+                <CWMRDB:Column xmi.id="_240" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_487" owner="_237" />
+                <CWMRDB:Column xmi.id="_241" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_488" owner="_237" />
+                <CWMRDB:Column xmi.id="_242" name="VAOneMost" isNullable="columnNullable" visibility="public" type="_489" owner="_237" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_243" name="XPKEB_OneMostSTG" visibility="public" namespace="_237" feature="_239"/>
+                <CWM:UniqueKey xmi.id="_244" name="XPKEB_OneMostSTG" visibility="public" namespace="_237" feature="_242"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_245" name="EB_OneOneSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_246" name="CBOne" isNullable="columnNoNulls" visibility="public" type="_490" owner="_245" />
+                <CWMRDB:Column xmi.id="_247" name="EBOneID" isNullable="columnNoNulls" visibility="public" type="_491" owner="_245" />
+                <CWMRDB:Column xmi.id="_248" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_492" owner="_245" />
+                <CWMRDB:Column xmi.id="_249" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_493" owner="_245" />
+                <CWMRDB:Column xmi.id="_250" name="VAOne" isNullable="columnNoNulls" visibility="public" type="_494" owner="_245" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_251" name="XPKEB_OneOneSTG" visibility="public" namespace="_245" feature="_247"/>
+                <CWM:UniqueKey xmi.id="_252" name="XPKEB_OneOneSTG" visibility="public" namespace="_245" feature="_250"/>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_253" name="VAEB_LeastLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_254" name="EBLeastID" isNullable="columnNoNulls" visibility="public" type="_495" owner="_253" />
+                <CWMRDB:Column xmi.id="_255" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_496" owner="_253" />
+                <CWMRDB:Column xmi.id="_256" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_497" owner="_253" />
+                <CWMRDB:Column xmi.id="_257" name="VALeast" isNullable="columnNoNulls" visibility="public" type="_498" owner="_253" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_258" name="XPKVAEB_LeastLeastSTG" visibility="public" namespace="_253">
                   <CWM:UniqueKey.feature>
-                    <CWM:StructuralFeature xmi.idref="_50"/>
-                    <CWM:StructuralFeature xmi.idref="_53"/>
+                    <CWM:StructuralFeature xmi.idref="_257"/>
+                    <CWM:StructuralFeature xmi.idref="_254"/>
                   </CWM:UniqueKey.feature>
                 </CWMRDB:PrimaryKey>
-                <CWMRDB:ForeignKey xmi.id="_55" name="R_55" visibility="public" namespace="_49" feature="_50" uniqueKey="_92" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
-            <CWMRDB:Table xmi.id="_56" name="EAVB_ManyManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+            <CWMRDB:Table xmi.id="_259" name="VAEB_LeastManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_57" name="EAManyID" isNullable="columnNoNulls" visibility="public" type="_386" owner="_56" />
-                <CWMRDB:Column xmi.id="_58" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_387" owner="_56" />
-                <CWMRDB:Column xmi.id="_59" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_388" owner="_56" />
-                <CWMRDB:Column xmi.id="_60" name="VBMany" isNullable="columnNoNulls" visibility="public" type="_389" owner="_56" />
+                <CWMRDB:Column xmi.id="_260" name="EBLeastManyID" isNullable="columnNoNulls" visibility="public" type="_499" owner="_259" />
+                <CWMRDB:Column xmi.id="_261" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_500" owner="_259" />
+                <CWMRDB:Column xmi.id="_262" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_501" owner="_259" />
+                <CWMRDB:Column xmi.id="_263" name="VALeastMany" isNullable="columnNoNulls" visibility="public" type="_502" owner="_259" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_61" name="XPKEAVB_ManyManySTG" visibility="public" namespace="_56">
+                <CWMRDB:PrimaryKey xmi.id="_264" name="XPKVAEB_LeastManySTG" visibility="public" namespace="_259">
                   <CWM:UniqueKey.feature>
-                    <CWM:StructuralFeature xmi.idref="_57"/>
-                    <CWM:StructuralFeature xmi.idref="_60"/>
+                    <CWM:StructuralFeature xmi.idref="_263"/>
+                    <CWM:StructuralFeature xmi.idref="_260"/>
                   </CWM:UniqueKey.feature>
                 </CWMRDB:PrimaryKey>
-                <CWMRDB:ForeignKey xmi.id="_62" name="R_62" visibility="public" namespace="_56" feature="_57" uniqueKey="_98" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
-            <CWMRDB:Table xmi.id="_63" name="EA_LeastLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+            <CWMRDB:Table xmi.id="_265" name="VAEB_ManyLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_64" name="CALeast" isNullable="columnNoNulls" visibility="public" type="_390" owner="_63" />
-                <CWMRDB:Column xmi.id="_65" name="EALeastID" isNullable="columnNoNulls" visibility="public" type="_391" owner="_63" />
-                <CWMRDB:Column xmi.id="_66" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_392" owner="_63" />
-                <CWMRDB:Column xmi.id="_67" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_393" owner="_63" />
+                <CWMRDB:Column xmi.id="_266" name="EBManyLeastID" isNullable="columnNoNulls" visibility="public" type="_503" owner="_265" />
+                <CWMRDB:Column xmi.id="_267" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_504" owner="_265" />
+                <CWMRDB:Column xmi.id="_268" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_505" owner="_265" />
+                <CWMRDB:Column xmi.id="_269" name="VAManyLeast" isNullable="columnNoNulls" visibility="public" type="_506" owner="_265" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_68" name="XPKEA_LeastLeastSTG" visibility="public" namespace="_63" feature="_65">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_9"/>
-                 <CWM:KeyRelationship xmi.idref="_41"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWMRDB:PrimaryKey>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_69" name="EA_LeastManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_70" name="CALeastMany" isNullable="columnNoNulls" visibility="public" type="_394" owner="_69" />
-                <CWMRDB:Column xmi.id="_71" name="EALeastManyID" isNullable="columnNoNulls" visibility="public" type="_395" owner="_69" />
-                <CWMRDB:Column xmi.id="_72" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_396" owner="_69" />
-                <CWMRDB:Column xmi.id="_73" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_397" owner="_69" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_74" name="XPKEA_LeastManySTG" visibility="public" namespace="_69" feature="_71">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_17"/>
-                 <CWM:KeyRelationship xmi.idref="_48"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWMRDB:PrimaryKey>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_75" name="EA_LeastMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_76" name="CALeastMost" isNullable="columnNoNulls" visibility="public" type="_398" owner="_75" />
-                <CWMRDB:Column xmi.id="_77" name="EALeastMostID" isNullable="columnNoNulls" visibility="public" type="_399" owner="_75" />
-                <CWMRDB:Column xmi.id="_78" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_400" owner="_75" />
-                <CWMRDB:Column xmi.id="_79" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_401" owner="_75" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_80" name="XPKEA_LeastMostSTG" visibility="public" namespace="_75" feature="_77">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_186"/>
-                 <CWM:KeyRelationship xmi.idref="_336"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWMRDB:PrimaryKey>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_81" name="EA_LeastOneSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_82" name="CALeastOne" isNullable="columnNoNulls" visibility="public" type="_402" owner="_81" />
-                <CWMRDB:Column xmi.id="_83" name="EALeastOneID" isNullable="columnNoNulls" visibility="public" type="_403" owner="_81" />
-                <CWMRDB:Column xmi.id="_84" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_404" owner="_81" />
-                <CWMRDB:Column xmi.id="_85" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_405" owner="_81" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_86" name="XPKEA_LeastOneSTG" visibility="public" namespace="_81" feature="_83">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_195"/>
-                 <CWM:KeyRelationship xmi.idref="_343"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWMRDB:PrimaryKey>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_87" name="EA_ManyLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_88" name="CAManyLeast" isNullable="columnNoNulls" visibility="public" type="_406" owner="_87" />
-                <CWMRDB:Column xmi.id="_89" name="EAManyLeastID" isNullable="columnNoNulls" visibility="public" type="_407" owner="_87" />
-                <CWMRDB:Column xmi.id="_90" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_408" owner="_87" />
-                <CWMRDB:Column xmi.id="_91" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_409" owner="_87" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_92" name="XPKEA_ManyLeastSTG" visibility="public" namespace="_87" feature="_89">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_25"/>
-                 <CWM:KeyRelationship xmi.idref="_55"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWMRDB:PrimaryKey>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_93" name="EA_ManyManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_94" name="CAMany" isNullable="columnNoNulls" visibility="public" type="_410" owner="_93" />
-                <CWMRDB:Column xmi.id="_95" name="EAManyID" isNullable="columnNoNulls" visibility="public" type="_411" owner="_93" />
-                <CWMRDB:Column xmi.id="_96" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_412" owner="_93" />
-                <CWMRDB:Column xmi.id="_97" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_413" owner="_93" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_98" name="XPKEA_ManyManySTG" visibility="public" namespace="_93" feature="_95">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_33"/>
-                 <CWM:KeyRelationship xmi.idref="_62"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWMRDB:PrimaryKey>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_99" name="EA_ManyMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_100" name="CAManyMost" isNullable="columnNoNulls" visibility="public" type="_414" owner="_99" />
-                <CWMRDB:Column xmi.id="_101" name="EAManyMostID" isNullable="columnNoNulls" visibility="public" type="_415" owner="_99" />
-                <CWMRDB:Column xmi.id="_102" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_416" owner="_99" />
-                <CWMRDB:Column xmi.id="_103" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_417" owner="_99" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_104" name="XPKEA_ManyMostSTG" visibility="public" namespace="_99" feature="_101">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_216"/>
-                 <CWM:KeyRelationship xmi.idref="_350"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWMRDB:PrimaryKey>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_105" name="EA_ManyOneSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_106" name="CAManyOne" isNullable="columnNoNulls" visibility="public" type="_418" owner="_105" />
-                <CWMRDB:Column xmi.id="_107" name="EAManyOneID" isNullable="columnNoNulls" visibility="public" type="_419" owner="_105" />
-                <CWMRDB:Column xmi.id="_108" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_420" owner="_105" />
-                <CWMRDB:Column xmi.id="_109" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_421" owner="_105" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_110" name="XPKEA_ManyOneSTG" visibility="public" namespace="_105" feature="_107">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_225"/>
-                 <CWM:KeyRelationship xmi.idref="_357"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWMRDB:PrimaryKey>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_111" name="EA_MostLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_112" name="CAMostLeast" isNullable="columnNoNulls" visibility="public" type="_422" owner="_111" />
-                <CWMRDB:Column xmi.id="_113" name="EAMostLeastID" isNullable="columnNoNulls" visibility="public" type="_423" owner="_111" />
-                <CWMRDB:Column xmi.id="_114" name="EBMostLeastID" isNullable="columnNullable" visibility="public" type="_424" owner="_111" />
-                <CWMRDB:Column xmi.id="_115" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_425" owner="_111" />
-                <CWMRDB:Column xmi.id="_116" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_426" owner="_111" />
-                <CWMRDB:Column xmi.id="_117" name="VBMostLeast" isNullable="columnNullable" visibility="public" type="_427" owner="_111" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_118" name="XPKEA_MostLeastSTG" visibility="public" namespace="_111" feature="_113"/>
-                <CWMRDB:ForeignKey xmi.id="_119" name="R_119" visibility="public" namespace="_111" feature="_114" uniqueKey="_231" />
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_120" name="EA_MostManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_121" name="CAMostMany" isNullable="columnNoNulls" visibility="public" type="_428" owner="_120" />
-                <CWMRDB:Column xmi.id="_122" name="EAMostManyID" isNullable="columnNoNulls" visibility="public" type="_429" owner="_120" />
-                <CWMRDB:Column xmi.id="_123" name="EBMostManyID" isNullable="columnNullable" visibility="public" type="_430" owner="_120" />
-                <CWMRDB:Column xmi.id="_124" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_431" owner="_120" />
-                <CWMRDB:Column xmi.id="_125" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_432" owner="_120" />
-                <CWMRDB:Column xmi.id="_126" name="VBMostMany" isNullable="columnNullable" visibility="public" type="_433" owner="_120" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_127" name="XPKEA_MostManySTG" visibility="public" namespace="_120" feature="_122"/>
-                <CWMRDB:ForeignKey xmi.id="_128" name="R_128" visibility="public" namespace="_120" feature="_123" uniqueKey="_237" />
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_129" name="EA_MostMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_130" name="CAMost" isNullable="columnNoNulls" visibility="public" type="_434" owner="_129" />
-                <CWMRDB:Column xmi.id="_131" name="EAMostID" isNullable="columnNoNulls" visibility="public" type="_435" owner="_129" />
-                <CWMRDB:Column xmi.id="_132" name="EBMostID" isNullable="columnNullable" visibility="public" type="_436" owner="_129" />
-                <CWMRDB:Column xmi.id="_133" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_437" owner="_129" />
-                <CWMRDB:Column xmi.id="_134" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_438" owner="_129" />
-                <CWMRDB:Column xmi.id="_135" name="VBMost" isNullable="columnNullable" visibility="public" type="_439" owner="_129" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_136" name="XPKEA_MostMostSTG" visibility="public" namespace="_129" feature="_131"/>
-                <CWM:UniqueKey xmi.id="_137" name="XPKEA_MostMostSTG" visibility="public" namespace="_129" feature="_132"/>
-                <CWM:UniqueKey xmi.id="_138" name="XPKEA_MostMostSTG" visibility="public" namespace="_129" feature="_135"/>
-                <CWMRDB:ForeignKey xmi.id="_139" name="R_139" visibility="public" namespace="_129" feature="_132" uniqueKey="_244" />
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_140" name="EA_MostOneSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_141" name="CAMostOne" isNullable="columnNoNulls" visibility="public" type="_440" owner="_140" />
-                <CWMRDB:Column xmi.id="_142" name="EAMostOneID" isNullable="columnNoNulls" visibility="public" type="_441" owner="_140" />
-                <CWMRDB:Column xmi.id="_143" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_442" owner="_140" />
-                <CWMRDB:Column xmi.id="_144" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_443" owner="_140" />
-                <CWMRDB:Column xmi.id="_145" name="VBMostOne" isNullable="columnNullable" visibility="public" type="_444" owner="_140" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_146" name="XPKEA_MostOneSTG" visibility="public" namespace="_140" feature="_142"/>
-                <CWM:UniqueKey xmi.id="_147" name="XPKEA_MostOneSTG" visibility="public" namespace="_140" feature="_145"/>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_148" name="EA_OneLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_149" name="CAOneLeast" isNullable="columnNoNulls" visibility="public" type="_445" owner="_148" />
-                <CWMRDB:Column xmi.id="_150" name="EAOneLeastID" isNullable="columnNoNulls" visibility="public" type="_446" owner="_148" />
-                <CWMRDB:Column xmi.id="_151" name="EBOneLeastID" isNullable="columnNoNulls" visibility="public" type="_447" owner="_148" />
-                <CWMRDB:Column xmi.id="_152" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_448" owner="_148" />
-                <CWMRDB:Column xmi.id="_153" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_449" owner="_148" />
-                <CWMRDB:Column xmi.id="_154" name="VBOneLeast" isNullable="columnNoNulls" visibility="public" type="_450" owner="_148" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_155" name="XPKEA_OneLeastSTG" visibility="public" namespace="_148" feature="_150"/>
-                <CWMRDB:ForeignKey xmi.id="_156" name="R_156" visibility="public" namespace="_148" feature="_151" uniqueKey="_251" />
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_157" name="EA_OneManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_158" name="CAOneMany" isNullable="columnNoNulls" visibility="public" type="_451" owner="_157" />
-                <CWMRDB:Column xmi.id="_159" name="EAOneManyID" isNullable="columnNoNulls" visibility="public" type="_452" owner="_157" />
-                <CWMRDB:Column xmi.id="_160" name="EBOneManyID" isNullable="columnNoNulls" visibility="public" type="_453" owner="_157" />
-                <CWMRDB:Column xmi.id="_161" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_454" owner="_157" />
-                <CWMRDB:Column xmi.id="_162" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_455" owner="_157" />
-                <CWMRDB:Column xmi.id="_163" name="VBOneMany" isNullable="columnNoNulls" visibility="public" type="_456" owner="_157" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_164" name="XPKEA_OneManySTG" visibility="public" namespace="_157" feature="_159"/>
-                <CWMRDB:ForeignKey xmi.id="_165" name="R_165" visibility="public" namespace="_157" feature="_160" uniqueKey="_257" />
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_166" name="EB_LeastLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_167" name="CBLeast" isNullable="columnNoNulls" visibility="public" type="_457" owner="_166" />
-                <CWMRDB:Column xmi.id="_168" name="EBLeastID" isNullable="columnNoNulls" visibility="public" type="_458" owner="_166" />
-                <CWMRDB:Column xmi.id="_169" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_459" owner="_166" />
-                <CWMRDB:Column xmi.id="_170" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_460" owner="_166" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_171" name="XPKEB_LeastLeastSTG" visibility="public" namespace="_166" feature="_168">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_10"/>
-                 <CWM:KeyRelationship xmi.idref="_280"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWMRDB:PrimaryKey>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_172" name="EB_LeastManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_173" name="CBLeastMany" isNullable="columnNoNulls" visibility="public" type="_461" owner="_172" />
-                <CWMRDB:Column xmi.id="_174" name="EBLeastManyID" isNullable="columnNoNulls" visibility="public" type="_462" owner="_172" />
-                <CWMRDB:Column xmi.id="_175" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_463" owner="_172" />
-                <CWMRDB:Column xmi.id="_176" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_464" owner="_172" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_177" name="XPKEB_LeastManySTG" visibility="public" namespace="_172" feature="_174">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_18"/>
-                 <CWM:KeyRelationship xmi.idref="_287"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWMRDB:PrimaryKey>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_178" name="EB_LeastMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_179" name="CBLeastMost" isNullable="columnNoNulls" visibility="public" type="_465" owner="_178" />
-                <CWMRDB:Column xmi.id="_180" name="EALeastMostID" isNullable="columnNullable" visibility="public" type="_466" owner="_178" />
-                <CWMRDB:Column xmi.id="_181" name="EBLeastMostID" isNullable="columnNoNulls" visibility="public" type="_467" owner="_178" />
-                <CWMRDB:Column xmi.id="_182" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_468" owner="_178" />
-                <CWMRDB:Column xmi.id="_183" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_469" owner="_178" />
-                <CWMRDB:Column xmi.id="_184" name="VALeastMost" isNullable="columnNullable" visibility="public" type="_470" owner="_178" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_185" name="XPKEB_LeastMostSTG" visibility="public" namespace="_178" feature="_181"/>
-                <CWMRDB:ForeignKey xmi.id="_186" name="R_186" visibility="public" namespace="_178" feature="_180" uniqueKey="_80" />
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_187" name="EB_LeastOneSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_188" name="CBLeastOne" isNullable="columnNoNulls" visibility="public" type="_471" owner="_187" />
-                <CWMRDB:Column xmi.id="_189" name="EALeastOneID" isNullable="columnNoNulls" visibility="public" type="_472" owner="_187" />
-                <CWMRDB:Column xmi.id="_190" name="EBLeastOneID" isNullable="columnNoNulls" visibility="public" type="_473" owner="_187" />
-                <CWMRDB:Column xmi.id="_191" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_474" owner="_187" />
-                <CWMRDB:Column xmi.id="_192" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_475" owner="_187" />
-                <CWMRDB:Column xmi.id="_193" name="VALeastOne" isNullable="columnNoNulls" visibility="public" type="_476" owner="_187" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_194" name="XPKEB_LeastOneSTG" visibility="public" namespace="_187" feature="_190"/>
-                <CWMRDB:ForeignKey xmi.id="_195" name="R_195" visibility="public" namespace="_187" feature="_189" uniqueKey="_86" />
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_196" name="EB_ManyLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_197" name="CBManyLeast" isNullable="columnNoNulls" visibility="public" type="_477" owner="_196" />
-                <CWMRDB:Column xmi.id="_198" name="EBManyLeastID" isNullable="columnNoNulls" visibility="public" type="_478" owner="_196" />
-                <CWMRDB:Column xmi.id="_199" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_479" owner="_196" />
-                <CWMRDB:Column xmi.id="_200" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_480" owner="_196" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_201" name="XPKEB_ManyLeastSTG" visibility="public" namespace="_196" feature="_198">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_26"/>
-                 <CWM:KeyRelationship xmi.idref="_294"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWMRDB:PrimaryKey>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_202" name="EB_ManyManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_203" name="CBMany" isNullable="columnNoNulls" visibility="public" type="_481" owner="_202" />
-                <CWMRDB:Column xmi.id="_204" name="EBManyID" isNullable="columnNoNulls" visibility="public" type="_482" owner="_202" />
-                <CWMRDB:Column xmi.id="_205" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_483" owner="_202" />
-                <CWMRDB:Column xmi.id="_206" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_484" owner="_202" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_207" name="XPKEB_ManyManySTG" visibility="public" namespace="_202" feature="_204">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_34"/>
-                 <CWM:KeyRelationship xmi.idref="_301"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWMRDB:PrimaryKey>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_208" name="EB_ManyMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_209" name="CBManyMost" isNullable="columnNoNulls" visibility="public" type="_485" owner="_208" />
-                <CWMRDB:Column xmi.id="_210" name="EAManyMostID" isNullable="columnNullable" visibility="public" type="_486" owner="_208" />
-                <CWMRDB:Column xmi.id="_211" name="EBManyMostID" isNullable="columnNoNulls" visibility="public" type="_487" owner="_208" />
-                <CWMRDB:Column xmi.id="_212" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_488" owner="_208" />
-                <CWMRDB:Column xmi.id="_213" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_489" owner="_208" />
-                <CWMRDB:Column xmi.id="_214" name="VAManyMost" isNullable="columnNullable" visibility="public" type="_490" owner="_208" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_215" name="XPKEB_ManyMostSTG" visibility="public" namespace="_208" feature="_211"/>
-                <CWMRDB:ForeignKey xmi.id="_216" name="R_216" visibility="public" namespace="_208" feature="_210" uniqueKey="_104" />
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_217" name="EB_ManyOneSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_218" name="CBManyOne" isNullable="columnNoNulls" visibility="public" type="_491" owner="_217" />
-                <CWMRDB:Column xmi.id="_219" name="EAManyOneID" isNullable="columnNoNulls" visibility="public" type="_492" owner="_217" />
-                <CWMRDB:Column xmi.id="_220" name="EBManyOneID" isNullable="columnNoNulls" visibility="public" type="_493" owner="_217" />
-                <CWMRDB:Column xmi.id="_221" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_494" owner="_217" />
-                <CWMRDB:Column xmi.id="_222" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_495" owner="_217" />
-                <CWMRDB:Column xmi.id="_223" name="VAManyOne" isNullable="columnNoNulls" visibility="public" type="_496" owner="_217" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_224" name="XPKEB_ManyOneSTG" visibility="public" namespace="_217" feature="_220"/>
-                <CWMRDB:ForeignKey xmi.id="_225" name="R_225" visibility="public" namespace="_217" feature="_219" uniqueKey="_110" />
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_226" name="EB_MostLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_227" name="CBMostLeast" isNullable="columnNoNulls" visibility="public" type="_497" owner="_226" />
-                <CWMRDB:Column xmi.id="_228" name="EBMostLeastID" isNullable="columnNoNulls" visibility="public" type="_498" owner="_226" />
-                <CWMRDB:Column xmi.id="_229" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_499" owner="_226" />
-                <CWMRDB:Column xmi.id="_230" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_500" owner="_226" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_231" name="XPKEB_MostLeastSTG" visibility="public" namespace="_226" feature="_228">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_119"/>
-                 <CWM:KeyRelationship xmi.idref="_308"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWMRDB:PrimaryKey>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_232" name="EB_MostManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_233" name="CBMostMany" isNullable="columnNoNulls" visibility="public" type="_501" owner="_232" />
-                <CWMRDB:Column xmi.id="_234" name="EBMostManyID" isNullable="columnNoNulls" visibility="public" type="_502" owner="_232" />
-                <CWMRDB:Column xmi.id="_235" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_503" owner="_232" />
-                <CWMRDB:Column xmi.id="_236" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_504" owner="_232" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_237" name="XPKEB_MostManySTG" visibility="public" namespace="_232" feature="_234">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_128"/>
-                 <CWM:KeyRelationship xmi.idref="_315"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWMRDB:PrimaryKey>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_238" name="EB_MostMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_239" name="CBMost" isNullable="columnNoNulls" visibility="public" type="_505" owner="_238" />
-                <CWMRDB:Column xmi.id="_240" name="EBMostID" isNullable="columnNoNulls" visibility="public" type="_506" owner="_238" />
-                <CWMRDB:Column xmi.id="_241" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_507" owner="_238" />
-                <CWMRDB:Column xmi.id="_242" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_508" owner="_238" />
-                <CWMRDB:Column xmi.id="_243" name="VAMost" isNullable="columnNullable" visibility="public" type="_509" owner="_238" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_244" name="XPKEB_MostMostSTG" visibility="public" namespace="_238" feature="_240">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_139"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWMRDB:PrimaryKey>
-                <CWM:UniqueKey xmi.id="_245" name="XPKEB_MostMostSTG" visibility="public" namespace="_238" feature="_243">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_139"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWM:UniqueKey>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_246" name="EB_OneLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_247" name="CBOneLeast" isNullable="columnNoNulls" visibility="public" type="_510" owner="_246" />
-                <CWMRDB:Column xmi.id="_248" name="EBOneLeastID" isNullable="columnNoNulls" visibility="public" type="_511" owner="_246" />
-                <CWMRDB:Column xmi.id="_249" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_512" owner="_246" />
-                <CWMRDB:Column xmi.id="_250" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_513" owner="_246" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_251" name="XPKEB_OneLeastSTG" visibility="public" namespace="_246" feature="_248">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_156"/>
-                 <CWM:KeyRelationship xmi.idref="_322"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWMRDB:PrimaryKey>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_252" name="EB_OneManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_253" name="CBOneMany" isNullable="columnNoNulls" visibility="public" type="_514" owner="_252" />
-                <CWMRDB:Column xmi.id="_254" name="EBOneManyID" isNullable="columnNoNulls" visibility="public" type="_515" owner="_252" />
-                <CWMRDB:Column xmi.id="_255" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_516" owner="_252" />
-                <CWMRDB:Column xmi.id="_256" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_517" owner="_252" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_257" name="XPKEB_OneManySTG" visibility="public" namespace="_252" feature="_254">
-                <CWM:UniqueKey.keyRelationship>
-                 <CWM:KeyRelationship xmi.idref="_165"/>
-                 <CWM:KeyRelationship xmi.idref="_329"/>
-                </CWM:UniqueKey.keyRelationship>
-                </CWMRDB:PrimaryKey>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_258" name="EB_OneMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_259" name="CBOneMost" isNullable="columnNoNulls" visibility="public" type="_518" owner="_258" />
-                <CWMRDB:Column xmi.id="_260" name="EBOneMostID" isNullable="columnNoNulls" visibility="public" type="_519" owner="_258" />
-                <CWMRDB:Column xmi.id="_261" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_520" owner="_258" />
-                <CWMRDB:Column xmi.id="_262" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_521" owner="_258" />
-                <CWMRDB:Column xmi.id="_263" name="VAOneMost" isNullable="columnNullable" visibility="public" type="_522" owner="_258" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_264" name="XPKEB_OneMostSTG" visibility="public" namespace="_258" feature="_260"/>
-                <CWM:UniqueKey xmi.id="_265" name="XPKEB_OneMostSTG" visibility="public" namespace="_258" feature="_263"/>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_266" name="EB_OneOneSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_267" name="CBOne" isNullable="columnNoNulls" visibility="public" type="_523" owner="_266" />
-                <CWMRDB:Column xmi.id="_268" name="EBOneID" isNullable="columnNoNulls" visibility="public" type="_524" owner="_266" />
-                <CWMRDB:Column xmi.id="_269" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_525" owner="_266" />
-                <CWMRDB:Column xmi.id="_270" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_526" owner="_266" />
-                <CWMRDB:Column xmi.id="_271" name="VAOne" isNullable="columnNoNulls" visibility="public" type="_527" owner="_266" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_272" name="XPKEB_OneOneSTG" visibility="public" namespace="_266" feature="_268"/>
-                <CWM:UniqueKey xmi.id="_273" name="XPKEB_OneOneSTG" visibility="public" namespace="_266" feature="_271"/>
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_274" name="VAEB_LeastLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_275" name="EBLeastID" isNullable="columnNoNulls" visibility="public" type="_528" owner="_274" />
-                <CWMRDB:Column xmi.id="_276" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_529" owner="_274" />
-                <CWMRDB:Column xmi.id="_277" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_530" owner="_274" />
-                <CWMRDB:Column xmi.id="_278" name="VALeast" isNullable="columnNoNulls" visibility="public" type="_531" owner="_274" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_279" name="XPKVAEB_LeastLeastSTG" visibility="public" namespace="_274">
+                <CWMRDB:PrimaryKey xmi.id="_270" name="XPKVAEB_ManyLeastSTG" visibility="public" namespace="_265">
                   <CWM:UniqueKey.feature>
-                    <CWM:StructuralFeature xmi.idref="_278"/>
+                    <CWM:StructuralFeature xmi.idref="_269"/>
+                    <CWM:StructuralFeature xmi.idref="_266"/>
+                  </CWM:UniqueKey.feature>
+                </CWMRDB:PrimaryKey>
+              </CWM:Namespace.ownedElement>
+            </CWMRDB:Table>
+
+            <CWMRDB:Table xmi.id="_271" name="VAEB_ManyManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+              <CWM:Classifier.feature>
+                <CWMRDB:Column xmi.id="_272" name="EBManyID" isNullable="columnNoNulls" visibility="public" type="_507" owner="_271" />
+                <CWMRDB:Column xmi.id="_273" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_508" owner="_271" />
+                <CWMRDB:Column xmi.id="_274" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_509" owner="_271" />
+                <CWMRDB:Column xmi.id="_275" name="VAMany" isNullable="columnNoNulls" visibility="public" type="_510" owner="_271" />
+              </CWM:Classifier.feature>
+              <CWM:Namespace.ownedElement>
+                <CWMRDB:PrimaryKey xmi.id="_276" name="XPKVAEB_ManyManySTG" visibility="public" namespace="_271">
+                  <CWM:UniqueKey.feature>
                     <CWM:StructuralFeature xmi.idref="_275"/>
+                    <CWM:StructuralFeature xmi.idref="_272"/>
                   </CWM:UniqueKey.feature>
                 </CWMRDB:PrimaryKey>
-                <CWMRDB:ForeignKey xmi.id="_280" name="R_280" visibility="public" namespace="_274" feature="_275" uniqueKey="_171" />
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
-            <CWMRDB:Table xmi.id="_281" name="VAEB_LeastManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+            <CWMRDB:Table xmi.id="_277" name="VA_MostLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_282" name="EBLeastManyID" isNullable="columnNoNulls" visibility="public" type="_532" owner="_281" />
-                <CWMRDB:Column xmi.id="_283" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_533" owner="_281" />
-                <CWMRDB:Column xmi.id="_284" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_534" owner="_281" />
-                <CWMRDB:Column xmi.id="_285" name="VALeastMany" isNullable="columnNoNulls" visibility="public" type="_535" owner="_281" />
+                <CWMRDB:Column xmi.id="_278" name="EBMostLeastID" isNullable="columnNullable" visibility="public" type="_511" owner="_277" />
+                <CWMRDB:Column xmi.id="_279" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_512" owner="_277" />
+                <CWMRDB:Column xmi.id="_280" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_513" owner="_277" />
+                <CWMRDB:Column xmi.id="_281" name="VAMostLeastValue" isNullable="columnNoNulls" visibility="public" type="_514" owner="_277" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_286" name="XPKVAEB_LeastManySTG" visibility="public" namespace="_281">
-                  <CWM:UniqueKey.feature>
-                    <CWM:StructuralFeature xmi.idref="_285"/>
-                    <CWM:StructuralFeature xmi.idref="_282"/>
-                  </CWM:UniqueKey.feature>
-                </CWMRDB:PrimaryKey>
-                <CWMRDB:ForeignKey xmi.id="_287" name="R_287" visibility="public" namespace="_281" feature="_282" uniqueKey="_177" />
+                <CWMRDB:PrimaryKey xmi.id="_282" name="XPKVA_MostLeastSTG" visibility="public" namespace="_277" feature="_281"/>
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
-            <CWMRDB:Table xmi.id="_288" name="VAEB_ManyLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+            <CWMRDB:Table xmi.id="_283" name="VA_MostManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_289" name="EBManyLeastID" isNullable="columnNoNulls" visibility="public" type="_536" owner="_288" />
-                <CWMRDB:Column xmi.id="_290" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_537" owner="_288" />
-                <CWMRDB:Column xmi.id="_291" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_538" owner="_288" />
-                <CWMRDB:Column xmi.id="_292" name="VAManyLeast" isNullable="columnNoNulls" visibility="public" type="_539" owner="_288" />
+                <CWMRDB:Column xmi.id="_284" name="EBMostManyID" isNullable="columnNullable" visibility="public" type="_515" owner="_283" />
+                <CWMRDB:Column xmi.id="_285" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_516" owner="_283" />
+                <CWMRDB:Column xmi.id="_286" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_517" owner="_283" />
+                <CWMRDB:Column xmi.id="_287" name="VAMostManyValue" isNullable="columnNoNulls" visibility="public" type="_518" owner="_283" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_293" name="XPKVAEB_ManyLeastSTG" visibility="public" namespace="_288">
-                  <CWM:UniqueKey.feature>
-                    <CWM:StructuralFeature xmi.idref="_292"/>
-                    <CWM:StructuralFeature xmi.idref="_289"/>
-                  </CWM:UniqueKey.feature>
-                </CWMRDB:PrimaryKey>
-                <CWMRDB:ForeignKey xmi.id="_294" name="R_294" visibility="public" namespace="_288" feature="_289" uniqueKey="_201" />
+                <CWMRDB:PrimaryKey xmi.id="_288" name="XPKVA_MostManySTG" visibility="public" namespace="_283" feature="_287"/>
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
-            <CWMRDB:Table xmi.id="_295" name="VAEB_ManyManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+            <CWMRDB:Table xmi.id="_289" name="VA_OneLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_296" name="EBManyID" isNullable="columnNoNulls" visibility="public" type="_540" owner="_295" />
-                <CWMRDB:Column xmi.id="_297" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_541" owner="_295" />
-                <CWMRDB:Column xmi.id="_298" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_542" owner="_295" />
-                <CWMRDB:Column xmi.id="_299" name="VAMany" isNullable="columnNoNulls" visibility="public" type="_543" owner="_295" />
+                <CWMRDB:Column xmi.id="_290" name="EBOneLeastID" isNullable="columnNoNulls" visibility="public" type="_519" owner="_289" />
+                <CWMRDB:Column xmi.id="_291" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_520" owner="_289" />
+                <CWMRDB:Column xmi.id="_292" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_521" owner="_289" />
+                <CWMRDB:Column xmi.id="_293" name="VAOneLeastValue" isNullable="columnNoNulls" visibility="public" type="_522" owner="_289" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_300" name="XPKVAEB_ManyManySTG" visibility="public" namespace="_295">
-                  <CWM:UniqueKey.feature>
-                    <CWM:StructuralFeature xmi.idref="_299"/>
-                    <CWM:StructuralFeature xmi.idref="_296"/>
-                  </CWM:UniqueKey.feature>
-                </CWMRDB:PrimaryKey>
-                <CWMRDB:ForeignKey xmi.id="_301" name="R_301" visibility="public" namespace="_295" feature="_296" uniqueKey="_207" />
+                <CWMRDB:PrimaryKey xmi.id="_294" name="XPKVA_OneLeastSTG" visibility="public" namespace="_289" feature="_293"/>
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
-            <CWMRDB:Table xmi.id="_302" name="VA_MostLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+            <CWMRDB:Table xmi.id="_295" name="VA_OneManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_303" name="EBMostLeastID" isNullable="columnNullable" visibility="public" type="_544" owner="_302" />
-                <CWMRDB:Column xmi.id="_304" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_545" owner="_302" />
-                <CWMRDB:Column xmi.id="_305" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_546" owner="_302" />
-                <CWMRDB:Column xmi.id="_306" name="VAMostLeastValue" isNullable="columnNoNulls" visibility="public" type="_547" owner="_302" />
+                <CWMRDB:Column xmi.id="_296" name="EBOneManyID" isNullable="columnNoNulls" visibility="public" type="_523" owner="_295" />
+                <CWMRDB:Column xmi.id="_297" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_524" owner="_295" />
+                <CWMRDB:Column xmi.id="_298" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_525" owner="_295" />
+                <CWMRDB:Column xmi.id="_299" name="VAOneManyValue" isNullable="columnNoNulls" visibility="public" type="_526" owner="_295" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_307" name="XPKVA_MostLeastSTG" visibility="public" namespace="_302" feature="_306"/>
-                <CWMRDB:ForeignKey xmi.id="_308" name="R_308" visibility="public" namespace="_302" feature="_303" uniqueKey="_231" />
+                <CWMRDB:PrimaryKey xmi.id="_300" name="XPKVA_OneManySTG" visibility="public" namespace="_295" feature="_299"/>
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
-            <CWMRDB:Table xmi.id="_309" name="VA_MostManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+            <CWMRDB:Table xmi.id="_301" name="VB_LeastMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_310" name="EBMostManyID" isNullable="columnNullable" visibility="public" type="_548" owner="_309" />
-                <CWMRDB:Column xmi.id="_311" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_549" owner="_309" />
-                <CWMRDB:Column xmi.id="_312" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_550" owner="_309" />
-                <CWMRDB:Column xmi.id="_313" name="VAMostManyValue" isNullable="columnNoNulls" visibility="public" type="_551" owner="_309" />
+                <CWMRDB:Column xmi.id="_302" name="EALeastMostID" isNullable="columnNullable" visibility="public" type="_527" owner="_301" />
+                <CWMRDB:Column xmi.id="_303" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_528" owner="_301" />
+                <CWMRDB:Column xmi.id="_304" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_529" owner="_301" />
+                <CWMRDB:Column xmi.id="_305" name="VBLeastMostValue" isNullable="columnNoNulls" visibility="public" type="_530" owner="_301" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_314" name="XPKVA_MostManySTG" visibility="public" namespace="_309" feature="_313"/>
-                <CWMRDB:ForeignKey xmi.id="_315" name="R_315" visibility="public" namespace="_309" feature="_310" uniqueKey="_237" />
+                <CWMRDB:PrimaryKey xmi.id="_306" name="XPKVB_LeastMostSTG" visibility="public" namespace="_301" feature="_305"/>
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
-            <CWMRDB:Table xmi.id="_316" name="VA_OneLeastSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+            <CWMRDB:Table xmi.id="_307" name="VB_LeastOneSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_317" name="EBOneLeastID" isNullable="columnNoNulls" visibility="public" type="_552" owner="_316" />
-                <CWMRDB:Column xmi.id="_318" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_553" owner="_316" />
-                <CWMRDB:Column xmi.id="_319" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_554" owner="_316" />
-                <CWMRDB:Column xmi.id="_320" name="VAOneLeastValue" isNullable="columnNoNulls" visibility="public" type="_555" owner="_316" />
+                <CWMRDB:Column xmi.id="_308" name="EALeastOneID" isNullable="columnNoNulls" visibility="public" type="_531" owner="_307" />
+                <CWMRDB:Column xmi.id="_309" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_532" owner="_307" />
+                <CWMRDB:Column xmi.id="_310" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_533" owner="_307" />
+                <CWMRDB:Column xmi.id="_311" name="VBLeastOneValue" isNullable="columnNoNulls" visibility="public" type="_534" owner="_307" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_321" name="XPKVA_OneLeastSTG" visibility="public" namespace="_316" feature="_320"/>
-                <CWMRDB:ForeignKey xmi.id="_322" name="R_322" visibility="public" namespace="_316" feature="_317" uniqueKey="_251" />
+                <CWMRDB:PrimaryKey xmi.id="_312" name="XPKVB_LeastOneSTG" visibility="public" namespace="_307" feature="_311"/>
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
-            <CWMRDB:Table xmi.id="_323" name="VA_OneManySTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+            <CWMRDB:Table xmi.id="_313" name="VB_ManyMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_324" name="EBOneManyID" isNullable="columnNoNulls" visibility="public" type="_556" owner="_323" />
-                <CWMRDB:Column xmi.id="_325" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_557" owner="_323" />
-                <CWMRDB:Column xmi.id="_326" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_558" owner="_323" />
-                <CWMRDB:Column xmi.id="_327" name="VAOneManyValue" isNullable="columnNoNulls" visibility="public" type="_559" owner="_323" />
+                <CWMRDB:Column xmi.id="_314" name="EAManyMostID" isNullable="columnNullable" visibility="public" type="_535" owner="_313" />
+                <CWMRDB:Column xmi.id="_315" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_536" owner="_313" />
+                <CWMRDB:Column xmi.id="_316" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_537" owner="_313" />
+                <CWMRDB:Column xmi.id="_317" name="VBManyMostValue" isNullable="columnNoNulls" visibility="public" type="_538" owner="_313" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_328" name="XPKVA_OneManySTG" visibility="public" namespace="_323" feature="_327"/>
-                <CWMRDB:ForeignKey xmi.id="_329" name="R_329" visibility="public" namespace="_323" feature="_324" uniqueKey="_257" />
+                <CWMRDB:PrimaryKey xmi.id="_318" name="XPKVB_ManyMostSTG" visibility="public" namespace="_313" feature="_317"/>
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
-            <CWMRDB:Table xmi.id="_330" name="VB_LeastMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
+            <CWMRDB:Table xmi.id="_319" name="VB_ManyOneSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
               <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_331" name="EALeastMostID" isNullable="columnNullable" visibility="public" type="_560" owner="_330" />
-                <CWMRDB:Column xmi.id="_332" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_561" owner="_330" />
-                <CWMRDB:Column xmi.id="_333" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_562" owner="_330" />
-                <CWMRDB:Column xmi.id="_334" name="VBLeastMostValue" isNullable="columnNoNulls" visibility="public" type="_563" owner="_330" />
+                <CWMRDB:Column xmi.id="_320" name="EAManyOneID" isNullable="columnNoNulls" visibility="public" type="_539" owner="_319" />
+                <CWMRDB:Column xmi.id="_321" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_540" owner="_319" />
+                <CWMRDB:Column xmi.id="_322" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_541" owner="_319" />
+                <CWMRDB:Column xmi.id="_323" name="VBManyOneValue" isNullable="columnNoNulls" visibility="public" type="_542" owner="_319" />
               </CWM:Classifier.feature>
               <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_335" name="XPKVB_LeastMostSTG" visibility="public" namespace="_330" feature="_334"/>
-                <CWMRDB:ForeignKey xmi.id="_336" name="R_336" visibility="public" namespace="_330" feature="_331" uniqueKey="_80" />
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_337" name="VB_LeastOneSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_338" name="EALeastOneID" isNullable="columnNoNulls" visibility="public" type="_564" owner="_337" />
-                <CWMRDB:Column xmi.id="_339" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_565" owner="_337" />
-                <CWMRDB:Column xmi.id="_340" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_566" owner="_337" />
-                <CWMRDB:Column xmi.id="_341" name="VBLeastOneValue" isNullable="columnNoNulls" visibility="public" type="_567" owner="_337" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_342" name="XPKVB_LeastOneSTG" visibility="public" namespace="_337" feature="_341"/>
-                <CWMRDB:ForeignKey xmi.id="_343" name="R_343" visibility="public" namespace="_337" feature="_338" uniqueKey="_86" />
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_344" name="VB_ManyMostSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_345" name="EAManyMostID" isNullable="columnNullable" visibility="public" type="_568" owner="_344" />
-                <CWMRDB:Column xmi.id="_346" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_569" owner="_344" />
-                <CWMRDB:Column xmi.id="_347" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_570" owner="_344" />
-                <CWMRDB:Column xmi.id="_348" name="VBManyMostValue" isNullable="columnNoNulls" visibility="public" type="_571" owner="_344" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_349" name="XPKVB_ManyMostSTG" visibility="public" namespace="_344" feature="_348"/>
-                <CWMRDB:ForeignKey xmi.id="_350" name="R_350" visibility="public" namespace="_344" feature="_345" uniqueKey="_104" />
-              </CWM:Namespace.ownedElement>
-            </CWMRDB:Table>
-
-            <CWMRDB:Table xmi.id="_351" name="VB_ManyOneSTG" isSystem="false" isTemporary="false" visibility="public" namespace="_2">
-              <CWM:Classifier.feature>
-                <CWMRDB:Column xmi.id="_352" name="EAManyOneID" isNullable="columnNoNulls" visibility="public" type="_572" owner="_351" />
-                <CWMRDB:Column xmi.id="_353" name="LoadTime" isNullable="columnNoNulls" visibility="public" type="_573" owner="_351" />
-                <CWMRDB:Column xmi.id="_354" name="RecordSource" isNullable="columnNoNulls" visibility="public" type="_574" owner="_351" />
-                <CWMRDB:Column xmi.id="_355" name="VBManyOneValue" isNullable="columnNoNulls" visibility="public" type="_575" owner="_351" />
-              </CWM:Classifier.feature>
-              <CWM:Namespace.ownedElement>
-                <CWMRDB:PrimaryKey xmi.id="_356" name="XPKVB_ManyOneSTG" visibility="public" namespace="_351" feature="_355"/>
-                <CWMRDB:ForeignKey xmi.id="_357" name="R_357" visibility="public" namespace="_351" feature="_352" uniqueKey="_110" />
+                <CWMRDB:PrimaryKey xmi.id="_324" name="XPKVB_ManyOneSTG" visibility="public" namespace="_319" feature="_323"/>
               </CWM:Namespace.ownedElement>
             </CWMRDB:Table>
 
@@ -814,21 +693,54 @@
         </CWMRDB:Schema>
       </CWM:Namespace.ownedElement>
     </CWMRDB:Catalog>
+    <CWMRDB:SQLSimpleType xmi.id="_325" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_326" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_327" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_328" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_329" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_330" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_331" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_332" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_333" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_334" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_335" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_336" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_337" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_338" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_339" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_340" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_341" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_342" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_343" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_344" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_345" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_346" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_347" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_348" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_349" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_350" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_351" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_352" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_353" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_354" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_355" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_356" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_357" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_358" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_359" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_360" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_359" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_360" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_361" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_362" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_363" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_364" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_363" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_364" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_365" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_366" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_367" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_368" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_367" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_368" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_369" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_370" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_371" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_372" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_371" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_372" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_373" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_374" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_375" name="datetime" visibility="public" typeNumber="93" />
@@ -852,11 +764,11 @@
     <CWMRDB:SQLSimpleType xmi.id="_393" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_394" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_395" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_396" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_396" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_397" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_398" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_398" name="datetime" visibility="public" typeNumber="93" />
     <CWMRDB:SQLSimpleType xmi.id="_399" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_400" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_400" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_401" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_402" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_403" name="varchar" visibility="public" typeNumber="12" />
@@ -864,69 +776,69 @@
     <CWMRDB:SQLSimpleType xmi.id="_405" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_406" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_407" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_408" name="datetime" visibility="public" typeNumber="93" />
-    <CWMRDB:SQLSimpleType xmi.id="_409" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_408" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_409" name="datetime" visibility="public" typeNumber="93" />
     <CWMRDB:SQLSimpleType xmi.id="_410" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_411" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_412" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_412" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_413" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_414" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_415" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_416" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_415" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_416" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_417" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_418" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_419" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_420" name="datetime" visibility="public" typeNumber="93" />
-    <CWMRDB:SQLSimpleType xmi.id="_421" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_420" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_421" name="datetime" visibility="public" typeNumber="93" />
     <CWMRDB:SQLSimpleType xmi.id="_422" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_423" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_424" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_425" name="datetime" visibility="public" typeNumber="93" />
-    <CWMRDB:SQLSimpleType xmi.id="_426" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_425" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_426" name="datetime" visibility="public" typeNumber="93" />
     <CWMRDB:SQLSimpleType xmi.id="_427" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_428" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_429" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_430" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_431" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_430" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_431" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_432" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_433" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_434" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_435" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_435" name="datetime" visibility="public" typeNumber="93" />
     <CWMRDB:SQLSimpleType xmi.id="_436" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_437" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_437" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_438" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_439" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_440" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_441" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_442" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_441" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_442" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_443" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_444" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_445" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_446" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_446" name="datetime" visibility="public" typeNumber="93" />
     <CWMRDB:SQLSimpleType xmi.id="_447" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_448" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_448" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_449" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_450" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_450" name="datetime" visibility="public" typeNumber="93" />
     <CWMRDB:SQLSimpleType xmi.id="_451" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_452" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_453" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_454" name="datetime" visibility="public" typeNumber="93" />
-    <CWMRDB:SQLSimpleType xmi.id="_455" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_454" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_455" name="datetime" visibility="public" typeNumber="93" />
     <CWMRDB:SQLSimpleType xmi.id="_456" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_457" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_458" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_459" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_459" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_460" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_461" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_461" name="datetime" visibility="public" typeNumber="93" />
     <CWMRDB:SQLSimpleType xmi.id="_462" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_463" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_463" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_464" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_465" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_466" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_466" name="datetime" visibility="public" typeNumber="93" />
     <CWMRDB:SQLSimpleType xmi.id="_467" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_468" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_468" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_469" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_470" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_470" name="datetime" visibility="public" typeNumber="93" />
     <CWMRDB:SQLSimpleType xmi.id="_471" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_472" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_473" name="varchar" visibility="public" typeNumber="12" />
@@ -943,28 +855,28 @@
     <CWMRDB:SQLSimpleType xmi.id="_484" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_485" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_486" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_487" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_488" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_487" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_488" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_489" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_490" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_491" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_492" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_492" name="datetime" visibility="public" typeNumber="93" />
     <CWMRDB:SQLSimpleType xmi.id="_493" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_494" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_494" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_495" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_496" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_496" name="datetime" visibility="public" typeNumber="93" />
     <CWMRDB:SQLSimpleType xmi.id="_497" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_498" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_499" name="datetime" visibility="public" typeNumber="93" />
-    <CWMRDB:SQLSimpleType xmi.id="_500" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_499" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_500" name="datetime" visibility="public" typeNumber="93" />
     <CWMRDB:SQLSimpleType xmi.id="_501" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_502" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_503" name="datetime" visibility="public" typeNumber="93" />
-    <CWMRDB:SQLSimpleType xmi.id="_504" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_503" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_504" name="datetime" visibility="public" typeNumber="93" />
     <CWMRDB:SQLSimpleType xmi.id="_505" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_506" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_507" name="datetime" visibility="public" typeNumber="93" />
-    <CWMRDB:SQLSimpleType xmi.id="_508" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_507" name="varchar" visibility="public" typeNumber="12" />
+    <CWMRDB:SQLSimpleType xmi.id="_508" name="datetime" visibility="public" typeNumber="93" />
     <CWMRDB:SQLSimpleType xmi.id="_509" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_510" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_511" name="varchar" visibility="public" typeNumber="12" />
@@ -980,57 +892,24 @@
     <CWMRDB:SQLSimpleType xmi.id="_521" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_522" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_523" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_524" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_525" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_524" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_525" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_526" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_527" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_528" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_529" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_528" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_529" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_530" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_531" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_532" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_533" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_532" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_533" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_534" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_535" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_536" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_537" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_536" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_537" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_538" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_539" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_540" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_541" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_540" name="datetime" visibility="public" typeNumber="93" />
+    <CWMRDB:SQLSimpleType xmi.id="_541" name="varchar" visibility="public" typeNumber="12" />
     <CWMRDB:SQLSimpleType xmi.id="_542" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_543" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_544" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_545" name="datetime" visibility="public" typeNumber="93" />
-    <CWMRDB:SQLSimpleType xmi.id="_546" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_547" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_548" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_549" name="datetime" visibility="public" typeNumber="93" />
-    <CWMRDB:SQLSimpleType xmi.id="_550" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_551" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_552" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_553" name="datetime" visibility="public" typeNumber="93" />
-    <CWMRDB:SQLSimpleType xmi.id="_554" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_555" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_556" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_557" name="datetime" visibility="public" typeNumber="93" />
-    <CWMRDB:SQLSimpleType xmi.id="_558" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_559" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_560" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_561" name="datetime" visibility="public" typeNumber="93" />
-    <CWMRDB:SQLSimpleType xmi.id="_562" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_563" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_564" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_565" name="datetime" visibility="public" typeNumber="93" />
-    <CWMRDB:SQLSimpleType xmi.id="_566" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_567" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_568" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_569" name="datetime" visibility="public" typeNumber="93" />
-    <CWMRDB:SQLSimpleType xmi.id="_570" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_571" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_572" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_573" name="datetime" visibility="public" typeNumber="93" />
-    <CWMRDB:SQLSimpleType xmi.id="_574" name="varchar" visibility="public" typeNumber="12" />
-    <CWMRDB:SQLSimpleType xmi.id="_575" name="varchar" visibility="public" typeNumber="12" />
   </XMI.content>
 </XMI>

@@ -240,14 +240,13 @@ CREATE TABLE Product (
 	Description                             VARCHAR(1024) NULL,
 	-- Primary index to Product
 	PRIMARY KEY(ProductID),
+	-- Unique index to Product over PresenceConstraint over (Alias in "Alias is of Product") occurs at most one time
+	UNIQUE(Alias),
+	-- Unique index to Product over PresenceConstraint over (Description in "Description is of Product") occurs at most one time
+	UNIQUE(Description),
 	-- Unique index to Product over PresenceConstraint over (Product Code in "Product has Product Code") occurs at most one time
 	UNIQUE(ProductCode)
 );
-
-CREATE UNIQUE INDEX ProductByAlias ON Product(Alias) WHERE Alias IS NOT NULL;
-
-
-CREATE UNIQUE INDEX ProductByDescription ON Product(Description) WHERE Description IS NOT NULL;
 
 
 CREATE TABLE PropertyDamage (
@@ -269,10 +268,10 @@ CREATE TABLE PropertyDamage (
 	PhoneNr                                 VARCHAR NULL,
 	-- Primary index to Property Damage
 	PRIMARY KEY(PropertyDamageID),
+	-- Unique index to Property Damage over PresenceConstraint over (Incident, Address in "Incident caused Property Damage", "Property Damage is at Address") occurs at most one time
+	UNIQUE(IncidentClaimID, AddressStreet, AddressCity, AddressPostcode, AddressStateID),
 	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID)
 );
-
-CREATE UNIQUE INDEX PropertyDamageByIncidentClaimIDAddressStreetAddressCityAd0ba ON PropertyDamage(IncidentClaimID, AddressStreet, AddressCity, AddressPostcode, AddressStateID) WHERE IncidentClaimID IS NOT NULL AND AddressPostcode IS NOT NULL AND AddressStateID IS NOT NULL;
 
 
 CREATE TABLE State (
@@ -285,10 +284,10 @@ CREATE TABLE State (
 	-- Primary index to State
 	PRIMARY KEY(StateID),
 	-- Unique index to State over PresenceConstraint over (State Code in "State has State Code") occurs at most one time
-	UNIQUE(StateCode)
+	UNIQUE(StateCode),
+	-- Unique index to State over PresenceConstraint over (State Name in "State Name is of State") occurs at most one time
+	UNIQUE(StateName)
 );
-
-CREATE UNIQUE INDEX StateByStateName ON State(StateName) WHERE StateName IS NOT NULL;
 
 
 CREATE TABLE ThirdParty (

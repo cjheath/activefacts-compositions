@@ -231,13 +231,12 @@ CREATE TABLE product (
 	-- maybe Product has Description
 	description                             VARCHAR(1024) NULL,
 	-- Primary index to Product over PresenceConstraint over (Product Code in "Product has Product Code") occurs at most one time
-	PRIMARY KEY(product_code)
+	PRIMARY KEY(product_code),
+	-- Unique index to Product over PresenceConstraint over (Alias in "Alias is of Product") occurs at most one time
+	UNIQUE(alias),
+	-- Unique index to Product over PresenceConstraint over (Description in "Description is of Product") occurs at most one time
+	UNIQUE(description)
 );
-
-CREATE UNIQUE INDEX productByalias ON product(alias) WHERE alias IS NOT NULL;
-
-
-CREATE UNIQUE INDEX productBydescription ON product(description) WHERE description IS NOT NULL;
 
 
 CREATE TABLE property_damage (
@@ -255,10 +254,10 @@ CREATE TABLE property_damage (
 	owner_name                              VARCHAR(256) NULL,
 	-- maybe Property Damage owner has contact Phone that has Phone Nr
 	phone_nr                                VARCHAR NULL,
+	-- Primary index to Property Damage over PresenceConstraint over (Incident, Address in "Incident caused Property Damage", "Property Damage is at Address") occurs at most one time
+	UNIQUE(incident_claim_id, address_street, address_city, address_postcode, address_state_code),
 	FOREIGN KEY (incident_claim_id) REFERENCES claim (claim_id)
 );
-
-CREATE UNIQUE INDEX property_damageByincident_claim_idaddress_streetaddress_549b ON property_damage(incident_claim_id, address_street, address_city, address_postcode, address_state_code) WHERE incident_claim_id IS NOT NULL AND address_postcode IS NOT NULL AND address_state_code IS NOT NULL;
 
 
 CREATE TABLE state (
@@ -267,10 +266,10 @@ CREATE TABLE state (
 	-- maybe State has State Name
 	state_name                              VARCHAR(256) NULL,
 	-- Primary index to State over PresenceConstraint over (State Code in "State has State Code") occurs at most one time
-	PRIMARY KEY(state_code)
+	PRIMARY KEY(state_code),
+	-- Unique index to State over PresenceConstraint over (State Name in "State Name is of State") occurs at most one time
+	UNIQUE(state_name)
 );
-
-CREATE UNIQUE INDEX stateBystate_name ON state(state_name) WHERE state_name IS NOT NULL;
 
 
 CREATE TABLE third_party (

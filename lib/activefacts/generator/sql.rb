@@ -60,6 +60,12 @@ module ActiveFacts
         when "raw"
           @restrict = "rdv"
         end
+
+        # Do not (yet) expose the closed-world vs open world problem.
+        # Closed World vs Open World uniqueness is a semantic issue,
+        # and so is OW, CW or CW with negation for unary fact types.
+        # We need an overall strategy for handling it.
+        @closed_world_indices = false   # Allow for SQL Server's non-standard NULL indexing
       end
 
       def generate
@@ -184,13 +190,16 @@ module ActiveFacts
           end
         contains_nullable_columns = nullable_columns.size > 0
 
+        # The index can only be emitted as PRIMARY if it has no nullable columns:
         primary = index.composite_as_primary_index && !contains_nullable_columns
+
         column_names =
           index.all_index_field.map do |ixf|
             column_name(ixf.component)
           end
 
-        if contains_nullable_columns
+        if contains_nullable_columns and @closed_world_indices
+          # Implement open-world uniqueness using a filtered index:
           table_name = safe_table_name(index.composite)
           delayed_indices <<
             'CREATE UNIQUE'+index_kind(index)+' INDEX '+

@@ -1,12 +1,9 @@
 Summary of Address
-Batch
-	Batch->Batch ID[1.0] as "Batch ID"
-	Batch->Start DateTime as "Start Date Time"
 Company STG
 	Company STG->RecordSource as "Record Source"
 	Company STG->Company Name[1.0] as "Company Name"
 	Company STG->LoadTime as "Load Time"
-	Company STG->Batch->Batch ID as "Batch ID"
+	Company STG->LoadBatch->LoadBatch ID[1.1] as "Load Batch ID"
 	Company STG->Address?->Street Number? as "Address Street Number"
 	Company STG->Address?->Street->First Street Line as "Address Street First Street Line"
 	Company STG->Address?->Street->Second Street Line? as "Address Street Second Street Line"
@@ -15,12 +12,15 @@ Company STG
 	Company STG->Address?->Postcode? as "Address Postcode"
 		### restricted to {1000..9999}
 	### SubsetConstraint((Street, Third Street Line in "Street includes third-Street Line") only if (Street, Second Street Line in "Street includes second-Street Line"))
+LoadBatch
+	LoadBatch->LoadBatch ID[1.0] as "Load Batch ID"
+	LoadBatch->Start DateTime as "Start Date Time"
 Person STG
 	Person STG->RecordSource as "Record Source"
 	Person STG->Family->Family Name[1.0] as "Family Name"
 	Person STG->Given Names[1.1] as "Given Names"
 	Person STG->LoadTime as "Load Time"
-	Person STG->Batch->Batch ID as "Batch ID"
+	Person STG->LoadBatch->LoadBatch ID[1.2] as "Load Batch ID"
 	Person STG->Address?->Street Number? as "Address Street Number"
 	Person STG->Address?->Street->First Street Line as "Address Street First Street Line"
 	Person STG->Address?->Street->Second Street Line? as "Address Street Second Street Line"
