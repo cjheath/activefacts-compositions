@@ -10,10 +10,10 @@ CREATE TABLE attendance (
 	-- Attendance involves Meeting that is held on Date
 	meeting_date                            DATE NOT NULL,
 	-- Attendance involves Meeting that Is Board Meeting
-	meeting_is_board_meeting                BOOLEAN
+	meeting_is_board_meeting                BOOLEAN,
+	-- Primary index to Attendance over PresenceConstraint over (Attendee, Meeting in "Person attended Meeting") occurs at most one time
+	UNIQUE(attendee_given_name, attendee_family_name, meeting_company_name, meeting_date, meeting_is_board_meeting)
 );
-
-CREATE UNIQUE INDEX attendanceByattendee_given_nameattendee_family_namemeetec894 ON attendance(attendee_given_name, attendee_family_name, meeting_company_name, meeting_date, meeting_is_board_meeting) WHERE attendee_family_name IS NOT NULL;
 
 
 CREATE TABLE company (
@@ -35,10 +35,10 @@ CREATE TABLE directorship (
 	company_name                            VARCHAR(48) NOT NULL,
 	-- Directorship began on appointment-Date
 	appointment_date                        DATE NOT NULL,
+	-- Primary index to Directorship over PresenceConstraint over (Director, Company in "Person directs Company") occurs at most one time
+	UNIQUE(director_given_name, director_family_name, company_name),
 	FOREIGN KEY (company_name) REFERENCES company (company_name)
 );
-
-CREATE UNIQUE INDEX directorshipBydirector_given_namedirector_family_namecompany ON directorship(director_given_name, director_family_name, company_name) WHERE director_family_name IS NOT NULL;
 
 
 CREATE TABLE employee (
@@ -64,10 +64,10 @@ CREATE TABLE employment (
 	person_family_name                      VARCHAR(48) NULL,
 	-- Employment involves Employee that has Employee Nr
 	employee_nr                             INTEGER NOT NULL,
+	-- Primary index to Employment over PresenceConstraint over (Person, Employee in "Person works as Employee") occurs at most one time
+	UNIQUE(person_given_name, person_family_name, employee_nr),
 	FOREIGN KEY (employee_nr) REFERENCES employee (employee_nr)
 );
-
-CREATE UNIQUE INDEX employmentByperson_given_nameperson_family_nameemployee_nr ON employment(person_given_name, person_family_name, employee_nr) WHERE person_family_name IS NOT NULL;
 
 
 CREATE TABLE meeting (
@@ -89,10 +89,10 @@ CREATE TABLE person (
 	-- maybe Person is called family-Name
 	family_name                             VARCHAR(48) NULL,
 	-- maybe Person was born on birth-Date
-	birth_date                              DATE NULL CHECK(birth_date >= '1900/01/01')
+	birth_date                              DATE NULL CHECK(birth_date >= '1900/01/01'),
+	-- Primary index to Person over PresenceConstraint over (Given Name, Family Name in "Person has given-Name", "family-Name is of Person") occurs at most one time
+	UNIQUE(given_name, family_name)
 );
-
-CREATE UNIQUE INDEX personBygiven_namefamily_name ON person(given_name, family_name) WHERE family_name IS NOT NULL;
 
 
 ALTER TABLE attendance

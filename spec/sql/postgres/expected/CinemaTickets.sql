@@ -64,10 +64,10 @@ CREATE TABLE film (
 	-- maybe Film was made in Year that has Year Nr
 	year_nr                                 INTEGER NULL CHECK((year_nr >= 1900 AND year_nr <= 9999)),
 	-- Primary index to Film over PresenceConstraint over (Film ID in "Film has Film ID") occurs at most one time
-	PRIMARY KEY(film_id)
+	PRIMARY KEY(film_id),
+	-- Unique index to Film over PresenceConstraint over (Name, Year in "Film has Name", "Film was made in Year") occurs at most one time
+	UNIQUE(name, year_nr)
 );
-
-CREATE UNIQUE INDEX filmBynameyear_nr ON film(name, year_nr) WHERE year_nr IS NOT NULL;
 
 
 CREATE TABLE person (
@@ -78,10 +78,10 @@ CREATE TABLE person (
 	-- maybe Person has login-Name
 	login_name                              VARCHAR NULL,
 	-- Primary index to Person over PresenceConstraint over (Person ID in "Person has Person ID") occurs at most one time
-	PRIMARY KEY(person_id)
+	PRIMARY KEY(person_id),
+	-- Unique index to Person over PresenceConstraint over (Login Name in "Person has login-Name") occurs at most one time
+	UNIQUE(login_name)
 );
-
-CREATE UNIQUE INDEX personBylogin_name ON person(login_name) WHERE login_name IS NOT NULL;
 
 
 CREATE TABLE places_paid (

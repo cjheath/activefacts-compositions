@@ -16,7 +16,8 @@ module ActiveFacts
           @option_recordsource = options.delete('recordsource')
           @option_recordsource = 'String' if [true, '', 'true', 'yes', nil].include?(@option_recordsource)
           @option_loadbatch = options.delete('loadbatch')
-          @option_loadbatch = 'LoadBatch' if [true, '', 'true', 'yes'].include?(@option_loadbatch)
+          @option_loadbatch = 'LoadBatch' if [true, 'true', 'yes'].include?(@option_loadbatch)
+          @option_loadbatch = nil if [false, 'false', ''].include?(@option_loadbatch)
         end
 
         def create_loadbatch
@@ -36,6 +37,7 @@ module ActiveFacts
         end
 
         def inject_loadbatch_relationships
+          return unless @option_loadbatch
           @composition.all_composite.each do |composite|
             next if composite.mapping.object_type.name == @option_loadbatch
             @compiler.compile("#{composite.mapping.name} was loaded in one #{@option_loadbatch};")

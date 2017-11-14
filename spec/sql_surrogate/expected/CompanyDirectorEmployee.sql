@@ -97,10 +97,10 @@ CREATE TABLE Person (
 	-- maybe Person was born on birth-Date
 	BirthDate                               DATE NULL CHECK(BirthDate >= '1900/01/01'),
 	-- Primary index to Person
-	PRIMARY KEY(PersonID)
+	PRIMARY KEY(PersonID),
+	-- Unique index to Person over PresenceConstraint over (Given Name, Family Name in "Person has given-Name", "family-Name is of Person") occurs at most one time
+	UNIQUE(GivenName, FamilyName)
 );
-
-CREATE UNIQUE INDEX PersonByGivenNameFamilyName ON Person(GivenName, FamilyName) WHERE FamilyName IS NOT NULL;
 
 
 ALTER TABLE Attendance

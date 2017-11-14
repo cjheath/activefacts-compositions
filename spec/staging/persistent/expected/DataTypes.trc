@@ -3,25 +3,22 @@ AAC_ET STG
 	AAC_ET STG->RecordSource as "Record Source"
 	AAC_ET STG->Alternate Auto Counter[1.0] as "Alternate Auto Counter"
 	AAC_ET STG->LoadTime as "Load Time"
-	AAC_ET STG->Batch->Batch ID as "Batch ID"
+	AAC_ET STG->LoadBatch->LoadBatch ID[1.1] as "Load Batch ID"
 AAC_Sub STG
 	AAC_Sub STG->AAC_ET->Alternate Auto Counter[1.0] as "AAC ET Alternate Auto Counter"
 	AAC_Sub STG->RecordSource as "Record Source"
 	AAC_Sub STG->LoadTime as "Load Time"
-	AAC_Sub STG->Batch->Batch ID as "Batch ID"
+	AAC_Sub STG->LoadBatch->LoadBatch ID[1.1] as "Load Batch ID"
 AG_ET STG
 	AG_ET STG->RecordSource as "Record Source"
 	AG_ET STG->Alternate Guid[1.0] as "Alternate Guid"
 	AG_ET STG->LoadTime as "Load Time"
-	AG_ET STG->Batch->Batch ID as "Batch ID"
+	AG_ET STG->LoadBatch->LoadBatch ID[1.1] as "Load Batch ID"
 AG_Sub STG
 	AG_Sub STG->AG_ET->Alternate Guid[1.0] as "AG ET Alternate Guid"
 	AG_Sub STG->RecordSource as "Record Source"
 	AG_Sub STG->LoadTime as "Load Time"
-	AG_Sub STG->Batch->Batch ID as "Batch ID"
-Batch
-	Batch->Batch ID[1.0] as "Batch ID"
-	Batch->Start DateTime as "Start Date Time"
+	AG_Sub STG->LoadBatch->LoadBatch ID[1.1] as "Load Batch ID"
 Container STG
 	Container STG->RecordSource as "Record Source"
 	Container STG->Container Name[1.0] as "Container Name"
@@ -55,7 +52,6 @@ Container STG
 	Container STG->Alternate Varchar as "Alternate Varchar"
 	Container STG->Alternate Variable Length Raw Data as "Alternate Variable Length Raw Data"
 	Container STG->Alternate Variable Length Text as "Alternate Variable Length Text"
-	Container STG->Batch->Batch ID as "Batch ID"
 	Container STG->Byte as "Byte"
 	Container STG->Char8 as "Char8"
 	Container STG->Decimal14 as "Decimal14"
@@ -81,6 +77,7 @@ Container STG
 	Container STG->Int8 as "Int8"
 	Container STG->Int80 as "Int80"
 	Container STG->Large as "Large"
+	Container STG->LoadBatch->LoadBatch ID[1.1] as "Load Batch ID"
 	Container STG->Quad as "Quad"
 	Container STG->Real32 as "Real32"
 	Container STG->Real64 as "Real64"
@@ -93,3 +90,6 @@ Container STG
 	Container STG->UQuad as "U Quad"
 	Container STG->UWord as "U Word"
 	Container STG->Word as "Word"
+LoadBatch
+	LoadBatch->LoadBatch ID[1.0] as "Load Batch ID"
+	LoadBatch->Start DateTime as "Start Date Time"

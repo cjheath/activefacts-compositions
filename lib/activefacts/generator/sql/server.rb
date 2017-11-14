@@ -23,6 +23,11 @@ module ActiveFacts
           })
         end
 
+        def initialize composition, options = {}
+          super
+          @closed_world_indices = true
+        end
+
         def table_name_max
           128
         end
