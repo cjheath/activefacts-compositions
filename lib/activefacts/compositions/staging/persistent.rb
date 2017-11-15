@@ -66,7 +66,7 @@ module ActiveFacts
                 # Ignore foreign keys:
                 next unless MM::Index === path
 
-                # DOn't meddle with the LoadBatch table:
+                # Don't meddle with the LoadBatch table:
                 next if composite.mapping.object_type == @loadbatch_entity_type
                 if composite.natural_index == path
                   # Add LoadBatchID to the natural index:
@@ -76,8 +76,15 @@ module ActiveFacts
                         c = role.counterpart and c.object_type == @loadbatch_entity_type
                       end
                     trace :relational_paths, "Found LoadBatch role in #{load_batch_role.fact_type.default_reading}" if load_batch_role
-                    # There can only be one absorption of LoadBatch, because we added it:
-                    absorption = load_batch_role.counterpart.all_absorption_as_child_role.single
+                    # There can only be one absorption of LoadBatch, because we added it,
+                    # but if you have separate subtypes, we need to select the one for the right composite:
+                    absorptions = load_batch_role.
+                      counterpart.
+                      all_absorption_as_child_role.
+                      select{|a| a.root == composite}
+                    # There should now always be exactly one.
+                    raise "Missing or ambiguous FK to LoadBatch from #{composite.inspect}" if absorptions.size != 1
+                    absorption = absorptions[0]
                     absorption.all_leaf.each do |leaf|
                       @constellation.IndexField(access_path: path, ordinal: path.all_index_field.size, component: leaf)
                     end
