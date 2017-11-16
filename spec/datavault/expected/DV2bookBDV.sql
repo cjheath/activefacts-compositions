@@ -33,11 +33,11 @@ CREATE TABLE PartHierarchyLINK (
 CREATE TABLE PassengerPIT (
 	-- Passenger PIT surrogate key
 	PassengerPITHID                         BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-	-- PassengerName SAT LoadDateTime
+	-- PassengerName SAT Load DateTime
 	PassengerNameSATLoadDateTime            TIMESTAMP,
-	-- PreferredDish SAT LoadDateTime
+	-- PreferredDish SAT Load DateTime
 	PreferredDishSATLoadDateTime            TIMESTAMP,
-	-- SnapshotDateTime
+	-- Snapshot DateTime
 	SnapshotDateTime                        TIMESTAMP,
 	-- Passenger HUB surrogate key
 	PassengerHID                            BIGINT NOT NULL,
@@ -90,10 +90,10 @@ CREATE TABLE PassengerSameAsLINK (
 CREATE TABLE PassengerComputedSAT (
 	-- Passenger HUB surrogate key
 	PassengerHID                            BIGINT NOT NULL,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- Passenger has Age
 	Age                                     INTEGER NOT NULL,
 	-- Primary index to PassengerComputed SAT

@@ -53,14 +53,16 @@ module ActiveFacts
           date_field = @constellation.ValidFrom(:new,
             parent: mapping,
             name: "LoadTime",
-            object_type: datestamp_type
+            object_type: datestamp_type,
+            injection_annotation: "datavault"
           )
 
           # Add a load DateTime value
           recsrc_field = @constellation.ValueField(:new,
             parent: mapping,
             name: "RecordSource",
-            object_type: recordsource_type
+            object_type: recordsource_type,
+            injection_annotation: "datavault"
           )
           mapping.re_rank
           date_field

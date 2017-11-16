@@ -1,13 +1,13 @@
 Summary of Address
 Company HUB
 	Company HUB->Company HID[1.0] as "Company HID"
-	Company HUB->RecordSource as "Record Source"
 	Company HUB->Company Name[2.0] as "Company Name"
 	Company HUB->LoadTime as "Load Time"
+	Company HUB->RecordSource as "Record Source"
 Company SAT
 	Company SAT->[Company HID][1.0] as "Company HID"
-	Company SAT->RecordSource as "Record Source"
 	Company SAT->LoadTime[1.1] as "Load Time"
+	Company SAT->RecordSource as "Record Source"
 	Company SAT->Address?->Street Number? as "Address Street Number"
 	Company SAT->Address?->Street->First Street Line as "Address Street First Street Line"
 	Company SAT->Address?->Street->Second Street Line? as "Address Street Second Street Line"
@@ -16,14 +16,14 @@ Company SAT
 	Company SAT->Address?->Postcode? as "Address Postcode"
 Person HUB
 	Person HUB->Person HID[1.0] as "Person HID"
-	Person HUB->RecordSource as "Record Source"
 	Person HUB->Family->Family Name[2.0] as "Family Name"
 	Person HUB->Given Names[2.1] as "Given Names"
 	Person HUB->LoadTime as "Load Time"
+	Person HUB->RecordSource as "Record Source"
 Person SAT
 	Person SAT->[Person HID][1.0] as "Person HID"
-	Person SAT->RecordSource as "Record Source"
 	Person SAT->LoadTime[1.1] as "Load Time"
+	Person SAT->RecordSource as "Record Source"
 	Person SAT->Address?->Street Number? as "Address Street Number"
 	Person SAT->Address?->Street->First Street Line as "Address Street First Street Line"
 	Person SAT->Address?->Street->Second Street Line? as "Address Street Second Street Line"

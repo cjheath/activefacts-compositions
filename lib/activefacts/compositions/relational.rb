@@ -325,7 +325,8 @@ module ActiveFacts
               :new,
               parent: composite.mapping,
               name: composite.mapping.name+extension,
-              object_type: surrogate_type
+              object_type: surrogate_type,
+              injection_annotation: "surrogate"
             )
           index =
             @constellation.Index(:new, composite: composite, is_unique: true,

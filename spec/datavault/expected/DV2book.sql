@@ -1,12 +1,12 @@
 CREATE TABLE AirlineHUB (
 	-- Airline HUB surrogate key
 	AirlineHID                              BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- Airline has Airline ID
 	AirlineID                               BIGINT NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- Primary index to Airline HUB
 	PRIMARY KEY(AirlineHID),
 	-- Unique index to Airline HUB over PresenceConstraint over (Airline ID in "Airline has Airline ID") occurs at most one time
@@ -17,10 +17,10 @@ CREATE TABLE AirlineHUB (
 CREATE TABLE AirlineSAT (
 	-- Airline HUB surrogate key
 	AirlineHID                              BIGINT NOT NULL,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- maybe Airline has Flight Code
 	FlightCode                              BIGINT NULL,
 	-- Primary index to Airline SAT
@@ -32,12 +32,12 @@ CREATE TABLE AirlineSAT (
 CREATE TABLE AirplaneHUB (
 	-- Airplane HUB surrogate key
 	AirplaneHID                             BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- Airplane has Tail Number
 	TailNumber                              VARCHAR(12) NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- Primary index to Airplane HUB
 	PRIMARY KEY(AirplaneHID),
 	-- Unique index to Airplane HUB over PresenceConstraint over (Tail Number in "Airplane has Tail Number") occurs one time
@@ -48,14 +48,14 @@ CREATE TABLE AirplaneHUB (
 CREATE TABLE AirplanePartLINK (
 	-- Airplane Part LINK surrogate key
 	AirplanePartHID                         BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- Airplane Part involves Airplane
 	AirplaneHID                             BIGINT NOT NULL,
 	-- Airplane Part involves Part
 	PartHID                                 BIGINT NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- Primary index to Airplane Part LINK
 	PRIMARY KEY(AirplanePartHID),
 	-- Unique index to Airplane Part LINK over PresenceConstraint over (Airplane, Part in "Airplane has Part") occurs at most one time
@@ -67,12 +67,12 @@ CREATE TABLE AirplanePartLINK (
 CREATE TABLE AirportHUB (
 	-- Airport HUB surrogate key
 	AirportHID                              BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- Airport has Airport Name
 	AirportName                             VARCHAR(48) NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- Primary index to Airport HUB
 	PRIMARY KEY(AirportHID),
 	-- Unique index to Airport HUB over PresenceConstraint over (Airport Name in "Airport has Airport Name") occurs at most one time
@@ -83,10 +83,10 @@ CREATE TABLE AirportHUB (
 CREATE TABLE AirportSAT (
 	-- Airport HUB surrogate key
 	AirportHID                              BIGINT NOT NULL,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- Airport has at Telephone Number
 	TelephoneNumber                         VARCHAR(12) NOT NULL,
 	-- maybe Airport is Latitude
@@ -108,14 +108,14 @@ CREATE TABLE AirportSAT (
 CREATE TABLE AssignedAirplaneLINK (
 	-- Assigned Airplane LINK surrogate key
 	AssignedAirplaneHID                     BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- Assigned Airplane involves Airplane
 	AirplaneHID                             BIGINT NOT NULL,
 	-- Assigned Airplane involves Connection
 	ConnectionHID                           BIGINT NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- Primary index to Assigned Airplane LINK
 	PRIMARY KEY(AssignedAirplaneHID),
 	-- Unique index to Assigned Airplane LINK over PresenceConstraint over (Airplane, Connection in "Airplane is assigned to Connection") occurs at most one time
@@ -127,14 +127,14 @@ CREATE TABLE AssignedAirplaneLINK (
 CREATE TABLE BookingLINK (
 	-- Booking LINK surrogate key
 	BookingHID                              BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- Booking involves Passenger
 	PassengerHID                            BIGINT NOT NULL,
 	-- Booking involves Sales Agent
 	SalesAgentHID                           BIGINT NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- Primary index to Booking LINK
 	PRIMARY KEY(BookingHID),
 	-- Unique index to Booking LINK over PresenceConstraint over (Passenger, Sales Agent in "Passenger books flight with Sales Agent") occurs at most one time
@@ -145,8 +145,6 @@ CREATE TABLE BookingLINK (
 CREATE TABLE ConnectionHUB (
 	-- Connection HUB surrogate key
 	ConnectionHID                           BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- Connection involves Airline that has Airline ID
 	AirlineID                               BIGINT NOT NULL,
 	-- Connection involves origin-Airport and Airport has Airport Name
@@ -157,6 +155,8 @@ CREATE TABLE ConnectionHUB (
 	FlightNumber                            VARCHAR(12) NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- Primary index to Connection HUB
 	PRIMARY KEY(ConnectionHID),
 	-- Unique index to Connection HUB over PresenceConstraint over (Airline, Origin Airport, Destination Airport, Flight Number in "Airline flies from origin-Airport to destination-Airport with flight Flight Number") occurs at most one time
@@ -167,14 +167,14 @@ CREATE TABLE ConnectionHUB (
 CREATE TABLE FixedBaseOperatorLINK (
 	-- Fixed Base Operator LINK surrogate key
 	FixedBaseOperatorHID                    BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- Fixed Base Operator involves Airline
 	AirlineHID                              BIGINT NOT NULL,
 	-- Fixed Base Operator involves Airport
 	AirportHID                              BIGINT NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- Primary index to Fixed Base Operator LINK
 	PRIMARY KEY(FixedBaseOperatorHID),
 	-- Unique index to Fixed Base Operator LINK over PresenceConstraint over (Airline, Airport in "Airline flies from Airport") occurs at most one time
@@ -187,12 +187,12 @@ CREATE TABLE FixedBaseOperatorLINK (
 CREATE TABLE PartHUB (
 	-- Part HUB surrogate key
 	PartHID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- Part has Part ID
 	PartID                                  BIGINT NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- Primary index to Part HUB
 	PRIMARY KEY(PartHID),
 	-- Unique index to Part HUB over PresenceConstraint over (Part ID in "Part has Part ID") occurs at most one time
@@ -203,10 +203,10 @@ CREATE TABLE PartHUB (
 CREATE TABLE PartSAT (
 	-- Part HUB surrogate key
 	PartHID                                 BIGINT NOT NULL,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- Part is built by Manufacturer that has Manufacturer ID
 	ManufacturerID                          BIGINT NOT NULL,
 	-- Primary index to Part SAT
@@ -218,12 +218,12 @@ CREATE TABLE PartSAT (
 CREATE TABLE PassengerHUB (
 	-- Passenger HUB surrogate key
 	PassengerHID                            BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- Passenger has Passenger ID
 	PassengerID                             BIGINT NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- Primary index to Passenger HUB
 	PRIMARY KEY(PassengerHID),
 	-- Unique index to Passenger HUB over PresenceConstraint over (Passenger ID in "Passenger has Passenger ID") occurs at most one time
@@ -234,10 +234,10 @@ CREATE TABLE PassengerHUB (
 CREATE TABLE PassengerSAT (
 	-- Passenger HUB surrogate key
 	PassengerHID                            BIGINT NOT NULL,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- Passenger has Birth Date
 	BirthDate                               TIMESTAMP NOT NULL,
 	-- Primary index to Passenger SAT
@@ -249,10 +249,10 @@ CREATE TABLE PassengerSAT (
 CREATE TABLE PassengerNameSAT (
 	-- Passenger HUB surrogate key
 	PassengerHID                            BIGINT NOT NULL,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- Passenger has Name
 	Name                                    VARCHAR(48) NOT NULL,
 	-- Primary index to PassengerName SAT
@@ -264,10 +264,10 @@ CREATE TABLE PassengerNameSAT (
 CREATE TABLE PreferredDishSAT (
 	-- Passenger HUB surrogate key
 	PassengerHID                            BIGINT NOT NULL,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- Passenger has Preferred Dish
 	PreferredDish                           VARCHAR NOT NULL,
 	-- Primary index to PreferredDish SAT
@@ -279,12 +279,12 @@ CREATE TABLE PreferredDishSAT (
 CREATE TABLE SalesAgentHUB (
 	-- Sales Agent HUB surrogate key
 	SalesAgentHID                           BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-	-- RecordSource
-	RecordSource                            VARCHAR NOT NULL,
 	-- Sales Agent has Sales Agent Name
 	SalesAgentName                          VARCHAR(48) NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP,
+	-- RecordSource
+	RecordSource                            VARCHAR NOT NULL,
 	-- Primary index to Sales Agent HUB
 	PRIMARY KEY(SalesAgentHID),
 	-- Unique index to Sales Agent HUB over PresenceConstraint over (Sales Agent Name in "Sales Agent has Sales Agent Name") occurs at most one time

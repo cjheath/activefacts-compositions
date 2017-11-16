@@ -1,14 +1,14 @@
 Summary of CinemaTickets
 AllocatableCinemaSection STG
-	AllocatableCinemaSection STG->RecordSource as "Record Source"
 	AllocatableCinemaSection STG->Cinema->Cinema ID[1.0] as "Cinema ID"
 	AllocatableCinemaSection STG->Section->Section Name[1.1] as "Section Name"
 	AllocatableCinemaSection STG->LoadTime as "Load Time"
+	AllocatableCinemaSection STG->RecordSource as "Record Source"
 	AllocatableCinemaSection STG->LoadBatch->LoadBatch ID[1.2] as "Load Batch ID"
 Booking STG
-	Booking STG->RecordSource as "Record Source"
 	Booking STG->Booking Nr[1.0] as "Booking Nr"
 	Booking STG->LoadTime as "Load Time"
+	Booking STG->RecordSource as "Record Source"
 	Booking STG->Tickets For Booking Have Been Issued? as "Tickets For Booking Have Been Issued"
 	Booking STG->LoadBatch->LoadBatch ID[1.1] as "Load Batch ID"
 	Booking STG->Number as "Number"
@@ -26,15 +26,15 @@ Booking STG
 	### at most one of (Booking in "Booking has Collection Code") or (Booking in "tickets for Booking are being mailed to Address")
 ### SubsetConstraint((Cinema, Allocated Seat in "Cinema shows Film on Session Time", "Booking has allocated-Seat") only if (Cinema, Seat in "Row is in Cinema", "Seat is in Row"))
 Cinema STG
-	Cinema STG->RecordSource as "Record Source"
 	Cinema STG->Cinema ID[1.0] as "Cinema ID"
 	Cinema STG->LoadTime as "Load Time"
+	Cinema STG->RecordSource as "Record Source"
 	Cinema STG->LoadBatch->LoadBatch ID[1.1] as "Load Batch ID"
 	Cinema STG->Name as "Name"
 Film STG
-	Film STG->RecordSource as "Record Source"
 	Film STG->Film ID[1.0] as "Film ID"
 	Film STG->LoadTime as "Load Time"
+	Film STG->RecordSource as "Record Source"
 	Film STG->LoadBatch->LoadBatch ID[1.1] as "Load Batch ID"
 	Film STG->Name as "Name"
 	Film STG->Year?->Year Nr as "Year Nr"
@@ -42,43 +42,42 @@ LoadBatch
 	LoadBatch->LoadBatch ID[1.0] as "Load Batch ID"
 	LoadBatch->Start DateTime as "Start Date Time"
 Person STG
-	Person STG->RecordSource as "Record Source"
 	Person STG->Person ID[1.0] as "Person ID"
 	Person STG->LoadTime as "Load Time"
+	Person STG->RecordSource as "Record Source"
 	Person STG->LoadBatch->LoadBatch ID[1.1] as "Load Batch ID"
 	Person STG->Encrypted Password? as "Encrypted Password"
 	Person STG->Login Name? as "Login Name"
 	### SubsetConstraint((Person in "Person has login-Name") only if (Person in "Person has Encrypted Password"))
 Places Paid STG
-	Places Paid STG->RecordSource as "Record Source"
 	Places Paid STG->Booking->Booking Nr[1.0] as "Booking Nr"
 	Places Paid STG->Payment Method->Payment Method Code[1.1] as "Payment Method Code"
 		### restricted to {'Card', 'Cash', 'Gift Voucher', 'Loyalty Voucher'}
 	Places Paid STG->LoadTime as "Load Time"
+	Places Paid STG->RecordSource as "Record Source"
 	Places Paid STG->LoadBatch->LoadBatch ID[1.2] as "Load Batch ID"
 	Places Paid STG->Number as "Number"
 ### SubsetConstraint((Booking in "Booking has allocated-Seat") only if (Booking in "Number of places for Booking have been paid for by Payment Method"))
 Seat Allocation STG
-	Seat Allocation STG->RecordSource as "Record Source"
 	Seat Allocation STG->Booking->Booking Nr[1.0] as "Booking Nr"
 	Seat Allocation STG->Allocated Seat->Row->Cinema->Cinema ID[1.1] as "Allocated Seat Row Cinema ID"
 	Seat Allocation STG->Allocated Seat->Row->Row Nr[1.2] as "Allocated Seat Row Nr"
 	Seat Allocation STG->Allocated Seat->Seat Number[1.3] as "Allocated Seat Number"
 	Seat Allocation STG->LoadTime as "Load Time"
+	Seat Allocation STG->RecordSource as "Record Source"
 	Seat Allocation STG->LoadBatch->LoadBatch ID[1.4] as "Load Batch ID"
 ### SubsetConstraint((Booking in "Booking has allocated-Seat") only if (Booking in "Number of places for Booking have been paid for by Payment Method"))
 ### SubsetConstraint((Cinema, Allocated Seat in "Cinema shows Film on Session Time", "Booking has allocated-Seat") only if (Cinema, Seat in "Row is in Cinema", "Seat is in Row"))
 Seat STG
-	Seat STG->RecordSource as "Record Source"
 	Seat STG->Row->Cinema->Cinema ID[1.0] as "Row Cinema ID"
 	Seat STG->Row->Row Nr[1.1] as "Row Nr"
 	Seat STG->Seat Number[1.2] as "Seat Number"
 	Seat STG->LoadTime as "Load Time"
+	Seat STG->RecordSource as "Record Source"
 	Seat STG->LoadBatch->LoadBatch ID[1.3] as "Load Batch ID"
 	Seat STG->Section?->Section Name as "Section Name"
 ### SubsetConstraint((Cinema, Allocated Seat in "Cinema shows Film on Session Time", "Booking has allocated-Seat") only if (Cinema, Seat in "Row is in Cinema", "Seat is in Row"))
 Session STG
-	Session STG->RecordSource as "Record Source"
 	Session STG->Cinema->Cinema ID[1.0] as "Cinema ID"
 	Session STG->Session Time->Year->Year Nr[1.1] as "Session Time Year Nr"
 	Session STG->Session Time->Month->Month Nr[1.2] as "Session Time Month Nr"
@@ -86,13 +85,13 @@ Session STG
 	Session STG->Session Time->Hour[1.4] as "Session Time Hour"
 	Session STG->Session Time->Minute[1.5] as "Session Time Minute"
 	Session STG->LoadTime as "Load Time"
+	Session STG->RecordSource as "Record Source"
 	Session STG->Is High Demand? as "Is High Demand"
 	Session STG->Uses Allocated Seating? as "Uses Allocated Seating"
 	Session STG->Film->Film ID as "Film ID"
 	Session STG->LoadBatch->LoadBatch ID[1.6] as "Load Batch ID"
 ### SubsetConstraint((Cinema, Allocated Seat in "Cinema shows Film on Session Time", "Booking has allocated-Seat") only if (Cinema, Seat in "Row is in Cinema", "Seat is in Row"))
 Ticket Pricing STG
-	Ticket Pricing STG->RecordSource as "Record Source"
 	Ticket Pricing STG->Session Time->Year->Year Nr[1.0] as "Session Time Year Nr"
 	Ticket Pricing STG->Session Time->Month->Month Nr[1.1] as "Session Time Month Nr"
 	Ticket Pricing STG->Session Time->Day[1.2] as "Session Time Day"
@@ -102,5 +101,6 @@ Ticket Pricing STG
 	Ticket Pricing STG->Section->Section Name[1.6] as "Section Name"
 	Ticket Pricing STG->High Demand[1.7] as "High Demand"
 	Ticket Pricing STG->LoadTime as "Load Time"
+	Ticket Pricing STG->RecordSource as "Record Source"
 	Ticket Pricing STG->LoadBatch->LoadBatch ID[1.8] as "Load Batch ID"
 	Ticket Pricing STG->Price as "Price"

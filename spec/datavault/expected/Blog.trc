@@ -1,88 +1,88 @@
 Summary of Blog
 Author HUB
 	Author HUB->Author HID[1.0] as "Author HID"
-	Author HUB->RecordSource as "Record Source"
 	Author HUB->Author Id[2.0] as "Author Id"
 	Author HUB->LoadTime as "Load Time"
+	Author HUB->RecordSource as "Record Source"
 Author SAT
 	Author SAT->[Author HID][1.0] as "Author HID"
-	Author SAT->RecordSource as "Record Source"
 	Author SAT->LoadTime[1.1] as "Load Time"
+	Author SAT->RecordSource as "Record Source"
 	Author SAT->Author Name as "Author Name"
 Comment HUB
 	Comment HUB->Comment HID[1.0] as "Comment HID"
-	Comment HUB->RecordSource as "Record Source"
 	Comment HUB->Comment Id[2.0] as "Comment Id"
 	Comment HUB->LoadTime as "Load Time"
+	Comment HUB->RecordSource as "Record Source"
 Comment Is On Paragraph LINK
 	Comment Is On Paragraph LINK->Comment Is On Paragraph HID[1.0] as "Comment Is On Paragraph HID"
-	Comment Is On Paragraph LINK->RecordSource as "Record Source"
 	Comment Is On Paragraph LINK->LoadTime as "Load Time"
+	Comment Is On Paragraph LINK->RecordSource as "Record Source"
 	Comment Is On Paragraph LINK->[Comment HID][2.0] as "Comment HID"
 	Comment Is On Paragraph LINK->{Paragraph}->[Paragraph HID][2.1] as "Paragraph HID"
 Comment SAT
 	Comment SAT->[Comment HID][1.0] as "Comment HID"
-	Comment SAT->RecordSource as "Record Source"
 	Comment SAT->LoadTime[1.1] as "Load Time"
+	Comment SAT->RecordSource as "Record Source"
 	Comment SAT->Content->Style? as "Content Style"
 	Comment SAT->Content->Text as "Content Text"
 ### exactly one of (Content in "Content provides text of Comment") or (Content in "Content is of Paragraph")
 Comment Was Written By Author LINK
 	Comment Was Written By Author LINK->Comment Was Written By Author HID[1.0] as "Comment Was Written By Author HID"
-	Comment Was Written By Author LINK->RecordSource as "Record Source"
 	Comment Was Written By Author LINK->LoadTime as "Load Time"
+	Comment Was Written By Author LINK->RecordSource as "Record Source"
 	Comment Was Written By Author LINK->{Author}->[Author HID][2.1] as "Author HID"
 	Comment Was Written By Author LINK->[Comment HID][2.0] as "Comment HID"
 Paragraph HUB
 	Paragraph HUB->Paragraph HID[1.0] as "Paragraph HID"
-	Paragraph HUB->RecordSource as "Record Source"
 	Paragraph HUB->Post->Post Id[2.0] as "Post Id"
 	Paragraph HUB->Ordinal[2.1] as "Ordinal"
 	Paragraph HUB->LoadTime as "Load Time"
+	Paragraph HUB->RecordSource as "Record Source"
 Paragraph Involves Post LINK
 	Paragraph Involves Post LINK->Paragraph Involves Post HID[1.0] as "Paragraph Involves Post HID"
-	Paragraph Involves Post LINK->RecordSource as "Record Source"
 	Paragraph Involves Post LINK->LoadTime as "Load Time"
+	Paragraph Involves Post LINK->RecordSource as "Record Source"
 	Paragraph Involves Post LINK->[Paragraph HID][2.0] as "Paragraph HID"
 	Paragraph Involves Post LINK->[Post HID][2.1] as "Post HID"
 Paragraph SAT
 	Paragraph SAT->[Paragraph HID][1.0] as "Paragraph HID"
-	Paragraph SAT->RecordSource as "Record Source"
 	Paragraph SAT->LoadTime[1.1] as "Load Time"
+	Paragraph SAT->RecordSource as "Record Source"
 	Paragraph SAT->Content->Style? as "Content Style"
 	Paragraph SAT->Content->Text as "Content Text"
 ### exactly one of (Content in "Content provides text of Comment") or (Content in "Content is of Paragraph")
 Post Belongs To Topic LINK
 	Post Belongs To Topic LINK->Post Belongs To Topic HID[1.0] as "Post Belongs To Topic HID"
-	Post Belongs To Topic LINK->RecordSource as "Record Source"
 	Post Belongs To Topic LINK->LoadTime as "Load Time"
+	Post Belongs To Topic LINK->RecordSource as "Record Source"
 	Post Belongs To Topic LINK->[Post HID][2.0] as "Post HID"
 	Post Belongs To Topic LINK->{Topic}->[Topic HID][2.1] as "Topic HID"
 Post HUB
 	Post HUB->Post HID[1.0] as "Post HID"
-	Post HUB->RecordSource as "Record Source"
 	Post HUB->Post Id[2.0] as "Post Id"
 	Post HUB->LoadTime as "Load Time"
+	Post HUB->RecordSource as "Record Source"
 Post Was Written By Author LINK
 	Post Was Written By Author LINK->Post Was Written By Author HID[1.0] as "Post Was Written By Author HID"
-	Post Was Written By Author LINK->RecordSource as "Record Source"
 	Post Was Written By Author LINK->LoadTime as "Load Time"
+	Post Was Written By Author LINK->RecordSource as "Record Source"
 	Post Was Written By Author LINK->{Author}->[Author HID][2.1] as "Author HID"
 	Post Was Written By Author LINK->[Post HID][2.0] as "Post HID"
 Topic Belongs To Parent Topic LINK
 	Topic Belongs To Parent Topic LINK->Topic Belongs To Parent Topic HID[1.0] as "Topic Belongs To Parent Topic HID"
-	Topic Belongs To Parent Topic LINK->RecordSource as "Record Source"
 	Topic Belongs To Parent Topic LINK->LoadTime as "Load Time"
+	Topic Belongs To Parent Topic LINK->RecordSource as "Record Source"
 	Topic Belongs To Parent Topic LINK->[Topic HID][2.0] as "Topic HID"
 	Topic Belongs To Parent Topic LINK->{Parent Topic}?->[Topic HID][2.1] as "Parent Topic HID"
 		### RingConstraint(Acyclic: Topic, Topic in Topic belongs to parent-Topic)
 Topic HUB
 	Topic HUB->Topic HID[1.0] as "Topic HID"
-	Topic HUB->RecordSource as "Record Source"
 	Topic HUB->Topic Id[2.0] as "Topic Id"
 	Topic HUB->LoadTime as "Load Time"
+	Topic HUB->RecordSource as "Record Source"
 Topic SAT
 	Topic SAT->[Topic HID][1.0] as "Topic HID"
-	Topic SAT->RecordSource as "Record Source"
 	Topic SAT->LoadTime[1.1] as "Load Time"
+	Topic SAT->RecordSource as "Record Source"
 	Topic SAT->Topic Name as "Topic Name"

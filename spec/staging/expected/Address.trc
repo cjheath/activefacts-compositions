@@ -1,8 +1,8 @@
 Summary of Address
 Company STG
-	Company STG->RecordSource as "Record Source"
 	Company STG->Company Name[1.0] as "Company Name"
 	Company STG->LoadTime as "Load Time"
+	Company STG->RecordSource as "Record Source"
 	Company STG->Address?->Street Number? as "Address Street Number"
 	Company STG->Address?->Street->First Street Line as "Address Street First Street Line"
 	Company STG->Address?->Street->Second Street Line? as "Address Street Second Street Line"
@@ -12,10 +12,10 @@ Company STG
 		### restricted to {1000..9999}
 	### SubsetConstraint((Street, Third Street Line in "Street includes third-Street Line") only if (Street, Second Street Line in "Street includes second-Street Line"))
 Person STG
-	Person STG->RecordSource as "Record Source"
 	Person STG->Family->Family Name[1.0] as "Family Name"
 	Person STG->Given Names[1.1] as "Given Names"
 	Person STG->LoadTime as "Load Time"
+	Person STG->RecordSource as "Record Source"
 	Person STG->Address?->Street Number? as "Address Street Number"
 	Person STG->Address?->Street->First Street Line as "Address Street First Street Line"
 	Person STG->Address?->Street->Second Street Line? as "Address Street Second Street Line"

@@ -1,49 +1,49 @@
 Summary of CompanyDirectorEmployee
 Attendance STG
-	Attendance STG->RecordSource as "Record Source"
 	Attendance STG->Attendee->Given Name[1.0] as "Attendee Given Name"
 	Attendance STG->Attendee->Family Name?[1.1] as "Attendee Family Name"
 	Attendance STG->Meeting->Company->Company Name[1.2] as "Meeting Company Name"
 	Attendance STG->Meeting->Date[1.3] as "Meeting Date"
 	Attendance STG->Meeting->Is Board Meeting?[1.4] as "Meeting Is Board Meeting"
 	Attendance STG->LoadTime as "Load Time"
+	Attendance STG->RecordSource as "Record Source"
 Company STG
-	Company STG->RecordSource as "Record Source"
 	Company STG->Company Name[1.0] as "Company Name"
 	Company STG->LoadTime as "Load Time"
+	Company STG->RecordSource as "Record Source"
 	Company STG->Is Listed? as "Is Listed"
 Directorship STG
-	Directorship STG->RecordSource as "Record Source"
 	Directorship STG->Director->Given Name[1.0] as "Director Given Name"
 	Directorship STG->Director->Family Name?[1.1] as "Director Family Name"
 	Directorship STG->Company->Company Name[1.2] as "Company Name"
 	Directorship STG->LoadTime as "Load Time"
+	Directorship STG->RecordSource as "Record Source"
 	Directorship STG->Appointment Date as "Appointment Date"
 Employee STG
-	Employee STG->RecordSource as "Record Source"
 	Employee STG->Employee Nr[1.0] as "Employee Nr"
 	Employee STG->LoadTime as "Load Time"
+	Employee STG->RecordSource as "Record Source"
 	Employee STG->Company->Company Name as "Company Name"
 	Employee STG->Manager?->Employee->Employee Nr as "Manager Nr"
 		### RingConstraint(Acyclic: Employee, Manager in Employee is supervised by Manager)
 		### exactly one of (Employee in "Employee is supervised by Manager") or (Employee in "Manager is a kind of Employee")
 	Employee STG->Manager?->Is Ceo? as "Manager Is Ceo"
 Employment STG
-	Employment STG->RecordSource as "Record Source"
 	Employment STG->Person->Given Name[1.0] as "Person Given Name"
 	Employment STG->Person->Family Name?[1.1] as "Person Family Name"
 	Employment STG->Employee->Employee Nr[1.2] as "Employee Nr"
 	Employment STG->LoadTime as "Load Time"
+	Employment STG->RecordSource as "Record Source"
 Meeting STG
-	Meeting STG->RecordSource as "Record Source"
 	Meeting STG->Company->Company Name[1.0] as "Company Name"
 	Meeting STG->Date[1.1] as "Date"
 	Meeting STG->Is Board Meeting?[1.2] as "Is Board Meeting"
 	Meeting STG->LoadTime as "Load Time"
+	Meeting STG->RecordSource as "Record Source"
 Person STG
-	Person STG->RecordSource as "Record Source"
 	Person STG->Given Name[1.0] as "Given Name"
 	Person STG->Family Name?[1.1] as "Family Name"
 	Person STG->LoadTime as "Load Time"
+	Person STG->RecordSource as "Record Source"
 	Person STG->Birth Date? as "Birth Date"
 		### restricted to {'1900/01/01'..}
