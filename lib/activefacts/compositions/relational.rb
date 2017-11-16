@@ -505,13 +505,11 @@ module ActiveFacts
       # This member is an Absorption. Process it recursively, absorbing all its members or just a key
       # depending on whether the absorbed object is a Composite (or absorbed into one) or not.
       def absorb_nested mapping, member, paths
-        # Is this where we absorb a partitioned supertype?
-        is_partitioned = (ft = member.child_role.fact_type).is_a?(MM::TypeInheritance) && ft.assimilation == 'partitioned'
-
         # Should we absorb a foreign key or the whole contents?
         child_object_type = member.child_role.object_type
         child_mapping = @binary_mappings[child_object_type]
-        if child_mapping.composite && !is_partitioned
+        if child_mapping.composite &&     # The child is a separate table
+            !member.is_partitioned_here   # We are not absorbing a partitioned supertype
           trace :relational_columns?, "Absorbing FK to #{member.child_role.name} in #{member.inspect_reading}" do
             paths[member] = @constellation.ForeignKey(:new, source_composite: mapping.root, composite: child_mapping.composite, absorption: member)
             absorb_key member, child_mapping, paths
@@ -540,7 +538,7 @@ module ActiveFacts
           return
         end
 
-        # REVISIT: if is_partitioned, don't absorb sibling subtypes!
+        # REVISIT: if member.is_partitioned_here, don't absorb sibling subtypes!
         trace :relational_columns?, "Absorbing all of #{member.child_role.name} in #{member.inspect_reading}" do
           absorb_all member, child_mapping, paths
         end
@@ -706,7 +704,8 @@ module ActiveFacts
         trace :relational_paths?, "Adding #{new_pcs.size} new indices for presence constraints on #{mapping.inspect}" do
           new_pcs.each do |pc|
             newpaths[pc] = index = @constellation.Index(:new, composite: mapping.root, is_unique: true, presence_constraint: pc)
-            if mapping.root.mapping.object_type.preferred_identifier == pc and
+            identified_object = mapping.is_partitioned_here ? mapping.child_role.object_type : mapping.root.mapping.object_type
+            if identified_object.preferred_identifier == pc and
                 !@composition.all_full_absorption[mapping.object_type] and  # REVISIT: This clause might now be unnecessary
                 !mapping.root.natural_index
               mapping.root.natural_index = index

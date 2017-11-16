@@ -1,0 +1,45 @@
+module Base
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'base_guid'
+
+    # Separate is a kind of Base
+    has_one :separate, :class_name => 'Separate', :foreign_key => :base_guid, :dependent => :destroy
+
+    validates :base_val, :presence => true
+  end
+end
+
+module Partition
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'base_guid'
+
+    validates :base_val, :presence => true
+    validates :part_val, :presence => true
+  end
+end
+
+module PartitionInd
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'partition_ind_id'
+
+    validates :base_guid, :presence => true
+    validates :base_val, :presence => true
+    validates :partition_ind_key, :presence => true
+  end
+end
+
+module Separate
+  extend ActiveSupport::Concern
+  included do
+    self.primary_key = 'base_guid'
+
+    # Separate is a kind of Base
+    belongs_to :base, :foreign_key => :base_guid
+
+    validates :base_guid, :presence => true
+    validates :sep_val, :presence => true
+  end
+end

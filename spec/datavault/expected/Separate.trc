@@ -11,13 +11,13 @@ Base SAT
 	Base SAT->Base Val as "Base Val"
 Partition HUB
 	Partition HUB->Partition HID[1.0] as "Partition HID"
+	Partition HUB->Base->Base GUID[2.0] as "Base GUID"
+	Partition HUB->Base->Base HID as "Base HID"
+	Partition HUB->Base->Base Val as "Base Val"
 	Partition HUB->RecordSource as "Record Source"
 	Partition HUB->LoadTime as "Load Time"
 Partition SAT
 	Partition SAT->[Partition HID][1.0] as "Partition HID"
-	Partition SAT->Base->Base GUID as "Base GUID"
-	Partition SAT->Base->Base HID as "Base HID"
-	Partition SAT->Base->Base Val as "Base Val"
 	Partition SAT->RecordSource as "Record Source"
 	Partition SAT->LoadTime[1.1] as "Load Time"
 	Partition SAT->Part Val as "Part Val"

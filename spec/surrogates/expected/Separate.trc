@@ -19,7 +19,7 @@
 #           1: Absorption (mandatory) in Base of Base Val in "Base has base-Val"
 #         1: Absorption (mandatory) in Partition of Part Val in "Partition has part-Val"
 #     Indices
-#       Unique index to Partition over PresenceConstraint over (Base GUID in "Base has Base GUID") occurs at most one time
+#       Primary index to Partition over PresenceConstraint over (Base GUID in "Base has Base GUID") occurs at most one time
 #         IndexField part 0 in Partition references Absorption (existential) in Base of Base GUID in "Base has Base GUID"
 #   Composite Mapping (top) of PartitionInd
 #     Columns

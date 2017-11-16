@@ -15,8 +15,8 @@ CREATE TABLE "Partition" (
 	BaseVal                                 Val NOT NULL,
 	-- Partition has part-Val
 	PartVal                                 Val NOT NULL,
-	-- Unique index to Partition over PresenceConstraint over (Base GUID in "Base has Base GUID") occurs at most one time
-	UNIQUE(BaseGUID)
+	-- Primary index to Partition over PresenceConstraint over (Base GUID in "Base has Base GUID") occurs at most one time
+	PRIMARY KEY(BaseGUID)
 );
 
 

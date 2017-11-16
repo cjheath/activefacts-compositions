@@ -12,7 +12,7 @@ CREATE TABLE BOOKING (
 	-- Booking has Booking Nr
 	BOOKING_NR                              INTEGER NOT NULL,
 	-- Tickets For Booking Have Been Issued
-	TICKETS_FOR_BOOKING_HAVE_BEEN_ISSUED    BOOLEAN,
+	TICKETS_FOR_BOOKING_HAVE_BEEN_ISSUED    CHAR(1),
 	-- Booking involves Number
 	NUMBER                                  SHORTINTEGER NOT NULL CHECK(NUMBER >= 1),
 	-- Booking involves Person that has Person ID
@@ -140,9 +140,9 @@ CREATE TABLE "SESSION" (
 	-- Session involves Session Time that is at Minute
 	SESSION_TIME_MINUTE                     INTEGER NOT NULL CHECK((SESSION_TIME_MINUTE >= 0 AND SESSION_TIME_MINUTE <= 59)),
 	-- Session Is High Demand
-	IS_HIGH_DEMAND                          BOOLEAN,
+	IS_HIGH_DEMAND                          CHAR(1),
 	-- Session Uses Allocated Seating
-	USES_ALLOCATED_SEATING                  BOOLEAN,
+	USES_ALLOCATED_SEATING                  CHAR(1),
 	-- Session involves Film that has Film ID
 	FILM_ID                                 LONGINTEGER NOT NULL,
 	-- Primary index to Session over PresenceConstraint over (Cinema, Session Time in "Cinema shows Film on Session Time") occurs one time
@@ -168,7 +168,7 @@ CREATE TABLE TICKET_PRICING (
 	-- Ticket Pricing involves Section that has Section Name
 	SECTION_NAME                            VARCHAR NOT NULL,
 	-- Ticket Pricing involves High Demand
-	HIGH_DEMAND                             BOOLEAN NOT NULL,
+	HIGH_DEMAND                             CHAR(1) NOT NULL,
 	-- Ticket Pricing involves Price
 	PRICE                                   MONEY NOT NULL,
 	-- Primary index to Ticket Pricing over PresenceConstraint over (Session Time, Cinema, Section, High Demand in "tickets on Session Time at Cinema in Section for High Demand have Price") occurs one time

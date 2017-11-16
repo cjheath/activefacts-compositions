@@ -11,6 +11,12 @@ ActiveRecord::Schema.define(version: 20000000000000) do
     t.column "base_val", :Val, null: false
   end
 
+  create_table "partitions", id: false, force: true do |t|
+    t.column "base_guid", :uuid, default: 'gen_random_uuid()', primary_key: true, null: false
+    t.column "base_val", :Val, null: false
+    t.column "part_val", :Val, null: false
+  end
+
   create_table "partition_inds", id: false, force: true do |t|
     t.column "partition_ind_id", :primary_key, null: false
     t.column "base_guid", :uuid, null: false

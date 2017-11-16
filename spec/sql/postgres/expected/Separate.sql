@@ -12,13 +12,13 @@ CREATE TABLE base (
 
 CREATE TABLE "partition" (
 	-- Partition is a kind of Base that has Base GUID
-	base_guid                               UUID NOT NULL,
+	base_guid                               UUID NOT NULL DEFAULT 'gen_random_uuid()',
 	-- Partition is a kind of Base that has base-Val
 	base_val                                Val NOT NULL,
 	-- Partition has part-Val
 	part_val                                Val NOT NULL,
-	-- Unique index to Partition over PresenceConstraint over (Base GUID in "Base has Base GUID") occurs at most one time
-	UNIQUE(base_guid)
+	-- Primary index to Partition over PresenceConstraint over (Base GUID in "Base has Base GUID") occurs at most one time
+	PRIMARY KEY(base_guid)
 );
 
 
