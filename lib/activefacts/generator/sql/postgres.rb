@@ -35,7 +35,7 @@ module ActiveFacts
           PostgresDataTypeContext.new
         end
 
-        def auto_assign_modifier
+        def auto_increment_modifier
           ''
         end
 

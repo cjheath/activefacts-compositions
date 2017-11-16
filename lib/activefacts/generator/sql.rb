@@ -153,7 +153,7 @@ module ActiveFacts
         "\t#{column_name}#{padding}#{column_type leaf, column_name}"
       end
 
-      def auto_assign_modifier
+      def auto_increment_modifier
         ' GENERATED ALWAYS AS IDENTITY'
       end
 
@@ -173,7 +173,7 @@ module ActiveFacts
         }#{
           options[:default] || ''
         }#{
-          auto_assign_modifier if a = options[:auto_assign] && a != 'assert'
+          auto_increment_modifier if a = options[:auto_assign] && a != 'assert'
         }#{
           check_clause(column_name, value_constraint) if value_constraint
         }"
