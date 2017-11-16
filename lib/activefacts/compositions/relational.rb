@@ -280,7 +280,7 @@ module ActiveFacts
         @composition.all_composite.each do |composite|
           mapping = composite.mapping
           if mapping.object_type.is_a?(MM::ValueType) and               # Composite needs a ValueField
-              !mapping.all_member.detect{|m| m.is_a?(MM::ValueField)}   # And don't already have one
+              !mapping.all_member.detect{|m| m.is_a?(MM::ValueField)}   # And doesn't already have one
             trace :relational_columns, "Adding value field for #{mapping.object_type.name}"
             @constellation.ValueField(
               :new,
