@@ -342,8 +342,9 @@ module ActiveFacts
         pit_hub_field = hub_hash_field.fork_to_new_parent(pit_composite.mapping)
         date_field = @constellation.ValidFrom(:new,
           parent: pit_composite.mapping,
-          name: "Snapshot"+datestamp_type_name,
-          object_type: datestamp_type
+          name: "Snapshot "+datestamp_type_name,
+          object_type: datestamp_type,
+          injection_annotation: "datavault"
         )
 
         natural_index =
@@ -376,8 +377,9 @@ module ActiveFacts
           src_hash_field.name = sat_hash_name
           src_load_field = @constellation.ValidFrom(:new,
             parent: pit_composite.mapping,
-            name: "#{sat_name} Load"+datestamp_type_name,
-            object_type: datestamp_type
+            name: "#{sat_name} Load "+datestamp_type_name,
+            object_type: datestamp_type,
+            injection_annotation: "datavault"
           )
 
           sat_index_fields = sat_composite.primary_index.all_index_field.to_a

@@ -8,7 +8,7 @@ CREATE TABLE ATTENDANCE (
 	-- Attendance involves Meeting that is held on Date
 	MEETING_DATE                            DATE NOT NULL,
 	-- Attendance involves Meeting that Is Board Meeting
-	MEETING_IS_BOARD_MEETING                BOOLEAN,
+	MEETING_IS_BOARD_MEETING                CHAR(1),
 	-- Primary index to Attendance over PresenceConstraint over (Attendee, Meeting in "Person attended Meeting") occurs at most one time
 	UNIQUE(ATTENDEE_GIVEN_NAME, ATTENDEE_FAMILY_NAME, MEETING_COMPANY_NAME, MEETING_DATE, MEETING_IS_BOARD_MEETING)
 );
@@ -18,7 +18,7 @@ CREATE TABLE COMPANY (
 	-- Company is called Company Name
 	COMPANY_NAME                            VARCHAR(48) NOT NULL,
 	-- Company Is Listed
-	IS_LISTED                               BOOLEAN,
+	IS_LISTED                               CHAR(1),
 	-- Primary index to Company over PresenceConstraint over (Company Name in "Company is called Company Name") occurs at most one time
 	PRIMARY KEY(COMPANY_NAME)
 );
@@ -47,7 +47,7 @@ CREATE TABLE EMPLOYEE (
 	-- maybe Employee is supervised by Manager that is a kind of Employee that has Employee Nr
 	MANAGER_NR                              INTEGER NULL,
 	-- maybe Employee is a Manager that Is Ceo
-	MANAGER_IS_CEO                          BOOLEAN,
+	MANAGER_IS_CEO                          CHAR(1),
 	-- Primary index to Employee over PresenceConstraint over (Employee Nr in "Employee has Employee Nr") occurs at most one time
 	PRIMARY KEY(EMPLOYEE_NR),
 	FOREIGN KEY (COMPANY_NAME) REFERENCES COMPANY (COMPANY_NAME),
@@ -74,7 +74,7 @@ CREATE TABLE MEETING (
 	-- Meeting is held on Date
 	"DATE"                                  DATE NOT NULL,
 	-- Is Board Meeting
-	IS_BOARD_MEETING                        BOOLEAN,
+	IS_BOARD_MEETING                        CHAR(1),
 	-- Primary index to Meeting over PresenceConstraint over (Company, Date, Is Board Meeting in "Meeting is held by Company", "Meeting is held on Date", "Meeting is board meeting") occurs at most one time
 	PRIMARY KEY(COMPANY_NAME, "DATE", IS_BOARD_MEETING),
 	FOREIGN KEY (COMPANY_NAME) REFERENCES COMPANY (COMPANY_NAME)

@@ -10,7 +10,7 @@ require 'activefacts/compositions/relational'
 require 'activefacts/generator/validate'
 require 'activefacts/input/cql'
 
-SURROGATE_CQL_DIR = Pathname.new(__FILE__+'/../../relational').relative_path_from(Pathname(Dir.pwd)).to_s
+SURROGATE_CQL_DIR = Pathname.new(__FILE__+'/../../cql').relative_path_from(Pathname(Dir.pwd)).to_s
 SURROGATE_TEST_DIR = Pathname.new(__FILE__+'/..').relative_path_from(Pathname(Dir.pwd)).to_s
 
 # Hack into the tracing mechanism to save the output from the :composition key:

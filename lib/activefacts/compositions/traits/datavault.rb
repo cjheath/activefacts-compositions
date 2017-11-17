@@ -7,14 +7,19 @@ module ActiveFacts
             datestamp: ['String', "Data type name to use for data vault date stamps (default: DateTime)"],
             recordsource: ['String', "Data type name to use for data vault record source (default: String)"],
             loadbatch: ['String', "Create a load batch table using this name, default LoadBatch"],
+            # recordhash: ['Boolean', "Create a RecordHash field to be populated with a hash of all fields in the source record"],
+            # sathash: ['Boolean', "Create a SatHash field for each satellite to be populated with a hash of all fields in the source record for each satellite"],
+            # surrogate: ['Boolean', "Add a RecordGUID field to be auto-populated on every insert"],
           }
         end
 
         def datavault_initialize options
           @option_datestamp = options.delete('datestamp')
           @option_datestamp = 'DateTime' if [true, '', 'true', 'yes', nil].include?(@option_datestamp)
+
           @option_recordsource = options.delete('recordsource')
           @option_recordsource = 'String' if [true, '', 'true', 'yes', nil].include?(@option_recordsource)
+
           @option_loadbatch = options.delete('loadbatch')
           @option_loadbatch = 'LoadBatch' if [true, 'true', 'yes'].include?(@option_loadbatch)
           @option_loadbatch = nil if [false, 'false', ''].include?(@option_loadbatch)
@@ -39,12 +44,15 @@ module ActiveFacts
         def inject_loadbatch_relationships
           return unless @option_loadbatch
           @composition.all_composite.each do |composite|
-            next if composite.mapping.object_type.name == @option_loadbatch
-            @compiler.compile("#{composite.mapping.name} was loaded in one #{@option_loadbatch};")
+            if composite.mapping.object_type.name == @option_loadbatch
+              composite.mapping.injection_annotation = 'loadbatch'
+            else
+              @compiler.compile("#{composite.mapping.name} was loaded in one #{@option_loadbatch};")
+            end
           end
           @loadbatch_entity_type.all_role.each do |role|
-            populate_reference role
-            populate_reference role.counterpart
+            populate_reference(role).injection_annotation = 'loadbatch'
+            populate_reference(role.counterpart).injection_annotation = 'loadbatch'
           end
         end
 
@@ -53,14 +61,16 @@ module ActiveFacts
           date_field = @constellation.ValidFrom(:new,
             parent: mapping,
             name: "LoadTime",
-            object_type: datestamp_type
+            object_type: datestamp_type,
+            injection_annotation: "datavault"
           )
 
           # Add a load DateTime value
           recsrc_field = @constellation.ValueField(:new,
             parent: mapping,
             name: "RecordSource",
-            object_type: recordsource_type
+            object_type: recordsource_type,
+            injection_annotation: "datavault"
           )
           mapping.re_rank
           date_field

@@ -1,18 +1,18 @@
 Summary of MagnetPole
 Magnet HUB
 	Magnet HUB->Magnet HID[1.0] as "Magnet HID"
-	Magnet HUB->RecordSource as "Record Source"
 	Magnet HUB->Magnet AutoCounter[2.0] as "Magnet Auto Counter"
 	Magnet HUB->LoadTime as "Load Time"
+	Magnet HUB->RecordSource as "Record Source"
 Magnet Pole Belongs To Magnet LINK
 	Magnet Pole Belongs To Magnet LINK->Magnet Pole Belongs To Magnet HID[1.0] as "Magnet Pole Belongs To Magnet HID"
-	Magnet Pole Belongs To Magnet LINK->RecordSource as "Record Source"
 	Magnet Pole Belongs To Magnet LINK->LoadTime as "Load Time"
+	Magnet Pole Belongs To Magnet LINK->RecordSource as "Record Source"
 	Magnet Pole Belongs To Magnet LINK->[Magnet HID][2.1] as "Magnet HID"
 	Magnet Pole Belongs To Magnet LINK->[MagnetPole HID][2.0] as "Magnet Pole HID"
 MagnetPole HUB
 	MagnetPole HUB->MagnetPole HID[1.0] as "Magnet Pole HID"
-	MagnetPole HUB->RecordSource as "Record Source"
 	MagnetPole HUB->Magnet->Magnet AutoCounter[2.0] as "Magnet Auto Counter"
 	MagnetPole HUB->Is North?[2.1] as "Is North"
 	MagnetPole HUB->LoadTime as "Load Time"
+	MagnetPole HUB->RecordSource as "Record Source"

@@ -42,7 +42,7 @@ CREATE TABLE CONTAINER (
 	-- Container has Alternate Big Int
 	ALTERNATE_BIG_INT                       LONGINTEGER NOT NULL,
 	-- Container has Alternate Bit
-	ALTERNATE_BIT                           BOOLEAN NOT NULL,
+	ALTERNATE_BIT                           CHAR(1) NOT NULL,
 	-- Container has Alternate Character
 	ALTERNATE_CHARACTER                     VARCHAR NOT NULL,
 	-- Container has Alternate Currency
@@ -106,7 +106,7 @@ CREATE TABLE CONTAINER (
 	-- Container has Fundamental Binary
 	FUNDAMENTAL_BINARY                      LOB NOT NULL,
 	-- Container has Fundamental Boolean
-	FUNDAMENTAL_BOOLEAN                     BOOLEAN NOT NULL,
+	FUNDAMENTAL_BOOLEAN                     CHAR(1) NOT NULL,
 	-- Container has Fundamental Char
 	FUNDAMENTAL_CHAR                        VARCHAR NOT NULL,
 	-- Container has Fundamental Date

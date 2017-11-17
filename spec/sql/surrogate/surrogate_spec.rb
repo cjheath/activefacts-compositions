@@ -8,10 +8,10 @@ require 'bundler/setup' # Set up gems listed in the Gemfile.
 require 'spec_helper'
 require 'activefacts/compositions/relational'
 require 'activefacts/compositions/names'
-require 'activefacts/generator/sql'
+require 'activefacts/generator/sql/postgres'
 require 'activefacts/input/cql'
 
-SQL_SURR_CQL_DIR = Pathname.new(__FILE__+'/../../relational').relative_path_from(Pathname(Dir.pwd)).to_s
+SQL_SURR_CQL_DIR = Pathname.new(__FILE__+'/../../../cql').relative_path_from(Pathname(Dir.pwd)).to_s
 SQL_SURR_TEST_DIR = Pathname.new(__FILE__+'/..').relative_path_from(Pathname(Dir.pwd)).to_s
 
 RSpec::Matchers.define :be_like do |expected|
@@ -50,7 +50,7 @@ describe "SQL schema with surrogates from CQL" do
       compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, "test", 'surrogates' => true)
       compositor.generate
 
-      output = ActiveFacts::Generators::SQL.new(compositor.composition).generate
+      output = ActiveFacts::Generators::SQL::Postgres.new(compositor.composition).generate
 
       # Save or delete the actual output file:
       if expected_text != output

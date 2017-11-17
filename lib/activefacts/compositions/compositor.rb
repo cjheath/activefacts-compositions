@@ -48,11 +48,12 @@ module ActiveFacts
       end
 
       def populate_reference role
-        return if (@reference_populated ||= {})[role]
+        component = (@reference_populated ||= {})[role]
+        return component if component
         @reference_populated[role] = true
 
         parent = @binary_mappings[role.object_type]
-        return if role.fact_type.all_role.size > 2
+        return nil if role.fact_type.all_role.size > 2
         if role.fact_type.all_role.size != 1
           counterpart = role.counterpart
           rt = role_type(counterpart)
@@ -60,7 +61,7 @@ module ActiveFacts
             raise "Fact type must be objectified: #{role.fact_type.default_reading}"
           end
 
-          a = @constellation.Absorption(
+          component = @constellation.Absorption(
               :new,
               name: role_name(counterpart),
               parent: parent,
@@ -71,26 +72,27 @@ module ActiveFacts
           # Populate the absorption/reverse_absorption (putting the "many" or optional side as reverse)
           if r = @component_by_fact[role.fact_type]
             # Second occurrence of this fact type, set the direction:
-            if a.is_preferred_direction
-              a.reverse_absorption = r
+            if component.is_preferred_direction
+              component.reverse_absorption = r
             else  # Set this as the reverse absorption
-              a.forward_absorption = r
+              component.forward_absorption = r
             end
           else
             # First occurrence of this fact type
-            @component_by_fact[role.fact_type] = a
+            @component_by_fact[role.fact_type] = component
           end
         else    # It's an indicator
-          a = @constellation.Indicator(
+          component = @constellation.Indicator(
               :new,
               name: role.name,
               parent: parent,
               role: role
             )
-          @component_by_fact[role.fact_type] = a  # For completeness, in case a subclass uses it
+          @component_by_fact[role.fact_type] = component  # For completeness, in case a subclass uses it
         end
-        @reference_populated[role] = a
-        trace :binarize, "Populating #{a.inspect}"
+        @reference_populated[role] = component
+        trace :binarize, "Populated #{component.inspect}"
+        component
       end
 
     private

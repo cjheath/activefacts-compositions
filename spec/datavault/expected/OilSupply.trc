@@ -1,65 +1,65 @@
 Summary of OilSupply
 Acceptable Substitution LINK
 	Acceptable Substitution LINK->Acceptable Substitution HID[1.0] as "Acceptable Substitution HID"
-	Acceptable Substitution LINK->RecordSource as "Record Source"
 	Acceptable Substitution LINK->{Product}->[Product HID][2.0] as "Product HID"
 	Acceptable Substitution LINK->{Alternate Product}->[Product HID][2.1] as "Alternate Product HID"
 	Acceptable Substitution LINK->Season[2.2] as "Season"
 	Acceptable Substitution LINK->LoadTime as "Load Time"
+	Acceptable Substitution LINK->RecordSource as "Record Source"
 	### RingConstraint(AcyclicIntransitive: Product, Product in Product may be substituted by alternate-Product in Season)
 Product HUB
 	Product HUB->Product HID[1.0] as "Product HID"
-	Product HUB->RecordSource as "Record Source"
 	Product HUB->Product Name[2.0] as "Product Name"
 	Product HUB->LoadTime as "Load Time"
+	Product HUB->RecordSource as "Record Source"
 Production Forecast LINK
 	Production Forecast LINK->Production Forecast HID[1.0] as "Production Forecast HID"
-	Production Forecast LINK->RecordSource as "Record Source"
 	Production Forecast LINK->{Refinery}->[Refinery HID][2.0] as "Refinery HID"
 	Production Forecast LINK->Supply Period->Year->Year Nr[2.1] as "Supply Period Year Nr"
 	Production Forecast LINK->Supply Period->Month->Month Nr[2.2] as "Supply Period Month Nr"
 		### restricted to {1..12}
 	Production Forecast LINK->{Product}->[Product HID][2.3] as "Product HID"
 	Production Forecast LINK->LoadTime as "Load Time"
+	Production Forecast LINK->RecordSource as "Record Source"
 Production Forecast SAT
 	Production Forecast SAT->[Production Forecast HID][1.0] as "Production Forecast HID"
-	Production Forecast SAT->RecordSource as "Record Source"
 	Production Forecast SAT->LoadTime[1.1] as "Load Time"
+	Production Forecast SAT->RecordSource as "Record Source"
 	Production Forecast SAT->Quantity as "Quantity"
 	Production Forecast SAT->Cost? as "Cost"
 Refinery HUB
 	Refinery HUB->Refinery HID[1.0] as "Refinery HID"
-	Refinery HUB->RecordSource as "Record Source"
 	Refinery HUB->Refinery Name[2.0] as "Refinery Name"
 	Refinery HUB->LoadTime as "Load Time"
+	Refinery HUB->RecordSource as "Record Source"
 Region HUB
 	Region HUB->Region HID[1.0] as "Region HID"
-	Region HUB->RecordSource as "Record Source"
 	Region HUB->Region Name[2.0] as "Region Name"
 	Region HUB->LoadTime as "Load Time"
+	Region HUB->RecordSource as "Record Source"
 Regional Demand LINK
 	Regional Demand LINK->Regional Demand HID[1.0] as "Regional Demand HID"
-	Regional Demand LINK->RecordSource as "Record Source"
 	Regional Demand LINK->{Region}->[Region HID][2.0] as "Region HID"
 	Regional Demand LINK->Supply Period->Year->Year Nr[2.1] as "Supply Period Year Nr"
 	Regional Demand LINK->Supply Period->Month->Month Nr[2.2] as "Supply Period Month Nr"
 		### restricted to {1..12}
 	Regional Demand LINK->{Product}->[Product HID][2.3] as "Product HID"
 	Regional Demand LINK->LoadTime as "Load Time"
+	Regional Demand LINK->RecordSource as "Record Source"
 Regional Demand SAT
 	Regional Demand SAT->[Regional Demand HID][1.0] as "Regional Demand HID"
-	Regional Demand SAT->RecordSource as "Record Source"
 	Regional Demand SAT->LoadTime[1.1] as "Load Time"
+	Regional Demand SAT->RecordSource as "Record Source"
 	Regional Demand SAT->Quantity as "Quantity"
 Transport Route LINK
 	Transport Route LINK->Transport Route HID[1.0] as "Transport Route HID"
-	Transport Route LINK->RecordSource as "Record Source"
 	Transport Route LINK->Transport Mode[2.0] as "Transport Mode"
 	Transport Route LINK->{Refinery}->[Refinery HID][2.1] as "Refinery HID"
 	Transport Route LINK->{Region}->[Region HID][2.2] as "Region HID"
 	Transport Route LINK->LoadTime as "Load Time"
+	Transport Route LINK->RecordSource as "Record Source"
 Transport Route SAT
 	Transport Route SAT->[Transport Route HID][1.0] as "Transport Route HID"
-	Transport Route SAT->RecordSource as "Record Source"
 	Transport Route SAT->LoadTime[1.1] as "Load Time"
+	Transport Route SAT->RecordSource as "Record Source"
 	Transport Route SAT->Cost? as "Cost"

@@ -10,13 +10,13 @@ CREATE TABLE BASE (
 
 CREATE TABLE "PARTITION" (
 	-- Partition is a kind of Base that has Base GUID
-	BASE_GUID                               RAW(32) NOT NULL,
+	BASE_GUID                               RAW(32) NOT NULL DEFAULT SYS_GUID(),
 	-- Partition is a kind of Base that has base-Val
 	BASE_VAL                                Val NOT NULL,
 	-- Partition has part-Val
 	PART_VAL                                Val NOT NULL,
-	-- Unique index to Partition over PresenceConstraint over (Base GUID in "Base has Base GUID") occurs at most one time
-	UNIQUE(BASE_GUID)
+	-- Primary index to Partition over PresenceConstraint over (Base GUID in "Base has Base GUID") occurs at most one time
+	PRIMARY KEY(BASE_GUID)
 );
 
 

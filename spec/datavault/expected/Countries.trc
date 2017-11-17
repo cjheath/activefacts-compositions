@@ -1,6 +1,6 @@
 Summary of Countries
 Country HUB
 	Country HUB->Country HID[1.0] as "Country HID"
-	Country HUB->RecordSource as "Record Source"
 	Country HUB->Country Code->Country Code[2.1] as "Country Code"
 	Country HUB->LoadTime as "Load Time"
+	Country HUB->RecordSource as "Record Source"

@@ -517,7 +517,7 @@ module ActiveFacts
             }#{
               value_constraint ? check_clause(column_name, value_constraint) : ''
             }"
-          when MM::Injection
+          when MM::ValidFrom
             component.object_type.name
           else
             raise "Can't make a column from #{component}"

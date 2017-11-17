@@ -3,8 +3,8 @@ LoadBatch
 	LoadBatch->LoadBatch ID[1.0] as "Load Batch ID"
 	LoadBatch->Start DateTime as "Start Date Time"
 Person STG
-	Person STG->RecordSource as "Record Source"
 	Person STG->Family Name[1.0] as "Family Name"
 	Person STG->Given Name[1.1] as "Given Name"
-	Person STG->LoadTime as "Load Time"
 	Person STG->LoadBatch->LoadBatch ID[1.2] as "Load Batch ID"
+	Person STG->LoadTime as "Load Time"
+	Person STG->RecordSource as "Record Source"

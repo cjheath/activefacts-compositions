@@ -11,7 +11,7 @@ require 'activefacts/generator/validate'
 require 'activefacts/generator/summary'
 require 'activefacts/input/cql'
 
-SUMMARY_CQL_DIR = Pathname.new(__FILE__+'/../../relational').relative_path_from(Pathname(Dir.pwd)).to_s
+SUMMARY_CQL_DIR = Pathname.new(__FILE__+'/../../cql').relative_path_from(Pathname(Dir.pwd)).to_s
 SUMMARY_TEST_DIR = Pathname.new(__FILE__+'/..').relative_path_from(Pathname(Dir.pwd)).to_s
 
 RSpec::Matchers.define :be_like do |expected|

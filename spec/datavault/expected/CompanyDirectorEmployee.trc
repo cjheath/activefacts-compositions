@@ -1,40 +1,40 @@
 Summary of CompanyDirectorEmployee
 Attendance LINK
 	Attendance LINK->Attendance HID[1.0] as "Attendance HID"
-	Attendance LINK->RecordSource as "Record Source"
 	Attendance LINK->{Attendee}->[Person HID][2.0] as "Attendee Person HID"
 	Attendance LINK->{Meeting}->[Meeting HID][2.1] as "Meeting HID"
 	Attendance LINK->LoadTime as "Load Time"
+	Attendance LINK->RecordSource as "Record Source"
 Company HUB
 	Company HUB->Company HID[1.0] as "Company HID"
-	Company HUB->RecordSource as "Record Source"
 	Company HUB->Company Name[2.0] as "Company Name"
 	Company HUB->LoadTime as "Load Time"
+	Company HUB->RecordSource as "Record Source"
 Company SAT
 	Company SAT->[Company HID][1.0] as "Company HID"
-	Company SAT->RecordSource as "Record Source"
 	Company SAT->LoadTime[1.1] as "Load Time"
+	Company SAT->RecordSource as "Record Source"
 	Company SAT->Is Listed? as "Is Listed"
 Directorship LINK
 	Directorship LINK->Directorship HID[1.0] as "Directorship HID"
-	Directorship LINK->RecordSource as "Record Source"
 	Directorship LINK->{Director}->[Person HID][2.0] as "Director Person HID"
 	Directorship LINK->{Company}->[Company HID][2.1] as "Company HID"
 	Directorship LINK->LoadTime as "Load Time"
+	Directorship LINK->RecordSource as "Record Source"
 Directorship SAT
 	Directorship SAT->[Directorship HID][1.0] as "Directorship HID"
-	Directorship SAT->RecordSource as "Record Source"
 	Directorship SAT->LoadTime[1.1] as "Load Time"
+	Directorship SAT->RecordSource as "Record Source"
 	Directorship SAT->Appointment Date as "Appointment Date"
 Employee HUB
 	Employee HUB->Employee HID[1.0] as "Employee HID"
-	Employee HUB->RecordSource as "Record Source"
 	Employee HUB->Employee Nr[2.0] as "Employee Nr"
 	Employee HUB->LoadTime as "Load Time"
+	Employee HUB->RecordSource as "Record Source"
 Employee Is Supervised By Manager LINK
 	Employee Is Supervised By Manager LINK->Employee Is Supervised By Manager HID[1.0] as "Employee Is Supervised By Manager HID"
-	Employee Is Supervised By Manager LINK->RecordSource as "Record Source"
 	Employee Is Supervised By Manager LINK->LoadTime as "Load Time"
+	Employee Is Supervised By Manager LINK->RecordSource as "Record Source"
 	Employee Is Supervised By Manager LINK->[Employee HID][2.0] as "Employee HID"
 	Employee Is Supervised By Manager LINK->{Manager}?->Employee->[Employee HID][2.1] as "Manager Employee HID"
 		### RingConstraint(Acyclic: Employee, Manager in Employee is supervised by Manager)
@@ -42,43 +42,43 @@ Employee Is Supervised By Manager LINK
 ### exactly one of (Employee in "Employee is supervised by Manager") or (Employee in "Manager is a kind of Employee")
 Employee SAT
 	Employee SAT->[Employee HID][1.0] as "Employee HID"
-	Employee SAT->RecordSource as "Record Source"
 	Employee SAT->LoadTime[1.1] as "Load Time"
+	Employee SAT->RecordSource as "Record Source"
 	Employee SAT->Manager?->Is Ceo? as "Manager Is Ceo"
 ### exactly one of (Employee in "Employee is supervised by Manager") or (Employee in "Manager is a kind of Employee")
 Employee Works At Company LINK
 	Employee Works At Company LINK->Employee Works At Company HID[1.0] as "Employee Works At Company HID"
-	Employee Works At Company LINK->RecordSource as "Record Source"
 	Employee Works At Company LINK->LoadTime as "Load Time"
+	Employee Works At Company LINK->RecordSource as "Record Source"
 	Employee Works At Company LINK->{Company}->[Company HID][2.1] as "Company HID"
 	Employee Works At Company LINK->[Employee HID][2.0] as "Employee HID"
 Employment LINK
 	Employment LINK->Employment HID[1.0] as "Employment HID"
-	Employment LINK->RecordSource as "Record Source"
 	Employment LINK->{Person}->[Person HID][2.0] as "Person HID"
 	Employment LINK->{Employee}->[Employee HID][2.1] as "Employee HID"
 	Employment LINK->LoadTime as "Load Time"
+	Employment LINK->RecordSource as "Record Source"
 Meeting HUB
 	Meeting HUB->Meeting HID[1.0] as "Meeting HID"
-	Meeting HUB->RecordSource as "Record Source"
 	Meeting HUB->Company->Company Name[2.0] as "Company Name"
 	Meeting HUB->Date[2.1] as "Date"
 	Meeting HUB->Is Board Meeting?[2.2] as "Is Board Meeting"
 	Meeting HUB->LoadTime as "Load Time"
+	Meeting HUB->RecordSource as "Record Source"
 Meeting Is Held By Company LINK
 	Meeting Is Held By Company LINK->Meeting Is Held By Company HID[1.0] as "Meeting Is Held By Company HID"
-	Meeting Is Held By Company LINK->RecordSource as "Record Source"
 	Meeting Is Held By Company LINK->LoadTime as "Load Time"
+	Meeting Is Held By Company LINK->RecordSource as "Record Source"
 	Meeting Is Held By Company LINK->[Company HID][2.1] as "Company HID"
 	Meeting Is Held By Company LINK->[Meeting HID][2.0] as "Meeting HID"
 Person HUB
 	Person HUB->Person HID[1.0] as "Person HID"
-	Person HUB->RecordSource as "Record Source"
 	Person HUB->Given Name[2.0] as "Given Name"
 	Person HUB->Family Name?[2.1] as "Family Name"
 	Person HUB->LoadTime as "Load Time"
+	Person HUB->RecordSource as "Record Source"
 Person SAT
 	Person SAT->[Person HID][1.0] as "Person HID"
-	Person SAT->RecordSource as "Record Source"
 	Person SAT->LoadTime[1.1] as "Load Time"
+	Person SAT->RecordSource as "Record Source"
 	Person SAT->Birth Date? as "Birth Date"
