@@ -10,7 +10,8 @@ require 'activefacts/compositions/relational'
 require 'activefacts/generator/validate'
 require 'activefacts/input/cql'
 
-CQL_DIR = Pathname.new(__FILE__+'/../').relative_path_from(Pathname(Dir.pwd)).to_s
+REL_CQL_DIR = Pathname.new(__FILE__+'/../../cql').relative_path_from(Pathname(Dir.pwd)).to_s
+REL_TEST_DIR = Pathname.new(__FILE__+'/..').relative_path_from(Pathname(Dir.pwd)).to_s
 
 # Hack into the tracing mechanism to save the output from the :composition key:
 class << trace
@@ -42,8 +43,9 @@ RSpec::Matchers.define :be_like do |expected|
 end
 
 describe "Relational absorption from CQL" do
-  dir = ENV['CQL_DIR'] || CQL_DIR
-  actual_dir = (ENV['CQL_DIR'] ? '' : CQL_DIR+'/') + 'actual'
+  dir = ENV['CQL_DIR'] || REL_CQL_DIR
+  actual_dir = (ENV['TEST_DIR'] ? '' : REL_TEST_DIR+'/') + 'actual'
+  expected_dir = (ENV['CQL_DIR'] ? '' : REL_TEST_DIR+'/') + 'expected'
   Dir.mkdir actual_dir unless Dir.exist? actual_dir
   if f = ENV['TEST_FILES']
     files = Dir[dir+"/#{f}*.cql"]
@@ -56,7 +58,7 @@ describe "Relational absorption from CQL" do
       trace.reinitialize
       trace.enable :relational
 
-      expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, dir+'/expected/\2.trc')
+      expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, expected_dir+'/\2.trc')
       actual = actual_dir + cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, '/\2.trc')
       begin
         expected_text = File.read(expected)
