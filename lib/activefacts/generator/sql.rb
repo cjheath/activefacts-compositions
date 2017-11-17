@@ -22,6 +22,7 @@ module ActiveFacts
     # * underscore
     class SQL
       include Traits::SQL
+      extend Traits::SQL
 
       def initialize composition, options = {}
         @composition = composition

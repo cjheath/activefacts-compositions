@@ -34,8 +34,8 @@ module ActiveFacts
             super
           end
 
-          def data_type_context
-            PostgresDataTypeContext.new
+          def data_type_context_class
+            PostgresDataTypeContext
           end
 
           def table_name_max

@@ -36,8 +36,8 @@ module ActiveFacts
             super
           end
 
-          def data_type_context
-            OracleDataTypeContext.new
+          def data_type_context_class
+            OracleDataTypeContext
           end
 
           # See https://docs.oracle.com/database/122/NEWFT/new-features.htm

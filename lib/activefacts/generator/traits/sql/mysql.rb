@@ -34,8 +34,8 @@ module ActiveFacts
             super
           end
 
-          def data_type_context
-            MySQLDataTypeContext.new
+          def data_type_context_class
+            MySQLDataTypeContext
           end
 
           # See https://dev.mysql.com/doc/refman/5.7/en/identifiers.html

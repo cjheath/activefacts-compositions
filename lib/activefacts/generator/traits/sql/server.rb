@@ -55,8 +55,8 @@ module ActiveFacts
             ''
           end
 
-          def data_type_context
-            SQLServerDataTypeContext.new
+          def data_type_context_class
+            SQLServerDataTypeContext
           end
 
           def auto_increment_modifier

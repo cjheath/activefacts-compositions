@@ -30,6 +30,7 @@ module ActiveFacts
             unicode: ['Boolean', "Use Unicode for all text fields by default"],
             tables: [%w{cap title camel snake shout}, "Case to use for table names"],
             columns: [%w{cap title camel snake shout}, "Case to use for table names"],
+            guids: ['Boolean', "Use GUID or UUID for surrogate keys instead of counters"],
             # Legacy: datavault: ['String', "Generate 'raw' or 'business' data vault tables"],
           }
         end
@@ -47,6 +48,7 @@ module ActiveFacts
           @delay_fks = @options.delete "delay_fks"
           @unicode = @options.delete "unicode"
           @restrict = @options.delete "restrict"
+          @guids = {nil=>false, true=>true, 't'=>true, 'f'=>false, 'y'=>true, 'n'=>false}[@options.delete 'guids']
 
           # Name configuration options:
           @joiner = @options.delete('joiner')
@@ -74,7 +76,11 @@ module ActiveFacts
         end
 
         def data_type_context
-          @data_type_context ||= SQLDataTypeContext.new
+          @data_type_context ||= data_type_context_class.new :guids => @guids
+        end
+
+        def data_type_context_class
+          SQLDataTypeContext
         end
 
         def table_name_max
@@ -383,6 +389,11 @@ module ActiveFacts
         end
 
         class SQLDataTypeContext < MM::DataType::Context
+          def initialize options = {}
+            @guids = options.delete :guids
+            super
+          end
+
           def integer_ranges
             [
               ['SMALLINT', -2**15, 2**15-1],  # The standard says -10^5..10^5 (less than 16 bits)
@@ -428,8 +439,12 @@ module ActiveFacts
 
           # What type to use for a Metamodel::SurrogateKey
           def surrogate_type
-            type_name, = choose_integer_type(0, 2**(default_autoincrement_length-1)-1)
-            type_name
+            if @guids
+              "GUID"
+            else
+              type_name, = choose_integer_type(0, 2**(default_autoincrement_length-1)-1)
+              type_name
+            end
           end
 
           # What type to use for a Metamodel::ValidFrom
