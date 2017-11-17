@@ -1,161 +1,163 @@
-CREATE TABLE AcceptableSubstitution (
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+CREATE TABLE acceptable_substitution (
 	-- Acceptable Substitution surrogate key
-	AcceptableSubstitutionID                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	acceptable_substitution_id              BIGSERIAL NOT NULL,
 	-- Acceptable Substitution involves Product
-	ProductID                               BIGINT NOT NULL,
+	product_id                              BIGINT NOT NULL,
 	-- Acceptable Substitution involves alternate-Product
-	AlternateProductID                      BIGINT NOT NULL,
+	alternate_product_id                    BIGINT NOT NULL,
 	-- Acceptable Substitution involves Season
-	Season                                  VARCHAR(6) NOT NULL CHECK(Season = 'Autumn' OR Season = 'Spring' OR Season = 'Summer' OR Season = 'Winter'),
+	season                                  VARCHAR(6) NOT NULL CHECK(season = 'Autumn' OR season = 'Spring' OR season = 'Summer' OR season = 'Winter'),
 	-- Primary index to Acceptable Substitution
-	PRIMARY KEY(AcceptableSubstitutionID),
+	PRIMARY KEY(acceptable_substitution_id),
 	-- Unique index to Acceptable Substitution over PresenceConstraint over (Product, Alternate Product, Season in "Product may be substituted by alternate-Product in Season") occurs at most one time
-	UNIQUE(ProductID, AlternateProductID, Season)
+	UNIQUE(product_id, alternate_product_id, season)
 );
 
 
-CREATE TABLE "Month" (
+CREATE TABLE "month" (
 	-- Month surrogate key
-	MonthID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	month_id                                BIGSERIAL NOT NULL,
 	-- Month has Month Nr
-	MonthNr                                 INTEGER NOT NULL CHECK((MonthNr >= 1 AND MonthNr <= 12)),
+	month_nr                                INTEGER NOT NULL CHECK((month_nr >= 1 AND month_nr <= 12)),
 	-- Month is in Season
-	Season                                  VARCHAR(6) NOT NULL CHECK(Season = 'Autumn' OR Season = 'Spring' OR Season = 'Summer' OR Season = 'Winter'),
+	season                                  VARCHAR(6) NOT NULL CHECK(season = 'Autumn' OR season = 'Spring' OR season = 'Summer' OR season = 'Winter'),
 	-- Primary index to Month
-	PRIMARY KEY(MonthID),
+	PRIMARY KEY(month_id),
 	-- Unique index to Month over PresenceConstraint over (Month Nr in "Month has Month Nr") occurs at most one time
-	UNIQUE(MonthNr)
+	UNIQUE(month_nr)
 );
 
 
-CREATE TABLE Product (
+CREATE TABLE product (
 	-- Product surrogate key
-	ProductID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	product_id                              BIGSERIAL NOT NULL,
 	-- Product has Product Name
-	ProductName                             VARCHAR NOT NULL,
+	product_name                            VARCHAR NOT NULL,
 	-- Primary index to Product
-	PRIMARY KEY(ProductID),
+	PRIMARY KEY(product_id),
 	-- Unique index to Product over PresenceConstraint over (Product Name in "Product has Product Name") occurs at most one time
-	UNIQUE(ProductName)
+	UNIQUE(product_name)
 );
 
 
-CREATE TABLE ProductionForecast (
+CREATE TABLE production_forecast (
 	-- Production Forecast surrogate key
-	ProductionForecastID                    BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	production_forecast_id                  BIGSERIAL NOT NULL,
 	-- Production Forecast involves Refinery
-	RefineryID                              BIGINT NOT NULL,
+	refinery_id                             BIGINT NOT NULL,
 	-- Production Forecast involves Supply Period
-	SupplyPeriodID                          BIGINT NOT NULL,
+	supply_period_id                        BIGINT NOT NULL,
 	-- Production Forecast involves Product
-	ProductID                               BIGINT NOT NULL,
+	product_id                              BIGINT NOT NULL,
 	-- Production Forecast involves Quantity
-	Quantity                                INTEGER NOT NULL,
+	quantity                                INTEGER NOT NULL,
 	-- maybe Production Forecast predicts Cost
-	Cost                                    DECIMAL NULL,
+	cost                                    MONEY NULL,
 	-- Primary index to Production Forecast
-	PRIMARY KEY(ProductionForecastID),
+	PRIMARY KEY(production_forecast_id),
 	-- Unique index to Production Forecast over PresenceConstraint over (Refinery, Supply Period, Product in "Refinery in Supply Period will make Product in Quantity") occurs one time
-	UNIQUE(RefineryID, SupplyPeriodID, ProductID),
-	FOREIGN KEY (ProductID) REFERENCES Product (ProductID)
+	UNIQUE(refinery_id, supply_period_id, product_id),
+	FOREIGN KEY (product_id) REFERENCES product (product_id)
 );
 
 
-CREATE TABLE Refinery (
+CREATE TABLE refinery (
 	-- Refinery surrogate key
-	RefineryID                              BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	refinery_id                             BIGSERIAL NOT NULL,
 	-- Refinery has Refinery Name
-	RefineryName                            VARCHAR(80) NOT NULL,
+	refinery_name                           VARCHAR(80) NOT NULL,
 	-- Primary index to Refinery
-	PRIMARY KEY(RefineryID),
+	PRIMARY KEY(refinery_id),
 	-- Unique index to Refinery over PresenceConstraint over (Refinery Name in "Refinery has Refinery Name") occurs at most one time
-	UNIQUE(RefineryName)
+	UNIQUE(refinery_name)
 );
 
 
-CREATE TABLE Region (
+CREATE TABLE region (
 	-- Region surrogate key
-	RegionID                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	region_id                               BIGSERIAL NOT NULL,
 	-- Region has Region Name
-	RegionName                              VARCHAR NOT NULL,
+	region_name                             VARCHAR NOT NULL,
 	-- Primary index to Region
-	PRIMARY KEY(RegionID),
+	PRIMARY KEY(region_id),
 	-- Unique index to Region over PresenceConstraint over (Region Name in "Region has Region Name") occurs at most one time
-	UNIQUE(RegionName)
+	UNIQUE(region_name)
 );
 
 
-CREATE TABLE RegionalDemand (
+CREATE TABLE regional_demand (
 	-- Regional Demand surrogate key
-	RegionalDemandID                        BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	regional_demand_id                      BIGSERIAL NOT NULL,
 	-- Regional Demand involves Region
-	RegionID                                BIGINT NOT NULL,
+	region_id                               BIGINT NOT NULL,
 	-- Regional Demand involves Supply Period
-	SupplyPeriodID                          BIGINT NOT NULL,
+	supply_period_id                        BIGINT NOT NULL,
 	-- Regional Demand involves Product
-	ProductID                               BIGINT NOT NULL,
+	product_id                              BIGINT NOT NULL,
 	-- Regional Demand involves Quantity
-	Quantity                                INTEGER NOT NULL,
+	quantity                                INTEGER NOT NULL,
 	-- Primary index to Regional Demand
-	PRIMARY KEY(RegionalDemandID),
+	PRIMARY KEY(regional_demand_id),
 	-- Unique index to Regional Demand over PresenceConstraint over (Region, Supply Period, Product in "Region in Supply Period will need Product in Quantity") occurs one time
-	UNIQUE(RegionID, SupplyPeriodID, ProductID),
-	FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
-	FOREIGN KEY (RegionID) REFERENCES Region (RegionID)
+	UNIQUE(region_id, supply_period_id, product_id),
+	FOREIGN KEY (product_id) REFERENCES product (product_id),
+	FOREIGN KEY (region_id) REFERENCES region (region_id)
 );
 
 
-CREATE TABLE SupplyPeriod (
+CREATE TABLE supply_period (
 	-- Supply Period surrogate key
-	SupplyPeriodID                          BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	supply_period_id                        BIGSERIAL NOT NULL,
 	-- Supply Period is in Year that has Year Nr
-	YearNr                                  INTEGER NOT NULL,
+	year_nr                                 INTEGER NOT NULL,
 	-- Supply Period is in Month
-	MonthID                                 BIGINT NOT NULL,
+	month_id                                BIGINT NOT NULL,
 	-- Primary index to Supply Period
-	PRIMARY KEY(SupplyPeriodID),
+	PRIMARY KEY(supply_period_id),
 	-- Unique index to Supply Period over PresenceConstraint over (Year, Month in "Supply Period is in Year", "Supply Period is in Month") occurs at most one time
-	UNIQUE(YearNr, MonthID),
-	FOREIGN KEY (MonthID) REFERENCES "Month" (MonthID)
+	UNIQUE(year_nr, month_id),
+	FOREIGN KEY (month_id) REFERENCES "month" (month_id)
 );
 
 
-CREATE TABLE TransportRoute (
+CREATE TABLE transport_route (
 	-- Transport Route surrogate key
-	TransportRouteID                        BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	transport_route_id                      BIGSERIAL NOT NULL,
 	-- Transport Route involves Transport Mode
-	TransportMode                           VARCHAR NOT NULL CHECK(TransportMode = 'Rail' OR TransportMode = 'Road' OR TransportMode = 'Sea'),
+	transport_mode                          VARCHAR NOT NULL CHECK(transport_mode = 'Rail' OR transport_mode = 'Road' OR transport_mode = 'Sea'),
 	-- Transport Route involves Refinery
-	RefineryID                              BIGINT NOT NULL,
+	refinery_id                             BIGINT NOT NULL,
 	-- Transport Route involves Region
-	RegionID                                BIGINT NOT NULL,
+	region_id                               BIGINT NOT NULL,
 	-- maybe Transport Route incurs Cost per kl
-	Cost                                    DECIMAL NULL,
+	cost                                    MONEY NULL,
 	-- Primary index to Transport Route
-	PRIMARY KEY(TransportRouteID),
+	PRIMARY KEY(transport_route_id),
 	-- Unique index to Transport Route over PresenceConstraint over (Transport Mode, Refinery, Region in "Transport Mode transportation is available from Refinery to Region") occurs at most one time
-	UNIQUE(TransportMode, RefineryID, RegionID),
-	FOREIGN KEY (RefineryID) REFERENCES Refinery (RefineryID),
-	FOREIGN KEY (RegionID) REFERENCES Region (RegionID)
+	UNIQUE(transport_mode, refinery_id, region_id),
+	FOREIGN KEY (refinery_id) REFERENCES refinery (refinery_id),
+	FOREIGN KEY (region_id) REFERENCES region (region_id)
 );
 
 
-ALTER TABLE AcceptableSubstitution
-	ADD FOREIGN KEY (AlternateProductID) REFERENCES Product (ProductID);
+ALTER TABLE acceptable_substitution
+	ADD FOREIGN KEY (alternate_product_id) REFERENCES product (product_id);
 
 
-ALTER TABLE AcceptableSubstitution
-	ADD FOREIGN KEY (ProductID) REFERENCES Product (ProductID);
+ALTER TABLE acceptable_substitution
+	ADD FOREIGN KEY (product_id) REFERENCES product (product_id);
 
 
-ALTER TABLE ProductionForecast
-	ADD FOREIGN KEY (RefineryID) REFERENCES Refinery (RefineryID);
+ALTER TABLE production_forecast
+	ADD FOREIGN KEY (refinery_id) REFERENCES refinery (refinery_id);
 
 
-ALTER TABLE ProductionForecast
-	ADD FOREIGN KEY (SupplyPeriodID) REFERENCES SupplyPeriod (SupplyPeriodID);
+ALTER TABLE production_forecast
+	ADD FOREIGN KEY (supply_period_id) REFERENCES supply_period (supply_period_id);
 
 
-ALTER TABLE RegionalDemand
-	ADD FOREIGN KEY (SupplyPeriodID) REFERENCES SupplyPeriod (SupplyPeriodID);
+ALTER TABLE regional_demand
+	ADD FOREIGN KEY (supply_period_id) REFERENCES supply_period (supply_period_id);
 

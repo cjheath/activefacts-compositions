@@ -1,120 +1,122 @@
-CREATE TABLE Attendance (
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+CREATE TABLE attendance (
 	-- Attendance involves Attendee
-	AttendeePersonID                        BIGINT NOT NULL,
+	attendee_person_id                      BIGINT NOT NULL,
 	-- Attendance involves Meeting
-	MeetingID                               BIGINT NOT NULL,
+	meeting_id                              BIGINT NOT NULL,
 	-- Primary index to Attendance over PresenceConstraint over (Attendee, Meeting in "Person attended Meeting") occurs at most one time
-	PRIMARY KEY(AttendeePersonID, MeetingID)
+	PRIMARY KEY(attendee_person_id, meeting_id)
 );
 
 
-CREATE TABLE Company (
+CREATE TABLE company (
 	-- Company surrogate key
-	CompanyID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	company_id                              BIGSERIAL NOT NULL,
 	-- Company is called Company Name
-	CompanyName                             VARCHAR(48) NOT NULL,
+	company_name                            VARCHAR(48) NOT NULL,
 	-- Company Is Listed
-	IsListed                                BOOLEAN,
+	is_listed                               BOOLEAN,
 	-- Primary index to Company
-	PRIMARY KEY(CompanyID),
+	PRIMARY KEY(company_id),
 	-- Unique index to Company over PresenceConstraint over (Company Name in "Company is called Company Name") occurs at most one time
-	UNIQUE(CompanyName)
+	UNIQUE(company_name)
 );
 
 
-CREATE TABLE Directorship (
+CREATE TABLE directorship (
 	-- Directorship surrogate key
-	DirectorshipID                          BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	directorship_id                         BIGSERIAL NOT NULL,
 	-- Directorship involves Director
-	DirectorPersonID                        BIGINT NOT NULL,
+	director_person_id                      BIGINT NOT NULL,
 	-- Directorship involves Company
-	CompanyID                               BIGINT NOT NULL,
+	company_id                              BIGINT NOT NULL,
 	-- Directorship began on appointment-Date
-	AppointmentDate                         DATE NOT NULL,
+	appointment_date                        DATE NOT NULL,
 	-- Primary index to Directorship
-	PRIMARY KEY(DirectorshipID),
+	PRIMARY KEY(directorship_id),
 	-- Unique index to Directorship over PresenceConstraint over (Director, Company in "Person directs Company") occurs at most one time
-	UNIQUE(DirectorPersonID, CompanyID),
-	FOREIGN KEY (CompanyID) REFERENCES Company (CompanyID)
+	UNIQUE(director_person_id, company_id),
+	FOREIGN KEY (company_id) REFERENCES company (company_id)
 );
 
 
-CREATE TABLE Employee (
+CREATE TABLE employee (
 	-- Employee surrogate key
-	EmployeeID                              BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	employee_id                             BIGSERIAL NOT NULL,
 	-- Employee has Employee Nr
-	EmployeeNr                              INTEGER NOT NULL,
+	employee_nr                             INTEGER NOT NULL,
 	-- Employee works at Company
-	CompanyID                               BIGINT NOT NULL,
+	company_id                              BIGINT NOT NULL,
 	-- maybe Employee is supervised by Manager that is a kind of Employee
-	ManagerEmployeeID                       BIGINT NULL,
+	manager_employee_id                     BIGINT NULL,
 	-- maybe Employee is a Manager that Is Ceo
-	ManagerIsCeo                            BOOLEAN,
+	manager_is_ceo                          BOOLEAN,
 	-- Primary index to Employee
-	PRIMARY KEY(EmployeeID),
+	PRIMARY KEY(employee_id),
 	-- Unique index to Employee over PresenceConstraint over (Employee Nr in "Employee has Employee Nr") occurs at most one time
-	UNIQUE(EmployeeNr),
-	FOREIGN KEY (CompanyID) REFERENCES Company (CompanyID),
-	FOREIGN KEY (ManagerEmployeeID) REFERENCES Employee (EmployeeID)
+	UNIQUE(employee_nr),
+	FOREIGN KEY (company_id) REFERENCES company (company_id),
+	FOREIGN KEY (manager_employee_id) REFERENCES employee (employee_id)
 );
 
 
-CREATE TABLE Employment (
+CREATE TABLE employment (
 	-- Employment involves Person
-	PersonID                                BIGINT NOT NULL,
+	person_id                               BIGINT NOT NULL,
 	-- Employment involves Employee
-	EmployeeID                              BIGINT NOT NULL,
+	employee_id                             BIGINT NOT NULL,
 	-- Primary index to Employment over PresenceConstraint over (Person, Employee in "Person works as Employee") occurs at most one time
-	PRIMARY KEY(PersonID, EmployeeID),
-	FOREIGN KEY (EmployeeID) REFERENCES Employee (EmployeeID)
+	PRIMARY KEY(person_id, employee_id),
+	FOREIGN KEY (employee_id) REFERENCES employee (employee_id)
 );
 
 
-CREATE TABLE Meeting (
+CREATE TABLE meeting (
 	-- Meeting surrogate key
-	MeetingID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	meeting_id                              BIGSERIAL NOT NULL,
 	-- Meeting is held by Company
-	CompanyID                               BIGINT NOT NULL,
+	company_id                              BIGINT NOT NULL,
 	-- Meeting is held on Date
-	"Date"                                  DATE NOT NULL,
+	"date"                                  DATE NOT NULL,
 	-- Is Board Meeting
-	IsBoardMeeting                          BOOLEAN,
+	is_board_meeting                        BOOLEAN,
 	-- Primary index to Meeting
-	PRIMARY KEY(MeetingID),
+	PRIMARY KEY(meeting_id),
 	-- Unique index to Meeting over PresenceConstraint over (Company, Date, Is Board Meeting in "Meeting is held by Company", "Meeting is held on Date", "Meeting is board meeting") occurs at most one time
-	UNIQUE(CompanyID, "Date", IsBoardMeeting),
-	FOREIGN KEY (CompanyID) REFERENCES Company (CompanyID)
+	UNIQUE(company_id, "date", is_board_meeting),
+	FOREIGN KEY (company_id) REFERENCES company (company_id)
 );
 
 
-CREATE TABLE Person (
+CREATE TABLE person (
 	-- Person surrogate key
-	PersonID                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	person_id                               BIGSERIAL NOT NULL,
 	-- Person has given-Name
-	GivenName                               VARCHAR(48) NOT NULL,
+	given_name                              VARCHAR(48) NOT NULL,
 	-- maybe Person is called family-Name
-	FamilyName                              VARCHAR(48) NULL,
+	family_name                             VARCHAR(48) NULL,
 	-- maybe Person was born on birth-Date
-	BirthDate                               DATE NULL CHECK(BirthDate >= '1900/01/01'),
+	birth_date                              DATE NULL CHECK(birth_date >= '1900/01/01'),
 	-- Primary index to Person
-	PRIMARY KEY(PersonID),
+	PRIMARY KEY(person_id),
 	-- Unique index to Person over PresenceConstraint over (Given Name, Family Name in "Person has given-Name", "family-Name is of Person") occurs at most one time
-	UNIQUE(GivenName, FamilyName)
+	UNIQUE(given_name, family_name)
 );
 
 
-ALTER TABLE Attendance
-	ADD FOREIGN KEY (AttendeePersonID) REFERENCES Person (PersonID);
+ALTER TABLE attendance
+	ADD FOREIGN KEY (attendee_person_id) REFERENCES person (person_id);
 
 
-ALTER TABLE Attendance
-	ADD FOREIGN KEY (MeetingID) REFERENCES Meeting (MeetingID);
+ALTER TABLE attendance
+	ADD FOREIGN KEY (meeting_id) REFERENCES meeting (meeting_id);
 
 
-ALTER TABLE Directorship
-	ADD FOREIGN KEY (DirectorPersonID) REFERENCES Person (PersonID);
+ALTER TABLE directorship
+	ADD FOREIGN KEY (director_person_id) REFERENCES person (person_id);
 
 
-ALTER TABLE Employment
-	ADD FOREIGN KEY (PersonID) REFERENCES Person (PersonID);
+ALTER TABLE employment
+	ADD FOREIGN KEY (person_id) REFERENCES person (person_id);
 

@@ -1,218 +1,220 @@
-CREATE TABLE BackOrderAllocation (
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+CREATE TABLE back_order_allocation (
 	-- Back Order Allocation surrogate key
-	BackOrderAllocationID                   BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	back_order_allocation_id                BIGSERIAL NOT NULL,
 	-- Back Order Allocation involves Purchase Order Item
-	PurchaseOrderItemID                     BIGINT NOT NULL,
+	purchase_order_item_id                  BIGINT NOT NULL,
 	-- Back Order Allocation involves Sales Order Item
-	SalesOrderItemID                        BIGINT NOT NULL,
+	sales_order_item_id                     BIGINT NOT NULL,
 	-- Back Order Allocation is for Quantity
-	Quantity                                INTEGER NOT NULL,
+	quantity                                INTEGER NOT NULL,
 	-- Primary index to Back Order Allocation
-	PRIMARY KEY(BackOrderAllocationID),
+	PRIMARY KEY(back_order_allocation_id),
 	-- Unique index to Back Order Allocation over PresenceConstraint over (Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item") occurs at most one time
-	UNIQUE(PurchaseOrderItemID, SalesOrderItemID)
+	UNIQUE(purchase_order_item_id, sales_order_item_id)
 );
 
 
-CREATE TABLE Bin (
+CREATE TABLE bin (
 	-- Bin has Bin ID
-	BinID                                   BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	bin_id                                  BIGSERIAL NOT NULL,
 	-- Bin contains Quantity
-	Quantity                                INTEGER NOT NULL,
+	quantity                                INTEGER NOT NULL,
 	-- maybe Bin contains Product that has Product ID
-	ProductID                               BIGINT NULL,
+	product_id                              BIGINT NULL,
 	-- maybe Warehouse contains Bin and Warehouse has Warehouse ID
-	WarehouseID                             BIGINT NULL,
+	warehouse_id                            BIGINT NULL,
 	-- Primary index to Bin over PresenceConstraint over (Bin ID in "Bin has Bin ID") occurs at most one time
-	PRIMARY KEY(BinID)
+	PRIMARY KEY(bin_id)
 );
 
 
-CREATE TABLE DispatchItem (
+CREATE TABLE dispatch_item (
 	-- Dispatch Item has Dispatch Item ID
-	DispatchItemID                          BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	dispatch_item_id                        BIGSERIAL NOT NULL,
 	-- Dispatch Item is Product that has Product ID
-	ProductID                               BIGINT NOT NULL,
+	product_id                              BIGINT NOT NULL,
 	-- Dispatch Item is in Quantity
-	Quantity                                INTEGER NOT NULL,
+	quantity                                INTEGER NOT NULL,
 	-- maybe Dispatch Item is for Dispatch that has Dispatch ID
-	DispatchID                              BIGINT NULL,
+	dispatch_id                             BIGINT NULL,
 	-- maybe Dispatch Item is for Sales Order Item
-	SalesOrderItemID                        BIGINT NULL,
+	sales_order_item_id                     BIGINT NULL,
 	-- maybe Dispatch Item is for Transfer Request that has Transfer Request ID
-	TransferRequestID                       BIGINT NULL,
+	transfer_request_id                     BIGINT NULL,
 	-- Primary index to Dispatch Item over PresenceConstraint over (Dispatch Item ID in "Dispatch Item has Dispatch Item ID") occurs at most one time
-	PRIMARY KEY(DispatchItemID)
+	PRIMARY KEY(dispatch_item_id)
 );
 
 
-CREATE TABLE Party (
+CREATE TABLE party (
 	-- Party has Party ID
-	PartyID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	party_id                                BIGSERIAL NOT NULL,
 	-- Primary index to Party over PresenceConstraint over (Party ID in "Party has Party ID") occurs at most one time
-	PRIMARY KEY(PartyID)
+	PRIMARY KEY(party_id)
 );
 
 
-CREATE TABLE Product (
+CREATE TABLE product (
 	-- Product has Product ID
-	ProductID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	product_id                              BIGSERIAL NOT NULL,
 	-- Primary index to Product over PresenceConstraint over (Product ID in "Product has Product ID") occurs at most one time
-	PRIMARY KEY(ProductID)
+	PRIMARY KEY(product_id)
 );
 
 
-CREATE TABLE PurchaseOrder (
+CREATE TABLE purchase_order (
 	-- Purchase Order has Purchase Order ID
-	PurchaseOrderID                         BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	purchase_order_id                       BIGSERIAL NOT NULL,
 	-- Purchase Order is to Supplier that is a kind of Party that has Party ID
-	SupplierID                              BIGINT NOT NULL,
+	supplier_id                             BIGINT NOT NULL,
 	-- Purchase Order is to Warehouse that has Warehouse ID
-	WarehouseID                             BIGINT NOT NULL,
+	warehouse_id                            BIGINT NOT NULL,
 	-- Primary index to Purchase Order over PresenceConstraint over (Purchase Order ID in "Purchase Order has Purchase Order ID") occurs at most one time
-	PRIMARY KEY(PurchaseOrderID),
-	FOREIGN KEY (SupplierID) REFERENCES Party (PartyID)
+	PRIMARY KEY(purchase_order_id),
+	FOREIGN KEY (supplier_id) REFERENCES party (party_id)
 );
 
 
-CREATE TABLE PurchaseOrderItem (
+CREATE TABLE purchase_order_item (
 	-- Purchase Order Item surrogate key
-	PurchaseOrderItemID                     BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	purchase_order_item_id                  BIGSERIAL NOT NULL,
 	-- Purchase Order Item is part of Purchase Order that has Purchase Order ID
-	PurchaseOrderID                         BIGINT NOT NULL,
+	purchase_order_id                       BIGINT NOT NULL,
 	-- Purchase Order Item is for Product that has Product ID
-	ProductID                               BIGINT NOT NULL,
+	product_id                              BIGINT NOT NULL,
 	-- Purchase Order Item is in Quantity
-	Quantity                                INTEGER NOT NULL,
+	quantity                                INTEGER NOT NULL,
 	-- Primary index to Purchase Order Item
-	PRIMARY KEY(PurchaseOrderItemID),
+	PRIMARY KEY(purchase_order_item_id),
 	-- Unique index to Purchase Order Item over PresenceConstraint over (Purchase Order, Product in "Purchase Order includes Purchase Order Item", "Purchase Order Item is for Product") occurs at most one time
-	UNIQUE(PurchaseOrderID, ProductID),
-	FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
-	FOREIGN KEY (PurchaseOrderID) REFERENCES PurchaseOrder (PurchaseOrderID)
+	UNIQUE(purchase_order_id, product_id),
+	FOREIGN KEY (product_id) REFERENCES product (product_id),
+	FOREIGN KEY (purchase_order_id) REFERENCES purchase_order (purchase_order_id)
 );
 
 
-CREATE TABLE ReceivedItem (
+CREATE TABLE received_item (
 	-- Received Item has Received Item ID
-	ReceivedItemID                          BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	received_item_id                        BIGSERIAL NOT NULL,
 	-- Received Item is Product that has Product ID
-	ProductID                               BIGINT NOT NULL,
+	product_id                              BIGINT NOT NULL,
 	-- Received Item is in Quantity
-	Quantity                                INTEGER NOT NULL,
+	quantity                                INTEGER NOT NULL,
 	-- maybe Received Item is for Purchase Order Item
-	PurchaseOrderItemID                     BIGINT NULL,
+	purchase_order_item_id                  BIGINT NULL,
 	-- maybe Received Item has Receipt that has Receipt ID
-	ReceiptID                               BIGINT NULL,
+	receipt_id                              BIGINT NULL,
 	-- maybe Received Item is for Transfer Request that has Transfer Request ID
-	TransferRequestID                       BIGINT NULL,
+	transfer_request_id                     BIGINT NULL,
 	-- Primary index to Received Item over PresenceConstraint over (Received Item ID in "Received Item has Received Item ID") occurs at most one time
-	PRIMARY KEY(ReceivedItemID),
-	FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
-	FOREIGN KEY (PurchaseOrderItemID) REFERENCES PurchaseOrderItem (PurchaseOrderItemID)
+	PRIMARY KEY(received_item_id),
+	FOREIGN KEY (product_id) REFERENCES product (product_id),
+	FOREIGN KEY (purchase_order_item_id) REFERENCES purchase_order_item (purchase_order_item_id)
 );
 
 
-CREATE TABLE SalesOrder (
+CREATE TABLE sales_order (
 	-- Sales Order has Sales Order ID
-	SalesOrderID                            BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	sales_order_id                          BIGSERIAL NOT NULL,
 	-- Sales Order was made by Customer that is a kind of Party that has Party ID
-	CustomerID                              BIGINT NOT NULL,
+	customer_id                             BIGINT NOT NULL,
 	-- Sales Order is from Warehouse that has Warehouse ID
-	WarehouseID                             BIGINT NOT NULL,
+	warehouse_id                            BIGINT NOT NULL,
 	-- Primary index to Sales Order over PresenceConstraint over (Sales Order ID in "Sales Order has Sales Order ID") occurs at most one time
-	PRIMARY KEY(SalesOrderID),
-	FOREIGN KEY (CustomerID) REFERENCES Party (PartyID)
+	PRIMARY KEY(sales_order_id),
+	FOREIGN KEY (customer_id) REFERENCES party (party_id)
 );
 
 
-CREATE TABLE SalesOrderItem (
+CREATE TABLE sales_order_item (
 	-- Sales Order Item surrogate key
-	SalesOrderItemID                        BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	sales_order_item_id                     BIGSERIAL NOT NULL,
 	-- Sales Order Item is part of Sales Order that has Sales Order ID
-	SalesOrderID                            BIGINT NOT NULL,
+	sales_order_id                          BIGINT NOT NULL,
 	-- Sales Order Item is for Product that has Product ID
-	ProductID                               BIGINT NOT NULL,
+	product_id                              BIGINT NOT NULL,
 	-- Sales Order Item is in Quantity
-	Quantity                                INTEGER NOT NULL,
+	quantity                                INTEGER NOT NULL,
 	-- Primary index to Sales Order Item
-	PRIMARY KEY(SalesOrderItemID),
+	PRIMARY KEY(sales_order_item_id),
 	-- Unique index to Sales Order Item over PresenceConstraint over (Sales Order, Product in "Sales Order includes Sales Order Item", "Sales Order Item is for Product") occurs at most one time
-	UNIQUE(SalesOrderID, ProductID),
-	FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
-	FOREIGN KEY (SalesOrderID) REFERENCES SalesOrder (SalesOrderID)
+	UNIQUE(sales_order_id, product_id),
+	FOREIGN KEY (product_id) REFERENCES product (product_id),
+	FOREIGN KEY (sales_order_id) REFERENCES sales_order (sales_order_id)
 );
 
 
-CREATE TABLE TransferRequest (
+CREATE TABLE transfer_request (
 	-- Transfer Request has Transfer Request ID
-	TransferRequestID                       BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	transfer_request_id                     BIGSERIAL NOT NULL,
 	-- Transfer Request is from From Warehouse and Warehouse has Warehouse ID
-	FromWarehouseID                         BIGINT NOT NULL,
+	from_warehouse_id                       BIGINT NOT NULL,
 	-- Transfer Request is for Product that has Product ID
-	ProductID                               BIGINT NOT NULL,
+	product_id                              BIGINT NOT NULL,
 	-- Transfer Request is for Quantity
-	Quantity                                INTEGER NOT NULL,
+	quantity                                INTEGER NOT NULL,
 	-- Transfer Request is to To Warehouse and Warehouse has Warehouse ID
-	ToWarehouseID                           BIGINT NOT NULL,
+	to_warehouse_id                         BIGINT NOT NULL,
 	-- Primary index to Transfer Request over PresenceConstraint over (Transfer Request ID in "Transfer Request has Transfer Request ID") occurs at most one time
-	PRIMARY KEY(TransferRequestID),
-	FOREIGN KEY (ProductID) REFERENCES Product (ProductID)
+	PRIMARY KEY(transfer_request_id),
+	FOREIGN KEY (product_id) REFERENCES product (product_id)
 );
 
 
-CREATE TABLE Warehouse (
+CREATE TABLE warehouse (
 	-- Warehouse has Warehouse ID
-	WarehouseID                             BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	warehouse_id                            BIGSERIAL NOT NULL,
 	-- Primary index to Warehouse over PresenceConstraint over (Warehouse ID in "Warehouse has Warehouse ID") occurs at most one time
-	PRIMARY KEY(WarehouseID)
+	PRIMARY KEY(warehouse_id)
 );
 
 
-ALTER TABLE BackOrderAllocation
-	ADD FOREIGN KEY (PurchaseOrderItemID) REFERENCES PurchaseOrderItem (PurchaseOrderItemID);
+ALTER TABLE back_order_allocation
+	ADD FOREIGN KEY (purchase_order_item_id) REFERENCES purchase_order_item (purchase_order_item_id);
 
 
-ALTER TABLE BackOrderAllocation
-	ADD FOREIGN KEY (SalesOrderItemID) REFERENCES SalesOrderItem (SalesOrderItemID);
+ALTER TABLE back_order_allocation
+	ADD FOREIGN KEY (sales_order_item_id) REFERENCES sales_order_item (sales_order_item_id);
 
 
-ALTER TABLE Bin
-	ADD FOREIGN KEY (ProductID) REFERENCES Product (ProductID);
+ALTER TABLE bin
+	ADD FOREIGN KEY (product_id) REFERENCES product (product_id);
 
 
-ALTER TABLE Bin
-	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID);
+ALTER TABLE bin
+	ADD FOREIGN KEY (warehouse_id) REFERENCES warehouse (warehouse_id);
 
 
-ALTER TABLE DispatchItem
-	ADD FOREIGN KEY (ProductID) REFERENCES Product (ProductID);
+ALTER TABLE dispatch_item
+	ADD FOREIGN KEY (product_id) REFERENCES product (product_id);
 
 
-ALTER TABLE DispatchItem
-	ADD FOREIGN KEY (SalesOrderItemID) REFERENCES SalesOrderItem (SalesOrderItemID);
+ALTER TABLE dispatch_item
+	ADD FOREIGN KEY (sales_order_item_id) REFERENCES sales_order_item (sales_order_item_id);
 
 
-ALTER TABLE DispatchItem
-	ADD FOREIGN KEY (TransferRequestID) REFERENCES TransferRequest (TransferRequestID);
+ALTER TABLE dispatch_item
+	ADD FOREIGN KEY (transfer_request_id) REFERENCES transfer_request (transfer_request_id);
 
 
-ALTER TABLE PurchaseOrder
-	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID);
+ALTER TABLE purchase_order
+	ADD FOREIGN KEY (warehouse_id) REFERENCES warehouse (warehouse_id);
 
 
-ALTER TABLE ReceivedItem
-	ADD FOREIGN KEY (TransferRequestID) REFERENCES TransferRequest (TransferRequestID);
+ALTER TABLE received_item
+	ADD FOREIGN KEY (transfer_request_id) REFERENCES transfer_request (transfer_request_id);
 
 
-ALTER TABLE SalesOrder
-	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID);
+ALTER TABLE sales_order
+	ADD FOREIGN KEY (warehouse_id) REFERENCES warehouse (warehouse_id);
 
 
-ALTER TABLE TransferRequest
-	ADD FOREIGN KEY (FromWarehouseID) REFERENCES Warehouse (WarehouseID);
+ALTER TABLE transfer_request
+	ADD FOREIGN KEY (from_warehouse_id) REFERENCES warehouse (warehouse_id);
 
 
-ALTER TABLE TransferRequest
-	ADD FOREIGN KEY (ToWarehouseID) REFERENCES Warehouse (WarehouseID);
+ALTER TABLE transfer_request
+	ADD FOREIGN KEY (to_warehouse_id) REFERENCES warehouse (warehouse_id);
 

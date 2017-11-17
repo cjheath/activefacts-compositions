@@ -1,30 +1,32 @@
-CREATE TABLE Company (
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+CREATE TABLE company (
 	-- Company is a kind of Party that has Party ID
-	PartyID                                 BIGINT NOT NULL,
+	party_id                                BIGINT NOT NULL,
 	-- Primary index to Company over PresenceConstraint over (Party in "Company is a kind of Party") occurs at most one time
-	PRIMARY KEY(PartyID)
+	PRIMARY KEY(party_id)
 );
 
 
-CREATE TABLE Party (
+CREATE TABLE party (
 	-- Party has Party ID
-	PartyID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	party_id                                BIGSERIAL NOT NULL,
 	-- Party is of Party Type that has Party Type Code
-	PartyTypeCode                           VARCHAR(16) NOT NULL CHECK(PartyTypeCode = 'Company' OR PartyTypeCode = 'Person'),
+	party_type_code                         VARCHAR(16) NOT NULL CHECK(party_type_code = 'Company' OR party_type_code = 'Person'),
 	-- Primary index to Party over PresenceConstraint over (Party ID in "Party has Party ID") occurs at most one time
-	PRIMARY KEY(PartyID)
+	PRIMARY KEY(party_id)
 );
 
 
-CREATE TABLE Person (
+CREATE TABLE person (
 	-- Person is a kind of Party that has Party ID
-	PartyID                                 BIGINT NOT NULL,
+	party_id                                BIGINT NOT NULL,
 	-- Primary index to Person over PresenceConstraint over (Party in "Person is a kind of Party") occurs at most one time
-	PRIMARY KEY(PartyID),
-	FOREIGN KEY (PartyID) REFERENCES Party (PartyID)
+	PRIMARY KEY(party_id),
+	FOREIGN KEY (party_id) REFERENCES party (party_id)
 );
 
 
-ALTER TABLE Company
-	ADD FOREIGN KEY (PartyID) REFERENCES Party (PartyID);
+ALTER TABLE company
+	ADD FOREIGN KEY (party_id) REFERENCES party (party_id);
 

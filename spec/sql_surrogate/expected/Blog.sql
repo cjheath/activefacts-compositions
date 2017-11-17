@@ -1,86 +1,88 @@
-CREATE TABLE Author (
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+CREATE TABLE author (
 	-- Author has Author Id
-	AuthorId                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	author_id                               BIGSERIAL NOT NULL,
 	-- Author is called Name
-	AuthorName                              VARCHAR(64) NOT NULL,
+	author_name                             VARCHAR(64) NOT NULL,
 	-- Primary index to Author over PresenceConstraint over (Author Id in "Author has Author Id") occurs at most one time
-	PRIMARY KEY(AuthorId),
+	PRIMARY KEY(author_id),
 	-- Unique index to Author over PresenceConstraint over (Author Name in "author-Name is of Author") occurs at most one time
-	UNIQUE(AuthorName)
+	UNIQUE(author_name)
 );
 
 
-CREATE TABLE Comment (
+CREATE TABLE comment (
 	-- Comment has Comment Id
-	CommentId                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	comment_id                              BIGSERIAL NOT NULL,
 	-- Comment was written by Author that has Author Id
-	AuthorId                                BIGINT NOT NULL,
+	author_id                               BIGINT NOT NULL,
 	-- Comment consists of text-Content and maybe Content is of Style
-	ContentStyle                            VARCHAR(20) NULL,
+	content_style                           VARCHAR(20) NULL,
 	-- Comment consists of text-Content and Content has Text
-	ContentText                             VARCHAR(MAX) NOT NULL,
+	content_text                            VARCHAR(MAX) NOT NULL,
 	-- Comment is on Paragraph
-	ParagraphID                             BIGINT NOT NULL,
+	paragraph_id                            BIGINT NOT NULL,
 	-- Primary index to Comment over PresenceConstraint over (Comment Id in "Comment has Comment Id") occurs at most one time
-	PRIMARY KEY(CommentId),
-	FOREIGN KEY (AuthorId) REFERENCES Author (AuthorId)
+	PRIMARY KEY(comment_id),
+	FOREIGN KEY (author_id) REFERENCES author (author_id)
 );
 
 
-CREATE TABLE Paragraph (
+CREATE TABLE paragraph (
 	-- Paragraph surrogate key
-	ParagraphID                             BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	paragraph_id                            BIGSERIAL NOT NULL,
 	-- Paragraph involves Post that has Post Id
-	PostId                                  BIGINT NOT NULL,
+	post_id                                 BIGINT NOT NULL,
 	-- Paragraph involves Ordinal
-	Ordinal                                 INTEGER NOT NULL,
+	ordinal                                 INTEGER NOT NULL,
 	-- Paragraph contains Content that maybe is of Style
-	ContentStyle                            VARCHAR(20) NULL,
+	content_style                           VARCHAR(20) NULL,
 	-- Paragraph contains Content that has Text
-	ContentText                             VARCHAR(MAX) NOT NULL,
+	content_text                            VARCHAR(MAX) NOT NULL,
 	-- Primary index to Paragraph
-	PRIMARY KEY(ParagraphID),
+	PRIMARY KEY(paragraph_id),
 	-- Unique index to Paragraph over PresenceConstraint over (Post, Ordinal in "Post includes Ordinal paragraph") occurs at most one time
-	UNIQUE(PostId, Ordinal)
+	UNIQUE(post_id, ordinal)
 );
 
 
-CREATE TABLE Post (
+CREATE TABLE post (
 	-- Post has Post Id
-	PostId                                  BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	post_id                                 BIGSERIAL NOT NULL,
 	-- Post was written by Author that has Author Id
-	AuthorId                                BIGINT NOT NULL,
+	author_id                               BIGINT NOT NULL,
 	-- Post belongs to Topic that has Topic Id
-	TopicId                                 BIGINT NOT NULL,
+	topic_id                                BIGINT NOT NULL,
 	-- Primary index to Post over PresenceConstraint over (Post Id in "Post has Post Id") occurs at most one time
-	PRIMARY KEY(PostId),
-	FOREIGN KEY (AuthorId) REFERENCES Author (AuthorId)
+	PRIMARY KEY(post_id),
+	FOREIGN KEY (author_id) REFERENCES author (author_id)
 );
 
 
-CREATE TABLE Topic (
+CREATE TABLE topic (
 	-- Topic has Topic Id
-	TopicId                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	topic_id                                BIGSERIAL NOT NULL,
 	-- Topic is called topic-Name
-	TopicName                               VARCHAR(64) NOT NULL,
+	topic_name                              VARCHAR(64) NOT NULL,
 	-- maybe Topic belongs to parent-Topic and Topic has Topic Id
-	ParentTopicId                           BIGINT NULL,
+	parent_topic_id                         BIGINT NULL,
 	-- Primary index to Topic over PresenceConstraint over (Topic Id in "Topic has Topic Id") occurs at most one time
-	PRIMARY KEY(TopicId),
+	PRIMARY KEY(topic_id),
 	-- Unique index to Topic over PresenceConstraint over (Topic Name in "Topic is called topic-Name") occurs at most one time
-	UNIQUE(TopicName),
-	FOREIGN KEY (ParentTopicId) REFERENCES Topic (TopicId)
+	UNIQUE(topic_name),
+	FOREIGN KEY (parent_topic_id) REFERENCES topic (topic_id)
 );
 
 
-ALTER TABLE Comment
-	ADD FOREIGN KEY (ParagraphID) REFERENCES Paragraph (ParagraphID);
+ALTER TABLE comment
+	ADD FOREIGN KEY (paragraph_id) REFERENCES paragraph (paragraph_id);
 
 
-ALTER TABLE Paragraph
-	ADD FOREIGN KEY (PostId) REFERENCES Post (PostId);
+ALTER TABLE paragraph
+	ADD FOREIGN KEY (post_id) REFERENCES post (post_id);
 
 
-ALTER TABLE Post
-	ADD FOREIGN KEY (TopicId) REFERENCES Topic (TopicId);
+ALTER TABLE post
+	ADD FOREIGN KEY (topic_id) REFERENCES topic (topic_id);
 

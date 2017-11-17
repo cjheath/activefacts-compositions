@@ -1,39 +1,41 @@
-CREATE TABLE OT (
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+CREATE TABLE ot (
 	-- OT surrogate key
-	OTID                                    BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	ot_id                                   BIGSERIAL NOT NULL,
 	-- OT is called Name
-	Name                                    VARCHAR NOT NULL,
+	name                                    VARCHAR NOT NULL,
 	-- Primary index to OT
-	PRIMARY KEY(OTID),
+	PRIMARY KEY(ot_id),
 	-- Unique index to OT over PresenceConstraint over (Name in "OT is called Name") occurs at most one time
-	UNIQUE(Name)
+	UNIQUE(name)
 );
 
 
-CREATE TABLE VTP (
+CREATE TABLE vtp (
 	-- VTP surrogate key
-	VTPID                                   BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	vtp_id                                  BIGSERIAL NOT NULL,
 	-- VTP involves VT that is a kind of DOT that is a kind of OT
-	VTOTID                                  BIGINT NOT NULL,
+	vt_ot_id                                BIGINT NOT NULL,
 	-- VTP involves Name
-	Name                                    VARCHAR NOT NULL,
+	name                                    VARCHAR NOT NULL,
 	-- Primary index to VTP
-	PRIMARY KEY(VTPID),
+	PRIMARY KEY(vtp_id),
 	-- Unique index to VTP over PresenceConstraint over (VT, Name in "VT has facet called Name") occurs at most one time
-	UNIQUE(VTOTID, Name),
-	FOREIGN KEY (VTOTID) REFERENCES OT (OTID)
+	UNIQUE(vt_ot_id, name),
+	FOREIGN KEY (vt_ot_id) REFERENCES ot (ot_id)
 );
 
 
-CREATE TABLE VTPRestriction (
+CREATE TABLE vtp_restriction (
 	-- VTPRestriction involves VT that is a kind of DOT that is a kind of OT
-	VTOTID                                  BIGINT NOT NULL,
+	vt_ot_id                                BIGINT NOT NULL,
 	-- VTPRestriction involves VTP
-	VTPID                                   BIGINT NOT NULL,
+	vtp_id                                  BIGINT NOT NULL,
 	-- Primary index to VTPRestriction over PresenceConstraint over (VT, VTP in "VT receives VTP") occurs at most one time
-	PRIMARY KEY(VTOTID, VTPID),
-	FOREIGN KEY (VTOTID) REFERENCES OT (OTID),
-	FOREIGN KEY (VTPID) REFERENCES VTP (VTPID)
+	PRIMARY KEY(vt_ot_id, vtp_id),
+	FOREIGN KEY (vt_ot_id) REFERENCES ot (ot_id),
+	FOREIGN KEY (vtp_id) REFERENCES vtp (vtp_id)
 );
 
 

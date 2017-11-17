@@ -1,14 +1,16 @@
-CREATE TABLE Person (
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+CREATE TABLE person (
 	-- Person surrogate key
-	PersonID                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	person_id                               BIGSERIAL NOT NULL,
 	-- Person has family-Name
-	FamilyName                              VARCHAR NOT NULL,
+	family_name                             VARCHAR NOT NULL,
 	-- Person has given-Name
-	GivenName                               VARCHAR NOT NULL,
+	given_name                              VARCHAR NOT NULL,
 	-- Primary index to Person
-	PRIMARY KEY(PersonID),
+	PRIMARY KEY(person_id),
 	-- Unique index to Person over PresenceConstraint over (Family Name, Given Name in "Person has family-Name", "Person has given-Name") occurs at most one time
-	UNIQUE(FamilyName, GivenName)
+	UNIQUE(family_name, given_name)
 );
 
 

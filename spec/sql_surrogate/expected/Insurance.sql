@@ -1,509 +1,511 @@
-CREATE TABLE Asset (
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+CREATE TABLE asset (
 	-- Asset has Asset ID
-	AssetID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	asset_id                                BIGSERIAL NOT NULL,
 	-- Primary index to Asset over PresenceConstraint over (Asset ID in "Asset has Asset ID") occurs at most one time
-	PRIMARY KEY(AssetID)
+	PRIMARY KEY(asset_id)
 );
 
 
-CREATE TABLE Claim (
+CREATE TABLE claim (
 	-- Claim has Claim ID
-	ClaimID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	claim_id                                BIGSERIAL NOT NULL,
 	-- Claim has p_sequence
-	PSequence                               SMALLINT NOT NULL CHECK((PSequence >= 1 AND PSequence <= 999)),
+	p_sequence                              SMALLINT NOT NULL CHECK((p_sequence >= 1 AND p_sequence <= 999)),
 	-- Claim is on Policy
-	PolicyID                                BIGINT NOT NULL,
+	policy_id                               BIGINT NOT NULL,
 	-- maybe Claim concerns Incident that relates to loss at Address that is at Street
-	IncidentAddressStreet                   VARCHAR(256) NULL,
+	incident_address_street                 VARCHAR(256) NULL,
 	-- maybe Claim concerns Incident that relates to loss at Address that is in City
-	IncidentAddressCity                     VARCHAR NULL,
+	incident_address_city                   VARCHAR NULL,
 	-- maybe Claim concerns Incident that relates to loss at Address that maybe is in Postcode
-	IncidentAddressPostcode                 VARCHAR NULL,
+	incident_address_postcode               VARCHAR NULL,
 	-- maybe Claim concerns Incident that relates to loss at Address that maybe is in State
-	IncidentAddressStateID                  BIGINT NULL,
+	incident_address_state_id               BIGINT NULL,
 	-- maybe Claim concerns Incident that relates to loss on Date Time
-	IncidentDateTime                        TIMESTAMP NULL,
+	incident_date_time                      TIMESTAMP NULL,
 	-- maybe Claim concerns Incident that maybe is covered by Police Report that maybe was to officer-Name
-	IncidentOfficerName                     VARCHAR(256) NULL,
+	incident_officer_name                   VARCHAR(256) NULL,
 	-- maybe Claim concerns Incident that maybe is covered by Police Report that maybe has police-Report Nr
-	IncidentPoliceReportNr                  INTEGER NULL,
+	incident_police_report_nr               INTEGER NULL,
 	-- maybe Claim concerns Incident that maybe is covered by Police Report that maybe was on report-Date Time
-	IncidentReportDateTime                  TIMESTAMP NULL,
+	incident_report_date_time               TIMESTAMP NULL,
 	-- maybe Claim concerns Incident that maybe is covered by Police Report that maybe was by reporter-Name
-	IncidentReporterName                    VARCHAR(256) NULL,
+	incident_reporter_name                  VARCHAR(256) NULL,
 	-- maybe Claim concerns Incident that maybe is covered by Police Report that maybe was at station-Name
-	IncidentStationName                     VARCHAR(256) NULL,
+	incident_station_name                   VARCHAR(256) NULL,
 	-- maybe Lodgement involves Claim and Lodgement involves Person that is a kind of Party that has Party ID
-	LodgementPersonID                       BIGINT NULL,
+	lodgement_person_id                     BIGINT NULL,
 	-- maybe Lodgement involves Claim and maybe Lodgement was made at Date Time
-	LodgementDateTime                       TIMESTAMP NULL,
+	lodgement_date_time                     TIMESTAMP NULL,
 	-- Primary index to Claim over PresenceConstraint over (Claim ID in "Claim has Claim ID") occurs at most one time
-	PRIMARY KEY(ClaimID),
+	PRIMARY KEY(claim_id),
 	-- Unique index to Claim over PresenceConstraint over (Policy, p_sequence in "Claim is on Policy", "Claim has Claim Sequence") occurs at most one time
-	UNIQUE(PSequence, PolicyID)
+	UNIQUE(p_sequence, policy_id)
 );
 
 
-CREATE TABLE ContractorAppointment (
+CREATE TABLE contractor_appointment (
 	-- Contractor Appointment involves Claim that has Claim ID
-	ClaimID                                 BIGINT NOT NULL,
+	claim_id                                BIGINT NOT NULL,
 	-- Contractor Appointment involves Contractor that is a kind of Company that is a kind of Party that has Party ID
-	ContractorID                            BIGINT NOT NULL,
+	contractor_id                           BIGINT NOT NULL,
 	-- Primary index to Contractor Appointment over PresenceConstraint over (Claim, Contractor in "Claim involves Contractor") occurs at most one time
-	PRIMARY KEY(ClaimID, ContractorID),
-	FOREIGN KEY (ClaimID) REFERENCES Claim (ClaimID)
+	PRIMARY KEY(claim_id, contractor_id),
+	FOREIGN KEY (claim_id) REFERENCES claim (claim_id)
 );
 
 
-CREATE TABLE Cover (
+CREATE TABLE cover (
 	-- Cover involves Policy
-	PolicyID                                BIGINT NOT NULL,
+	policy_id                               BIGINT NOT NULL,
 	-- Cover involves Cover Type
-	CoverTypeID                             BIGINT NOT NULL,
+	cover_type_id                           BIGINT NOT NULL,
 	-- Cover involves Asset that has Asset ID
-	AssetID                                 BIGINT NOT NULL,
+	asset_id                                BIGINT NOT NULL,
 	-- Primary index to Cover over PresenceConstraint over (Policy, Cover Type, Asset in "Policy provides Cover Type over Asset") occurs at most one time
-	PRIMARY KEY(PolicyID, CoverTypeID, AssetID),
-	FOREIGN KEY (AssetID) REFERENCES Asset (AssetID)
+	PRIMARY KEY(policy_id, cover_type_id, asset_id),
+	FOREIGN KEY (asset_id) REFERENCES asset (asset_id)
 );
 
 
-CREATE TABLE CoverType (
+CREATE TABLE cover_type (
 	-- Cover Type surrogate key
-	CoverTypeID                             BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	cover_type_id                           BIGSERIAL NOT NULL,
 	-- Cover Type has Cover Type Code
-	CoverTypeCode                           CHARACTER NOT NULL,
+	cover_type_code                         VARCHAR NOT NULL,
 	-- Cover Type has Cover Type Name
-	CoverTypeName                           VARCHAR NOT NULL,
+	cover_type_name                         VARCHAR NOT NULL,
 	-- Primary index to Cover Type
-	PRIMARY KEY(CoverTypeID),
+	PRIMARY KEY(cover_type_id),
 	-- Unique index to Cover Type over PresenceConstraint over (Cover Type Code in "Cover Type has Cover Type Code") occurs at most one time
-	UNIQUE(CoverTypeCode),
+	UNIQUE(cover_type_code),
 	-- Unique index to Cover Type over PresenceConstraint over (Cover Type Name in "Cover Type has Cover Type Name") occurs at most one time
-	UNIQUE(CoverTypeName)
+	UNIQUE(cover_type_name)
 );
 
 
-CREATE TABLE CoverWording (
+CREATE TABLE cover_wording (
 	-- Cover Wording surrogate key
-	CoverWordingID                          BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	cover_wording_id                        BIGSERIAL NOT NULL,
 	-- Cover Wording involves Cover Type
-	CoverTypeID                             BIGINT NOT NULL,
+	cover_type_id                           BIGINT NOT NULL,
 	-- Cover Wording involves Policy Wording that has Policy Wording Text
-	PolicyWordingText                       VARCHAR NOT NULL,
+	policy_wording_text                     VARCHAR NOT NULL,
 	-- Cover Wording involves start-Date
-	StartDate                               DATE NOT NULL,
+	start_date                              DATE NOT NULL,
 	-- Primary index to Cover Wording
-	PRIMARY KEY(CoverWordingID),
+	PRIMARY KEY(cover_wording_id),
 	-- Unique index to Cover Wording over PresenceConstraint over (Cover Type, Policy Wording, Start Date in "Cover Type used Policy Wording from start-Date") occurs at most one time
-	UNIQUE(CoverTypeID, PolicyWordingText, StartDate),
-	FOREIGN KEY (CoverTypeID) REFERENCES CoverType (CoverTypeID)
+	UNIQUE(cover_type_id, policy_wording_text, start_date),
+	FOREIGN KEY (cover_type_id) REFERENCES cover_type (cover_type_id)
 );
 
 
-CREATE TABLE LossType (
+CREATE TABLE loss_type (
 	-- Loss Type surrogate key
-	LossTypeID                              BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	loss_type_id                            BIGSERIAL NOT NULL,
 	-- Loss Type has Loss Type Code
-	LossTypeCode                            CHARACTER NOT NULL,
+	loss_type_code                          VARCHAR NOT NULL,
 	-- Loss Type Involves Driving
-	InvolvesDriving                         BOOLEAN,
+	involves_driving                        BOOLEAN,
 	-- Loss Type Is Single Vehicle Incident
-	IsSingleVehicleIncident                 BOOLEAN,
+	is_single_vehicle_incident              BOOLEAN,
 	-- maybe Loss Type implies Liability that has Liability Code
-	LiabilityCode                           CHARACTER(1) NULL CHECK(LiabilityCode = 'D' OR LiabilityCode = 'L' OR LiabilityCode = 'R' OR LiabilityCode = 'U'),
+	liability_code                          VARCHAR(1) NULL CHECK(liability_code = 'D' OR liability_code = 'L' OR liability_code = 'R' OR liability_code = 'U'),
 	-- Primary index to Loss Type
-	PRIMARY KEY(LossTypeID),
+	PRIMARY KEY(loss_type_id),
 	-- Unique index to Loss Type over PresenceConstraint over (Loss Type Code in "Loss Type has Loss Type Code") occurs at most one time
-	UNIQUE(LossTypeCode)
+	UNIQUE(loss_type_code)
 );
 
 
-CREATE TABLE LostItem (
+CREATE TABLE lost_item (
 	-- Lost Item surrogate key
-	LostItemID                              BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	lost_item_id                            BIGSERIAL NOT NULL,
 	-- Lost Item was lost in Incident that is of Claim that has Claim ID
-	IncidentClaimID                         BIGINT NOT NULL,
+	incident_claim_id                       BIGINT NOT NULL,
 	-- Lost Item has Lost Item Nr
-	LostItemNr                              INTEGER NOT NULL,
+	lost_item_nr                            INTEGER NOT NULL,
 	-- Lost Item has Description
-	Description                             VARCHAR(1024) NOT NULL,
+	description                             VARCHAR(1024) NOT NULL,
 	-- maybe Lost Item was purchased on purchase-Date
-	PurchaseDate                            DATE NULL,
+	purchase_date                           DATE NULL,
 	-- maybe Lost Item was purchased at purchase-Place
-	PurchasePlace                           VARCHAR NULL,
+	purchase_place                          VARCHAR NULL,
 	-- maybe Lost Item was purchased for purchase-Price
-	PurchasePrice                           DECIMAL(18, 2) NULL,
+	purchase_price                          DECIMAL(18, 2) NULL,
 	-- Primary index to Lost Item
-	PRIMARY KEY(LostItemID),
+	PRIMARY KEY(lost_item_id),
 	-- Unique index to Lost Item over PresenceConstraint over (Incident, Lost Item Nr in "Lost Item was lost in Incident", "Lost Item has Lost Item Nr") occurs at most one time
-	UNIQUE(IncidentClaimID, LostItemNr),
-	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID)
+	UNIQUE(incident_claim_id, lost_item_nr),
+	FOREIGN KEY (incident_claim_id) REFERENCES claim (claim_id)
 );
 
 
-CREATE TABLE Party (
+CREATE TABLE party (
 	-- Party has Party ID
-	PartyID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	party_id                                BIGSERIAL NOT NULL,
 	-- Party Is A Company
-	IsACompany                              BOOLEAN,
+	is_a_company                            BOOLEAN,
 	-- maybe Party has postal-Address and Address is at Street
-	PostalAddressStreet                     VARCHAR(256) NULL,
+	postal_address_street                   VARCHAR(256) NULL,
 	-- maybe Party has postal-Address and Address is in City
-	PostalAddressCity                       VARCHAR NULL,
+	postal_address_city                     VARCHAR NULL,
 	-- maybe Party has postal-Address and maybe Address is in Postcode
-	PostalAddressPostcode                   VARCHAR NULL,
+	postal_address_postcode                 VARCHAR NULL,
 	-- maybe Party has postal-Address and maybe Address is in State
-	PostalAddressStateID                    BIGINT NULL,
+	postal_address_state_id                 BIGINT NULL,
 	-- maybe Party is a Company that has contact-Person and Person is a kind of Party that has Party ID
-	CompanyContactPersonID                  BIGINT NULL,
+	company_contact_person_id               BIGINT NULL,
 	-- maybe Party is a Person that has Contact Methods that maybe includes business-Phone and Phone has Phone Nr
-	PersonBusinessPhoneNr                   VARCHAR NULL,
+	person_business_phone_nr                VARCHAR NULL,
 	-- maybe Party is a Person that has Contact Methods that maybe prefers contact-Time
-	PersonContactTime                       TIME NULL,
+	person_contact_time                     TIME NULL,
 	-- maybe Party is a Person that has Contact Methods that maybe includes Email
-	PersonEmail                             VARCHAR NULL,
+	person_email                            VARCHAR NULL,
 	-- maybe Party is a Person that has Contact Methods that maybe includes home-Phone and Phone has Phone Nr
-	PersonHomePhoneNr                       VARCHAR NULL,
+	person_home_phone_nr                    VARCHAR NULL,
 	-- maybe Party is a Person that has Contact Methods that maybe includes mobile-Phone and Phone has Phone Nr
-	PersonMobilePhoneNr                     VARCHAR NULL,
+	person_mobile_phone_nr                  VARCHAR NULL,
 	-- maybe Party is a Person that has Contact Methods that maybe has preferred-Contact Method
-	PersonPreferredContactMethod            CHARACTER(1) NULL CHECK(PersonPreferredContactMethod = 'B' OR PersonPreferredContactMethod = 'H' OR PersonPreferredContactMethod = 'M'),
+	person_preferred_contact_method         VARCHAR(1) NULL CHECK(person_preferred_contact_method = 'B' OR person_preferred_contact_method = 'H' OR person_preferred_contact_method = 'M'),
 	-- maybe Party is a Person that has family-Name
-	PersonFamilyName                        VARCHAR(256) NULL,
+	person_family_name                      VARCHAR(256) NULL,
 	-- maybe Party is a Person that has given-Name
-	PersonGivenName                         VARCHAR(256) NULL,
+	person_given_name                       VARCHAR(256) NULL,
 	-- maybe Party is a Person that has Title
-	PersonTitle                             VARCHAR NULL,
+	person_title                            VARCHAR NULL,
 	-- maybe Party is a Person that maybe lives at Address that is at Street
-	PersonAddressStreet                     VARCHAR(256) NULL,
+	person_address_street                   VARCHAR(256) NULL,
 	-- maybe Party is a Person that maybe lives at Address that is in City
-	PersonAddressCity                       VARCHAR NULL,
+	person_address_city                     VARCHAR NULL,
 	-- maybe Party is a Person that maybe lives at Address that maybe is in Postcode
-	PersonAddressPostcode                   VARCHAR NULL,
+	person_address_postcode                 VARCHAR NULL,
 	-- maybe Party is a Person that maybe lives at Address that maybe is in State
-	PersonAddressStateID                    BIGINT NULL,
+	person_address_state_id                 BIGINT NULL,
 	-- maybe Party is a Person that maybe has birth-Date
-	PersonBirthDate                         DATE NULL,
+	person_birth_date                       DATE NULL,
 	-- maybe Party is a Person that maybe holds License that Is International
-	PersonIsInternational                   BOOLEAN,
+	person_is_international                 BOOLEAN,
 	-- maybe Party is a Person that maybe holds License that has License Number
-	PersonLicenseNumber                     VARCHAR NULL,
+	person_license_number                   VARCHAR NULL,
 	-- maybe Party is a Person that maybe holds License that is of License Type
-	PersonLicenseType                       VARCHAR NULL,
+	person_license_type                     VARCHAR NULL,
 	-- maybe Party is a Person that maybe holds License that maybe was granted in Year that has Year Nr
-	PersonYearNr                            INTEGER NULL,
+	person_year_nr                          INTEGER NULL,
 	-- maybe Party is a Person that maybe has Occupation
-	PersonOccupation                        VARCHAR NULL,
+	person_occupation                       VARCHAR NULL,
 	-- Primary index to Party over PresenceConstraint over (Party ID in "Party has Party ID") occurs at most one time
-	PRIMARY KEY(PartyID),
-	FOREIGN KEY (CompanyContactPersonID) REFERENCES Party (PartyID)
+	PRIMARY KEY(party_id),
+	FOREIGN KEY (company_contact_person_id) REFERENCES party (party_id)
 );
 
 
-CREATE TABLE Policy (
+CREATE TABLE policy (
 	-- Policy surrogate key
-	PolicyID                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	policy_id                               BIGSERIAL NOT NULL,
 	-- Policy was issued in p_year and Year has Year Nr
-	PYearNr                                 INTEGER NOT NULL,
+	p_year_nr                               INTEGER NOT NULL,
 	-- Policy is for product having p_product
-	PProductID                              BIGINT NOT NULL,
+	p_product_id                            BIGINT NOT NULL,
 	-- Policy issued in state having p_state
-	PStateID                                BIGINT NOT NULL,
+	p_state_id                              BIGINT NOT NULL,
 	-- Policy has p_serial
-	PSerial                                 INTEGER NOT NULL CHECK((PSerial >= 1 AND PSerial <= 99999)),
+	p_serial                                INTEGER NOT NULL CHECK((p_serial >= 1 AND p_serial <= 99999)),
 	-- Policy has Application that has Application Nr
-	ApplicationNr                           INTEGER NOT NULL,
+	application_nr                          INTEGER NOT NULL,
 	-- Policy belongs to Insured that is a kind of Party that has Party ID
-	InsuredID                               BIGINT NOT NULL,
+	insured_id                              BIGINT NOT NULL,
 	-- maybe Policy was sold by Authorised Rep that is a kind of Party that has Party ID
-	AuthorisedRepID                         BIGINT NULL,
+	authorised_rep_id                       BIGINT NULL,
 	-- maybe Policy has ITC Claimed
-	ITCClaimed                              DECIMAL(18, 2) NULL CHECK((ITCClaimed >= 0.0 AND ITCClaimed <= 100.0)),
+	itc_claimed                             DECIMAL(18, 2) NULL CHECK((itc_claimed >= 0.0 AND itc_claimed <= 100.0)),
 	-- Primary index to Policy
-	PRIMARY KEY(PolicyID),
+	PRIMARY KEY(policy_id),
 	-- Unique index to Policy over PresenceConstraint over (p_year, p_product, p_state, p_serial in "Policy was issued in Year", "Policy is for product having Product", "Policy issued in state having State", "Policy has Policy Serial") occurs at most one time
-	UNIQUE(PYearNr, PProductID, PStateID, PSerial),
-	FOREIGN KEY (AuthorisedRepID) REFERENCES Party (PartyID),
-	FOREIGN KEY (InsuredID) REFERENCES Party (PartyID)
+	UNIQUE(p_year_nr, p_product_id, p_state_id, p_serial),
+	FOREIGN KEY (authorised_rep_id) REFERENCES party (party_id),
+	FOREIGN KEY (insured_id) REFERENCES party (party_id)
 );
 
 
-CREATE TABLE Product (
+CREATE TABLE product (
 	-- Product surrogate key
-	ProductID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	product_id                              BIGSERIAL NOT NULL,
 	-- Product has Product Code
-	ProductCode                             SMALLINT NOT NULL CHECK((ProductCode >= 1 AND ProductCode <= 99)),
+	product_code                            SMALLINT NOT NULL CHECK((product_code >= 1 AND product_code <= 99)),
 	-- maybe Product has Alias
-	Alias                                   CHARACTER(3) NULL,
+	alias                                   VARCHAR(3) NULL,
 	-- maybe Product has Description
-	Description                             VARCHAR(1024) NULL,
+	description                             VARCHAR(1024) NULL,
 	-- Primary index to Product
-	PRIMARY KEY(ProductID),
+	PRIMARY KEY(product_id),
 	-- Unique index to Product over PresenceConstraint over (Alias in "Alias is of Product") occurs at most one time
-	UNIQUE(Alias),
+	UNIQUE(alias),
 	-- Unique index to Product over PresenceConstraint over (Description in "Description is of Product") occurs at most one time
-	UNIQUE(Description),
+	UNIQUE(description),
 	-- Unique index to Product over PresenceConstraint over (Product Code in "Product has Product Code") occurs at most one time
-	UNIQUE(ProductCode)
+	UNIQUE(product_code)
 );
 
 
-CREATE TABLE PropertyDamage (
+CREATE TABLE property_damage (
 	-- Property Damage surrogate key
-	PropertyDamageID                        BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	property_damage_id                      BIGSERIAL NOT NULL,
 	-- maybe Property Damage was damaged in Incident that is of Claim that has Claim ID
-	IncidentClaimID                         BIGINT NULL,
+	incident_claim_id                       BIGINT NULL,
 	-- Property Damage is at Address that is at Street
-	AddressStreet                           VARCHAR(256) NOT NULL,
+	address_street                          VARCHAR(256) NOT NULL,
 	-- Property Damage is at Address that is in City
-	AddressCity                             VARCHAR NOT NULL,
+	address_city                            VARCHAR NOT NULL,
 	-- Property Damage is at Address that maybe is in Postcode
-	AddressPostcode                         VARCHAR NULL,
+	address_postcode                        VARCHAR NULL,
 	-- Property Damage is at Address that maybe is in State
-	AddressStateID                          BIGINT NULL,
+	address_state_id                        BIGINT NULL,
 	-- maybe Property Damage belongs to owner-Name
-	OwnerName                               VARCHAR(256) NULL,
+	owner_name                              VARCHAR(256) NULL,
 	-- maybe Property Damage owner has contact Phone that has Phone Nr
-	PhoneNr                                 VARCHAR NULL,
+	phone_nr                                VARCHAR NULL,
 	-- Primary index to Property Damage
-	PRIMARY KEY(PropertyDamageID),
+	PRIMARY KEY(property_damage_id),
 	-- Unique index to Property Damage over PresenceConstraint over (Incident, Address in "Incident caused Property Damage", "Property Damage is at Address") occurs at most one time
-	UNIQUE(IncidentClaimID, AddressStreet, AddressCity, AddressPostcode, AddressStateID),
-	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID)
+	UNIQUE(incident_claim_id, address_street, address_city, address_postcode, address_state_id),
+	FOREIGN KEY (incident_claim_id) REFERENCES claim (claim_id)
 );
 
 
-CREATE TABLE State (
+CREATE TABLE state (
 	-- State surrogate key
-	StateID                                 BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	state_id                                BIGSERIAL NOT NULL,
 	-- State has State Code
-	StateCode                               SMALLINT NOT NULL CHECK((StateCode >= 0 AND StateCode <= 9)),
+	state_code                              SMALLINT NOT NULL CHECK((state_code >= 0 AND state_code <= 9)),
 	-- maybe State has State Name
-	StateName                               VARCHAR(256) NULL,
+	state_name                              VARCHAR(256) NULL,
 	-- Primary index to State
-	PRIMARY KEY(StateID),
+	PRIMARY KEY(state_id),
 	-- Unique index to State over PresenceConstraint over (State Code in "State has State Code") occurs at most one time
-	UNIQUE(StateCode),
+	UNIQUE(state_code),
 	-- Unique index to State over PresenceConstraint over (State Name in "State Name is of State") occurs at most one time
-	UNIQUE(StateName)
+	UNIQUE(state_name)
 );
 
 
-CREATE TABLE ThirdParty (
+CREATE TABLE third_party (
 	-- Third Party surrogate key
-	ThirdPartyID                            BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	third_party_id                          BIGSERIAL NOT NULL,
 	-- Third Party involves Person that is a kind of Party that has Party ID
-	PersonID                                BIGINT NOT NULL,
+	person_id                               BIGINT NOT NULL,
 	-- Third Party involves Vehicle Incident that is a kind of Incident that is of Claim that has Claim ID
-	VehicleIncidentClaimID                  BIGINT NOT NULL,
+	vehicle_incident_claim_id               BIGINT NOT NULL,
 	-- maybe Third Party is insured by Insurer that is a kind of Company that is a kind of Party that has Party ID
-	InsurerID                               BIGINT NULL,
+	insurer_id                              BIGINT NULL,
 	-- maybe Third Party vehicle is of model-Year and Year has Year Nr
-	ModelYearNr                             INTEGER NULL,
+	model_year_nr                           INTEGER NULL,
 	-- maybe Third Party drove vehicle-Registration and Registration has Registration Nr
-	VehicleRegistrationNr                   CHARACTER(8) NULL,
+	vehicle_registration_nr                 VARCHAR(8) NULL,
 	-- maybe Third Party vehicle is of Vehicle Type that is of Make
-	VehicleTypeMake                         VARCHAR NULL,
+	vehicle_type_make                       VARCHAR NULL,
 	-- maybe Third Party vehicle is of Vehicle Type that is of Model
-	VehicleTypeModel                        VARCHAR NULL,
+	vehicle_type_model                      VARCHAR NULL,
 	-- maybe Third Party vehicle is of Vehicle Type that maybe has Badge
-	VehicleTypeBadge                        VARCHAR NULL,
+	vehicle_type_badge                      VARCHAR NULL,
 	-- Primary index to Third Party
-	PRIMARY KEY(ThirdPartyID),
+	PRIMARY KEY(third_party_id),
 	-- Unique index to Third Party over PresenceConstraint over (Person, Vehicle Incident in "Person was third party in Vehicle Incident") occurs at most one time
-	UNIQUE(PersonID, VehicleIncidentClaimID),
-	FOREIGN KEY (InsurerID) REFERENCES Party (PartyID),
-	FOREIGN KEY (PersonID) REFERENCES Party (PartyID)
+	UNIQUE(person_id, vehicle_incident_claim_id),
+	FOREIGN KEY (insurer_id) REFERENCES party (party_id),
+	FOREIGN KEY (person_id) REFERENCES party (party_id)
 );
 
 
-CREATE TABLE UnderwritingDemerit (
+CREATE TABLE underwriting_demerit (
 	-- Underwriting Demerit surrogate key
-	UnderwritingDemeritID                   BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	underwriting_demerit_id                 BIGSERIAL NOT NULL,
 	-- Underwriting Demerit preceded Vehicle Incident that is a kind of Incident that is of Claim that has Claim ID
-	VehicleIncidentClaimID                  BIGINT NOT NULL,
+	vehicle_incident_claim_id               BIGINT NOT NULL,
 	-- Underwriting Demerit has Underwriting Question that has Underwriting Question ID
-	UnderwritingQuestionID                  BIGINT NOT NULL,
+	underwriting_question_id                BIGINT NOT NULL,
 	-- maybe Underwriting Demerit occurred occurrence-Count times
-	OccurrenceCount                         INTEGER NULL,
+	occurrence_count                        INTEGER NULL,
 	-- Primary index to Underwriting Demerit
-	PRIMARY KEY(UnderwritingDemeritID),
+	PRIMARY KEY(underwriting_demerit_id),
 	-- Unique index to Underwriting Demerit over PresenceConstraint over (Vehicle Incident, Underwriting Question in "Vehicle Incident occurred despite Underwriting Demerit", "Underwriting Demerit has Underwriting Question") occurs at most one time
-	UNIQUE(VehicleIncidentClaimID, UnderwritingQuestionID)
+	UNIQUE(vehicle_incident_claim_id, underwriting_question_id)
 );
 
 
-CREATE TABLE UnderwritingQuestion (
+CREATE TABLE underwriting_question (
 	-- Underwriting Question has Underwriting Question ID
-	UnderwritingQuestionID                  BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	underwriting_question_id                BIGSERIAL NOT NULL,
 	-- Underwriting Question has Text
-	Text                                    VARCHAR NOT NULL,
+	text                                    VARCHAR NOT NULL,
 	-- Primary index to Underwriting Question over PresenceConstraint over (Underwriting Question ID in "Underwriting Question has Underwriting Question ID") occurs at most one time
-	PRIMARY KEY(UnderwritingQuestionID),
+	PRIMARY KEY(underwriting_question_id),
 	-- Unique index to Underwriting Question over PresenceConstraint over (Text in "Text is of Underwriting Question") occurs at most one time
-	UNIQUE(Text)
+	UNIQUE(text)
 );
 
 
-CREATE TABLE Vehicle (
+CREATE TABLE vehicle (
 	-- Vehicle surrogate key
-	VehicleID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	vehicle_id                              BIGSERIAL NOT NULL,
 	-- Vehicle is a kind of Asset that has Asset ID
-	AssetID                                 BIGINT NOT NULL,
+	asset_id                                BIGINT NOT NULL,
 	-- Vehicle has VIN
-	VIN                                     INTEGER NOT NULL,
+	vin                                     INTEGER NOT NULL,
 	-- Vehicle Has Commercial Registration
-	HasCommercialRegistration               BOOLEAN,
+	has_commercial_registration             BOOLEAN,
 	-- Vehicle is of model-Year and Year has Year Nr
-	ModelYearNr                             INTEGER NOT NULL,
+	model_year_nr                           INTEGER NOT NULL,
 	-- Vehicle has Registration that has Registration Nr
-	RegistrationNr                          CHARACTER(8) NOT NULL,
+	registration_nr                         VARCHAR(8) NOT NULL,
 	-- Vehicle is of Vehicle Type that is of Make
-	VehicleTypeMake                         VARCHAR NOT NULL,
+	vehicle_type_make                       VARCHAR NOT NULL,
 	-- Vehicle is of Vehicle Type that is of Model
-	VehicleTypeModel                        VARCHAR NOT NULL,
+	vehicle_type_model                      VARCHAR NOT NULL,
 	-- Vehicle is of Vehicle Type that maybe has Badge
-	VehicleTypeBadge                        VARCHAR NULL,
+	vehicle_type_badge                      VARCHAR NULL,
 	-- maybe Vehicle is of Colour
-	Colour                                  VARCHAR NULL,
+	colour                                  VARCHAR NULL,
 	-- maybe Vehicle was sold by Dealer that is a kind of Party that has Party ID
-	DealerID                                BIGINT NULL,
+	dealer_id                               BIGINT NULL,
 	-- maybe Vehicle has Engine Number
-	EngineNumber                            VARCHAR NULL,
+	engine_number                           VARCHAR NULL,
 	-- maybe Vehicle is subject to finance with Finance Institution that is a kind of Company that is a kind of Party that has Party ID
-	FinanceInstitutionID                    BIGINT NULL,
+	finance_institution_id                  BIGINT NULL,
 	-- Primary index to Vehicle
-	PRIMARY KEY(VehicleID),
+	PRIMARY KEY(vehicle_id),
 	-- Unique index to Vehicle over PresenceConstraint over (VIN in "Vehicle has VIN") occurs at most one time
-	UNIQUE(VIN),
-	FOREIGN KEY (AssetID) REFERENCES Asset (AssetID),
-	FOREIGN KEY (DealerID) REFERENCES Party (PartyID),
-	FOREIGN KEY (FinanceInstitutionID) REFERENCES Party (PartyID)
+	UNIQUE(vin),
+	FOREIGN KEY (asset_id) REFERENCES asset (asset_id),
+	FOREIGN KEY (dealer_id) REFERENCES party (party_id),
+	FOREIGN KEY (finance_institution_id) REFERENCES party (party_id)
 );
 
 
-CREATE TABLE VehicleIncident (
+CREATE TABLE vehicle_incident (
 	-- Vehicle Incident is a kind of Incident that is of Claim that has Claim ID
-	IncidentClaimID                         BIGINT NOT NULL,
+	incident_claim_id                       BIGINT NOT NULL,
 	-- Vehicle Incident Occurred While Being Driven
-	OccurredWhileBeingDriven                BOOLEAN,
+	occurred_while_being_driven             BOOLEAN,
 	-- maybe Vehicle Incident has Description
-	Description                             VARCHAR(1024) NULL,
+	description                             VARCHAR(1024) NULL,
 	-- maybe Driving involves Vehicle Incident and Driving was by Person that is a kind of Party that has Party ID
-	DrivingPersonID                         BIGINT NULL,
+	driving_person_id                       BIGINT NULL,
 	-- maybe Driving involves Vehicle Incident and maybe Driving resulted in breath-Test Result
-	DrivingBreathTestResult                 VARCHAR NULL,
+	driving_breath_test_result              VARCHAR NULL,
 	-- maybe Driving involves Vehicle Incident and maybe Driving Charge involves Driving that Is A Warning
-	DrivingIsAWarning                       BOOLEAN,
+	driving_is_a_warning                    BOOLEAN,
 	-- maybe Driving involves Vehicle Incident and maybe Driving Charge involves Driving and Driving Charge involves Charge
-	DrivingCharge                           VARCHAR NULL,
+	driving_charge                          VARCHAR NULL,
 	-- maybe Driving involves Vehicle Incident and maybe Hospitalization involves Driving and Hospitalization involves Hospital that has Hospital Name
-	DrivingHospitalName                     VARCHAR NULL,
+	driving_hospital_name                   VARCHAR NULL,
 	-- maybe Driving involves Vehicle Incident and maybe Hospitalization involves Driving and maybe Hospitalization resulted in blood-Test Result
-	DrivingBloodTestResult                  VARCHAR NULL,
+	driving_blood_test_result               VARCHAR NULL,
 	-- maybe Driving involves Vehicle Incident and maybe Driving followed Intoxication
-	DrivingIntoxication                     VARCHAR NULL,
+	driving_intoxication                    VARCHAR NULL,
 	-- maybe Driving involves Vehicle Incident and maybe Driving was without owners consent for nonconsent-Reason
-	DrivingNonconsentReason                 VARCHAR NULL,
+	driving_nonconsent_reason               VARCHAR NULL,
 	-- maybe Driving involves Vehicle Incident and maybe Driving was unlicenced for unlicensed-Reason
-	DrivingUnlicensedReason                 VARCHAR NULL,
+	driving_unlicensed_reason               VARCHAR NULL,
 	-- maybe Vehicle Incident resulted from Loss Type
-	LossTypeID                              BIGINT NULL,
+	loss_type_id                            BIGINT NULL,
 	-- maybe Vehicle Incident involved previous_damage-Description
-	PreviousDamageDescription               VARCHAR(1024) NULL,
+	previous_damage_description             VARCHAR(1024) NULL,
 	-- maybe Vehicle Incident was caused by Reason
-	Reason                                  VARCHAR NULL,
+	reason                                  VARCHAR NULL,
 	-- maybe Vehicle Incident resulted in vehicle being towed to towed-Location
-	TowedLocation                           VARCHAR NULL,
+	towed_location                          VARCHAR NULL,
 	-- maybe Vehicle Incident occurred during weather-Description
-	WeatherDescription                      VARCHAR(1024) NULL,
+	weather_description                     VARCHAR(1024) NULL,
 	-- Primary index to Vehicle Incident over PresenceConstraint over (Incident in "Vehicle Incident is a kind of Incident") occurs at most one time
-	PRIMARY KEY(IncidentClaimID),
-	FOREIGN KEY (DrivingPersonID) REFERENCES Party (PartyID),
-	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID),
-	FOREIGN KEY (LossTypeID) REFERENCES LossType (LossTypeID)
+	PRIMARY KEY(incident_claim_id),
+	FOREIGN KEY (driving_person_id) REFERENCES party (party_id),
+	FOREIGN KEY (incident_claim_id) REFERENCES claim (claim_id),
+	FOREIGN KEY (loss_type_id) REFERENCES loss_type (loss_type_id)
 );
 
 
-CREATE TABLE Witness (
+CREATE TABLE witness (
 	-- Witness surrogate key
-	WitnessID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	witness_id                              BIGSERIAL NOT NULL,
 	-- Witness saw Incident that is of Claim that has Claim ID
-	IncidentClaimID                         BIGINT NOT NULL,
+	incident_claim_id                       BIGINT NOT NULL,
 	-- Witness is called Name
-	Name                                    VARCHAR(256) NOT NULL,
+	name                                    VARCHAR(256) NOT NULL,
 	-- maybe Witness lives at Address that is at Street
-	AddressStreet                           VARCHAR(256) NULL,
+	address_street                          VARCHAR(256) NULL,
 	-- maybe Witness lives at Address that is in City
-	AddressCity                             VARCHAR NULL,
+	address_city                            VARCHAR NULL,
 	-- maybe Witness lives at Address that maybe is in Postcode
-	AddressPostcode                         VARCHAR NULL,
+	address_postcode                        VARCHAR NULL,
 	-- maybe Witness lives at Address that maybe is in State
-	AddressStateID                          BIGINT NULL,
+	address_state_id                        BIGINT NULL,
 	-- maybe Witness has contact-Phone and Phone has Phone Nr
-	ContactPhoneNr                          VARCHAR NULL,
+	contact_phone_nr                        VARCHAR NULL,
 	-- Primary index to Witness
-	PRIMARY KEY(WitnessID),
+	PRIMARY KEY(witness_id),
 	-- Unique index to Witness over PresenceConstraint over (Incident, Name in "Incident was independently witnessed by Witness", "Witness is called Name") occurs at most one time
-	UNIQUE(IncidentClaimID, Name),
-	FOREIGN KEY (AddressStateID) REFERENCES State (StateID),
-	FOREIGN KEY (IncidentClaimID) REFERENCES Claim (ClaimID)
+	UNIQUE(incident_claim_id, name),
+	FOREIGN KEY (address_state_id) REFERENCES state (state_id),
+	FOREIGN KEY (incident_claim_id) REFERENCES claim (claim_id)
 );
 
 
-ALTER TABLE Claim
-	ADD FOREIGN KEY (IncidentAddressStateID) REFERENCES State (StateID);
+ALTER TABLE claim
+	ADD FOREIGN KEY (incident_address_state_id) REFERENCES state (state_id);
 
 
-ALTER TABLE Claim
-	ADD FOREIGN KEY (LodgementPersonID) REFERENCES Party (PartyID);
+ALTER TABLE claim
+	ADD FOREIGN KEY (lodgement_person_id) REFERENCES party (party_id);
 
 
-ALTER TABLE Claim
-	ADD FOREIGN KEY (PolicyID) REFERENCES Policy (PolicyID);
+ALTER TABLE claim
+	ADD FOREIGN KEY (policy_id) REFERENCES policy (policy_id);
 
 
-ALTER TABLE ContractorAppointment
-	ADD FOREIGN KEY (ContractorID) REFERENCES Party (PartyID);
+ALTER TABLE contractor_appointment
+	ADD FOREIGN KEY (contractor_id) REFERENCES party (party_id);
 
 
-ALTER TABLE Cover
-	ADD FOREIGN KEY (CoverTypeID) REFERENCES CoverType (CoverTypeID);
+ALTER TABLE cover
+	ADD FOREIGN KEY (cover_type_id) REFERENCES cover_type (cover_type_id);
 
 
-ALTER TABLE Cover
-	ADD FOREIGN KEY (PolicyID) REFERENCES Policy (PolicyID);
+ALTER TABLE cover
+	ADD FOREIGN KEY (policy_id) REFERENCES policy (policy_id);
 
 
-ALTER TABLE Party
-	ADD FOREIGN KEY (PersonAddressStateID) REFERENCES State (StateID);
+ALTER TABLE party
+	ADD FOREIGN KEY (person_address_state_id) REFERENCES state (state_id);
 
 
-ALTER TABLE Party
-	ADD FOREIGN KEY (PostalAddressStateID) REFERENCES State (StateID);
+ALTER TABLE party
+	ADD FOREIGN KEY (postal_address_state_id) REFERENCES state (state_id);
 
 
-ALTER TABLE Policy
-	ADD FOREIGN KEY (PProductID) REFERENCES Product (ProductID);
+ALTER TABLE policy
+	ADD FOREIGN KEY (p_product_id) REFERENCES product (product_id);
 
 
-ALTER TABLE Policy
-	ADD FOREIGN KEY (PStateID) REFERENCES State (StateID);
+ALTER TABLE policy
+	ADD FOREIGN KEY (p_state_id) REFERENCES state (state_id);
 
 
-ALTER TABLE PropertyDamage
-	ADD FOREIGN KEY (AddressStateID) REFERENCES State (StateID);
+ALTER TABLE property_damage
+	ADD FOREIGN KEY (address_state_id) REFERENCES state (state_id);
 
 
-ALTER TABLE ThirdParty
-	ADD FOREIGN KEY (VehicleIncidentClaimID) REFERENCES VehicleIncident (IncidentClaimID);
+ALTER TABLE third_party
+	ADD FOREIGN KEY (vehicle_incident_claim_id) REFERENCES vehicle_incident (incident_claim_id);
 
 
-ALTER TABLE UnderwritingDemerit
-	ADD FOREIGN KEY (UnderwritingQuestionID) REFERENCES UnderwritingQuestion (UnderwritingQuestionID);
+ALTER TABLE underwriting_demerit
+	ADD FOREIGN KEY (underwriting_question_id) REFERENCES underwriting_question (underwriting_question_id);
 
 
-ALTER TABLE UnderwritingDemerit
-	ADD FOREIGN KEY (VehicleIncidentClaimID) REFERENCES VehicleIncident (IncidentClaimID);
+ALTER TABLE underwriting_demerit
+	ADD FOREIGN KEY (vehicle_incident_claim_id) REFERENCES vehicle_incident (incident_claim_id);
 

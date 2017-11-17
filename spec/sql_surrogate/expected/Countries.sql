@@ -1,23 +1,25 @@
-CREATE TABLE Country (
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+CREATE TABLE country (
 	-- Country has Country Code
-	CountryCodeID                           BIGINT NOT NULL,
+	country_code_id                         BIGINT NOT NULL,
 	-- Primary index to Country over PresenceConstraint over (Country Code in "Country has Country Code") occurs at most one time
-	PRIMARY KEY(CountryCode, CountryCodeID)
+	PRIMARY KEY(country_code, country_code_id)
 );
 
 
-CREATE TABLE CountryCode (
+CREATE TABLE country_code (
 	-- Country Code surrogate key
-	CountryCodeID                           BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	country_code_id                         BIGSERIAL NOT NULL,
 	-- Country Code Value
-	CountryCodeValue                        CHARACTER(3) NOT NULL,
+	country_code_value                      VARCHAR(3) NOT NULL,
 	-- Primary index to Country Code
-	PRIMARY KEY(CountryCodeID),
+	PRIMARY KEY(country_code_id),
 	-- Unique index to Country Code
-	UNIQUE(CountryCodeValue)
+	UNIQUE(country_code_value)
 );
 
 
-ALTER TABLE Country
-	ADD FOREIGN KEY (CountryCodeID) REFERENCES CountryCode (CountryCodeID);
+ALTER TABLE country
+	ADD FOREIGN KEY (country_code_id) REFERENCES country_code (country_code_id);
 

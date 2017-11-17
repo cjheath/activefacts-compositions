@@ -1,50 +1,52 @@
-CREATE TABLE Company (
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+CREATE TABLE company (
 	-- Company surrogate key
-	CompanyID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	company_id                              BIGSERIAL NOT NULL,
 	-- Company has Company Name
-	CompanyName                             VARCHAR NOT NULL,
+	company_name                            VARCHAR NOT NULL,
 	-- maybe Company has head office at Address that maybe is at street-Number
-	AddressStreetNumber                     VARCHAR(12) NULL,
+	address_street_number                   VARCHAR(12) NULL,
 	-- maybe Company has head office at Address that is at Street that includes first-Street Line
-	AddressStreetFirstStreetLine            VARCHAR(64) NULL,
+	address_street_first_street_line        VARCHAR(64) NULL,
 	-- maybe Company has head office at Address that is at Street that maybe includes second-Street Line
-	AddressStreetSecondStreetLine           VARCHAR(64) NULL,
+	address_street_second_street_line       VARCHAR(64) NULL,
 	-- maybe Company has head office at Address that is at Street that maybe includes third-Street Line
-	AddressStreetThirdStreetLine            VARCHAR(64) NULL,
+	address_street_third_street_line        VARCHAR(64) NULL,
 	-- maybe Company has head office at Address that is in City
-	AddressCity                             VARCHAR(64) NULL,
+	address_city                            VARCHAR(64) NULL,
 	-- maybe Company has head office at Address that maybe is in Postcode
-	AddressPostcode                         VARCHAR NULL CHECK((AddressPostcode >= 1000 AND AddressPostcode <= 9999)),
+	address_postcode                        VARCHAR NULL CHECK((address_postcode >= 1000 AND address_postcode <= 9999)),
 	-- Primary index to Company
-	PRIMARY KEY(CompanyID),
+	PRIMARY KEY(company_id),
 	-- Unique index to Company over PresenceConstraint over (Company Name in "Company has Company Name") occurs at most one time
-	UNIQUE(CompanyName)
+	UNIQUE(company_name)
 );
 
 
-CREATE TABLE Person (
+CREATE TABLE person (
 	-- Person surrogate key
-	PersonID                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	person_id                               BIGSERIAL NOT NULL,
 	-- Person is of Family that has Family Name
-	FamilyName                              VARCHAR(20) NOT NULL,
+	family_name                             VARCHAR(20) NOT NULL,
 	-- Person has Given Names
-	GivenNames                              VARCHAR(20) NOT NULL,
+	given_names                             VARCHAR(20) NOT NULL,
 	-- maybe Person lives at Address that maybe is at street-Number
-	AddressStreetNumber                     VARCHAR(12) NULL,
+	address_street_number                   VARCHAR(12) NULL,
 	-- maybe Person lives at Address that is at Street that includes first-Street Line
-	AddressStreetFirstStreetLine            VARCHAR(64) NULL,
+	address_street_first_street_line        VARCHAR(64) NULL,
 	-- maybe Person lives at Address that is at Street that maybe includes second-Street Line
-	AddressStreetSecondStreetLine           VARCHAR(64) NULL,
+	address_street_second_street_line       VARCHAR(64) NULL,
 	-- maybe Person lives at Address that is at Street that maybe includes third-Street Line
-	AddressStreetThirdStreetLine            VARCHAR(64) NULL,
+	address_street_third_street_line        VARCHAR(64) NULL,
 	-- maybe Person lives at Address that is in City
-	AddressCity                             VARCHAR(64) NULL,
+	address_city                            VARCHAR(64) NULL,
 	-- maybe Person lives at Address that maybe is in Postcode
-	AddressPostcode                         VARCHAR NULL CHECK((AddressPostcode >= 1000 AND AddressPostcode <= 9999)),
+	address_postcode                        VARCHAR NULL CHECK((address_postcode >= 1000 AND address_postcode <= 9999)),
 	-- Primary index to Person
-	PRIMARY KEY(PersonID),
+	PRIMARY KEY(person_id),
 	-- Unique index to Person over PresenceConstraint over (Family, Given Names in "Person is of Family", "Person has Given Names") occurs at most one time
-	UNIQUE(FamilyName, GivenNames)
+	UNIQUE(family_name, given_names)
 );
 
 

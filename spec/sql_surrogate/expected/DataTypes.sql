@@ -1,178 +1,180 @@
-CREATE TABLE AACET (
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+CREATE TABLE aac_et (
 	-- AAC_ET has Alternate Auto Counter
-	AlternateAutoCounter                    BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	alternate_auto_counter                  BIGSERIAL NOT NULL,
 	-- Primary index to AAC_ET over PresenceConstraint over (Alternate Auto Counter in "AAC_ET has Alternate Auto Counter") occurs at most one time
-	PRIMARY KEY(AlternateAutoCounter)
+	PRIMARY KEY(alternate_auto_counter)
 );
 
 
-CREATE TABLE AACSub (
+CREATE TABLE aac_sub (
 	-- AAC_Sub is a kind of AAC_ET that has Alternate Auto Counter
-	AACETAlternateAutoCounter               BIGINT NOT NULL,
+	aac_et_alternate_auto_counter           BIGINT NOT NULL,
 	-- Primary index to AAC_Sub over PresenceConstraint over (AAC_ET in "AAC_Sub is a kind of AAC_ET") occurs at most one time
-	PRIMARY KEY(AACETAlternateAutoCounter),
-	FOREIGN KEY (AACETAlternateAutoCounter) REFERENCES AACET (AlternateAutoCounter)
+	PRIMARY KEY(aac_et_alternate_auto_counter),
+	FOREIGN KEY (aac_et_alternate_auto_counter) REFERENCES aac_et (alternate_auto_counter)
 );
 
 
-CREATE TABLE AGET (
+CREATE TABLE ag_et (
 	-- AG_ET has Alternate Guid
-	AlternateGuid                           BINARY(16) NOT NULL,
+	alternate_guid                          UUID NOT NULL DEFAULT 'gen_random_uuid()',
 	-- Primary index to AG_ET over PresenceConstraint over (Alternate Guid in "AG_ET has Alternate Guid") occurs at most one time
-	PRIMARY KEY(AlternateGuid)
+	PRIMARY KEY(alternate_guid)
 );
 
 
-CREATE TABLE AGSub (
+CREATE TABLE ag_sub (
 	-- AG_Sub is a kind of AG_ET that has Alternate Guid
-	AGETAlternateGuid                       BINARY(16) NOT NULL,
+	ag_et_alternate_guid                    UUID NOT NULL,
 	-- Primary index to AG_Sub over PresenceConstraint over (AG_ET in "AG_Sub is a kind of AG_ET") occurs at most one time
-	PRIMARY KEY(AGETAlternateGuid),
-	FOREIGN KEY (AGETAlternateGuid) REFERENCES AGET (AlternateGuid)
+	PRIMARY KEY(ag_et_alternate_guid),
+	FOREIGN KEY (ag_et_alternate_guid) REFERENCES ag_et (alternate_guid)
 );
 
 
-CREATE TABLE Container (
+CREATE TABLE container (
 	-- Container surrogate key
-	ContainerID                             BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	container_id                            BIGSERIAL NOT NULL,
 	-- Container has Container Name
-	ContainerName                           VARCHAR NOT NULL,
+	container_name                          VARCHAR NOT NULL,
 	-- Container has Alternate Auto Counter
-	AlternateAutoCounter                    BIGINT NOT NULL,
+	alternate_auto_counter                  BIGINT NOT NULL,
 	-- Container has Alternate Auto Time Stamp
-	AlternateAutoTimeStamp                  TIMESTAMP NOT NULL,
+	alternate_auto_time_stamp               TIMESTAMP NOT NULL,
 	-- Container has Alternate Big Int
-	AlternateBigInt                         BIGINT NOT NULL,
+	alternate_big_int                       BIGINT NOT NULL,
 	-- Container has Alternate Bit
-	AlternateBit                            BOOLEAN NOT NULL,
+	alternate_bit                           BOOLEAN NOT NULL,
 	-- Container has Alternate Character
-	AlternateCharacter                      CHARACTER NOT NULL,
+	alternate_character                     VARCHAR NOT NULL,
 	-- Container has Alternate Currency
-	AlternateCurrency                       DECIMAL NOT NULL,
+	alternate_currency                      MONEY NOT NULL,
 	-- Container has Alternate Date Time
-	AlternateDateTime                       TIMESTAMP NOT NULL,
+	alternate_date_time                     TIMESTAMP NOT NULL,
 	-- Container has Alternate Double
-	AlternateDouble                         FLOAT(53) NOT NULL,
+	alternate_double                        FLOAT(53) NOT NULL,
 	-- Container has Alternate Fixed Length Text
-	AlternateFixedLengthText                CHARACTER NOT NULL,
+	alternate_fixed_length_text             VARCHAR NOT NULL,
 	-- Container has Alternate Float
-	AlternateFloat                          FLOAT(53) NOT NULL,
+	alternate_float                         FLOAT(53) NOT NULL,
 	-- Container has Alternate Guid
-	AlternateGuid                           BINARY(16) NOT NULL,
+	alternate_guid                          UUID NOT NULL,
 	-- Container has Alternate Int
-	AlternateInt                            INTEGER NOT NULL CHECK((AlternateInt >= -2147483648 AND AlternateInt <= 2147483647)),
+	alternate_int                           INTEGER NOT NULL CHECK((alternate_int >= -2147483648 AND alternate_int <= 2147483647)),
 	-- Container has Alternate Large Length Text
-	AlternateLargeLengthText                VARCHAR(MAX) NOT NULL,
+	alternate_large_length_text             VARCHAR(MAX) NOT NULL,
 	-- Container has Alternate National Character
-	AlternateNationalCharacter              CHARACTER NOT NULL,
+	alternate_national_character            VARCHAR NOT NULL,
 	-- Container has Alternate National Character Varying
-	AlternateNationalCharacterVarying       VARCHAR NOT NULL,
+	alternate_national_character_varying    VARCHAR NOT NULL,
 	-- Container has Alternate Nchar
-	AlternateNchar                          CHARACTER NOT NULL,
+	alternate_nchar                         VARCHAR NOT NULL,
 	-- Container has Alternate Nvarchar
-	AlternateNvarchar                       VARCHAR NOT NULL,
+	alternate_nvarchar                      VARCHAR NOT NULL,
 	-- Container has Alternate Picture Raw Data
-	AlternatePictureRawData                 VARBINARY NOT NULL,
+	alternate_picture_raw_data              IMAGE NOT NULL,
 	-- Container has Alternate Signed Int
-	AlternateSignedInt                      INTEGER NOT NULL,
+	alternate_signed_int                    INTEGER NOT NULL,
 	-- Container has Alternate Signed Integer
-	AlternateSignedInteger                  INTEGER NOT NULL,
+	alternate_signed_integer                INTEGER NOT NULL,
 	-- Container has Alternate Small Int
-	AlternateSmallInt                       SMALLINT NOT NULL,
+	alternate_small_int                     SMALLINT NOT NULL,
 	-- Container has Alternate Time Stamp
-	AlternateTimeStamp                      TIMESTAMP NOT NULL,
+	alternate_time_stamp                    TIMESTAMP NOT NULL,
 	-- Container has Alternate Tiny Int
-	AlternateTinyInt                        SMALLINT NOT NULL,
+	alternate_tiny_int                      SMALLINT NOT NULL,
 	-- Container has Alternate Unsigned
-	AlternateUnsigned                       INTEGER NOT NULL,
+	alternate_unsigned                      INTEGER NOT NULL,
 	-- Container has Alternate Unsigned Int
-	AlternateUnsignedInt                    INTEGER NOT NULL,
+	alternate_unsigned_int                  INTEGER NOT NULL,
 	-- Container has Alternate Unsigned Integer
-	AlternateUnsignedInteger                INTEGER NOT NULL,
+	alternate_unsigned_integer              INTEGER NOT NULL,
 	-- Container has Alternate Varchar
-	AlternateVarchar                        VARCHAR NOT NULL,
+	alternate_varchar                       VARCHAR NOT NULL,
 	-- Container has Alternate Variable Length Raw Data
-	AlternateVariableLengthRawData          VARBINARY NOT NULL,
+	alternate_variable_length_raw_data      IMAGE NOT NULL,
 	-- Container has Alternate Variable Length Text
-	AlternateVariableLengthText             VARCHAR NOT NULL,
+	alternate_variable_length_text          VARCHAR NOT NULL,
 	-- Container has Byte
-	Byte                                    SMALLINT NOT NULL CHECK((Byte >= -128 AND Byte <= 127)),
+	byte                                    SMALLINT NOT NULL CHECK((byte >= -128 AND byte <= 127)),
 	-- Container has Char8
-	Char8                                   CHARACTER(8) NOT NULL,
+	char8                                   VARCHAR(8) NOT NULL,
 	-- Container has Decimal14
-	Decimal14                               DECIMAL(14) NOT NULL,
+	decimal14                               DECIMAL(14) NOT NULL,
 	-- Container has Decimal14_6
-	Decimal14_6                             DECIMAL(14, 6) NOT NULL,
+	decimal14__6                            DECIMAL(14, 6) NOT NULL,
 	-- Container has Decimal8_3
-	Decimal8_3                              DECIMAL(8, 3) NOT NULL,
+	decimal8__3                             DECIMAL(8, 3) NOT NULL,
 	-- Container has Fundamental Binary
-	FundamentalBinary                       VARBINARY NOT NULL,
+	fundamental_binary                      IMAGE NOT NULL,
 	-- Container has Fundamental Boolean
-	FundamentalBoolean                      BOOLEAN NOT NULL,
+	fundamental_boolean                     BOOLEAN NOT NULL,
 	-- Container has Fundamental Char
-	FundamentalChar                         CHARACTER NOT NULL,
+	fundamental_char                        VARCHAR NOT NULL,
 	-- Container has Fundamental Date
-	FundamentalDate                         DATE NOT NULL,
+	fundamental_date                        DATE NOT NULL,
 	-- Container has Fundamental DateTime
-	FundamentalDateTime                     TIMESTAMP NOT NULL,
+	fundamental_date_time                   TIMESTAMP NOT NULL,
 	-- Container has Fundamental Decimal
-	FundamentalDecimal                      DECIMAL NOT NULL,
+	fundamental_decimal                     DECIMAL NOT NULL,
 	-- Container has Fundamental Integer
-	FundamentalInteger                      INTEGER NOT NULL,
+	fundamental_integer                     INTEGER NOT NULL,
 	-- Container has Fundamental Money
-	FundamentalMoney                        DECIMAL NOT NULL,
+	fundamental_money                       MONEY NOT NULL,
 	-- Container has Fundamental Real
-	FundamentalReal                         FLOAT(53) NOT NULL,
+	fundamental_real                        FLOAT(53) NOT NULL,
 	-- Container has Fundamental String
-	FundamentalString                       VARCHAR NOT NULL,
+	fundamental_string                      VARCHAR NOT NULL,
 	-- Container has Fundamental Text
-	FundamentalText                         VARCHAR(MAX) NOT NULL,
+	fundamental_text                        VARCHAR(MAX) NOT NULL,
 	-- Container has Fundamental Time
-	FundamentalTime                         TIME NOT NULL,
+	fundamental_time                        TIME NOT NULL,
 	-- Container has Fundamental Timestamp
-	FundamentalTimestamp                    TIMESTAMP NOT NULL,
+	fundamental_timestamp                   TIMESTAMP NOT NULL,
 	-- Container has Int
-	"Int"                                   INTEGER NOT NULL CHECK(("Int" >= -2147483648 AND "Int" <= 2147483647)),
+	"int"                                   INTEGER NOT NULL CHECK(("int" >= -2147483648 AND "int" <= 2147483647)),
 	-- Container has Int16
-	Int16                                   SMALLINT NOT NULL,
+	int16                                   SMALLINT NOT NULL,
 	-- Container has Int32
-	Int32                                   INTEGER NOT NULL,
+	int32                                   INTEGER NOT NULL,
 	-- Container has Int64
-	Int64                                   BIGINT NOT NULL,
+	int64                                   BIGINT NOT NULL,
 	-- Container has Int8
-	Int8                                    SMALLINT NOT NULL,
+	int8                                    SMALLINT NOT NULL,
 	-- Container has Int80
-	Int80                                   int NOT NULL,
+	int80                                   int NOT NULL,
 	-- Container has Large
-	"Large"                                 BIGINT NOT NULL CHECK(("Large" >= -9223372036854775808999 AND "Large" <= 9223372036854775807999)),
+	"large"                                 BIGINT NOT NULL CHECK(("large" >= -9223372036854775808999 AND "large" <= 9223372036854775807999)),
 	-- Container has Quad
-	Quad                                    BIGINT NOT NULL CHECK((Quad >= -9223372036854775808 AND Quad <= 9223372036854775807)),
+	quad                                    BIGINT NOT NULL CHECK((quad >= -9223372036854775808 AND quad <= 9223372036854775807)),
 	-- Container has Real32
-	Real32                                  FLOAT(53) NOT NULL,
+	real32                                  FLOAT(53) NOT NULL,
 	-- Container has Real64
-	Real64                                  FLOAT(53) NOT NULL,
+	real64                                  FLOAT(53) NOT NULL,
 	-- Container has Real80
-	Real80                                  FLOAT(53) NOT NULL,
+	real80                                  FLOAT(53) NOT NULL,
 	-- Container has String255
-	String255                               VARCHAR(255) NOT NULL,
+	string255                               VARCHAR(255) NOT NULL,
 	-- Container has Text65536
-	Text65536                               VARCHAR(65536) NOT NULL,
+	text65536                               VARCHAR(65536) NOT NULL,
 	-- Container has UByte
-	UByte                                   SMALLINT NOT NULL CHECK((UByte >= 0 AND UByte <= 255)),
+	u_byte                                  SMALLINT NOT NULL CHECK((u_byte >= 0 AND u_byte <= 255)),
 	-- Container has UInt
-	UInt                                    BIGINT NOT NULL CHECK((UInt >= 0 AND UInt <= 4294967295)),
+	u_int                                   BIGINT NOT NULL CHECK((u_int >= 0 AND u_int <= 4294967295)),
 	-- Container has ULarge
-	ULarge                                  BIGINT NOT NULL CHECK((ULarge >= 0 AND ULarge <= 184467440737095516159999)),
+	u_large                                 BIGINT NOT NULL CHECK((u_large >= 0 AND u_large <= 184467440737095516159999)),
 	-- Container has UQuad
-	UQuad                                   BIGINT NOT NULL CHECK((UQuad >= 0 AND UQuad <= 18446744073709551615)),
+	u_quad                                  BIGINT NOT NULL CHECK((u_quad >= 0 AND u_quad <= 18446744073709551615)),
 	-- Container has UWord
-	UWord                                   INTEGER NOT NULL CHECK((UWord >= 0 AND UWord <= 65535)),
+	u_word                                  INTEGER NOT NULL CHECK((u_word >= 0 AND u_word <= 65535)),
 	-- Container has Word
-	Word                                    SMALLINT NOT NULL CHECK((Word >= -32768 AND Word <= 32767)),
+	word                                    SMALLINT NOT NULL CHECK((word >= -32768 AND word <= 32767)),
 	-- Primary index to Container
-	PRIMARY KEY(ContainerID),
+	PRIMARY KEY(container_id),
 	-- Unique index to Container over PresenceConstraint over (Container Name in "Container has Container Name") occurs at most one time
-	UNIQUE(ContainerName)
+	UNIQUE(container_name)
 );
 
 

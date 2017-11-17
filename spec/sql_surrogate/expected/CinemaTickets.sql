@@ -1,200 +1,202 @@
-CREATE TABLE AllocatableCinemaSection (
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+CREATE TABLE allocatable_cinema_section (
 	-- AllocatableCinemaSection surrogate key
-	AllocatableCinemaSectionID              BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	allocatable_cinema_section_id           BIGSERIAL NOT NULL,
 	-- AllocatableCinemaSection involves Cinema that has Cinema ID
-	CinemaID                                BIGINT NOT NULL,
+	cinema_id                               BIGINT NOT NULL,
 	-- AllocatableCinemaSection involves Section that has Section Name
-	SectionName                             VARCHAR NOT NULL,
+	section_name                            VARCHAR NOT NULL,
 	-- Primary index to AllocatableCinemaSection
-	PRIMARY KEY(AllocatableCinemaSectionID),
+	PRIMARY KEY(allocatable_cinema_section_id),
 	-- Unique index to AllocatableCinemaSection over PresenceConstraint over (Cinema, Section in "Cinema provides allocated seating in Section") occurs at most one time
-	UNIQUE(CinemaID, SectionName)
+	UNIQUE(cinema_id, section_name)
 );
 
 
-CREATE TABLE Booking (
+CREATE TABLE booking (
 	-- Booking surrogate key
-	BookingID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	booking_id                              BIGSERIAL NOT NULL,
 	-- Booking has Booking Nr
-	BookingNr                               INTEGER NOT NULL,
+	booking_nr                              INTEGER NOT NULL,
 	-- Tickets For Booking Have Been Issued
-	TicketsForBookingHaveBeenIssued         BOOLEAN,
+	tickets_for_booking_have_been_issued    BOOLEAN,
 	-- Booking involves Number
-	Number                                  SMALLINT NOT NULL CHECK(Number >= 1),
+	number                                  SMALLINT NOT NULL CHECK(number >= 1),
 	-- Booking involves Person that has Person ID
-	PersonID                                BIGINT NOT NULL,
+	person_id                               BIGINT NOT NULL,
 	-- Booking involves Session
-	SessionID                               BIGINT NOT NULL,
+	session_id                              BIGINT NOT NULL,
 	-- maybe tickets for Booking are being mailed to Address that has Address Text
-	AddressText                             VARCHAR(MAX) NULL,
+	address_text                            VARCHAR(MAX) NULL,
 	-- maybe Booking has Collection Code
-	CollectionCode                          INTEGER NULL,
+	collection_code                         INTEGER NULL,
 	-- maybe Booking is for seats in Section that has Section Name
-	SectionName                             VARCHAR NULL,
+	section_name                            VARCHAR NULL,
 	-- Primary index to Booking
-	PRIMARY KEY(BookingID),
+	PRIMARY KEY(booking_id),
 	-- Unique index to Booking over PresenceConstraint over (Booking Nr in "Booking has Booking Nr") occurs at most one time
-	UNIQUE(BookingNr),
+	UNIQUE(booking_nr),
 	-- Unique index to Booking over PresenceConstraint over (Person, Session in "Person booked Session for Number of places") occurs one time
-	UNIQUE(PersonID, SessionID)
+	UNIQUE(person_id, session_id)
 );
 
 
-CREATE TABLE Cinema (
+CREATE TABLE cinema (
 	-- Cinema has Cinema ID
-	CinemaID                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	cinema_id                               BIGSERIAL NOT NULL,
 	-- Cinema has Name
-	Name                                    VARCHAR NOT NULL,
+	name                                    VARCHAR NOT NULL,
 	-- Primary index to Cinema over PresenceConstraint over (Cinema ID in "Cinema has Cinema ID") occurs at most one time
-	PRIMARY KEY(CinemaID),
+	PRIMARY KEY(cinema_id),
 	-- Unique index to Cinema over PresenceConstraint over (Name in "Cinema has Name") occurs at most one time
-	UNIQUE(Name)
+	UNIQUE(name)
 );
 
 
-CREATE TABLE Film (
+CREATE TABLE film (
 	-- Film has Film ID
-	FilmID                                  BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	film_id                                 BIGSERIAL NOT NULL,
 	-- Film has Name
-	Name                                    VARCHAR NOT NULL,
+	name                                    VARCHAR NOT NULL,
 	-- maybe Film was made in Year that has Year Nr
-	YearNr                                  INTEGER NULL CHECK((YearNr >= 1900 AND YearNr <= 9999)),
+	year_nr                                 INTEGER NULL CHECK((year_nr >= 1900 AND year_nr <= 9999)),
 	-- Primary index to Film over PresenceConstraint over (Film ID in "Film has Film ID") occurs at most one time
-	PRIMARY KEY(FilmID),
+	PRIMARY KEY(film_id),
 	-- Unique index to Film over PresenceConstraint over (Name, Year in "Film has Name", "Film was made in Year") occurs at most one time
-	UNIQUE(Name, YearNr)
+	UNIQUE(name, year_nr)
 );
 
 
-CREATE TABLE Person (
+CREATE TABLE person (
 	-- Person has Person ID
-	PersonID                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	person_id                               BIGSERIAL NOT NULL,
 	-- maybe Person has Encrypted Password
-	EncryptedPassword                       VARCHAR NULL,
+	encrypted_password                      VARCHAR NULL,
 	-- maybe Person has login-Name
-	LoginName                               VARCHAR NULL,
+	login_name                              VARCHAR NULL,
 	-- Primary index to Person over PresenceConstraint over (Person ID in "Person has Person ID") occurs at most one time
-	PRIMARY KEY(PersonID),
+	PRIMARY KEY(person_id),
 	-- Unique index to Person over PresenceConstraint over (Login Name in "Person has login-Name") occurs at most one time
-	UNIQUE(LoginName)
+	UNIQUE(login_name)
 );
 
 
-CREATE TABLE PlacesPaid (
+CREATE TABLE places_paid (
 	-- Places Paid surrogate key
-	PlacesPaidID                            BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	places_paid_id                          BIGSERIAL NOT NULL,
 	-- Places Paid involves Booking
-	BookingID                               BIGINT NOT NULL,
+	booking_id                              BIGINT NOT NULL,
 	-- Places Paid involves Payment Method that has Payment Method Code
-	PaymentMethodCode                       VARCHAR NOT NULL CHECK(PaymentMethodCode = 'Card' OR PaymentMethodCode = 'Cash' OR PaymentMethodCode = 'Gift Voucher' OR PaymentMethodCode = 'Loyalty Voucher'),
+	payment_method_code                     VARCHAR NOT NULL CHECK(payment_method_code = 'Card' OR payment_method_code = 'Cash' OR payment_method_code = 'Gift Voucher' OR payment_method_code = 'Loyalty Voucher'),
 	-- Places Paid involves Number
-	Number                                  SMALLINT NOT NULL CHECK(Number >= 1),
+	number                                  SMALLINT NOT NULL CHECK(number >= 1),
 	-- Primary index to Places Paid
-	PRIMARY KEY(PlacesPaidID),
+	PRIMARY KEY(places_paid_id),
 	-- Unique index to Places Paid over PresenceConstraint over (Booking, Payment Method in "Number of places for Booking have been paid for by Payment Method") occurs one time
-	UNIQUE(BookingID, PaymentMethodCode),
-	FOREIGN KEY (BookingID) REFERENCES Booking (BookingID)
+	UNIQUE(booking_id, payment_method_code),
+	FOREIGN KEY (booking_id) REFERENCES booking (booking_id)
 );
 
 
-CREATE TABLE Seat (
+CREATE TABLE seat (
 	-- Seat surrogate key
-	SeatID                                  BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	seat_id                                 BIGSERIAL NOT NULL,
 	-- Seat is in Row that is in Cinema that has Cinema ID
-	RowCinemaID                             BIGINT NOT NULL,
+	row_cinema_id                           BIGINT NOT NULL,
 	-- Seat is in Row that has Row Nr
-	RowNr                                   CHARACTER(2) NOT NULL,
+	row_nr                                  VARCHAR(2) NOT NULL,
 	-- Seat has Seat Number
-	SeatNumber                              SMALLINT NOT NULL,
+	seat_number                             SMALLINT NOT NULL,
 	-- maybe Seat is in Section that has Section Name
-	SectionName                             VARCHAR NULL,
+	section_name                            VARCHAR NULL,
 	-- Primary index to Seat
-	PRIMARY KEY(SeatID),
+	PRIMARY KEY(seat_id),
 	-- Unique index to Seat over PresenceConstraint over (Row, Seat Number in "Seat is in Row", "Seat has Seat Number") occurs at most one time
-	UNIQUE(RowCinemaID, RowNr, SeatNumber),
-	FOREIGN KEY (RowCinemaID) REFERENCES Cinema (CinemaID)
+	UNIQUE(row_cinema_id, row_nr, seat_number),
+	FOREIGN KEY (row_cinema_id) REFERENCES cinema (cinema_id)
 );
 
 
-CREATE TABLE SeatAllocation (
+CREATE TABLE seat_allocation (
 	-- Seat Allocation involves Booking
-	BookingID                               BIGINT NOT NULL,
+	booking_id                              BIGINT NOT NULL,
 	-- Seat Allocation involves allocated-Seat
-	AllocatedSeatID                         BIGINT NOT NULL,
+	allocated_seat_id                       BIGINT NOT NULL,
 	-- Primary index to Seat Allocation over PresenceConstraint over (Booking, Allocated Seat in "Booking has allocated-Seat") occurs at most one time
-	PRIMARY KEY(BookingID, AllocatedSeatID),
-	FOREIGN KEY (AllocatedSeatID) REFERENCES Seat (SeatID),
-	FOREIGN KEY (BookingID) REFERENCES Booking (BookingID)
+	PRIMARY KEY(booking_id, allocated_seat_id),
+	FOREIGN KEY (allocated_seat_id) REFERENCES seat (seat_id),
+	FOREIGN KEY (booking_id) REFERENCES booking (booking_id)
 );
 
 
-CREATE TABLE "Session" (
+CREATE TABLE "session" (
 	-- Session surrogate key
-	SessionID                               BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	session_id                              BIGSERIAL NOT NULL,
 	-- Session involves Cinema that has Cinema ID
-	CinemaID                                BIGINT NOT NULL,
+	cinema_id                               BIGINT NOT NULL,
 	-- Session involves Session Time that is in Year that has Year Nr
-	SessionTimeYearNr                       INTEGER NOT NULL CHECK((SessionTimeYearNr >= 1900 AND SessionTimeYearNr <= 9999)),
+	session_time_year_nr                    INTEGER NOT NULL CHECK((session_time_year_nr >= 1900 AND session_time_year_nr <= 9999)),
 	-- Session involves Session Time that is in Month that has Month Nr
-	SessionTimeMonthNr                      INTEGER NOT NULL CHECK((SessionTimeMonthNr >= 1 AND SessionTimeMonthNr <= 12)),
+	session_time_month_nr                   INTEGER NOT NULL CHECK((session_time_month_nr >= 1 AND session_time_month_nr <= 12)),
 	-- Session involves Session Time that is on Day
-	SessionTimeDay                          INTEGER NOT NULL CHECK((SessionTimeDay >= 1 AND SessionTimeDay <= 31)),
+	session_time_day                        INTEGER NOT NULL CHECK((session_time_day >= 1 AND session_time_day <= 31)),
 	-- Session involves Session Time that is at Hour
-	SessionTimeHour                         INTEGER NOT NULL CHECK((SessionTimeHour >= 0 AND SessionTimeHour <= 23)),
+	session_time_hour                       INTEGER NOT NULL CHECK((session_time_hour >= 0 AND session_time_hour <= 23)),
 	-- Session involves Session Time that is at Minute
-	SessionTimeMinute                       INTEGER NOT NULL CHECK((SessionTimeMinute >= 0 AND SessionTimeMinute <= 59)),
+	session_time_minute                     INTEGER NOT NULL CHECK((session_time_minute >= 0 AND session_time_minute <= 59)),
 	-- Session Is High Demand
-	IsHighDemand                            BOOLEAN,
+	is_high_demand                          BOOLEAN,
 	-- Session Uses Allocated Seating
-	UsesAllocatedSeating                    BOOLEAN,
+	uses_allocated_seating                  BOOLEAN,
 	-- Session involves Film that has Film ID
-	FilmID                                  BIGINT NOT NULL,
+	film_id                                 BIGINT NOT NULL,
 	-- Primary index to Session
-	PRIMARY KEY(SessionID),
+	PRIMARY KEY(session_id),
 	-- Unique index to Session over PresenceConstraint over (Cinema, Session Time in "Cinema shows Film on Session Time") occurs one time
-	UNIQUE(CinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute),
-	FOREIGN KEY (CinemaID) REFERENCES Cinema (CinemaID),
-	FOREIGN KEY (FilmID) REFERENCES Film (FilmID)
+	UNIQUE(cinema_id, session_time_year_nr, session_time_month_nr, session_time_day, session_time_hour, session_time_minute),
+	FOREIGN KEY (cinema_id) REFERENCES cinema (cinema_id),
+	FOREIGN KEY (film_id) REFERENCES film (film_id)
 );
 
 
-CREATE TABLE TicketPricing (
+CREATE TABLE ticket_pricing (
 	-- Ticket Pricing surrogate key
-	TicketPricingID                         BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	ticket_pricing_id                       BIGSERIAL NOT NULL,
 	-- Ticket Pricing involves Session Time that is in Year that has Year Nr
-	SessionTimeYearNr                       INTEGER NOT NULL CHECK((SessionTimeYearNr >= 1900 AND SessionTimeYearNr <= 9999)),
+	session_time_year_nr                    INTEGER NOT NULL CHECK((session_time_year_nr >= 1900 AND session_time_year_nr <= 9999)),
 	-- Ticket Pricing involves Session Time that is in Month that has Month Nr
-	SessionTimeMonthNr                      INTEGER NOT NULL CHECK((SessionTimeMonthNr >= 1 AND SessionTimeMonthNr <= 12)),
+	session_time_month_nr                   INTEGER NOT NULL CHECK((session_time_month_nr >= 1 AND session_time_month_nr <= 12)),
 	-- Ticket Pricing involves Session Time that is on Day
-	SessionTimeDay                          INTEGER NOT NULL CHECK((SessionTimeDay >= 1 AND SessionTimeDay <= 31)),
+	session_time_day                        INTEGER NOT NULL CHECK((session_time_day >= 1 AND session_time_day <= 31)),
 	-- Ticket Pricing involves Session Time that is at Hour
-	SessionTimeHour                         INTEGER NOT NULL CHECK((SessionTimeHour >= 0 AND SessionTimeHour <= 23)),
+	session_time_hour                       INTEGER NOT NULL CHECK((session_time_hour >= 0 AND session_time_hour <= 23)),
 	-- Ticket Pricing involves Session Time that is at Minute
-	SessionTimeMinute                       INTEGER NOT NULL CHECK((SessionTimeMinute >= 0 AND SessionTimeMinute <= 59)),
+	session_time_minute                     INTEGER NOT NULL CHECK((session_time_minute >= 0 AND session_time_minute <= 59)),
 	-- Ticket Pricing involves Cinema that has Cinema ID
-	CinemaID                                BIGINT NOT NULL,
+	cinema_id                               BIGINT NOT NULL,
 	-- Ticket Pricing involves Section that has Section Name
-	SectionName                             VARCHAR NOT NULL,
+	section_name                            VARCHAR NOT NULL,
 	-- Ticket Pricing involves High Demand
-	HighDemand                              BOOLEAN NOT NULL,
+	high_demand                             BOOLEAN NOT NULL,
 	-- Ticket Pricing involves Price
-	Price                                   DECIMAL NOT NULL,
+	price                                   MONEY NOT NULL,
 	-- Primary index to Ticket Pricing
-	PRIMARY KEY(TicketPricingID),
+	PRIMARY KEY(ticket_pricing_id),
 	-- Unique index to Ticket Pricing over PresenceConstraint over (Session Time, Cinema, Section, High Demand in "tickets on Session Time at Cinema in Section for High Demand have Price") occurs one time
-	UNIQUE(SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute, CinemaID, SectionName, HighDemand),
-	FOREIGN KEY (CinemaID) REFERENCES Cinema (CinemaID)
+	UNIQUE(session_time_year_nr, session_time_month_nr, session_time_day, session_time_hour, session_time_minute, cinema_id, section_name, high_demand),
+	FOREIGN KEY (cinema_id) REFERENCES cinema (cinema_id)
 );
 
 
-ALTER TABLE AllocatableCinemaSection
-	ADD FOREIGN KEY (CinemaID) REFERENCES Cinema (CinemaID);
+ALTER TABLE allocatable_cinema_section
+	ADD FOREIGN KEY (cinema_id) REFERENCES cinema (cinema_id);
 
 
-ALTER TABLE Booking
-	ADD FOREIGN KEY (PersonID) REFERENCES Person (PersonID);
+ALTER TABLE booking
+	ADD FOREIGN KEY (person_id) REFERENCES person (person_id);
 
 
-ALTER TABLE Booking
-	ADD FOREIGN KEY (SessionID) REFERENCES "Session" (SessionID);
+ALTER TABLE booking
+	ADD FOREIGN KEY (session_id) REFERENCES "session" (session_id);
 

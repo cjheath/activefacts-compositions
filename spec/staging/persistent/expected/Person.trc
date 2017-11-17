@@ -5,6 +5,6 @@ LoadBatch
 Person STG
 	Person STG->Family Name[1.0] as "Family Name"
 	Person STG->Given Name[1.1] as "Given Name"
+	Person STG->LoadBatch->LoadBatch ID[1.2] as "Load Batch ID"
 	Person STG->LoadTime as "Load Time"
 	Person STG->RecordSource as "Record Source"
-	Person STG->LoadBatch->LoadBatch ID[1.2] as "Load Batch ID"

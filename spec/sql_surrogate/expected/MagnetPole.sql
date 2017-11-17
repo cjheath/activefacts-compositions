@@ -1,23 +1,25 @@
-CREATE TABLE Magnet (
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+CREATE TABLE magnet (
 	-- Magnet has Magnet AutoCounter
-	MagnetAutoCounter                       BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	magnet_auto_counter                     BIGSERIAL NOT NULL,
 	-- Primary index to Magnet over PresenceConstraint over (Magnet AutoCounter in "Magnet has Magnet AutoCounter") occurs at most one time
-	PRIMARY KEY(MagnetAutoCounter)
+	PRIMARY KEY(magnet_auto_counter)
 );
 
 
-CREATE TABLE MagnetPole (
+CREATE TABLE magnet_pole (
 	-- MagnetPole surrogate key
-	MagnetPoleID                            BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
+	magnet_pole_id                          BIGSERIAL NOT NULL,
 	-- MagnetPole belongs to Magnet that has Magnet AutoCounter
-	MagnetAutoCounter                       BIGINT NOT NULL,
+	magnet_auto_counter                     BIGINT NOT NULL,
 	-- MagnetPole Is North
-	IsNorth                                 BOOLEAN,
+	is_north                                BOOLEAN,
 	-- Primary index to MagnetPole
-	PRIMARY KEY(MagnetPoleID),
+	PRIMARY KEY(magnet_pole_id),
 	-- Unique index to MagnetPole over PresenceConstraint over (Magnet, Is North in "MagnetPole belongs to Magnet", "MagnetPole is north") occurs at most one time
-	UNIQUE(MagnetAutoCounter, IsNorth),
-	FOREIGN KEY (MagnetAutoCounter) REFERENCES Magnet (MagnetAutoCounter)
+	UNIQUE(magnet_auto_counter, is_north),
+	FOREIGN KEY (magnet_auto_counter) REFERENCES magnet (magnet_auto_counter)
 );
 
 
