@@ -4,7 +4,7 @@ Batch
 	Batch->Start DateTime as "Start Date Time"
 Country STG
 	Country STG->ISO3166Code3[1.0] as "ISO3166 Code3"
-	Country STG->Batch->Batch ID as "Batch ID"
+	Country STG->{Batch}->[Batch ID] as "Batch ID"
 	Country STG->LoadTime as "Load Time"
 	Country STG->RecordSource as "Record Source"
 	Country STG->Country Name[2.0] as "Country Name"

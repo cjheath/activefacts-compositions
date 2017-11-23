@@ -4,7 +4,7 @@ Magnet STG
 	Magnet STG->LoadTime as "Load Time"
 	Magnet STG->RecordSource as "Record Source"
 MagnetPole STG
-	MagnetPole STG->Magnet->Magnet AutoCounter[1.0] as "Magnet Auto Counter"
+	MagnetPole STG->{Magnet}->[Magnet AutoCounter][1.0] as "Magnet Auto Counter"
 	MagnetPole STG->Is North?[1.1] as "Is North"
 	MagnetPole STG->LoadTime as "Load Time"
 	MagnetPole STG->RecordSource as "Record Source"

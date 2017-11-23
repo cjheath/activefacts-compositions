@@ -1,7 +1,7 @@
 Summary of PartyModel
 Company STG
-	Company STG->Party->Party ID[1.0] as "Party ID"
-	Company STG->LoadBatch->LoadBatch ID[1.1] as "Load Batch ID"
+	Company STG->{Party}->[Party ID][1.0,2.0] as "Party ID"
+	Company STG->{LoadBatch}->[LoadBatch ID][2.1] as "Load Batch ID"
 	Company STG->LoadTime as "Load Time"
 	Company STG->RecordSource as "Record Source"
 	Company STG->Superannuation Company? as "Superannuation Company"
@@ -12,16 +12,16 @@ LoadBatch
 	LoadBatch->LoadBatch ID[1.0] as "Load Batch ID"
 	LoadBatch->Start DateTime as "Start Date Time"
 Party STG
-	Party STG->Party ID[1.0] as "Party ID"
-	Party STG->LoadBatch->LoadBatch ID[1.1] as "Load Batch ID"
+	Party STG->Party ID[1.0,2.0] as "Party ID"
+	Party STG->{LoadBatch}->[LoadBatch ID][2.1] as "Load Batch ID"
 	Party STG->LoadTime as "Load Time"
 	Party STG->RecordSource as "Record Source"
 	Party STG->Party Type->Party Type Code as "Party Type Code"
 ### (Party in "Company is a kind of Party") if and only if (Party in "Party is of Party Type")
 ### (Party in "Person is a kind of Party") if and only if (Party in "Party is of Party Type")
 Person STG
-	Person STG->Party->Party ID[1.0] as "Party ID"
-	Person STG->LoadBatch->LoadBatch ID[1.1] as "Load Batch ID"
+	Person STG->{Party}->[Party ID][1.0,2.0] as "Party ID"
+	Person STG->{LoadBatch}->[LoadBatch ID][2.1] as "Load Batch ID"
 	Person STG->LoadTime as "Load Time"
 	Person STG->RecordSource as "Record Source"
 	Person STG->User? as "User"
