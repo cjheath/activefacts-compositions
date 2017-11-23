@@ -68,9 +68,17 @@ module ActiveFacts
 
                 # Don't meddle with the LoadBatch table:
                 next if composite.mapping.object_type == @loadbatch_entity_type
+
+                # If we found the natural key, clone it as a modified primary key:
                 if composite.natural_index == path
-                  # Add LoadBatchID to the natural index:
-                  trace :relational_paths, "Appending LoadBatch to primary key #{path.inspect}" do
+                  primary_key = @composition.constellation.fork(path, guid: :new)
+                  composite.primary_index = primary_key
+                  path.all_index_field.each do |ixf|
+                    @composition.constellation.fork(ixf, access_path: primary_key)
+                  end
+
+                  # Add LoadBatchID to the new primary index:
+                  trace :relational_paths, "Appending LoadBatch to primary key #{primary_key.inspect}" do
                     load_batch_role =
                       composite.mapping.object_type.all_role.detect do |role|
                         c = role.counterpart and c.object_type == @loadbatch_entity_type
@@ -86,9 +94,10 @@ module ActiveFacts
                     raise "Missing or ambiguous FK to LoadBatch from #{composite.inspect}" if absorptions.size != 1
                     absorption = absorptions[0]
                     absorption.all_leaf.each do |leaf|
-                      @constellation.IndexField(access_path: path, ordinal: path.all_index_field.size, component: leaf)
+                      @constellation.IndexField(access_path: primary_key, ordinal: primary_key.all_index_field.size, component: leaf)
                     end
                   end
+                  composite.natural_index.is_unique = false
                 elsif path.is_unique
                   # Retract other unique keys:
                   trace :relational_paths, "Retracting unique secondary index #{path.inspect}" do
