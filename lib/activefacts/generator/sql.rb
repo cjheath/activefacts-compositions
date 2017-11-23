@@ -63,6 +63,7 @@ module ActiveFacts
             generate_index index, delayed_indices
           end.compact.sort +
           composite.all_foreign_key_as_source_composite.map do |fk|
+            next nil if @fks == false
             fk_text = generate_foreign_key fk
             if !@delay_fks and  # We're not delaying foreign keys unnecessarily
                 @tables_emitted[fk.composite] ||          # Already done
@@ -130,25 +131,38 @@ module ActiveFacts
             column_name(ixf.component)
           end
 
-        if contains_nullable_columns and @closed_world_indices
-          # Implement open-world uniqueness using a filtered index:
-          table_name = safe_table_name(index.composite)
-          delayed_indices <<
-            'CREATE UNIQUE'+index_kind(index)+' INDEX '+
-            escape("#{table_name(index.composite)}By#{column_names*''}", index_name_max) +
-            " ON #{table_name}("+column_names.map{|n| escape(n, column_name_max)}*', ' +
-            ") WHERE #{
-              nullable_columns.
-              map{|ixf| safe_column_name ixf.component}.
-              map{|column_name| column_name + ' IS NOT NULL'} *
-              ' AND '
-            }"
-          nil
+        if index.is_unique
+          if contains_nullable_columns and @closed_world_indices
+            # Implement open-world uniqueness using a filtered index:
+            table_name = safe_table_name(index.composite)
+            delayed_indices <<
+              'CREATE UNIQUE'+index_kind(index)+' INDEX '+
+              escape("#{table_name(index.composite)}By#{column_names*''}", index_name_max) +
+              " ON #{table_name}("+column_names.map{|n| escape(n, column_name_max)}*', ' +
+              ") WHERE #{
+                nullable_columns.
+                map{|ixf| safe_column_name ixf.component}.
+                map{|column_name| column_name + ' IS NOT NULL'} *
+                ' AND '
+              }"
+            nil
+          else
+            '-- '+index.inspect + "\n\t" +
+            (primary ? 'PRIMARY KEY' : 'UNIQUE') +
+            index_kind(index) +
+            "(#{column_names.map{|n| escape(n, column_name_max)}*', '})"
+          end
         else
-          '-- '+index.inspect + "\n\t" +
-          (primary ? 'PRIMARY KEY' : 'UNIQUE') +
-          index_kind(index) +
-          "(#{column_names.map{|n| escape(n, column_name_max)}*', '})"
+          # REVISIT: If the fields of this index is a prefix of another index, it can be omitted
+          delayed_indices <<
+            'CREATE'+index_kind(index)+' INDEX '+
+            escape("#{table_name(index.composite)}By#{column_names*''}", index_name_max) +
+            " ON #{table_name}(" +
+            column_names.map{|n|
+              escape(n, column_name_max)
+            }*', ' +
+            ')'
+          nil
         end
       end
 
