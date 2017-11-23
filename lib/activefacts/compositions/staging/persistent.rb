@@ -41,13 +41,12 @@ module ActiveFacts
           super.
           merge({
           }).
-          merge(Relational.options).
-          reject{|k,v| [:surrogates].include?(k) }
+          merge(Relational.options)
         end
 
         def initialize constellation, name, options = {}
           # Extract recognised options:
-          super(constellation, name, {"loadbatch"=>true}.merge(options))
+          super(constellation, name, {'surrogates'=>true, 'fk'=>'natural', "loadbatch"=>true}.merge(options))
 
           raise "--staging/persistent requires the loadbatch option (you can't disable it)" unless @option_loadbatch
         end

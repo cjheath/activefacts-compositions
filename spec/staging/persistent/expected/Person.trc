@@ -7,4 +7,5 @@ Person STG
 	Person STG->Given Name[1.1,2.1] as "Given Name"
 	Person STG->{LoadBatch}->[LoadBatch ID][2.2] as "Load Batch ID"
 	Person STG->LoadTime as "Load Time"
+	Person STG->Person ID as "Person ID"
 	Person STG->RecordSource as "Record Source"

@@ -23,6 +23,7 @@ PartitionInd STG
 	PartitionInd STG->PartitionInd Key[1.0,2.0] as "Partition Ind Key"
 	PartitionInd STG->{LoadBatch}->[LoadBatch ID][2.1] as "Load Batch ID"
 	PartitionInd STG->LoadTime as "Load Time"
+	PartitionInd STG->PartitionInd ID as "Partition Ind ID"
 	PartitionInd STG->RecordSource as "Record Source"
 	PartitionInd STG->AbsorbedPart?->Abs Part Val as "Absorbed Part Abs Part Val"
 Separate STG

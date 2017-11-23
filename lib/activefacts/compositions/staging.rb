@@ -19,8 +19,7 @@ module ActiveFacts
         merge({
           stgname: ['String', "Suffix or pattern for naming staging tables. Include a + to insert the name. Default 'STG'"],
         }).
-        merge(Relational.options).
-        reject{|k,v| [:surrogates].include?(k) }
+        merge(Relational.options)
       end
 
       def initialize constellation, name, options = {}
@@ -28,6 +27,7 @@ module ActiveFacts
         datavault_initialize options
         @option_stg_name = options.delete('stgname') || 'STG'
         @option_stg_name.sub!(/^/,'+ ') unless @option_stg_name =~ /\+/
+        @fk_natural = true
 
         super constellation, name, options, 'Staging'
       end

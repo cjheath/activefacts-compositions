@@ -21,6 +21,7 @@ AG_Sub STG
 	AG_Sub STG->RecordSource as "Record Source"
 Container STG
 	Container STG->Container Name[1.0,2.0] as "Container Name"
+	Container STG->Container ID as "Container ID"
 	Container STG->{LoadBatch}->[LoadBatch ID][2.1] as "Load Batch ID"
 	Container STG->LoadTime as "Load Time"
 	Container STG->RecordSource as "Record Source"

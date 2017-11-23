@@ -24,6 +24,7 @@ Paragraph STG
 	Paragraph STG->Ordinal[1.1,2.1] as "Ordinal"
 	Paragraph STG->{LoadBatch}->[LoadBatch ID][2.2] as "Load Batch ID"
 	Paragraph STG->LoadTime as "Load Time"
+	Paragraph STG->Paragraph ID as "Paragraph ID"
 	Paragraph STG->RecordSource as "Record Source"
 	Paragraph STG->Content->Style? as "Content Style"
 	Paragraph STG->Content->Text as "Content Text"
