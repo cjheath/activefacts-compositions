@@ -18,7 +18,7 @@ PartitionInd STG
 	PartitionInd STG->RecordSource as "Record Source"
 	PartitionInd STG->AbsorbedPart?->Abs Part Val as "Absorbed Part Abs Part Val"
 Separate STG
-	Separate STG->Base->Base GUID[1.0] as "Base GUID"
+	Separate STG->{Base}->[Base GUID][1.0] as "Base GUID"
 	Separate STG->LoadTime as "Load Time"
 	Separate STG->RecordSource as "Record Source"
 	Separate STG->Sep Val as "Sep Val"

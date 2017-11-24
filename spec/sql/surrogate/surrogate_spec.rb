@@ -19,10 +19,6 @@ RSpec::Matchers.define :be_like do |expected|
     actual == expected
   end
 
-  failure_message do
-    'Output doesn\'t match expected, see diff'
-  end
-
   diffable
 end
 

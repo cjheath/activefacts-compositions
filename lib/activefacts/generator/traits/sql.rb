@@ -31,6 +31,7 @@ module ActiveFacts
             tables: [%w{cap title camel snake shout}, "Case to use for table names"],
             columns: [%w{cap title camel snake shout}, "Case to use for table names"],
             guids: ['Boolean', "Use GUID or UUID for surrogate keys instead of counters"],
+            fks: [%w{no yes delay}, "Emit foreign keys, delay them to the end, or omit them"],
             # Legacy: datavault: ['String', "Generate 'raw' or 'business' data vault tables"],
           }
         end
@@ -46,6 +47,15 @@ module ActiveFacts
           @quote_keywords = {nil=>true, 't'=>true, 'f'=>false, 'y'=>true, 'n'=>false}[@options.delete 'keywords']
           @quote_keywords = false if @keywords == nil  # Set default
           @delay_fks = @options.delete "delay_fks"
+          case (@options.delete "fks" || true)
+          when true, '', 't', 'y', 'yes'
+            @fks = true
+          when 'd', 'delay'
+            @fks = true
+            @delay_fks = true
+          when false, 'f', 'n', 'no'
+            @fks = false
+          end
           @unicode = @options.delete "unicode"
           @restrict = @options.delete "restrict"
           @guids = {nil=>false, true=>true, 't'=>true, 'f'=>false, 'y'=>true, 'n'=>false}[@options.delete 'guids']

@@ -15,12 +15,24 @@ module ActiveFacts
       def self.options
         {
           surrogates: ['Boolean', "Inject a surrogate key into each table that needs it"],
+          fk: [%w{primary natural}, "Enforce foreign keys using the primary (surrogate) or natural keys"],
         }.merge(Compositor.options)
       end
 
       def initialize constellation, name, options = {}, compositor_name = 'Relational'
         # Extract recognised options:
         @option_surrogates = options.delete('surrogates')
+        fk = options.delete('fk')
+        @fk_natural = false if @fk_natural == nil # Don't override subclass default
+        case fk
+        when 'primary', '', nil
+          @fk_natural = false
+        when 'natural'
+          @fk_natural = true
+        else
+          raise "Value #{fk.inspect} for fk option is not supported"
+        end
+
         super constellation, name, options, compositor_name
       end
 
@@ -547,7 +559,7 @@ module ActiveFacts
 
       # May be overridden in subclasses
       def prefer_natural_key building_natural_key, source_composite, target_composite
-        false
+        @fk_natural
       end
 
       # Recursively add members to this component for the existential roles of
@@ -616,7 +628,7 @@ module ActiveFacts
             augment_paths rel, member
 
             if member.is_a?(MM::Absorption) && !member.forward_absorption
-              # Only forward absorptions here please...
+              # Process forward absorptions recursively
               absorb_nested mapping, member, rel
             end
           end

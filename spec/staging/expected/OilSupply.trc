@@ -1,7 +1,7 @@
 Summary of OilSupply
 Acceptable Substitution STG
-	Acceptable Substitution STG->Product->Product Name[1.0] as "Product Name"
-	Acceptable Substitution STG->Alternate Product->Product Name[1.1] as "Alternate Product Name"
+	Acceptable Substitution STG->{Product}->[Product Name][1.0] as "Product Name"
+	Acceptable Substitution STG->{Alternate Product}->[Product Name][1.1] as "Alternate Product Name"
 	Acceptable Substitution STG->Season[1.2] as "Season"
 	Acceptable Substitution STG->LoadTime as "Load Time"
 	Acceptable Substitution STG->RecordSource as "Record Source"
@@ -17,11 +17,10 @@ Product STG
 	Product STG->LoadTime as "Load Time"
 	Product STG->RecordSource as "Record Source"
 Production Forecast STG
-	Production Forecast STG->Refinery->Refinery Name[1.0] as "Refinery Name"
-	Production Forecast STG->Supply Period->Year->Year Nr[1.1] as "Supply Period Year Nr"
-	Production Forecast STG->Supply Period->Month->Month Nr[1.2] as "Supply Period Month Nr"
-		### restricted to {1..12}
-	Production Forecast STG->Product->Product Name[1.3] as "Product Name"
+	Production Forecast STG->{Refinery}->[Refinery Name][1.0] as "Refinery Name"
+	Production Forecast STG->{Supply Period}->Year->[Year Nr][1.1] as "Supply Period Year Nr"
+	Production Forecast STG->{Supply Period}->Month->[Month Nr][1.2] as "Supply Period Month Nr"
+	Production Forecast STG->{Product}->[Product Name][1.3] as "Product Name"
 	Production Forecast STG->LoadTime as "Load Time"
 	Production Forecast STG->RecordSource as "Record Source"
 	Production Forecast STG->Quantity as "Quantity"
@@ -35,24 +34,22 @@ Region STG
 	Region STG->LoadTime as "Load Time"
 	Region STG->RecordSource as "Record Source"
 Regional Demand STG
-	Regional Demand STG->Region->Region Name[1.0] as "Region Name"
-	Regional Demand STG->Supply Period->Year->Year Nr[1.1] as "Supply Period Year Nr"
-	Regional Demand STG->Supply Period->Month->Month Nr[1.2] as "Supply Period Month Nr"
-		### restricted to {1..12}
-	Regional Demand STG->Product->Product Name[1.3] as "Product Name"
+	Regional Demand STG->{Region}->[Region Name][1.0] as "Region Name"
+	Regional Demand STG->{Supply Period}->Year->[Year Nr][1.1] as "Supply Period Year Nr"
+	Regional Demand STG->{Supply Period}->Month->[Month Nr][1.2] as "Supply Period Month Nr"
+	Regional Demand STG->{Product}->[Product Name][1.3] as "Product Name"
 	Regional Demand STG->LoadTime as "Load Time"
 	Regional Demand STG->RecordSource as "Record Source"
 	Regional Demand STG->Quantity as "Quantity"
 Supply Period STG
 	Supply Period STG->Year->Year Nr[1.0] as "Year Nr"
-	Supply Period STG->Month->Month Nr[1.1] as "Month Nr"
-		### restricted to {1..12}
+	Supply Period STG->{Month}->[Month Nr][1.1] as "Month Nr"
 	Supply Period STG->LoadTime as "Load Time"
 	Supply Period STG->RecordSource as "Record Source"
 Transport Route STG
 	Transport Route STG->Transport Mode[1.0] as "Transport Mode"
-	Transport Route STG->Refinery->Refinery Name[1.1] as "Refinery Name"
-	Transport Route STG->Region->Region Name[1.2] as "Region Name"
+	Transport Route STG->{Refinery}->[Refinery Name][1.1] as "Refinery Name"
+	Transport Route STG->{Region}->[Region Name][1.2] as "Region Name"
 	Transport Route STG->LoadTime as "Load Time"
 	Transport Route STG->RecordSource as "Record Source"
 	Transport Route STG->Cost? as "Cost"

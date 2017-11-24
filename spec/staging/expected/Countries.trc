@@ -4,6 +4,6 @@ Country Code STG
 	Country Code STG->LoadTime as "Load Time"
 	Country Code STG->RecordSource as "Record Source"
 Country STG
-	Country STG->Country Code->Country Code[1.1] as "Country Code"
+	Country STG->{Country Code}->[Country Code][1.1] as "Country Code"
 	Country STG->LoadTime as "Load Time"
 	Country STG->RecordSource as "Record Source"
