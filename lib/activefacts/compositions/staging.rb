@@ -32,6 +32,10 @@ module ActiveFacts
         super constellation, name, options, 'Staging'
       end
 
+      def needs_surrogate(composite)
+        @option_surrogates && composite.mapping.object_type != @loadbatch_entity_type
+      end
+
       def generate
         create_loadbatch if @option_loadbatch
         super

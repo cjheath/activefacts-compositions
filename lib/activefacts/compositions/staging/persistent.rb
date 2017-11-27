@@ -52,10 +52,6 @@ module ActiveFacts
           raise "--staging/persistent requires the loadbatch option (you can't disable it)" unless @option_loadbatch
         end
 
-        def needs_surrogate(composite)
-          composite.mapping.object_type != @loadbatch_entity_type
-        end
-
         def complete_foreign_keys
           super
 
