@@ -22,6 +22,7 @@ module ActiveFacts
       def initialize constellation, name, options = {}, compositor_name = 'Relational'
         # Extract recognised options:
         @option_surrogates = options.delete('surrogates')
+        @surrogate_name_pattern = [true, '', 'true', 'yes', nil].include?(t = @option_surrogates) ? '+ ID' : t
         fk = options.delete('fk')
         @fk_natural = false if @fk_natural == nil # Don't override subclass default
         case fk
@@ -305,6 +306,10 @@ module ActiveFacts
         end
       end
 
+      def patterned_name pattern, name
+        pattern.sub(/\+/, name)
+      end
+
       def inject_surrogates
         composites = @composition.all_composite.to_a
         return if composites.empty?
@@ -317,13 +322,13 @@ module ActiveFacts
         end
       end
 
-      def inject_surrogate composite, extension = ' ID'
+      def inject_surrogate composite, name_pattern = @surrogate_name_pattern
         trace :surrogates, "Injecting surrogate for #{composite.inspect}" do
           surrogate_component =
             @constellation.SurrogateKey(
               :new,
               parent: composite.mapping,
-              name: composite.mapping.name+extension,
+              name: patterned_name(name_pattern, composite.mapping.name),
               injection_annotation: "surrogate"
             )
           index =

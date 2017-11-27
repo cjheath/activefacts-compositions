@@ -1,9 +1,9 @@
 Summary of Address
 Company STG
 	Company STG->Company Name[N1,P2.0] as "Company Name"
-	Company STG->Company ID as "Company ID"
 	Company STG->[LoadBatch]->LoadBatch ID[P2.1] as "Load Batch ID"
 	Company STG->LoadTime as "Load Time"
+	Company STG->Record GUID[U3] as "Record GUID"
 	Company STG->RecordSource as "Record Source"
 	Company STG->Address?->Street Number? as "Address Street Number"
 	Company STG->Address?->Street->First Street Line as "Address Street First Street Line"
@@ -21,7 +21,7 @@ Person STG
 	Person STG->Given Names[N1.1,P2.1] as "Given Names"
 	Person STG->[LoadBatch]->LoadBatch ID[P2.2] as "Load Batch ID"
 	Person STG->LoadTime as "Load Time"
-	Person STG->Person ID as "Person ID"
+	Person STG->Record GUID[U3] as "Record GUID"
 	Person STG->RecordSource as "Record Source"
 	Person STG->Address?->Street Number? as "Address Street Number"
 	Person STG->Address?->Street->First Street Line as "Address Street First Street Line"

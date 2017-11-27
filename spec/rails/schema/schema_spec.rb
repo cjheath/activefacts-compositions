@@ -11,7 +11,7 @@ require 'activefacts/compositions/names'
 require 'activefacts/generator/rails/schema'
 require 'activefacts/input/cql'
 
-SCHEMAS_CQL_DIR = Pathname.new(__FILE__+'/../../../cql').relative_path_from(Pathname(Dir.pwd)).to_s
+SCHEMAS_CQL_DIR = Pathname.new(__FILE__+'../cql').relative_path_from(Pathname(Dir.pwd)).to_s
 SCHEMAS_TEST_DIR = Pathname.new(__FILE__+'/..').relative_path_from(Pathname(Dir.pwd)).to_s
 
 RSpec::Matchers.define :be_like do |expected|

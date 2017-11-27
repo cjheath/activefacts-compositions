@@ -3,6 +3,7 @@ Company STG
 	Company STG->[Party]->Party ID[N1,P2.0] as "Party ID"
 	Company STG->[LoadBatch]->LoadBatch ID[P2.1] as "Load Batch ID"
 	Company STG->LoadTime as "Load Time"
+	Company STG->Record GUID[U3] as "Record GUID"
 	Company STG->RecordSource as "Record Source"
 	Company STG->Superannuation Company? as "Superannuation Company"
 	Company STG->Teaching Institution?->RTO? as "RTO"
@@ -15,6 +16,7 @@ Party STG
 	Party STG->Party ID[N1,P2.0] as "Party ID"
 	Party STG->[LoadBatch]->LoadBatch ID[P2.1] as "Load Batch ID"
 	Party STG->LoadTime as "Load Time"
+	Party STG->Record GUID[U3] as "Record GUID"
 	Party STG->RecordSource as "Record Source"
 	Party STG->Party Type->Party Type Code as "Party Type Code"
 ### (Party in "Company is a kind of Party") if and only if (Party in "Party is of Party Type")
@@ -23,6 +25,7 @@ Person STG
 	Person STG->[Party]->Party ID[N1,P2.0] as "Party ID"
 	Person STG->[LoadBatch]->LoadBatch ID[P2.1] as "Load Batch ID"
 	Person STG->LoadTime as "Load Time"
+	Person STG->Record GUID[U3] as "Record GUID"
 	Person STG->RecordSource as "Record Source"
 	Person STG->User? as "User"
 ### (Party in "Person is a kind of Party") if and only if (Party in "Party is of Party Type")

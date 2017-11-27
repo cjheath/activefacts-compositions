@@ -6,11 +6,12 @@ Magnet STG
 	Magnet STG->Magnet AutoCounter[N1,P2.0] as "Magnet Auto Counter"
 	Magnet STG->[LoadBatch]->LoadBatch ID[P2.1] as "Load Batch ID"
 	Magnet STG->LoadTime as "Load Time"
+	Magnet STG->Record GUID[U3] as "Record GUID"
 	Magnet STG->RecordSource as "Record Source"
 MagnetPole STG
 	MagnetPole STG->[Magnet]->Magnet AutoCounter[N1.0,P2.0] as "Magnet Auto Counter"
 	MagnetPole STG->Is North?[N1.1,P2.1] as "Is North"
 	MagnetPole STG->[LoadBatch]->LoadBatch ID[P2.2] as "Load Batch ID"
 	MagnetPole STG->LoadTime as "Load Time"
-	MagnetPole STG->MagnetPole ID as "Magnet Pole ID"
+	MagnetPole STG->Record GUID[U3] as "Record GUID"
 	MagnetPole STG->RecordSource as "Record Source"

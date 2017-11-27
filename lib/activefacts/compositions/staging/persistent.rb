@@ -41,14 +41,18 @@ module ActiveFacts
           super.
           merge({
           }).
-          merge(Relational.options)
+          reject{|k,v| [:loadbatch].include?(k) }
         end
 
         def initialize constellation, name, options = {}
           # Extract recognised options:
-          super(constellation, name, {'surrogates'=>true, 'fk'=>'natural', "loadbatch"=>true}.merge(options))
+          super(constellation, name, {'surrogates'=>'Record GUID', 'fk'=>'natural', "loadbatch"=>true}.merge(options))
 
           raise "--staging/persistent requires the loadbatch option (you can't disable it)" unless @option_loadbatch
+        end
+
+        def needs_surrogate(composite)
+          composite.mapping.object_type != @loadbatch_entity_type
         end
 
         def complete_foreign_keys
@@ -65,9 +69,6 @@ module ActiveFacts
                 # Ignore foreign keys:
                 next unless MM::Index === path
 
-                # Don't meddle with the LoadBatch table:
-                next if composite.mapping.object_type == @loadbatch_entity_type
-
                 # If we found the natural key, clone it as a modified primary key:
                 if composite.natural_index == path
                   primary_key = @composition.constellation.fork(path, guid: :new)
@@ -77,12 +78,12 @@ module ActiveFacts
                   end
 
                   # Add LoadBatchID to the new primary index:
-                  trace :relational_paths, "Appending LoadBatch to primary key #{primary_key.inspect}" do
+                  trace :index, "Appending LoadBatch to primary key #{primary_key.inspect}" do
                     load_batch_role =
                       composite.mapping.object_type.all_role.detect do |role|
                         c = role.counterpart and c.object_type == @loadbatch_entity_type
                       end
-                    trace :relational_paths, "Found LoadBatch role in #{load_batch_role.fact_type.default_reading}" if load_batch_role
+                    trace :index, "Found LoadBatch role in #{load_batch_role.fact_type.default_reading}" if load_batch_role
                     # There can only be one absorption of LoadBatch, because we added it,
                     # but if you have separate subtypes, we need to select the one for the right composite:
                     absorptions = load_batch_role.
@@ -98,10 +99,12 @@ module ActiveFacts
                   end
                   composite.natural_index.is_unique = false
                 elsif path.is_unique
-                  # Retract other unique keys:
-                  trace :relational_paths, "Retracting unique secondary index #{path.inspect}" do
-                    # REVISIT: Or just make it non-unique?
-                    path.retract
+                  # Don't retract the surrogate
+                  next if path.all_index_field.size == 1 && MM::SurrogateKey === path.all_index_field.single.component
+
+                  # Make other unique keys non-unique:
+                  trace :index, "Make secondary #{path.inspect} non-unique" do
+                    path.is_unique = false
                   end
                 end
               end
