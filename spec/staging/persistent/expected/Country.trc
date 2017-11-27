@@ -1,13 +1,13 @@
 Summary of Country
 Country STG
-	Country STG->ISO3166Code3[1.0,2.0] as "ISO3166 Code3"
+	Country STG->ISO3166Code3[N1,P2.0] as "ISO3166 Code3"
 	Country STG->Country ID as "Country ID"
-	Country STG->{LoadBatch}->[LoadBatch ID][2.1] as "Load Batch ID"
+	Country STG->[LoadBatch]->LoadBatch ID[P2.1] as "Load Batch ID"
 	Country STG->LoadTime as "Load Time"
 	Country STG->RecordSource as "Record Source"
 	Country STG->Country Name as "Country Name"
 	Country STG->ISO3166Code2 as "ISO3166 Code2"
 	Country STG->ISO3166Numeric3 as "ISO3166 Numeric3"
 LoadBatch
-	LoadBatch->LoadBatch ID[1.0] as "Load Batch ID"
+	LoadBatch->LoadBatch ID[PN1] as "Load Batch ID"
 	LoadBatch->Start DateTime as "Start Date Time"

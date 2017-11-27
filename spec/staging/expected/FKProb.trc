@@ -1,17 +1,17 @@
 Summary of FKProb
 OT STG
-	OT STG->Name[1.0] as "Name"
+	OT STG->Name[PN1] as "Name"
 	OT STG->LoadTime as "Load Time"
 	OT STG->RecordSource as "Record Source"
 	OT STG->DOT?->VT? as "VT"
 VTP STG
-	VTP STG->{VT}->DOT->OT->[Name][1.0] as "VT Name"
-	VTP STG->Name[1.1] as "Name"
+	VTP STG->[VT]->DOT->OT->Name[PN1.0] as "VT Name"
+	VTP STG->Name[PN1.1] as "Name"
 	VTP STG->LoadTime as "Load Time"
 	VTP STG->RecordSource as "Record Source"
 VTPRestriction STG
-	VTPRestriction STG->{VT}->DOT->OT->[Name][1.0] as "VT Name"
-	VTPRestriction STG->{VTP}->VT->DOT->OT->[Name][1.1] as "VTP VT Name"
-	VTPRestriction STG->{VTP}->[Name][1.2] as "VTP Name"
+	VTPRestriction STG->[VT]->DOT->OT->Name[PN1.0] as "VT Name"
+	VTPRestriction STG->[VTP]->VT->DOT->OT->Name[PN1.1] as "VTP VT Name"
+	VTPRestriction STG->[VTP]->Name[PN1.2] as "VTP Name"
 	VTPRestriction STG->LoadTime as "Load Time"
 	VTPRestriction STG->RecordSource as "Record Source"

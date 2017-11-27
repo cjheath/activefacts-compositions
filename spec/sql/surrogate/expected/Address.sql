@@ -17,10 +17,10 @@ CREATE TABLE company (
 	address_city                            VARCHAR(64) NULL,
 	-- maybe Company has head office at Address that maybe is in Postcode
 	address_postcode                        VARCHAR NULL CHECK((address_postcode >= 1000 AND address_postcode <= 9999)),
+	-- Natural index to Company(Company Name in "Company has Company Name")
+	UNIQUE(company_name),
 	-- Primary index to Company
-	PRIMARY KEY(company_id),
-	-- Unique index to Company over PresenceConstraint over (Company Name in "Company has Company Name") occurs at most one time
-	UNIQUE(company_name)
+	PRIMARY KEY(company_id)
 );
 
 
@@ -43,10 +43,10 @@ CREATE TABLE person (
 	address_city                            VARCHAR(64) NULL,
 	-- maybe Person lives at Address that maybe is in Postcode
 	address_postcode                        VARCHAR NULL CHECK((address_postcode >= 1000 AND address_postcode <= 9999)),
+	-- Natural index to Person(Family, Given Names in "Person is of Family", "Person has Given Names")
+	UNIQUE(family_name, given_names),
 	-- Primary index to Person
-	PRIMARY KEY(person_id),
-	-- Unique index to Person over PresenceConstraint over (Family, Given Names in "Person is of Family", "Person has Given Names") occurs at most one time
-	UNIQUE(family_name, given_names)
+	PRIMARY KEY(person_id)
 );
 
 

@@ -3,7 +3,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 CREATE TABLE asset (
 	-- Asset has Asset ID
 	asset_id                                BIGSERIAL NOT NULL,
-	-- Primary index to Asset over PresenceConstraint over (Asset ID in "Asset has Asset ID") occurs at most one time
+	-- Primary index to Asset(Asset ID in "Asset has Asset ID")
 	PRIMARY KEY(asset_id)
 );
 
@@ -45,9 +45,9 @@ CREATE TABLE claim (
 	lodgement_person_id                     BIGINT NULL,
 	-- maybe Lodgement involves Claim and maybe Lodgement was made at Date Time
 	lodgement_date_time                     TIMESTAMP NULL,
-	-- Primary index to Claim over PresenceConstraint over (Claim ID in "Claim has Claim ID") occurs at most one time
+	-- Primary index to Claim(Claim ID in "Claim has Claim ID")
 	PRIMARY KEY(claim_id),
-	-- Unique index to Claim over PresenceConstraint over (Policy, p_sequence in "Claim is on Policy", "Claim has Claim Sequence") occurs at most one time
+	-- Unique index to Claim(Policy, p_sequence in "Claim is on Policy", "Claim has Claim Sequence")
 	UNIQUE(p_sequence, policy_p_year_nr, policy_p_product_code, policy_p_state_code, policy_p_serial)
 );
 
@@ -57,7 +57,7 @@ CREATE TABLE contractor_appointment (
 	claim_id                                BIGINT NOT NULL,
 	-- Contractor Appointment involves Contractor that is a kind of Company that is a kind of Party that has Party ID
 	contractor_id                           BIGINT NOT NULL,
-	-- Primary index to Contractor Appointment over PresenceConstraint over (Claim, Contractor in "Claim involves Contractor") occurs at most one time
+	-- Primary index to Contractor Appointment(Claim, Contractor in "Claim involves Contractor")
 	PRIMARY KEY(claim_id, contractor_id),
 	FOREIGN KEY (claim_id) REFERENCES claim (claim_id)
 );
@@ -76,7 +76,7 @@ CREATE TABLE cover (
 	cover_type_code                         VARCHAR NOT NULL,
 	-- Cover involves Asset that has Asset ID
 	asset_id                                BIGINT NOT NULL,
-	-- Primary index to Cover over PresenceConstraint over (Policy, Cover Type, Asset in "Policy provides Cover Type over Asset") occurs at most one time
+	-- Primary index to Cover(Policy, Cover Type, Asset in "Policy provides Cover Type over Asset")
 	PRIMARY KEY(policy_p_year_nr, policy_p_product_code, policy_p_state_code, policy_p_serial, cover_type_code, asset_id),
 	FOREIGN KEY (asset_id) REFERENCES asset (asset_id)
 );
@@ -87,9 +87,9 @@ CREATE TABLE cover_type (
 	cover_type_code                         VARCHAR NOT NULL,
 	-- Cover Type has Cover Type Name
 	cover_type_name                         VARCHAR NOT NULL,
-	-- Primary index to Cover Type over PresenceConstraint over (Cover Type Code in "Cover Type has Cover Type Code") occurs at most one time
+	-- Primary index to Cover Type(Cover Type Code in "Cover Type has Cover Type Code")
 	PRIMARY KEY(cover_type_code),
-	-- Unique index to Cover Type over PresenceConstraint over (Cover Type Name in "Cover Type has Cover Type Name") occurs at most one time
+	-- Unique index to Cover Type(Cover Type Name in "Cover Type has Cover Type Name")
 	UNIQUE(cover_type_name)
 );
 
@@ -101,7 +101,7 @@ CREATE TABLE cover_wording (
 	policy_wording_text                     VARCHAR NOT NULL,
 	-- Cover Wording involves start-Date
 	start_date                              DATE NOT NULL,
-	-- Primary index to Cover Wording over PresenceConstraint over (Cover Type, Policy Wording, Start Date in "Cover Type used Policy Wording from start-Date") occurs at most one time
+	-- Primary index to Cover Wording(Cover Type, Policy Wording, Start Date in "Cover Type used Policy Wording from start-Date")
 	PRIMARY KEY(cover_type_code, policy_wording_text, start_date),
 	FOREIGN KEY (cover_type_code) REFERENCES cover_type (cover_type_code)
 );
@@ -116,7 +116,7 @@ CREATE TABLE loss_type (
 	is_single_vehicle_incident              BOOLEAN,
 	-- maybe Loss Type implies Liability that has Liability Code
 	liability_code                          VARCHAR(1) NULL CHECK(liability_code = 'D' OR liability_code = 'L' OR liability_code = 'R' OR liability_code = 'U'),
-	-- Primary index to Loss Type over PresenceConstraint over (Loss Type Code in "Loss Type has Loss Type Code") occurs at most one time
+	-- Primary index to Loss Type(Loss Type Code in "Loss Type has Loss Type Code")
 	PRIMARY KEY(loss_type_code)
 );
 
@@ -134,7 +134,7 @@ CREATE TABLE lost_item (
 	purchase_place                          VARCHAR NULL,
 	-- maybe Lost Item was purchased for purchase-Price
 	purchase_price                          DECIMAL(18, 2) NULL,
-	-- Primary index to Lost Item over PresenceConstraint over (Incident, Lost Item Nr in "Lost Item was lost in Incident", "Lost Item has Lost Item Nr") occurs at most one time
+	-- Primary index to Lost Item(Incident, Lost Item Nr in "Lost Item was lost in Incident", "Lost Item has Lost Item Nr")
 	PRIMARY KEY(incident_claim_id, lost_item_nr),
 	FOREIGN KEY (incident_claim_id) REFERENCES claim (claim_id)
 );
@@ -193,7 +193,7 @@ CREATE TABLE party (
 	person_year_nr                          INTEGER NULL,
 	-- maybe Party is a Person that maybe has Occupation
 	person_occupation                       VARCHAR NULL,
-	-- Primary index to Party over PresenceConstraint over (Party ID in "Party has Party ID") occurs at most one time
+	-- Primary index to Party(Party ID in "Party has Party ID")
 	PRIMARY KEY(party_id),
 	FOREIGN KEY (company_contact_person_id) REFERENCES party (party_id)
 );
@@ -216,7 +216,7 @@ CREATE TABLE policy (
 	authorised_rep_id                       BIGINT NULL,
 	-- maybe Policy has ITC Claimed
 	itc_claimed                             DECIMAL(18, 2) NULL CHECK((itc_claimed >= 0.0 AND itc_claimed <= 100.0)),
-	-- Primary index to Policy over PresenceConstraint over (p_year, p_product, p_state, p_serial in "Policy was issued in Year", "Policy is for product having Product", "Policy issued in state having State", "Policy has Policy Serial") occurs at most one time
+	-- Primary index to Policy(p_year, p_product, p_state, p_serial in "Policy was issued in Year", "Policy is for product having Product", "Policy issued in state having State", "Policy has Policy Serial")
 	PRIMARY KEY(p_year_nr, p_product_code, p_state_code, p_serial),
 	FOREIGN KEY (authorised_rep_id) REFERENCES party (party_id),
 	FOREIGN KEY (insured_id) REFERENCES party (party_id)
@@ -230,11 +230,11 @@ CREATE TABLE product (
 	alias                                   VARCHAR(3) NULL,
 	-- maybe Product has Description
 	description                             VARCHAR(1024) NULL,
-	-- Primary index to Product over PresenceConstraint over (Product Code in "Product has Product Code") occurs at most one time
+	-- Primary index to Product(Product Code in "Product has Product Code")
 	PRIMARY KEY(product_code),
-	-- Unique index to Product over PresenceConstraint over (Alias in "Alias is of Product") occurs at most one time
+	-- Unique index to Product(Alias in "Alias is of Product")
 	UNIQUE(alias),
-	-- Unique index to Product over PresenceConstraint over (Description in "Description is of Product") occurs at most one time
+	-- Unique index to Product(Description in "Description is of Product")
 	UNIQUE(description)
 );
 
@@ -254,7 +254,7 @@ CREATE TABLE property_damage (
 	owner_name                              VARCHAR(256) NULL,
 	-- maybe Property Damage owner has contact Phone that has Phone Nr
 	phone_nr                                VARCHAR NULL,
-	-- Primary index to Property Damage over PresenceConstraint over (Incident, Address in "Incident caused Property Damage", "Property Damage is at Address") occurs at most one time
+	-- Primary index to Property Damage(Incident, Address in "Incident caused Property Damage", "Property Damage is at Address")
 	UNIQUE(incident_claim_id, address_street, address_city, address_postcode, address_state_code),
 	FOREIGN KEY (incident_claim_id) REFERENCES claim (claim_id)
 );
@@ -265,9 +265,9 @@ CREATE TABLE state (
 	state_code                              SMALLINT NOT NULL CHECK((state_code >= 0 AND state_code <= 9)),
 	-- maybe State has State Name
 	state_name                              VARCHAR(256) NULL,
-	-- Primary index to State over PresenceConstraint over (State Code in "State has State Code") occurs at most one time
+	-- Primary index to State(State Code in "State has State Code")
 	PRIMARY KEY(state_code),
-	-- Unique index to State over PresenceConstraint over (State Name in "State Name is of State") occurs at most one time
+	-- Unique index to State(State Name in "State Name is of State")
 	UNIQUE(state_name)
 );
 
@@ -289,7 +289,7 @@ CREATE TABLE third_party (
 	vehicle_type_model                      VARCHAR NULL,
 	-- maybe Third Party vehicle is of Vehicle Type that maybe has Badge
 	vehicle_type_badge                      VARCHAR NULL,
-	-- Primary index to Third Party over PresenceConstraint over (Person, Vehicle Incident in "Person was third party in Vehicle Incident") occurs at most one time
+	-- Primary index to Third Party(Person, Vehicle Incident in "Person was third party in Vehicle Incident")
 	PRIMARY KEY(person_id, vehicle_incident_claim_id),
 	FOREIGN KEY (insurer_id) REFERENCES party (party_id),
 	FOREIGN KEY (person_id) REFERENCES party (party_id)
@@ -303,7 +303,7 @@ CREATE TABLE underwriting_demerit (
 	underwriting_question_id                BIGINT NOT NULL,
 	-- maybe Underwriting Demerit occurred occurrence-Count times
 	occurrence_count                        INTEGER NULL,
-	-- Primary index to Underwriting Demerit over PresenceConstraint over (Vehicle Incident, Underwriting Question in "Vehicle Incident occurred despite Underwriting Demerit", "Underwriting Demerit has Underwriting Question") occurs at most one time
+	-- Primary index to Underwriting Demerit(Vehicle Incident, Underwriting Question in "Vehicle Incident occurred despite Underwriting Demerit", "Underwriting Demerit has Underwriting Question")
 	PRIMARY KEY(vehicle_incident_claim_id, underwriting_question_id)
 );
 
@@ -313,9 +313,9 @@ CREATE TABLE underwriting_question (
 	underwriting_question_id                BIGSERIAL NOT NULL,
 	-- Underwriting Question has Text
 	text                                    VARCHAR NOT NULL,
-	-- Primary index to Underwriting Question over PresenceConstraint over (Underwriting Question ID in "Underwriting Question has Underwriting Question ID") occurs at most one time
+	-- Primary index to Underwriting Question(Underwriting Question ID in "Underwriting Question has Underwriting Question ID")
 	PRIMARY KEY(underwriting_question_id),
-	-- Unique index to Underwriting Question over PresenceConstraint over (Text in "Text is of Underwriting Question") occurs at most one time
+	-- Unique index to Underwriting Question(Text in "Text is of Underwriting Question")
 	UNIQUE(text)
 );
 
@@ -345,7 +345,7 @@ CREATE TABLE vehicle (
 	engine_number                           VARCHAR NULL,
 	-- maybe Vehicle is subject to finance with Finance Institution that is a kind of Company that is a kind of Party that has Party ID
 	finance_institution_id                  BIGINT NULL,
-	-- Primary index to Vehicle over PresenceConstraint over (VIN in "Vehicle has VIN") occurs at most one time
+	-- Primary index to Vehicle(VIN in "Vehicle has VIN")
 	PRIMARY KEY(vin),
 	FOREIGN KEY (asset_id) REFERENCES asset (asset_id),
 	FOREIGN KEY (dealer_id) REFERENCES party (party_id),
@@ -388,7 +388,7 @@ CREATE TABLE vehicle_incident (
 	towed_location                          VARCHAR NULL,
 	-- maybe Vehicle Incident occurred during weather-Description
 	weather_description                     VARCHAR(1024) NULL,
-	-- Primary index to Vehicle Incident over PresenceConstraint over (Incident in "Vehicle Incident is a kind of Incident") occurs at most one time
+	-- Primary index to Vehicle Incident(Incident in "Vehicle Incident is a kind of Incident")
 	PRIMARY KEY(incident_claim_id),
 	FOREIGN KEY (driving_person_id) REFERENCES party (party_id),
 	FOREIGN KEY (incident_claim_id) REFERENCES claim (claim_id),
@@ -411,7 +411,7 @@ CREATE TABLE witness (
 	address_state_code                      SMALLINT NULL,
 	-- maybe Witness has contact-Phone and Phone has Phone Nr
 	contact_phone_nr                        VARCHAR NULL,
-	-- Primary index to Witness over PresenceConstraint over (Incident, Name in "Incident was independently witnessed by Witness", "Witness is called Name") occurs at most one time
+	-- Primary index to Witness(Incident, Name in "Incident was independently witnessed by Witness", "Witness is called Name")
 	PRIMARY KEY(incident_claim_id, name),
 	FOREIGN KEY (address_state_code) REFERENCES state (state_code),
 	FOREIGN KEY (incident_claim_id) REFERENCES claim (claim_id)

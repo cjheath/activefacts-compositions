@@ -5,10 +5,10 @@ CREATE TABLE AirplanePartManufacturerExplorationLINK (
 	AirplaneHID                             BIGINT NOT NULL,
 	-- Airplane Part Manufacturer Exploration involves Manufacturer
 	ManufacturerHID                         BIGINT NOT NULL,
+	-- Natural index to Airplane Part Manufacturer Exploration LINK(Airplane, Manufacturer in "Airplane has parts from Manufacturer")
+	UNIQUE(AirplaneHID, ManufacturerHID),
 	-- Primary index to Airplane Part Manufacturer Exploration LINK
 	PRIMARY KEY(AirplanePartManufacturerExplorationHID),
-	-- Unique index to Airplane Part Manufacturer Exploration LINK over PresenceConstraint over (Airplane, Manufacturer in "Airplane has parts from Manufacturer") occurs at most one time
-	UNIQUE(AirplaneHID, ManufacturerHID),
 	FOREIGN KEY (AirplaneHID) REFERENCES AirplaneHUB (AirplaneHID),
 	FOREIGN KEY (ManufacturerHID) REFERENCES ManufacturerHUB (ManufacturerHID)
 );
@@ -21,10 +21,10 @@ CREATE TABLE PartHierarchyLINK (
 	PartHID                                 BIGINT NOT NULL,
 	-- Part Hierarchy involves parent-Part
 	ParentPartHID                           BIGINT NOT NULL,
+	-- Natural index to Part Hierarchy LINK(Part in "Part is child of parent-Part")
+	UNIQUE(PartHID),
 	-- Primary index to Part Hierarchy LINK
 	PRIMARY KEY(PartHierarchyHID),
-	-- Unique index to Part Hierarchy LINK over PresenceConstraint over (Part in "Part is child of parent-Part") occurs at most one time
-	UNIQUE(PartHID),
 	FOREIGN KEY (ParentPartHID) REFERENCES PartHUB (PartHID),
 	FOREIGN KEY (PartHID) REFERENCES PartHUB (PartHID)
 );
@@ -45,10 +45,10 @@ CREATE TABLE PassengerPIT (
 	PassengerNameSATHID                     BIGINT NOT NULL,
 	-- PreferredDish SAT surrogate key
 	PreferredDishSATHID                     BIGINT NOT NULL,
+	-- Natural index to Passenger PIT
+	UNIQUE(PassengerHID, SnapshotDateTime),
 	-- Primary index to Passenger PIT
 	PRIMARY KEY(PassengerPITHID),
-	-- Unique index to Passenger PIT
-	UNIQUE(PassengerHID, SnapshotDateTime),
 	FOREIGN KEY (PassengerHID) REFERENCES PassengerHUB (PassengerHID),
 	FOREIGN KEY (PassengerNameSATHID, PassengerNameSATLoadDateTime) REFERENCES PassengerNameSAT (PassengerHID, LoadTime),
 	FOREIGN KEY (PreferredDishSATHID, PreferredDishSATLoadDateTime) REFERENCES PreferredDishSAT (PassengerHID, LoadTime)
@@ -62,10 +62,10 @@ CREATE TABLE PassengerSalesAgentBRIDGE (
 	PassengerID                             BIGINT NOT NULL,
 	-- Passenger Sales Agent involves Sales Agent that has Sales Agent Name
 	SalesAgentName                          VARCHAR(48) NOT NULL,
+	-- Natural index to Passenger Sales Agent BRIDGE(Passenger, Sales Agent in "Passenger books a flight with Sales Agent")
+	UNIQUE(PassengerID, SalesAgentName),
 	-- Primary index to Passenger Sales Agent BRIDGE
 	PRIMARY KEY(PassengerSalesAgentHID),
-	-- Unique index to Passenger Sales Agent BRIDGE over PresenceConstraint over (Passenger, Sales Agent in "Passenger books a flight with Sales Agent") occurs at most one time
-	UNIQUE(PassengerID, SalesAgentName),
 	FOREIGN KEY (PassengerID) REFERENCES PassengerHUB (PassengerHID),
 	FOREIGN KEY (SalesAgentName) REFERENCES SalesAgentHUB (SalesAgentHID)
 );
@@ -78,10 +78,10 @@ CREATE TABLE PassengerSameAsLINK (
 	PassengerHID                            BIGINT NOT NULL,
 	-- Passenger Same As involves master-Passenger
 	MasterPassengerHID                      BIGINT NOT NULL,
+	-- Natural index to Passenger Same As LINK(Passenger in "Passenger is same as master-Passenger")
+	UNIQUE(PassengerHID),
 	-- Primary index to Passenger Same As LINK
 	PRIMARY KEY(PassengerSameAsHID),
-	-- Unique index to Passenger Same As LINK over PresenceConstraint over (Passenger in "Passenger is same as master-Passenger") occurs at most one time
-	UNIQUE(PassengerHID),
 	FOREIGN KEY (MasterPassengerHID) REFERENCES PassengerHUB (PassengerHID),
 	FOREIGN KEY (PassengerHID) REFERENCES PassengerHUB (PassengerHID)
 );
@@ -111,10 +111,10 @@ CREATE TABLE ServiceComputedLINK (
 	OriginAirportHID                        BIGINT NOT NULL,
 	-- Service Computed involves destination-Airport
 	DestinationAirportHID                   BIGINT NOT NULL,
+	-- Natural index to Service Computed LINK(Airline, Origin Airport, Destination Airport in "Airline flies from origin-Airport to destination-Airport")
+	UNIQUE(AirlineHID, OriginAirportHID, DestinationAirportHID),
 	-- Primary index to Service Computed LINK
 	PRIMARY KEY(ServiceComputedHID),
-	-- Unique index to Service Computed LINK over PresenceConstraint over (Airline, Origin Airport, Destination Airport in "Airline flies from origin-Airport to destination-Airport") occurs at most one time
-	UNIQUE(AirlineHID, OriginAirportHID, DestinationAirportHID),
 	FOREIGN KEY (AirlineHID) REFERENCES AirlineHUB (AirlineHID),
 	FOREIGN KEY (DestinationAirportHID) REFERENCES AirportHUB (AirportHID),
 	FOREIGN KEY (OriginAirportHID) REFERENCES AirportHUB (AirportHID)

@@ -1,11 +1,11 @@
 Summary of Person
 LoadBatch
-	LoadBatch->LoadBatch ID[1.0] as "Load Batch ID"
+	LoadBatch->LoadBatch ID[PN1] as "Load Batch ID"
 	LoadBatch->Start DateTime as "Start Date Time"
 Person STG
-	Person STG->Family Name[1.0,2.0] as "Family Name"
-	Person STG->Given Name[1.1,2.1] as "Given Name"
-	Person STG->{LoadBatch}->[LoadBatch ID][2.2] as "Load Batch ID"
+	Person STG->Family Name[N1.0,P2.0] as "Family Name"
+	Person STG->Given Name[N1.1,P2.1] as "Given Name"
+	Person STG->[LoadBatch]->LoadBatch ID[P2.2] as "Load Batch ID"
 	Person STG->LoadTime as "Load Time"
 	Person STG->Person ID as "Person ID"
 	Person STG->RecordSource as "Record Source"

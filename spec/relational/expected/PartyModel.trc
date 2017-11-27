@@ -8,7 +8,7 @@
 #         2: Absorption (subtype) in Company of Teaching Institution (full) in "Company is a Teaching Institution"
 #           0: Absorption (subtype) in Teaching Institution of RTO in "Teaching Institution is a RTO"
 #     Indices
-#       Primary index to Company over PresenceConstraint over (Party in "Company is a kind of Party") occurs at most one time
+#       Primary index to Company(Party in "Company is a kind of Party")
 #         IndexField part 0 in Company references Absorption (existential) in Party of Party ID in "Party has Party ID"
 #     Foreign keys outbound
 #       Foreign Key from Company to Party over Absorption (supertype) in Company of Party in "Company is a kind of Party"
@@ -21,7 +21,7 @@
 #         1: Absorption (mandatory) in Party of Party Type in "Party is of Party Type"
 #           0: Absorption (existential) in Party Type of Party Type Code in "Party Type has Party Type Code"
 #     Indices
-#       Primary index to Party over PresenceConstraint over (Party ID in "Party has Party ID") occurs at most one time
+#       Primary index to Party(Party ID in "Party has Party ID")
 #         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
 #     Foreign keys inbound
 #       Foreign Key from Company to Party over Absorption (supertype) in Company of Party in "Company is a kind of Party"
@@ -37,7 +37,7 @@
 #           0: Absorption (existential) in Party of Party ID in "Party has Party ID"
 #         1: Absorption (subtype) in Person of User (full) in "Person is a User"
 #     Indices
-#       Primary index to Person over PresenceConstraint over (Party in "Person is a kind of Party") occurs at most one time
+#       Primary index to Person(Party in "Person is a kind of Party")
 #         IndexField part 0 in Person references Absorption (existential) in Party of Party ID in "Party has Party ID"
 #     Foreign keys outbound
 #       Foreign Key from Person to Party over Absorption (supertype) in Person of Party in "Person is a kind of Party"

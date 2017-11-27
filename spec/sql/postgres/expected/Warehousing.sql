@@ -11,7 +11,7 @@ CREATE TABLE back_order_allocation (
 	sales_order_item_product_id             BIGINT NOT NULL,
 	-- Back Order Allocation is for Quantity
 	quantity                                INTEGER NOT NULL,
-	-- Primary index to Back Order Allocation over PresenceConstraint over (Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item") occurs at most one time
+	-- Primary index to Back Order Allocation(Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item")
 	PRIMARY KEY(purchase_order_item_purchase_order_id, purchase_order_item_product_id, sales_order_item_sales_order_id, sales_order_item_product_id)
 );
 
@@ -25,7 +25,7 @@ CREATE TABLE bin (
 	product_id                              BIGINT NULL,
 	-- maybe Warehouse contains Bin and Warehouse has Warehouse ID
 	warehouse_id                            BIGINT NULL,
-	-- Primary index to Bin over PresenceConstraint over (Bin ID in "Bin has Bin ID") occurs at most one time
+	-- Primary index to Bin(Bin ID in "Bin has Bin ID")
 	PRIMARY KEY(bin_id)
 );
 
@@ -45,7 +45,7 @@ CREATE TABLE dispatch_item (
 	sales_order_item_product_id             BIGINT NULL,
 	-- maybe Dispatch Item is for Transfer Request that has Transfer Request ID
 	transfer_request_id                     BIGINT NULL,
-	-- Primary index to Dispatch Item over PresenceConstraint over (Dispatch Item ID in "Dispatch Item has Dispatch Item ID") occurs at most one time
+	-- Primary index to Dispatch Item(Dispatch Item ID in "Dispatch Item has Dispatch Item ID")
 	PRIMARY KEY(dispatch_item_id)
 );
 
@@ -53,7 +53,7 @@ CREATE TABLE dispatch_item (
 CREATE TABLE party (
 	-- Party has Party ID
 	party_id                                BIGSERIAL NOT NULL,
-	-- Primary index to Party over PresenceConstraint over (Party ID in "Party has Party ID") occurs at most one time
+	-- Primary index to Party(Party ID in "Party has Party ID")
 	PRIMARY KEY(party_id)
 );
 
@@ -61,7 +61,7 @@ CREATE TABLE party (
 CREATE TABLE product (
 	-- Product has Product ID
 	product_id                              BIGSERIAL NOT NULL,
-	-- Primary index to Product over PresenceConstraint over (Product ID in "Product has Product ID") occurs at most one time
+	-- Primary index to Product(Product ID in "Product has Product ID")
 	PRIMARY KEY(product_id)
 );
 
@@ -73,7 +73,7 @@ CREATE TABLE purchase_order (
 	supplier_id                             BIGINT NOT NULL,
 	-- Purchase Order is to Warehouse that has Warehouse ID
 	warehouse_id                            BIGINT NOT NULL,
-	-- Primary index to Purchase Order over PresenceConstraint over (Purchase Order ID in "Purchase Order has Purchase Order ID") occurs at most one time
+	-- Primary index to Purchase Order(Purchase Order ID in "Purchase Order has Purchase Order ID")
 	PRIMARY KEY(purchase_order_id),
 	FOREIGN KEY (supplier_id) REFERENCES party (party_id)
 );
@@ -86,7 +86,7 @@ CREATE TABLE purchase_order_item (
 	product_id                              BIGINT NOT NULL,
 	-- Purchase Order Item is in Quantity
 	quantity                                INTEGER NOT NULL,
-	-- Primary index to Purchase Order Item over PresenceConstraint over (Purchase Order, Product in "Purchase Order includes Purchase Order Item", "Purchase Order Item is for Product") occurs at most one time
+	-- Primary index to Purchase Order Item(Purchase Order, Product in "Purchase Order includes Purchase Order Item", "Purchase Order Item is for Product")
 	PRIMARY KEY(purchase_order_id, product_id),
 	FOREIGN KEY (product_id) REFERENCES product (product_id),
 	FOREIGN KEY (purchase_order_id) REFERENCES purchase_order (purchase_order_id)
@@ -108,7 +108,7 @@ CREATE TABLE received_item (
 	receipt_id                              BIGINT NULL,
 	-- maybe Received Item is for Transfer Request that has Transfer Request ID
 	transfer_request_id                     BIGINT NULL,
-	-- Primary index to Received Item over PresenceConstraint over (Received Item ID in "Received Item has Received Item ID") occurs at most one time
+	-- Primary index to Received Item(Received Item ID in "Received Item has Received Item ID")
 	PRIMARY KEY(received_item_id),
 	FOREIGN KEY (product_id) REFERENCES product (product_id),
 	FOREIGN KEY (purchase_order_item_purchase_order_id, purchase_order_item_product_id) REFERENCES purchase_order_item (purchase_order_id, product_id)
@@ -122,7 +122,7 @@ CREATE TABLE sales_order (
 	customer_id                             BIGINT NOT NULL,
 	-- Sales Order is from Warehouse that has Warehouse ID
 	warehouse_id                            BIGINT NOT NULL,
-	-- Primary index to Sales Order over PresenceConstraint over (Sales Order ID in "Sales Order has Sales Order ID") occurs at most one time
+	-- Primary index to Sales Order(Sales Order ID in "Sales Order has Sales Order ID")
 	PRIMARY KEY(sales_order_id),
 	FOREIGN KEY (customer_id) REFERENCES party (party_id)
 );
@@ -135,7 +135,7 @@ CREATE TABLE sales_order_item (
 	product_id                              BIGINT NOT NULL,
 	-- Sales Order Item is in Quantity
 	quantity                                INTEGER NOT NULL,
-	-- Primary index to Sales Order Item over PresenceConstraint over (Sales Order, Product in "Sales Order includes Sales Order Item", "Sales Order Item is for Product") occurs at most one time
+	-- Primary index to Sales Order Item(Sales Order, Product in "Sales Order includes Sales Order Item", "Sales Order Item is for Product")
 	PRIMARY KEY(sales_order_id, product_id),
 	FOREIGN KEY (product_id) REFERENCES product (product_id),
 	FOREIGN KEY (sales_order_id) REFERENCES sales_order (sales_order_id)
@@ -153,7 +153,7 @@ CREATE TABLE transfer_request (
 	quantity                                INTEGER NOT NULL,
 	-- Transfer Request is to To Warehouse and Warehouse has Warehouse ID
 	to_warehouse_id                         BIGINT NOT NULL,
-	-- Primary index to Transfer Request over PresenceConstraint over (Transfer Request ID in "Transfer Request has Transfer Request ID") occurs at most one time
+	-- Primary index to Transfer Request(Transfer Request ID in "Transfer Request has Transfer Request ID")
 	PRIMARY KEY(transfer_request_id),
 	FOREIGN KEY (product_id) REFERENCES product (product_id)
 );
@@ -162,7 +162,7 @@ CREATE TABLE transfer_request (
 CREATE TABLE warehouse (
 	-- Warehouse has Warehouse ID
 	warehouse_id                            BIGSERIAL NOT NULL,
-	-- Primary index to Warehouse over PresenceConstraint over (Warehouse ID in "Warehouse has Warehouse ID") occurs at most one time
+	-- Primary index to Warehouse(Warehouse ID in "Warehouse has Warehouse ID")
 	PRIMARY KEY(warehouse_id)
 );
 

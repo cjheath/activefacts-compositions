@@ -221,6 +221,7 @@ module ActiveFacts
           ccs =
             composite.mapping.all_leaf.flat_map do |component|
               next unless component.path_mandatory && !component.is_a?(Metamodel::Indicator)
+              next if composite.primary_index != composite.natural_index && composite.primary_index.all_index_field.detect{|ixf| ixf.component == component}
               next if component.is_a?(Metamodel::Mapping) && component.object_type.is_a?(Metamodel::ValueType) && component.is_auto_assigned
               [ "    validates :#{component.column_name.snakecase}, :presence => true" ]
             end.compact

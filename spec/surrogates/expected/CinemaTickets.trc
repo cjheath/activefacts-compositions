@@ -10,7 +10,7 @@
 #     Indices
 #       Primary index to AllocatableCinemaSection
 #         IndexField part 0 in AllocatableCinemaSection references SurrogateKey (surrogate) in AllocatableCinemaSection of AllocatableCinemaSection ID
-#       Unique index to AllocatableCinemaSection over PresenceConstraint over (Cinema, Section in "Cinema provides allocated seating in Section") occurs at most one time
+#       Natural index to AllocatableCinemaSection(Cinema, Section in "Cinema provides allocated seating in Section")
 #         IndexField part 0 in AllocatableCinemaSection references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
 #         IndexField part 1 in AllocatableCinemaSection references Absorption (existential) in Section of Section Name in "Section has Section Name"
 #     Foreign keys outbound
@@ -27,7 +27,7 @@
 #         4: Absorption (mandatory) in Booking of Person in "Booking involves Person"
 #           0: Absorption (existential) in Person of Person ID in "Person has Person ID"
 #         5: Absorption (mandatory) in Booking of Session in "Booking involves Session"
-#           0: SurrogateKey (mandatory) in Session of Session ID
+#           0: SurrogateKey (foreignkey) in Session of Session ID
 #         6: Absorption (optional) in Booking of Address in "tickets for Booking are being mailed to Address"
 #           0: Absorption (existential) in Address of Address Text in "Address has Address Text"
 #         7: Absorption (optional) in Booking of Collection Code in "Booking has Collection Code"
@@ -36,24 +36,24 @@
 #     Indices
 #       Primary index to Booking
 #         IndexField part 0 in Booking references SurrogateKey (surrogate) in Booking of Booking ID
-#       Unique index to Booking over PresenceConstraint over (Booking Nr in "Booking has Booking Nr") occurs at most one time
+#       Natural index to Booking(Booking Nr in "Booking has Booking Nr")
 #         IndexField part 0 in Booking references Absorption (existential) in Booking of Booking Nr in "Booking has Booking Nr"
-#       Unique index to Booking over PresenceConstraint over (Person, Session in "Person booked Session for Number of places") occurs one time
+#       Unique index to Booking(Person, Session in "Person booked Session for Number of places")
 #         IndexField part 0 in Booking references Absorption (existential) in Person of Person ID in "Person has Person ID"
-#         IndexField part 1 in Booking references SurrogateKey (mandatory) in Session of Session ID
+#         IndexField part 1 in Booking references SurrogateKey (foreignkey) in Session of Session ID
 #     Foreign keys inbound
 #       Foreign Key from Places Paid to Booking over Absorption (existential) in Places Paid of Booking in "Places Paid involves Booking"
-#         ForeignKeyField part 0 in Places Paid is SurrogateKey (mandatory) in Booking of Booking ID
+#         ForeignKeyField part 0 in Places Paid is SurrogateKey (foreignkey) in Booking of Booking ID
 #         IndexField part 0 in Booking references SurrogateKey (surrogate) in Booking of Booking ID
 #       Foreign Key from Seat Allocation to Booking over Absorption (existential) in Seat Allocation of Booking in "Seat Allocation involves Booking"
-#         ForeignKeyField part 0 in Seat Allocation is SurrogateKey (mandatory) in Booking of Booking ID
+#         ForeignKeyField part 0 in Seat Allocation is SurrogateKey (foreignkey) in Booking of Booking ID
 #         IndexField part 0 in Booking references SurrogateKey (surrogate) in Booking of Booking ID
 #     Foreign keys outbound
 #       Foreign Key from Booking to Person over Absorption (mandatory) in Booking of Person in "Booking involves Person"
 #         ForeignKeyField part 0 in Booking is Absorption (existential) in Person of Person ID in "Person has Person ID"
 #         IndexField part 0 in Person references Absorption (existential) in Person of Person ID in "Person has Person ID"
 #       Foreign Key from Booking to Session over Absorption (mandatory) in Booking of Session in "Booking involves Session"
-#         ForeignKeyField part 0 in Booking is SurrogateKey (mandatory) in Session of Session ID
+#         ForeignKeyField part 0 in Booking is SurrogateKey (foreignkey) in Session of Session ID
 #         IndexField part 0 in Session references SurrogateKey (surrogate) in Session of Session ID
 #   Composite Mapping (top) of Cinema
 #     Columns
@@ -61,9 +61,9 @@
 #         0: Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
 #         1: Absorption (mandatory) in Cinema of Name in "Cinema has Name"
 #     Indices
-#       Primary index to Cinema over PresenceConstraint over (Cinema ID in "Cinema has Cinema ID") occurs at most one time
+#       Primary index to Cinema(Cinema ID in "Cinema has Cinema ID")
 #         IndexField part 0 in Cinema references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
-#       Unique index to Cinema over PresenceConstraint over (Name in "Cinema has Name") occurs at most one time
+#       Unique index to Cinema(Name in "Cinema has Name")
 #         IndexField part 0 in Cinema references Absorption (mandatory) in Cinema of Name in "Cinema has Name"
 #     Foreign keys inbound
 #       Foreign Key from AllocatableCinemaSection to Cinema over Absorption (existential) in AllocatableCinemaSection of Cinema in "AllocatableCinemaSection involves Cinema"
@@ -86,9 +86,9 @@
 #         2: Absorption (optional) in Film of Year in "Film was made in Year"
 #           0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
 #     Indices
-#       Primary index to Film over PresenceConstraint over (Film ID in "Film has Film ID") occurs at most one time
+#       Primary index to Film(Film ID in "Film has Film ID")
 #         IndexField part 0 in Film references Absorption (existential) in Film of Film ID in "Film has Film ID"
-#       Unique index to Film over PresenceConstraint over (Name, Year in "Film has Name", "Film was made in Year") occurs at most one time
+#       Unique index to Film(Name, Year in "Film has Name", "Film was made in Year")
 #         IndexField part 0 in Film references Absorption (mandatory) in Film of Name in "Film has Name"
 #         IndexField part 1 in Film references Absorption (existential) in Year of Year Nr in "Year has Year Nr"
 #     Foreign keys inbound
@@ -102,9 +102,9 @@
 #         1: Absorption (optional) in Person of Encrypted Password in "Person has Encrypted Password"
 #         2: Absorption (optional) in Person of Login Name in "Person has login-Name"
 #     Indices
-#       Primary index to Person over PresenceConstraint over (Person ID in "Person has Person ID") occurs at most one time
+#       Primary index to Person(Person ID in "Person has Person ID")
 #         IndexField part 0 in Person references Absorption (existential) in Person of Person ID in "Person has Person ID"
-#       Unique index to Person over PresenceConstraint over (Login Name in "Person has login-Name") occurs at most one time
+#       Unique index to Person(Login Name in "Person has login-Name")
 #         IndexField part 0 in Person references Absorption (optional) in Person of Login Name in "Person has login-Name"
 #     Foreign keys inbound
 #       Foreign Key from Booking to Person over Absorption (mandatory) in Booking of Person in "Booking involves Person"
@@ -115,19 +115,19 @@
 #       Mapping (top) of Places Paid
 #         0: SurrogateKey (surrogate) in Places Paid of Places Paid ID
 #         1: Absorption (existential) in Places Paid of Booking in "Places Paid involves Booking"
-#           0: SurrogateKey (mandatory) in Booking of Booking ID
+#           0: SurrogateKey (foreignkey) in Booking of Booking ID
 #         2: Absorption (existential) in Places Paid of Payment Method in "Places Paid involves Payment Method"
 #           0: Absorption (existential) in Payment Method of Payment Method Code in "Payment Method has Payment Method Code"
 #         3: Absorption (mandatory) in Places Paid of Number in "Places Paid involves Number"
 #     Indices
 #       Primary index to Places Paid
 #         IndexField part 0 in Places Paid references SurrogateKey (surrogate) in Places Paid of Places Paid ID
-#       Unique index to Places Paid over PresenceConstraint over (Booking, Payment Method in "Number of places for Booking have been paid for by Payment Method") occurs one time
-#         IndexField part 0 in Places Paid references SurrogateKey (mandatory) in Booking of Booking ID
+#       Natural index to Places Paid(Booking, Payment Method in "Number of places for Booking have been paid for by Payment Method")
+#         IndexField part 0 in Places Paid references SurrogateKey (foreignkey) in Booking of Booking ID
 #         IndexField part 1 in Places Paid references Absorption (existential) in Payment Method of Payment Method Code in "Payment Method has Payment Method Code"
 #     Foreign keys outbound
 #       Foreign Key from Places Paid to Booking over Absorption (existential) in Places Paid of Booking in "Places Paid involves Booking"
-#         ForeignKeyField part 0 in Places Paid is SurrogateKey (mandatory) in Booking of Booking ID
+#         ForeignKeyField part 0 in Places Paid is SurrogateKey (foreignkey) in Booking of Booking ID
 #         IndexField part 0 in Booking references SurrogateKey (surrogate) in Booking of Booking ID
 #   Composite Mapping (top) of Seat
 #     Columns
@@ -143,13 +143,13 @@
 #     Indices
 #       Primary index to Seat
 #         IndexField part 0 in Seat references SurrogateKey (surrogate) in Seat of Seat ID
-#       Unique index to Seat over PresenceConstraint over (Row, Seat Number in "Seat is in Row", "Seat has Seat Number") occurs at most one time
+#       Natural index to Seat(Row, Seat Number in "Seat is in Row", "Seat has Seat Number")
 #         IndexField part 0 in Seat references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
 #         IndexField part 1 in Seat references Absorption (existential) in Row of Row Nr in "Row has Row Nr"
 #         IndexField part 2 in Seat references Absorption (existential) in Seat of Seat Number in "Seat has Seat Number"
 #     Foreign keys inbound
 #       Foreign Key from Seat Allocation to Seat over Absorption (existential) in Seat Allocation of Allocated Seat in "Seat Allocation involves allocated-Seat"
-#         ForeignKeyField part 0 in Seat Allocation is SurrogateKey (mandatory) in Allocated Seat of Seat ID
+#         ForeignKeyField part 0 in Seat Allocation is SurrogateKey (foreignkey) in Allocated Seat of Seat ID
 #         IndexField part 0 in Seat references SurrogateKey (surrogate) in Seat of Seat ID
 #     Foreign keys outbound
 #       Foreign Key from Seat to Cinema over Absorption (existential) in Row of Cinema in "Row is in Cinema"
@@ -159,19 +159,19 @@
 #     Columns
 #       Mapping (top) of Seat Allocation
 #         0: Absorption (existential) in Seat Allocation of Booking in "Seat Allocation involves Booking"
-#           0: SurrogateKey (mandatory) in Booking of Booking ID
+#           0: SurrogateKey (foreignkey) in Booking of Booking ID
 #         1: Absorption (existential) in Seat Allocation of Allocated Seat in "Seat Allocation involves allocated-Seat"
-#           0: SurrogateKey (mandatory) in Allocated Seat of Seat ID
+#           0: SurrogateKey (foreignkey) in Allocated Seat of Seat ID
 #     Indices
-#       Primary index to Seat Allocation over PresenceConstraint over (Booking, Allocated Seat in "Booking has allocated-Seat") occurs at most one time
-#         IndexField part 0 in Seat Allocation references SurrogateKey (mandatory) in Booking of Booking ID
-#         IndexField part 1 in Seat Allocation references SurrogateKey (mandatory) in Allocated Seat of Seat ID
+#       Primary index to Seat Allocation(Booking, Allocated Seat in "Booking has allocated-Seat")
+#         IndexField part 0 in Seat Allocation references SurrogateKey (foreignkey) in Booking of Booking ID
+#         IndexField part 1 in Seat Allocation references SurrogateKey (foreignkey) in Allocated Seat of Seat ID
 #     Foreign keys outbound
 #       Foreign Key from Seat Allocation to Seat over Absorption (existential) in Seat Allocation of Allocated Seat in "Seat Allocation involves allocated-Seat"
-#         ForeignKeyField part 0 in Seat Allocation is SurrogateKey (mandatory) in Allocated Seat of Seat ID
+#         ForeignKeyField part 0 in Seat Allocation is SurrogateKey (foreignkey) in Allocated Seat of Seat ID
 #         IndexField part 0 in Seat references SurrogateKey (surrogate) in Seat of Seat ID
 #       Foreign Key from Seat Allocation to Booking over Absorption (existential) in Seat Allocation of Booking in "Seat Allocation involves Booking"
-#         ForeignKeyField part 0 in Seat Allocation is SurrogateKey (mandatory) in Booking of Booking ID
+#         ForeignKeyField part 0 in Seat Allocation is SurrogateKey (foreignkey) in Booking of Booking ID
 #         IndexField part 0 in Booking references SurrogateKey (surrogate) in Booking of Booking ID
 #   Composite Mapping (top) of Session
 #     Columns
@@ -194,7 +194,7 @@
 #     Indices
 #       Primary index to Session
 #         IndexField part 0 in Session references SurrogateKey (surrogate) in Session of Session ID
-#       Unique index to Session over PresenceConstraint over (Cinema, Session Time in "Cinema shows Film on Session Time") occurs one time
+#       Natural index to Session(Cinema, Session Time in "Cinema shows Film on Session Time")
 #         IndexField part 0 in Session references Absorption (existential) in Cinema of Cinema ID in "Cinema has Cinema ID"
 #         IndexField part 1 in Session references Absorption (existential) in Year of Year Nr in "Year has Year Nr"
 #         IndexField part 2 in Session references Absorption (existential) in Month of Month Nr in "Month has Month Nr"
@@ -203,7 +203,7 @@
 #         IndexField part 5 in Session references Absorption (existential) in Session Time of Minute in "Session Time is at Minute"
 #     Foreign keys inbound
 #       Foreign Key from Booking to Session over Absorption (mandatory) in Booking of Session in "Booking involves Session"
-#         ForeignKeyField part 0 in Booking is SurrogateKey (mandatory) in Session of Session ID
+#         ForeignKeyField part 0 in Booking is SurrogateKey (foreignkey) in Session of Session ID
 #         IndexField part 0 in Session references SurrogateKey (surrogate) in Session of Session ID
 #     Foreign keys outbound
 #       Foreign Key from Session to Cinema over Absorption (existential) in Session of Cinema in "Session involves Cinema"
@@ -233,7 +233,7 @@
 #     Indices
 #       Primary index to Ticket Pricing
 #         IndexField part 0 in Ticket Pricing references SurrogateKey (surrogate) in Ticket Pricing of Ticket Pricing ID
-#       Unique index to Ticket Pricing over PresenceConstraint over (Session Time, Cinema, Section, High Demand in "tickets on Session Time at Cinema in Section for High Demand have Price") occurs one time
+#       Natural index to Ticket Pricing(Session Time, Cinema, Section, High Demand in "tickets on Session Time at Cinema in Section for High Demand have Price")
 #         IndexField part 0 in Ticket Pricing references Absorption (existential) in Year of Year Nr in "Year has Year Nr"
 #         IndexField part 1 in Ticket Pricing references Absorption (existential) in Month of Month Nr in "Month has Month Nr"
 #         IndexField part 2 in Ticket Pricing references Absorption (existential) in Session Time of Day in "Session Time is on Day"

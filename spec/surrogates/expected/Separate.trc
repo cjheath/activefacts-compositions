@@ -5,7 +5,7 @@
 #         0: Absorption (existential) in Base of Base GUID in "Base has Base GUID"
 #         1: Absorption (mandatory) in Base of Base Val in "Base has base-Val"
 #     Indices
-#       Primary index to Base over PresenceConstraint over (Base GUID in "Base has Base GUID") occurs at most one time
+#       Primary index to Base(Base GUID in "Base has Base GUID")
 #         IndexField part 0 in Base references Absorption (existential) in Base of Base GUID in "Base has Base GUID"
 #     Foreign keys inbound
 #       Foreign Key from Separate to Base over Absorption (supertype) in Separate of Base in "Separate is a kind of Base"
@@ -19,7 +19,7 @@
 #           1: Absorption (mandatory) in Base of Base Val in "Base has base-Val"
 #         1: Absorption (mandatory) in Partition of Part Val in "Partition has part-Val"
 #     Indices
-#       Primary index to Partition over PresenceConstraint over (Base GUID in "Base has Base GUID") occurs at most one time
+#       Primary index to Partition(Base GUID in "Base has Base GUID")
 #         IndexField part 0 in Partition references Absorption (existential) in Base of Base GUID in "Base has Base GUID"
 #   Composite Mapping (top) of PartitionInd
 #     Columns
@@ -34,9 +34,9 @@
 #     Indices
 #       Primary index to PartitionInd
 #         IndexField part 0 in PartitionInd references SurrogateKey (surrogate) in PartitionInd of PartitionInd ID
-#       Unique index to PartitionInd over PresenceConstraint over (Base GUID in "Base has Base GUID") occurs at most one time
+#       Unique index to PartitionInd(Base GUID in "Base has Base GUID")
 #         IndexField part 0 in PartitionInd references Absorption (existential) in Base of Base GUID in "Base has Base GUID"
-#       Unique index to PartitionInd over PresenceConstraint over (PartitionInd Key in "PartitionInd has PartitionInd Key") occurs at most one time
+#       Natural index to PartitionInd(PartitionInd Key in "PartitionInd has PartitionInd Key")
 #         IndexField part 0 in PartitionInd references Absorption (existential) in PartitionInd of PartitionInd Key in "PartitionInd has PartitionInd Key"
 #   Composite Mapping (top) of Separate
 #     Columns
@@ -45,7 +45,7 @@
 #           0: Absorption (existential) in Base of Base GUID in "Base has Base GUID"
 #         1: Absorption (mandatory) in Separate of Sep Val in "Separate has sep-Val"
 #     Indices
-#       Primary index to Separate over PresenceConstraint over (Base in "Separate is a kind of Base") occurs at most one time
+#       Primary index to Separate(Base in "Separate is a kind of Base")
 #         IndexField part 0 in Separate references Absorption (existential) in Base of Base GUID in "Base has Base GUID"
 #     Foreign keys outbound
 #       Foreign Key from Separate to Base over Absorption (supertype) in Separate of Base in "Separate is a kind of Base"

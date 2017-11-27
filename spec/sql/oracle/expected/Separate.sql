@@ -3,7 +3,7 @@ CREATE TABLE BASE (
 	BASE_GUID                               RAW(32) NOT NULL DEFAULT SYS_GUID(),
 	-- Base has base-Val
 	BASE_VAL                                Val NOT NULL,
-	-- Primary index to Base over PresenceConstraint over (Base GUID in "Base has Base GUID") occurs at most one time
+	-- Primary index to Base(Base GUID in "Base has Base GUID")
 	PRIMARY KEY(BASE_GUID)
 );
 
@@ -15,7 +15,7 @@ CREATE TABLE "PARTITION" (
 	BASE_VAL                                Val NOT NULL,
 	-- Partition has part-Val
 	PART_VAL                                Val NOT NULL,
-	-- Primary index to Partition over PresenceConstraint over (Base GUID in "Base has Base GUID") occurs at most one time
+	-- Primary index to Partition(Base GUID in "Base has Base GUID")
 	PRIMARY KEY(BASE_GUID)
 );
 
@@ -29,9 +29,9 @@ CREATE TABLE PARTITION_IND (
 	PARTITION_IND_KEY                       RAW(32) NOT NULL DEFAULT SYS_GUID(),
 	-- maybe PartitionInd is an AbsorbedPart that has abs- part Val
 	ABSORBED_PART_ABS_PART_VAL              Val NULL,
-	-- Primary index to PartitionInd over PresenceConstraint over (PartitionInd Key in "PartitionInd has PartitionInd Key") occurs at most one time
+	-- Primary index to PartitionInd(PartitionInd Key in "PartitionInd has PartitionInd Key")
 	PRIMARY KEY(PARTITION_IND_KEY),
-	-- Unique index to PartitionInd over PresenceConstraint over (Base GUID in "Base has Base GUID") occurs at most one time
+	-- Unique index to PartitionInd(Base GUID in "Base has Base GUID")
 	UNIQUE(BASE_GUID)
 );
 
@@ -41,7 +41,7 @@ CREATE TABLE SEPARATE (
 	BASE_GUID                               RAW(32) NOT NULL,
 	-- Separate has sep-Val
 	SEP_VAL                                 Val NOT NULL,
-	-- Primary index to Separate over PresenceConstraint over (Base in "Separate is a kind of Base") occurs at most one time
+	-- Primary index to Separate(Base in "Separate is a kind of Base")
 	PRIMARY KEY(BASE_GUID),
 	FOREIGN KEY (BASE_GUID) REFERENCES BASE (BASE_GUID)
 );

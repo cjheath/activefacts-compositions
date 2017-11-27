@@ -1,14 +1,14 @@
 Summary of test
 AAC_ET
-	AAC_ET->Alternate Auto Counter[1.0] as "Alternate Auto Counter"
+	AAC_ET->Alternate Auto Counter[PN1] as "Alternate Auto Counter"
 AAC_Sub
-	AAC_Sub->{AAC_ET}->[Alternate Auto Counter][1.0] as "AAC ET Alternate Auto Counter"
+	AAC_Sub->[AAC_ET]->Alternate Auto Counter[PN1] as "AAC ET Alternate Auto Counter"
 AG_ET
-	AG_ET->Alternate Guid[1.0] as "Alternate Guid"
+	AG_ET->Alternate Guid[PN1] as "Alternate Guid"
 AG_Sub
-	AG_Sub->{AG_ET}->[Alternate Guid][1.0] as "AG ET Alternate Guid"
+	AG_Sub->[AG_ET]->Alternate Guid[PN1] as "AG ET Alternate Guid"
 Container
-	Container->Container Name[1.0] as "Container Name"
+	Container->Container Name[PN1] as "Container Name"
 	Container->Alternate Auto Counter as "Alternate Auto Counter"
 	Container->Alternate Auto Time Stamp as "Alternate Auto Time Stamp"
 	Container->Alternate Big Int as "Alternate Big Int"

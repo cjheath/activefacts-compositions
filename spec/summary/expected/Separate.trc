@@ -1,16 +1,16 @@
 Summary of test
 Base
-	Base->Base GUID[1.0] as "Base GUID"
+	Base->Base GUID[PN1] as "Base GUID"
 	Base->Base Val as "Base Val"
 Partition
-	Partition->Base->Base GUID[1.0] as "Base GUID"
+	Partition->Base->Base GUID[PN1] as "Base GUID"
 	Partition->Base->Base Val as "Base Val"
 	Partition->Part Val as "Part Val"
 PartitionInd
-	PartitionInd->Base->Base GUID[1.0] as "Base GUID"
+	PartitionInd->Base->Base GUID[U1] as "Base GUID"
 	PartitionInd->Base->Base Val as "Base Val"
-	PartitionInd->PartitionInd Key[2.0] as "Partition Ind Key"
+	PartitionInd->PartitionInd Key[PN2] as "Partition Ind Key"
 	PartitionInd->AbsorbedPart?->Abs Part Val as "Absorbed Part Abs Part Val"
 Separate
-	Separate->{Base}->[Base GUID][1.0] as "Base GUID"
+	Separate->[Base]->Base GUID[PN1] as "Base GUID"
 	Separate->Sep Val as "Sep Val"

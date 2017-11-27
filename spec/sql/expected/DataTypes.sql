@@ -1,7 +1,7 @@
 CREATE TABLE AACET (
 	-- AAC_ET has Alternate Auto Counter
 	AlternateAutoCounter                    BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-	-- Primary index to AAC_ET over PresenceConstraint over (Alternate Auto Counter in "AAC_ET has Alternate Auto Counter") occurs at most one time
+	-- Primary index to AAC_ET(Alternate Auto Counter in "AAC_ET has Alternate Auto Counter")
 	PRIMARY KEY(AlternateAutoCounter)
 );
 
@@ -9,7 +9,7 @@ CREATE TABLE AACET (
 CREATE TABLE AACSub (
 	-- AAC_Sub is a kind of AAC_ET that has Alternate Auto Counter
 	AACETAlternateAutoCounter               BIGINT NOT NULL,
-	-- Primary index to AAC_Sub over PresenceConstraint over (AAC_ET in "AAC_Sub is a kind of AAC_ET") occurs at most one time
+	-- Primary index to AAC_Sub(AAC_ET in "AAC_Sub is a kind of AAC_ET")
 	PRIMARY KEY(AACETAlternateAutoCounter),
 	FOREIGN KEY (AACETAlternateAutoCounter) REFERENCES AACET (AlternateAutoCounter)
 );
@@ -18,7 +18,7 @@ CREATE TABLE AACSub (
 CREATE TABLE AGET (
 	-- AG_ET has Alternate Guid
 	AlternateGuid                           BINARY(16) NOT NULL,
-	-- Primary index to AG_ET over PresenceConstraint over (Alternate Guid in "AG_ET has Alternate Guid") occurs at most one time
+	-- Primary index to AG_ET(Alternate Guid in "AG_ET has Alternate Guid")
 	PRIMARY KEY(AlternateGuid)
 );
 
@@ -26,7 +26,7 @@ CREATE TABLE AGET (
 CREATE TABLE AGSub (
 	-- AG_Sub is a kind of AG_ET that has Alternate Guid
 	AGETAlternateGuid                       BINARY(16) NOT NULL,
-	-- Primary index to AG_Sub over PresenceConstraint over (AG_ET in "AG_Sub is a kind of AG_ET") occurs at most one time
+	-- Primary index to AG_Sub(AG_ET in "AG_Sub is a kind of AG_ET")
 	PRIMARY KEY(AGETAlternateGuid),
 	FOREIGN KEY (AGETAlternateGuid) REFERENCES AGET (AlternateGuid)
 );
@@ -167,7 +167,7 @@ CREATE TABLE Container (
 	UWord                                   INTEGER NOT NULL CHECK((UWord >= 0 AND UWord <= 65535)),
 	-- Container has Word
 	Word                                    SMALLINT NOT NULL CHECK((Word >= -32768 AND Word <= 32767)),
-	-- Primary index to Container over PresenceConstraint over (Container Name in "Container has Container Name") occurs at most one time
+	-- Primary index to Container(Container Name in "Container has Container Name")
 	PRIMARY KEY(ContainerName)
 );
 

@@ -7,10 +7,10 @@ CREATE TABLE AirlineHUB (
 	LoadTime                                TIMESTAMP,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
+	-- Natural index to Airline HUB(Airline ID in "Airline has Airline ID")
+	UNIQUE(AirlineID),
 	-- Primary index to Airline HUB
-	PRIMARY KEY(AirlineHID),
-	-- Unique index to Airline HUB over PresenceConstraint over (Airline ID in "Airline has Airline ID") occurs at most one time
-	UNIQUE(AirlineID)
+	PRIMARY KEY(AirlineHID)
 );
 
 
@@ -38,10 +38,10 @@ CREATE TABLE AirplaneHUB (
 	LoadTime                                TIMESTAMP,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
+	-- Natural index to Airplane HUB(Tail Number in "Airplane has Tail Number")
+	UNIQUE(TailNumber),
 	-- Primary index to Airplane HUB
-	PRIMARY KEY(AirplaneHID),
-	-- Unique index to Airplane HUB over PresenceConstraint over (Tail Number in "Airplane has Tail Number") occurs one time
-	UNIQUE(TailNumber)
+	PRIMARY KEY(AirplaneHID)
 );
 
 
@@ -56,10 +56,10 @@ CREATE TABLE AirplanePartLINK (
 	LoadTime                                TIMESTAMP,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
+	-- Natural index to Airplane Part LINK(Airplane, Part in "Airplane has Part")
+	UNIQUE(AirplaneHID, PartHID),
 	-- Primary index to Airplane Part LINK
 	PRIMARY KEY(AirplanePartHID),
-	-- Unique index to Airplane Part LINK over PresenceConstraint over (Airplane, Part in "Airplane has Part") occurs at most one time
-	UNIQUE(AirplaneHID, PartHID),
 	FOREIGN KEY (AirplaneHID) REFERENCES AirplaneHUB (AirplaneHID)
 );
 
@@ -73,10 +73,10 @@ CREATE TABLE AirportHUB (
 	LoadTime                                TIMESTAMP,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
+	-- Natural index to Airport HUB(Airport Name in "Airport has Airport Name")
+	UNIQUE(AirportName),
 	-- Primary index to Airport HUB
-	PRIMARY KEY(AirportHID),
-	-- Unique index to Airport HUB over PresenceConstraint over (Airport Name in "Airport has Airport Name") occurs at most one time
-	UNIQUE(AirportName)
+	PRIMARY KEY(AirportHID)
 );
 
 
@@ -116,10 +116,10 @@ CREATE TABLE AssignedAirplaneLINK (
 	LoadTime                                TIMESTAMP,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
+	-- Natural index to Assigned Airplane LINK(Airplane, Connection in "Airplane is assigned to Connection")
+	UNIQUE(AirplaneHID, ConnectionHID),
 	-- Primary index to Assigned Airplane LINK
 	PRIMARY KEY(AssignedAirplaneHID),
-	-- Unique index to Assigned Airplane LINK over PresenceConstraint over (Airplane, Connection in "Airplane is assigned to Connection") occurs at most one time
-	UNIQUE(AirplaneHID, ConnectionHID),
 	FOREIGN KEY (AirplaneHID) REFERENCES AirplaneHUB (AirplaneHID)
 );
 
@@ -135,10 +135,10 @@ CREATE TABLE BookingLINK (
 	LoadTime                                TIMESTAMP,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
+	-- Natural index to Booking LINK(Passenger, Sales Agent in "Passenger books flight with Sales Agent")
+	UNIQUE(PassengerHID, SalesAgentHID),
 	-- Primary index to Booking LINK
-	PRIMARY KEY(BookingHID),
-	-- Unique index to Booking LINK over PresenceConstraint over (Passenger, Sales Agent in "Passenger books flight with Sales Agent") occurs at most one time
-	UNIQUE(PassengerHID, SalesAgentHID)
+	PRIMARY KEY(BookingHID)
 );
 
 
@@ -157,10 +157,10 @@ CREATE TABLE ConnectionHUB (
 	LoadTime                                TIMESTAMP,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
+	-- Natural index to Connection HUB(Airline, Origin Airport, Destination Airport, Flight Number in "Airline flies from origin-Airport to destination-Airport with flight Flight Number")
+	UNIQUE(AirlineID, OriginAirportName, DestinationAirportName, FlightNumber),
 	-- Primary index to Connection HUB
-	PRIMARY KEY(ConnectionHID),
-	-- Unique index to Connection HUB over PresenceConstraint over (Airline, Origin Airport, Destination Airport, Flight Number in "Airline flies from origin-Airport to destination-Airport with flight Flight Number") occurs at most one time
-	UNIQUE(AirlineID, OriginAirportName, DestinationAirportName, FlightNumber)
+	PRIMARY KEY(ConnectionHID)
 );
 
 
@@ -175,10 +175,10 @@ CREATE TABLE FixedBaseOperatorLINK (
 	LoadTime                                TIMESTAMP,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
+	-- Natural index to Fixed Base Operator LINK(Airline, Airport in "Airline flies from Airport")
+	UNIQUE(AirlineHID, AirportHID),
 	-- Primary index to Fixed Base Operator LINK
 	PRIMARY KEY(FixedBaseOperatorHID),
-	-- Unique index to Fixed Base Operator LINK over PresenceConstraint over (Airline, Airport in "Airline flies from Airport") occurs at most one time
-	UNIQUE(AirlineHID, AirportHID),
 	FOREIGN KEY (AirlineHID) REFERENCES AirlineHUB (AirlineHID),
 	FOREIGN KEY (AirportHID) REFERENCES AirportHUB (AirportHID)
 );
@@ -193,10 +193,10 @@ CREATE TABLE PartHUB (
 	LoadTime                                TIMESTAMP,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
+	-- Natural index to Part HUB(Part ID in "Part has Part ID")
+	UNIQUE(PartID),
 	-- Primary index to Part HUB
-	PRIMARY KEY(PartHID),
-	-- Unique index to Part HUB over PresenceConstraint over (Part ID in "Part has Part ID") occurs at most one time
-	UNIQUE(PartID)
+	PRIMARY KEY(PartHID)
 );
 
 
@@ -224,10 +224,10 @@ CREATE TABLE PassengerHUB (
 	LoadTime                                TIMESTAMP,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
+	-- Natural index to Passenger HUB(Passenger ID in "Passenger has Passenger ID")
+	UNIQUE(PassengerID),
 	-- Primary index to Passenger HUB
-	PRIMARY KEY(PassengerHID),
-	-- Unique index to Passenger HUB over PresenceConstraint over (Passenger ID in "Passenger has Passenger ID") occurs at most one time
-	UNIQUE(PassengerID)
+	PRIMARY KEY(PassengerHID)
 );
 
 
@@ -285,10 +285,10 @@ CREATE TABLE SalesAgentHUB (
 	LoadTime                                TIMESTAMP,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
+	-- Natural index to Sales Agent HUB(Sales Agent Name in "Sales Agent has Sales Agent Name")
+	UNIQUE(SalesAgentName),
 	-- Primary index to Sales Agent HUB
-	PRIMARY KEY(SalesAgentHID),
-	-- Unique index to Sales Agent HUB over PresenceConstraint over (Sales Agent Name in "Sales Agent has Sales Agent Name") occurs at most one time
-	UNIQUE(SalesAgentName)
+	PRIMARY KEY(SalesAgentHID)
 );
 
 

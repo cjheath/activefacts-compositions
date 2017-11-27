@@ -1,7 +1,7 @@
 Summary of PartyModel
 Company HUB
-	Company HUB->Company HID[1.0] as "Company HID"
-	Company HUB->Party->Party ID[2.0] as "Party ID"
+	Company HUB->Company HID[P1] as "Company HID"
+	Company HUB->Party->Party ID[N2] as "Party ID"
 	Company HUB->LoadTime as "Load Time"
 	Company HUB->RecordSource as "Record Source"
 	Company HUB->Superannuation Company? as "Superannuation Company"
@@ -9,34 +9,34 @@ Company HUB
 ### (Party in "Company is a kind of Party") if and only if (Party in "Party is of Party Type")
 ### exactly one of (Party in "Person is a kind of Party") or (Party in "Company is a kind of Party")
 Company Is A Kind Of Party LINK
-	Company Is A Kind Of Party LINK->Company Is A Kind Of Party HID[1.0] as "Company Is A Kind Of Party HID"
+	Company Is A Kind Of Party LINK->Company Is A Kind Of Party HID[P1] as "Company Is A Kind Of Party HID"
 	Company Is A Kind Of Party LINK->LoadTime as "Load Time"
 	Company Is A Kind Of Party LINK->RecordSource as "Record Source"
-	Company Is A Kind Of Party LINK->[Company HID][2.0] as "Company HID"
-	Company Is A Kind Of Party LINK->[Party HID][2.1] as "Party HID"
+	Company Is A Kind Of Party LINK->Company HID[N2.0] as "Company HID"
+	Company Is A Kind Of Party LINK->Party HID[N2.1] as "Party HID"
 Party HUB
-	Party HUB->Party HID[1.0] as "Party HID"
-	Party HUB->Party ID[2.0] as "Party ID"
+	Party HUB->Party HID[P1] as "Party HID"
+	Party HUB->Party ID[N2] as "Party ID"
 	Party HUB->LoadTime as "Load Time"
 	Party HUB->RecordSource as "Record Source"
 Party SAT
-	Party SAT->[Party HID][1.0] as "Party HID"
-	Party SAT->LoadTime[1.1] as "Load Time"
+	Party SAT->Party HID[PN1.0] as "Party HID"
+	Party SAT->LoadTime[PN1.1] as "Load Time"
 	Party SAT->RecordSource as "Record Source"
 	Party SAT->Party Type->Party Type Code as "Party Type Code"
 ### (Party in "Company is a kind of Party") if and only if (Party in "Party is of Party Type")
 ### (Party in "Person is a kind of Party") if and only if (Party in "Party is of Party Type")
 Person HUB
-	Person HUB->Person HID[1.0] as "Person HID"
-	Person HUB->Party->Party ID[2.0] as "Party ID"
+	Person HUB->Person HID[P1] as "Person HID"
+	Person HUB->Party->Party ID[N2] as "Party ID"
 	Person HUB->LoadTime as "Load Time"
 	Person HUB->RecordSource as "Record Source"
 	Person HUB->User? as "User"
 ### (Party in "Person is a kind of Party") if and only if (Party in "Party is of Party Type")
 ### exactly one of (Party in "Person is a kind of Party") or (Party in "Company is a kind of Party")
 Person Is A Kind Of Party LINK
-	Person Is A Kind Of Party LINK->Person Is A Kind Of Party HID[1.0] as "Person Is A Kind Of Party HID"
+	Person Is A Kind Of Party LINK->Person Is A Kind Of Party HID[P1] as "Person Is A Kind Of Party HID"
 	Person Is A Kind Of Party LINK->LoadTime as "Load Time"
 	Person Is A Kind Of Party LINK->RecordSource as "Record Source"
-	Person Is A Kind Of Party LINK->[Party HID][2.1] as "Party HID"
-	Person Is A Kind Of Party LINK->[Person HID][2.0] as "Person HID"
+	Person Is A Kind Of Party LINK->Party HID[N2.1] as "Party HID"
+	Person Is A Kind Of Party LINK->Person HID[N2.0] as "Person HID"

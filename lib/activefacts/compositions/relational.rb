@@ -317,19 +317,6 @@ module ActiveFacts
         end
       end
 
-      def surrogate_type
-        @surrogate_type ||= begin
-          surrogate_type_name = [true, '', 'true', 'yes', nil].include?(t = @option_surrogates) ? 'Auto Counter' : t
-          # REVISIT: Crappy: choose the first (currently always single)
-          vocabulary = @composition.all_composite.to_a[0].mapping.object_type.vocabulary
-          @constellation.ValueType(
-            vocabulary: vocabulary,
-            name: surrogate_type_name,
-            concept: [:new, :implication_rule => "surrogate injection"]
-          )
-        end
-      end
-
       def inject_surrogate composite, extension = ' ID'
         trace :surrogates, "Injecting surrogate for #{composite.inspect}" do
           surrogate_component =
@@ -337,7 +324,6 @@ module ActiveFacts
               :new,
               parent: composite.mapping,
               name: composite.mapping.name+extension,
-              object_type: surrogate_type,
               injection_annotation: "surrogate"
             )
           index =
@@ -749,7 +735,7 @@ module ActiveFacts
       end
 
       def augment_paths paths, mapping
-        return unless MM::Indicator === mapping || MM::ValueType === mapping.object_type
+        return unless !(MM::Mapping === mapping) || MM::ValueType === mapping.object_type
 
         if MM::ValueField === mapping && mapping.parent.composite   # ValueType that's a composite (table) by itself
           # This AccessPath has exactly one field and no presence constraint, so just make the index.

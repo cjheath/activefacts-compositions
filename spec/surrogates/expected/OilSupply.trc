@@ -4,23 +4,23 @@
 #       Mapping (top) of Acceptable Substitution
 #         0: SurrogateKey (surrogate) in Acceptable Substitution of Acceptable Substitution ID
 #         1: Absorption (existential) in Acceptable Substitution of Product in "Acceptable Substitution involves Product"
-#           0: SurrogateKey (mandatory) in Product of Product ID
+#           0: SurrogateKey (foreignkey) in Product of Product ID
 #         2: Absorption (existential) in Acceptable Substitution of Alternate Product in "Acceptable Substitution involves alternate-Product"
-#           0: SurrogateKey (mandatory) in Alternate Product of Product ID
+#           0: SurrogateKey (foreignkey) in Alternate Product of Product ID
 #         3: Absorption (existential) in Acceptable Substitution of Season in "Acceptable Substitution involves Season"
 #     Indices
 #       Primary index to Acceptable Substitution
 #         IndexField part 0 in Acceptable Substitution references SurrogateKey (surrogate) in Acceptable Substitution of Acceptable Substitution ID
-#       Unique index to Acceptable Substitution over PresenceConstraint over (Product, Alternate Product, Season in "Product may be substituted by alternate-Product in Season") occurs at most one time
-#         IndexField part 0 in Acceptable Substitution references SurrogateKey (mandatory) in Product of Product ID
-#         IndexField part 1 in Acceptable Substitution references SurrogateKey (mandatory) in Alternate Product of Product ID
+#       Natural index to Acceptable Substitution(Product, Alternate Product, Season in "Product may be substituted by alternate-Product in Season")
+#         IndexField part 0 in Acceptable Substitution references SurrogateKey (foreignkey) in Product of Product ID
+#         IndexField part 1 in Acceptable Substitution references SurrogateKey (foreignkey) in Alternate Product of Product ID
 #         IndexField part 2 in Acceptable Substitution references Absorption (existential) in Acceptable Substitution of Season in "Acceptable Substitution involves Season"
 #     Foreign keys outbound
 #       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Alternate Product in "Acceptable Substitution involves alternate-Product"
-#         ForeignKeyField part 0 in Acceptable Substitution is SurrogateKey (mandatory) in Alternate Product of Product ID
+#         ForeignKeyField part 0 in Acceptable Substitution is SurrogateKey (foreignkey) in Alternate Product of Product ID
 #         IndexField part 0 in Product references SurrogateKey (surrogate) in Product of Product ID
 #       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Product in "Acceptable Substitution involves Product"
-#         ForeignKeyField part 0 in Acceptable Substitution is SurrogateKey (mandatory) in Product of Product ID
+#         ForeignKeyField part 0 in Acceptable Substitution is SurrogateKey (foreignkey) in Product of Product ID
 #         IndexField part 0 in Product references SurrogateKey (surrogate) in Product of Product ID
 #   Composite Mapping (top) of Month
 #     Columns
@@ -31,11 +31,11 @@
 #     Indices
 #       Primary index to Month
 #         IndexField part 0 in Month references SurrogateKey (surrogate) in Month of Month ID
-#       Unique index to Month over PresenceConstraint over (Month Nr in "Month has Month Nr") occurs at most one time
+#       Natural index to Month(Month Nr in "Month has Month Nr")
 #         IndexField part 0 in Month references Absorption (existential) in Month of Month Nr in "Month has Month Nr"
 #     Foreign keys inbound
 #       Foreign Key from Supply Period to Month over Absorption (existential) in Supply Period of Month in "Supply Period is in Month"
-#         ForeignKeyField part 0 in Supply Period is SurrogateKey (mandatory) in Month of Month ID
+#         ForeignKeyField part 0 in Supply Period is SurrogateKey (foreignkey) in Month of Month ID
 #         IndexField part 0 in Month references SurrogateKey (surrogate) in Month of Month ID
 #   Composite Mapping (top) of Product
 #     Columns
@@ -45,49 +45,49 @@
 #     Indices
 #       Primary index to Product
 #         IndexField part 0 in Product references SurrogateKey (surrogate) in Product of Product ID
-#       Unique index to Product over PresenceConstraint over (Product Name in "Product has Product Name") occurs at most one time
+#       Natural index to Product(Product Name in "Product has Product Name")
 #         IndexField part 0 in Product references Absorption (existential) in Product of Product Name in "Product has Product Name"
 #     Foreign keys inbound
 #       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Alternate Product in "Acceptable Substitution involves alternate-Product"
-#         ForeignKeyField part 0 in Acceptable Substitution is SurrogateKey (mandatory) in Alternate Product of Product ID
+#         ForeignKeyField part 0 in Acceptable Substitution is SurrogateKey (foreignkey) in Alternate Product of Product ID
 #         IndexField part 0 in Product references SurrogateKey (surrogate) in Product of Product ID
 #       Foreign Key from Acceptable Substitution to Product over Absorption (existential) in Acceptable Substitution of Product in "Acceptable Substitution involves Product"
-#         ForeignKeyField part 0 in Acceptable Substitution is SurrogateKey (mandatory) in Product of Product ID
+#         ForeignKeyField part 0 in Acceptable Substitution is SurrogateKey (foreignkey) in Product of Product ID
 #         IndexField part 0 in Product references SurrogateKey (surrogate) in Product of Product ID
 #       Foreign Key from Production Forecast to Product over Absorption (existential) in Production Forecast of Product in "Production Forecast involves Product"
-#         ForeignKeyField part 0 in Production Forecast is SurrogateKey (mandatory) in Product of Product ID
+#         ForeignKeyField part 0 in Production Forecast is SurrogateKey (foreignkey) in Product of Product ID
 #         IndexField part 0 in Product references SurrogateKey (surrogate) in Product of Product ID
 #       Foreign Key from Regional Demand to Product over Absorption (existential) in Regional Demand of Product in "Regional Demand involves Product"
-#         ForeignKeyField part 0 in Regional Demand is SurrogateKey (mandatory) in Product of Product ID
+#         ForeignKeyField part 0 in Regional Demand is SurrogateKey (foreignkey) in Product of Product ID
 #         IndexField part 0 in Product references SurrogateKey (surrogate) in Product of Product ID
 #   Composite Mapping (top) of Production Forecast
 #     Columns
 #       Mapping (top) of Production Forecast
 #         0: SurrogateKey (surrogate) in Production Forecast of Production Forecast ID
 #         1: Absorption (existential) in Production Forecast of Refinery in "Production Forecast involves Refinery"
-#           0: SurrogateKey (mandatory) in Refinery of Refinery ID
+#           0: SurrogateKey (foreignkey) in Refinery of Refinery ID
 #         2: Absorption (existential) in Production Forecast of Supply Period in "Production Forecast involves Supply Period"
-#           0: SurrogateKey (mandatory) in Supply Period of Supply Period ID
+#           0: SurrogateKey (foreignkey) in Supply Period of Supply Period ID
 #         3: Absorption (existential) in Production Forecast of Product in "Production Forecast involves Product"
-#           0: SurrogateKey (mandatory) in Product of Product ID
+#           0: SurrogateKey (foreignkey) in Product of Product ID
 #         4: Absorption (mandatory) in Production Forecast of Quantity in "Production Forecast involves Quantity"
 #         5: Absorption (optional) in Production Forecast of Cost in "Production Forecast predicts Cost"
 #     Indices
 #       Primary index to Production Forecast
 #         IndexField part 0 in Production Forecast references SurrogateKey (surrogate) in Production Forecast of Production Forecast ID
-#       Unique index to Production Forecast over PresenceConstraint over (Refinery, Supply Period, Product in "Refinery in Supply Period will make Product in Quantity") occurs one time
-#         IndexField part 0 in Production Forecast references SurrogateKey (mandatory) in Refinery of Refinery ID
-#         IndexField part 1 in Production Forecast references SurrogateKey (mandatory) in Supply Period of Supply Period ID
-#         IndexField part 2 in Production Forecast references SurrogateKey (mandatory) in Product of Product ID
+#       Natural index to Production Forecast(Refinery, Supply Period, Product in "Refinery in Supply Period will make Product in Quantity")
+#         IndexField part 0 in Production Forecast references SurrogateKey (foreignkey) in Refinery of Refinery ID
+#         IndexField part 1 in Production Forecast references SurrogateKey (foreignkey) in Supply Period of Supply Period ID
+#         IndexField part 2 in Production Forecast references SurrogateKey (foreignkey) in Product of Product ID
 #     Foreign keys outbound
 #       Foreign Key from Production Forecast to Product over Absorption (existential) in Production Forecast of Product in "Production Forecast involves Product"
-#         ForeignKeyField part 0 in Production Forecast is SurrogateKey (mandatory) in Product of Product ID
+#         ForeignKeyField part 0 in Production Forecast is SurrogateKey (foreignkey) in Product of Product ID
 #         IndexField part 0 in Product references SurrogateKey (surrogate) in Product of Product ID
 #       Foreign Key from Production Forecast to Refinery over Absorption (existential) in Production Forecast of Refinery in "Production Forecast involves Refinery"
-#         ForeignKeyField part 0 in Production Forecast is SurrogateKey (mandatory) in Refinery of Refinery ID
+#         ForeignKeyField part 0 in Production Forecast is SurrogateKey (foreignkey) in Refinery of Refinery ID
 #         IndexField part 0 in Refinery references SurrogateKey (surrogate) in Refinery of Refinery ID
 #       Foreign Key from Production Forecast to Supply Period over Absorption (existential) in Production Forecast of Supply Period in "Production Forecast involves Supply Period"
-#         ForeignKeyField part 0 in Production Forecast is SurrogateKey (mandatory) in Supply Period of Supply Period ID
+#         ForeignKeyField part 0 in Production Forecast is SurrogateKey (foreignkey) in Supply Period of Supply Period ID
 #         IndexField part 0 in Supply Period references SurrogateKey (surrogate) in Supply Period of Supply Period ID
 #   Composite Mapping (top) of Refinery
 #     Columns
@@ -97,14 +97,14 @@
 #     Indices
 #       Primary index to Refinery
 #         IndexField part 0 in Refinery references SurrogateKey (surrogate) in Refinery of Refinery ID
-#       Unique index to Refinery over PresenceConstraint over (Refinery Name in "Refinery has Refinery Name") occurs at most one time
+#       Natural index to Refinery(Refinery Name in "Refinery has Refinery Name")
 #         IndexField part 0 in Refinery references Absorption (existential) in Refinery of Refinery Name in "Refinery has Refinery Name"
 #     Foreign keys inbound
 #       Foreign Key from Production Forecast to Refinery over Absorption (existential) in Production Forecast of Refinery in "Production Forecast involves Refinery"
-#         ForeignKeyField part 0 in Production Forecast is SurrogateKey (mandatory) in Refinery of Refinery ID
+#         ForeignKeyField part 0 in Production Forecast is SurrogateKey (foreignkey) in Refinery of Refinery ID
 #         IndexField part 0 in Refinery references SurrogateKey (surrogate) in Refinery of Refinery ID
 #       Foreign Key from Transport Route to Refinery over Absorption (existential) in Transport Route of Refinery in "Transport Route involves Refinery"
-#         ForeignKeyField part 0 in Transport Route is SurrogateKey (mandatory) in Refinery of Refinery ID
+#         ForeignKeyField part 0 in Transport Route is SurrogateKey (foreignkey) in Refinery of Refinery ID
 #         IndexField part 0 in Refinery references SurrogateKey (surrogate) in Refinery of Refinery ID
 #   Composite Mapping (top) of Region
 #     Columns
@@ -114,42 +114,42 @@
 #     Indices
 #       Primary index to Region
 #         IndexField part 0 in Region references SurrogateKey (surrogate) in Region of Region ID
-#       Unique index to Region over PresenceConstraint over (Region Name in "Region has Region Name") occurs at most one time
+#       Natural index to Region(Region Name in "Region has Region Name")
 #         IndexField part 0 in Region references Absorption (existential) in Region of Region Name in "Region has Region Name"
 #     Foreign keys inbound
 #       Foreign Key from Regional Demand to Region over Absorption (existential) in Regional Demand of Region in "Regional Demand involves Region"
-#         ForeignKeyField part 0 in Regional Demand is SurrogateKey (mandatory) in Region of Region ID
+#         ForeignKeyField part 0 in Regional Demand is SurrogateKey (foreignkey) in Region of Region ID
 #         IndexField part 0 in Region references SurrogateKey (surrogate) in Region of Region ID
 #       Foreign Key from Transport Route to Region over Absorption (existential) in Transport Route of Region in "Transport Route involves Region"
-#         ForeignKeyField part 0 in Transport Route is SurrogateKey (mandatory) in Region of Region ID
+#         ForeignKeyField part 0 in Transport Route is SurrogateKey (foreignkey) in Region of Region ID
 #         IndexField part 0 in Region references SurrogateKey (surrogate) in Region of Region ID
 #   Composite Mapping (top) of Regional Demand
 #     Columns
 #       Mapping (top) of Regional Demand
 #         0: SurrogateKey (surrogate) in Regional Demand of Regional Demand ID
 #         1: Absorption (existential) in Regional Demand of Region in "Regional Demand involves Region"
-#           0: SurrogateKey (mandatory) in Region of Region ID
+#           0: SurrogateKey (foreignkey) in Region of Region ID
 #         2: Absorption (existential) in Regional Demand of Supply Period in "Regional Demand involves Supply Period"
-#           0: SurrogateKey (mandatory) in Supply Period of Supply Period ID
+#           0: SurrogateKey (foreignkey) in Supply Period of Supply Period ID
 #         3: Absorption (existential) in Regional Demand of Product in "Regional Demand involves Product"
-#           0: SurrogateKey (mandatory) in Product of Product ID
+#           0: SurrogateKey (foreignkey) in Product of Product ID
 #         4: Absorption (mandatory) in Regional Demand of Quantity in "Regional Demand involves Quantity"
 #     Indices
 #       Primary index to Regional Demand
 #         IndexField part 0 in Regional Demand references SurrogateKey (surrogate) in Regional Demand of Regional Demand ID
-#       Unique index to Regional Demand over PresenceConstraint over (Region, Supply Period, Product in "Region in Supply Period will need Product in Quantity") occurs one time
-#         IndexField part 0 in Regional Demand references SurrogateKey (mandatory) in Region of Region ID
-#         IndexField part 1 in Regional Demand references SurrogateKey (mandatory) in Supply Period of Supply Period ID
-#         IndexField part 2 in Regional Demand references SurrogateKey (mandatory) in Product of Product ID
+#       Natural index to Regional Demand(Region, Supply Period, Product in "Region in Supply Period will need Product in Quantity")
+#         IndexField part 0 in Regional Demand references SurrogateKey (foreignkey) in Region of Region ID
+#         IndexField part 1 in Regional Demand references SurrogateKey (foreignkey) in Supply Period of Supply Period ID
+#         IndexField part 2 in Regional Demand references SurrogateKey (foreignkey) in Product of Product ID
 #     Foreign keys outbound
 #       Foreign Key from Regional Demand to Product over Absorption (existential) in Regional Demand of Product in "Regional Demand involves Product"
-#         ForeignKeyField part 0 in Regional Demand is SurrogateKey (mandatory) in Product of Product ID
+#         ForeignKeyField part 0 in Regional Demand is SurrogateKey (foreignkey) in Product of Product ID
 #         IndexField part 0 in Product references SurrogateKey (surrogate) in Product of Product ID
 #       Foreign Key from Regional Demand to Region over Absorption (existential) in Regional Demand of Region in "Regional Demand involves Region"
-#         ForeignKeyField part 0 in Regional Demand is SurrogateKey (mandatory) in Region of Region ID
+#         ForeignKeyField part 0 in Regional Demand is SurrogateKey (foreignkey) in Region of Region ID
 #         IndexField part 0 in Region references SurrogateKey (surrogate) in Region of Region ID
 #       Foreign Key from Regional Demand to Supply Period over Absorption (existential) in Regional Demand of Supply Period in "Regional Demand involves Supply Period"
-#         ForeignKeyField part 0 in Regional Demand is SurrogateKey (mandatory) in Supply Period of Supply Period ID
+#         ForeignKeyField part 0 in Regional Demand is SurrogateKey (foreignkey) in Supply Period of Supply Period ID
 #         IndexField part 0 in Supply Period references SurrogateKey (surrogate) in Supply Period of Supply Period ID
 #   Composite Mapping (top) of Supply Period
 #     Columns
@@ -158,23 +158,23 @@
 #         1: Absorption (existential) in Supply Period of Year in "Supply Period is in Year"
 #           0: Absorption (existential) in Year of Year Nr in "Year has Year Nr"
 #         2: Absorption (existential) in Supply Period of Month in "Supply Period is in Month"
-#           0: SurrogateKey (mandatory) in Month of Month ID
+#           0: SurrogateKey (foreignkey) in Month of Month ID
 #     Indices
 #       Primary index to Supply Period
 #         IndexField part 0 in Supply Period references SurrogateKey (surrogate) in Supply Period of Supply Period ID
-#       Unique index to Supply Period over PresenceConstraint over (Year, Month in "Supply Period is in Year", "Supply Period is in Month") occurs at most one time
+#       Natural index to Supply Period(Year, Month in "Supply Period is in Year", "Supply Period is in Month")
 #         IndexField part 0 in Supply Period references Absorption (existential) in Year of Year Nr in "Year has Year Nr"
-#         IndexField part 1 in Supply Period references SurrogateKey (mandatory) in Month of Month ID
+#         IndexField part 1 in Supply Period references SurrogateKey (foreignkey) in Month of Month ID
 #     Foreign keys inbound
 #       Foreign Key from Production Forecast to Supply Period over Absorption (existential) in Production Forecast of Supply Period in "Production Forecast involves Supply Period"
-#         ForeignKeyField part 0 in Production Forecast is SurrogateKey (mandatory) in Supply Period of Supply Period ID
+#         ForeignKeyField part 0 in Production Forecast is SurrogateKey (foreignkey) in Supply Period of Supply Period ID
 #         IndexField part 0 in Supply Period references SurrogateKey (surrogate) in Supply Period of Supply Period ID
 #       Foreign Key from Regional Demand to Supply Period over Absorption (existential) in Regional Demand of Supply Period in "Regional Demand involves Supply Period"
-#         ForeignKeyField part 0 in Regional Demand is SurrogateKey (mandatory) in Supply Period of Supply Period ID
+#         ForeignKeyField part 0 in Regional Demand is SurrogateKey (foreignkey) in Supply Period of Supply Period ID
 #         IndexField part 0 in Supply Period references SurrogateKey (surrogate) in Supply Period of Supply Period ID
 #     Foreign keys outbound
 #       Foreign Key from Supply Period to Month over Absorption (existential) in Supply Period of Month in "Supply Period is in Month"
-#         ForeignKeyField part 0 in Supply Period is SurrogateKey (mandatory) in Month of Month ID
+#         ForeignKeyField part 0 in Supply Period is SurrogateKey (foreignkey) in Month of Month ID
 #         IndexField part 0 in Month references SurrogateKey (surrogate) in Month of Month ID
 #   Composite Mapping (top) of Transport Route
 #     Columns
@@ -182,21 +182,21 @@
 #         0: SurrogateKey (surrogate) in Transport Route of Transport Route ID
 #         1: Absorption (existential) in Transport Route of Transport Mode in "Transport Route involves Transport Mode"
 #         2: Absorption (existential) in Transport Route of Refinery in "Transport Route involves Refinery"
-#           0: SurrogateKey (mandatory) in Refinery of Refinery ID
+#           0: SurrogateKey (foreignkey) in Refinery of Refinery ID
 #         3: Absorption (existential) in Transport Route of Region in "Transport Route involves Region"
-#           0: SurrogateKey (mandatory) in Region of Region ID
+#           0: SurrogateKey (foreignkey) in Region of Region ID
 #         4: Absorption (optional) in Transport Route of Cost in "Transport Route incurs Cost per kl"
 #     Indices
 #       Primary index to Transport Route
 #         IndexField part 0 in Transport Route references SurrogateKey (surrogate) in Transport Route of Transport Route ID
-#       Unique index to Transport Route over PresenceConstraint over (Transport Mode, Refinery, Region in "Transport Mode transportation is available from Refinery to Region") occurs at most one time
+#       Natural index to Transport Route(Transport Mode, Refinery, Region in "Transport Mode transportation is available from Refinery to Region")
 #         IndexField part 0 in Transport Route references Absorption (existential) in Transport Route of Transport Mode in "Transport Route involves Transport Mode"
-#         IndexField part 1 in Transport Route references SurrogateKey (mandatory) in Refinery of Refinery ID
-#         IndexField part 2 in Transport Route references SurrogateKey (mandatory) in Region of Region ID
+#         IndexField part 1 in Transport Route references SurrogateKey (foreignkey) in Refinery of Refinery ID
+#         IndexField part 2 in Transport Route references SurrogateKey (foreignkey) in Region of Region ID
 #     Foreign keys outbound
 #       Foreign Key from Transport Route to Refinery over Absorption (existential) in Transport Route of Refinery in "Transport Route involves Refinery"
-#         ForeignKeyField part 0 in Transport Route is SurrogateKey (mandatory) in Refinery of Refinery ID
+#         ForeignKeyField part 0 in Transport Route is SurrogateKey (foreignkey) in Refinery of Refinery ID
 #         IndexField part 0 in Refinery references SurrogateKey (surrogate) in Refinery of Refinery ID
 #       Foreign Key from Transport Route to Region over Absorption (existential) in Transport Route of Region in "Transport Route involves Region"
-#         ForeignKeyField part 0 in Transport Route is SurrogateKey (mandatory) in Region of Region ID
+#         ForeignKeyField part 0 in Transport Route is SurrogateKey (foreignkey) in Region of Region ID
 #         IndexField part 0 in Region references SurrogateKey (surrogate) in Region of Region ID

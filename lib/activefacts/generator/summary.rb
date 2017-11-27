@@ -49,10 +49,10 @@ module ActiveFacts
                   is_mandatory = false
                 end
 
-                if component.all_foreign_key_field.size > 0
+                # if all_foreign_key.detect{|fk| fk.all_foreign_key_field.detect{|fkf| fkf.component == leaf}}
+                if component.is_a?(Absorption) && component.foreign_key
+                  # Unfortunately there are cases where a FK is over a component that's not an absorption, and we can't show that
                   "[#{component.name}]"
-                elsif component.is_a?(Absorption) && component.foreign_key
-                  "{#{component.name}}"
                 else
                   component.name
                 end +
@@ -62,9 +62,14 @@ module ActiveFacts
             # Build a symbolic representation of the index participation of this leaf
             pos = 0
             indexing = indices.inject([]) do |a, index|
+              # An index can be both Primary and Natural. Otherwise we show if it's Unique
+              type_str = ''
+              type_str << 'P' if index == primary_index
+              type_str << 'N' if index == natural_index
+              type_str = 'U' if type_str == '' && index.is_unique
               pos += 1
               if part = index.position_in_index(leaf)
-                a << "#{pos}.#{part}"
+                a << "#{type_str}#{pos}" + (index.all_index_field.size > 1 ? ".#{part}" : "")
               end
               a
             end

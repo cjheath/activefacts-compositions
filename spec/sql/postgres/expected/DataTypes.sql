@@ -3,7 +3,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 CREATE TABLE aac_et (
 	-- AAC_ET has Alternate Auto Counter
 	alternate_auto_counter                  BIGSERIAL NOT NULL,
-	-- Primary index to AAC_ET over PresenceConstraint over (Alternate Auto Counter in "AAC_ET has Alternate Auto Counter") occurs at most one time
+	-- Primary index to AAC_ET(Alternate Auto Counter in "AAC_ET has Alternate Auto Counter")
 	PRIMARY KEY(alternate_auto_counter)
 );
 
@@ -11,7 +11,7 @@ CREATE TABLE aac_et (
 CREATE TABLE aac_sub (
 	-- AAC_Sub is a kind of AAC_ET that has Alternate Auto Counter
 	aac_et_alternate_auto_counter           BIGINT NOT NULL,
-	-- Primary index to AAC_Sub over PresenceConstraint over (AAC_ET in "AAC_Sub is a kind of AAC_ET") occurs at most one time
+	-- Primary index to AAC_Sub(AAC_ET in "AAC_Sub is a kind of AAC_ET")
 	PRIMARY KEY(aac_et_alternate_auto_counter),
 	FOREIGN KEY (aac_et_alternate_auto_counter) REFERENCES aac_et (alternate_auto_counter)
 );
@@ -20,7 +20,7 @@ CREATE TABLE aac_sub (
 CREATE TABLE ag_et (
 	-- AG_ET has Alternate Guid
 	alternate_guid                          UUID NOT NULL DEFAULT 'gen_random_uuid()',
-	-- Primary index to AG_ET over PresenceConstraint over (Alternate Guid in "AG_ET has Alternate Guid") occurs at most one time
+	-- Primary index to AG_ET(Alternate Guid in "AG_ET has Alternate Guid")
 	PRIMARY KEY(alternate_guid)
 );
 
@@ -28,7 +28,7 @@ CREATE TABLE ag_et (
 CREATE TABLE ag_sub (
 	-- AG_Sub is a kind of AG_ET that has Alternate Guid
 	ag_et_alternate_guid                    UUID NOT NULL,
-	-- Primary index to AG_Sub over PresenceConstraint over (AG_ET in "AG_Sub is a kind of AG_ET") occurs at most one time
+	-- Primary index to AG_Sub(AG_ET in "AG_Sub is a kind of AG_ET")
 	PRIMARY KEY(ag_et_alternate_guid),
 	FOREIGN KEY (ag_et_alternate_guid) REFERENCES ag_et (alternate_guid)
 );
@@ -169,7 +169,7 @@ CREATE TABLE container (
 	u_word                                  INTEGER NOT NULL CHECK((u_word >= 0 AND u_word <= 65535)),
 	-- Container has Word
 	word                                    SMALLINT NOT NULL CHECK((word >= -32768 AND word <= 32767)),
-	-- Primary index to Container over PresenceConstraint over (Container Name in "Container has Container Name") occurs at most one time
+	-- Primary index to Container(Container Name in "Container has Container Name")
 	PRIMARY KEY(container_name)
 );
 

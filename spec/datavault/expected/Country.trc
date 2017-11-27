@@ -1,12 +1,12 @@
 Summary of Country
 Country HUB
-	Country HUB->Country HID[1.0] as "Country HID"
-	Country HUB->ISO3166Code3[2.0] as "ISO3166 Code3"
+	Country HUB->Country HID[P1] as "Country HID"
+	Country HUB->ISO3166Code3[N2] as "ISO3166 Code3"
 	Country HUB->LoadTime as "Load Time"
 	Country HUB->RecordSource as "Record Source"
 Country SAT
-	Country SAT->[Country HID][1.0] as "Country HID"
-	Country SAT->LoadTime[1.1] as "Load Time"
+	Country SAT->Country HID[PN1.0] as "Country HID"
+	Country SAT->LoadTime[PN1.1] as "Load Time"
 	Country SAT->RecordSource as "Record Source"
 	Country SAT->Country Name as "Country Name"
 	Country SAT->ISO3166Code2 as "ISO3166 Code2"

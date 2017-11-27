@@ -7,10 +7,10 @@ CREATE TABLE person (
 	family_name                             VARCHAR NOT NULL,
 	-- Person has given-Name
 	given_name                              VARCHAR NOT NULL,
+	-- Natural index to Person(Family Name, Given Name in "Person has family-Name", "Person has given-Name")
+	UNIQUE(family_name, given_name),
 	-- Primary index to Person
-	PRIMARY KEY(person_id),
-	-- Unique index to Person over PresenceConstraint over (Family Name, Given Name in "Person has family-Name", "Person has given-Name") occurs at most one time
-	UNIQUE(family_name, given_name)
+	PRIMARY KEY(person_id)
 );
 
 

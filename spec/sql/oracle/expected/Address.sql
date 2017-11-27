@@ -13,7 +13,7 @@ CREATE TABLE COMPANY (
 	ADDRESS_CITY                            VARCHAR(64) NULL,
 	-- maybe Company has head office at Address that maybe is in Postcode
 	ADDRESS_POSTCODE                        VARCHAR NULL CHECK((ADDRESS_POSTCODE >= 1000 AND ADDRESS_POSTCODE <= 9999)),
-	-- Primary index to Company over PresenceConstraint over (Company Name in "Company has Company Name") occurs at most one time
+	-- Primary index to Company(Company Name in "Company has Company Name")
 	PRIMARY KEY(COMPANY_NAME)
 );
 
@@ -35,7 +35,7 @@ CREATE TABLE PERSON (
 	ADDRESS_CITY                            VARCHAR(64) NULL,
 	-- maybe Person lives at Address that maybe is in Postcode
 	ADDRESS_POSTCODE                        VARCHAR NULL CHECK((ADDRESS_POSTCODE >= 1000 AND ADDRESS_POSTCODE <= 9999)),
-	-- Primary index to Person over PresenceConstraint over (Family, Given Names in "Person is of Family", "Person has Given Names") occurs at most one time
+	-- Primary index to Person(Family, Given Names in "Person is of Family", "Person has Given Names")
 	PRIMARY KEY(FAMILY_NAME, GIVEN_NAMES)
 );
 
