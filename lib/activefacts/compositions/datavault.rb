@@ -41,7 +41,7 @@ module ActiveFacts
         # Extract recognised options:
         datavault_initialize options
         @option_reference = options.delete('reference')
-        @option_id = (options.delete('id') || '+ HID')
+        @option_id = '+ ' + (options.delete('id') || 'HID')
         @option_hub_name = options.delete('hubname') || 'HUB'
         @option_hub_name.sub!(/^/,'+ ') unless @option_hub_name =~ /\+/
         @option_link_name = options.delete('linkname') || 'LINK'
@@ -372,7 +372,7 @@ module ActiveFacts
 
         sat_composites.each do |sat_composite|
           sat_name = sat_composite.mapping.name
-          sat_hash_name = "#{sat_name}#{@option_id}"
+          sat_hash_name = patterned_name(@option_id, sat_name)
 
           src_hash_field = hub_hash_field.fork_to_new_parent(pit_composite.mapping)
           src_hash_field.name = sat_hash_name
@@ -542,7 +542,7 @@ module ActiveFacts
 
       def name_satellite component
         name, is_computed = *satellite_base_name_and_type(component)
-        [apply_name(@option_sat_name, name), is_computed != nil]
+        [patterned_name(@option_sat_name, name), is_computed != nil]
       end
 
       # Create a new satellite for the same object_type as this composite
@@ -694,28 +694,24 @@ module ActiveFacts
         end
       end
 
-      def apply_name pattern, name
-        pattern.sub(/\+/, name)
-      end
-
       def apply_composite_name_pattern
         @reference_composites.each do |composite|
-          composite.mapping.name = apply_name(@option_ref_name, composite.mapping.name)
+          composite.mapping.name = patterned_name(@option_ref_name, composite.mapping.name)
         end
         @hub_composites.each do |composite|
-          composite.mapping.name = apply_name(@option_hub_name, composite.mapping.name)
+          composite.mapping.name = patterned_name(@option_hub_name, composite.mapping.name)
         end
         @link_composites.each do |composite|
-          composite.mapping.name = apply_name(@option_link_name, composite.mapping.name)
+          composite.mapping.name = patterned_name(@option_link_name, composite.mapping.name)
         end
         @bdv_link_composites.each do |composite|
-          composite.mapping.name = apply_name(@option_link_name, composite.mapping.name)
+          composite.mapping.name = patterned_name(@option_link_name, composite.mapping.name)
         end
         @pit_composites.each do |composite|
-          composite.mapping.name = apply_name(@option_pit_name, composite.mapping.name)
+          composite.mapping.name = patterned_name(@option_pit_name, composite.mapping.name)
         end
         @bridge_composites.each do |composite|
-          composite.mapping.name = apply_name(@option_bridge_name, composite.mapping.name)
+          composite.mapping.name = patterned_name(@option_bridge_name, composite.mapping.name)
         end
       end
 
