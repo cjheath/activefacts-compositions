@@ -40,6 +40,7 @@ module ActiveFacts
         def self.options
           super.
           merge({
+            # Add Persistent options here
           }).
           reject{|k,v| [:loadbatch].include?(k) }
         end

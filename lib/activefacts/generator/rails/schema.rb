@@ -18,7 +18,7 @@ module ActiveFacts
         HEADER = "# Auto-generated from CQL, edits will be lost"
         def self.options
           ({
-            exclude_fks:      ['Boolean', "Don't generate foreign key definitions"],
+            fks:              ['Boolean', "Generate foreign key definitions"],
             include_comments: ['Boolean', "Generate a comment for each column showing the absorption path"],
             closed_world:     ['Boolean', "Set this if your DBMS only allows one null in a unique index (MS SQL)"],
           })
@@ -27,7 +27,7 @@ module ActiveFacts
         def initialize composition, options = {}
           @composition = composition
           @options = options
-          @option_exclude_fks = options.delete("exclude_fks")
+          @option_exclude_fks = [false, 'f', 'n', 'no'].include?(options.delete("fks"))
           @option_include_comments = options.delete("include_comments")
           @option_closed_world = options.delete("closed_world")
         end

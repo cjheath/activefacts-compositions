@@ -34,7 +34,7 @@ module ActiveFacts
           refname: ['String', "Suffix or pattern for naming reference tables. Include a + to insert the name. Default '+'"],
         }).
         merge(Relational.options).
-        reject{|k,v| [:surrogates].include?(k) }  # Datavault surrogates are not optional
+        reject{|k,v| [:fk, :surrogates].include?(k) }  # Datavault surrogates are not optional
       end
 
       def initialize constellation, name, options = {}

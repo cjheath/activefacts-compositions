@@ -14,7 +14,7 @@ module ActiveFacts
 
       def self.options
         {
-          surrogates: ['Boolean', "Inject a surrogate key into each table that needs it"],
+          surrogates: [%w{true field_name_pattern}, "Inject a surrogate key into each table that needs it"],
           fk: [%w{primary natural}, "Enforce foreign keys using the primary (surrogate) or natural keys"],
         }.merge(Compositor.options)
       end
