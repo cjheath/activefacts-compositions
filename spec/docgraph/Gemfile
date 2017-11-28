@@ -1,0 +1,24 @@
+source 'https://rubygems.org'
+
+gem "bundler", ">= 1.10"
+gem "rake", "~> 10.0"
+gem "rspec", "~> 3.3"
+
+gem "byebug", "~>1.8.2"
+gem "json", "~>1.8"
+gem 'rubyzip'
+
+this_file = File.absolute_path(__FILE__)
+if this_file =~ %r{\A#{ENV['HOME']}}i
+  dir = File.dirname(File.dirname(this_file))+"/../../.."
+  $stderr.puts "Using work area gems in #{dir} from #{Dir.getwd}"
+  gem 'activefacts-api', path: dir+'/activefacts/api'
+  gem 'activefacts-metamodel', path: dir+'/activefacts/metamodel'
+  gem 'activefacts-cql', path: dir+'/activefacts/cql'
+  gem 'activefacts-compositions', path: dir+'/activefacts/compositions'
+  gem 'activefacts-factil', path: dir+'/activefacts/factil'
+else
+  gem "activefacts-compositions", "~> 1", ">= 1.9.10"
+  gem "activefacts-metamodel", "~> 1", ">= 1.9.12"
+  gem "activefacts-factil", "~> 1", :git => 'https://github.com/factil/activefacts-factil.git'
+end
