@@ -3,19 +3,19 @@
 #     Columns
 #       Mapping (top) of Attendance
 #         0: Absorption (existential) in Attendance of Attendee in "Attendance involves Person"
-#           0: SurrogateKey (mandatory) in Attendee of Person ID
+#           0: SurrogateKey (foreignkey) in Attendee of Person ID
 #         1: Absorption (existential) in Attendance of Meeting in "Attendance involves Meeting"
-#           0: SurrogateKey (mandatory) in Meeting of Meeting ID
+#           0: SurrogateKey (foreignkey) in Meeting of Meeting ID
 #     Indices
-#       Primary index to Attendance over PresenceConstraint over (Attendee, Meeting in "Person attended Meeting") occurs at most one time
-#         IndexField part 0 in Attendance references SurrogateKey (mandatory) in Attendee of Person ID
-#         IndexField part 1 in Attendance references SurrogateKey (mandatory) in Meeting of Meeting ID
+#       Primary index to Attendance(Attendee, Meeting in "Person attended Meeting")
+#         IndexField part 0 in Attendance references SurrogateKey (foreignkey) in Attendee of Person ID
+#         IndexField part 1 in Attendance references SurrogateKey (foreignkey) in Meeting of Meeting ID
 #     Foreign keys outbound
 #       Foreign Key from Attendance to Person over Absorption (existential) in Attendance of Attendee in "Attendance involves Person"
-#         ForeignKeyField part 0 in Attendance is SurrogateKey (mandatory) in Attendee of Person ID
+#         ForeignKeyField part 0 in Attendance is SurrogateKey (foreignkey) in Attendee of Person ID
 #         IndexField part 0 in Person references SurrogateKey (surrogate) in Person of Person ID
 #       Foreign Key from Attendance to Meeting over Absorption (existential) in Attendance of Meeting in "Attendance involves Meeting"
-#         ForeignKeyField part 0 in Attendance is SurrogateKey (mandatory) in Meeting of Meeting ID
+#         ForeignKeyField part 0 in Attendance is SurrogateKey (foreignkey) in Meeting of Meeting ID
 #         IndexField part 0 in Meeting references SurrogateKey (surrogate) in Meeting of Meeting ID
 #   Composite Mapping (top) of Company
 #     Columns
@@ -26,39 +26,39 @@
 #     Indices
 #       Primary index to Company
 #         IndexField part 0 in Company references SurrogateKey (surrogate) in Company of Company ID
-#       Unique index to Company over PresenceConstraint over (Company Name in "Company is called Company Name") occurs at most one time
+#       Natural index to Company(Company Name in "Company is called Company Name")
 #         IndexField part 0 in Company references Absorption (existential) in Company of Company Name in "Company is called Company Name"
 #     Foreign keys inbound
 #       Foreign Key from Directorship to Company over Absorption (existential) in Directorship of Company in "Directorship involves Company"
-#         ForeignKeyField part 0 in Directorship is SurrogateKey (mandatory) in Company of Company ID
+#         ForeignKeyField part 0 in Directorship is SurrogateKey (foreignkey) in Company of Company ID
 #         IndexField part 0 in Company references SurrogateKey (surrogate) in Company of Company ID
 #       Foreign Key from Employee to Company over Absorption (mandatory) in Employee of Company in "Employee works at Company"
-#         ForeignKeyField part 0 in Employee is SurrogateKey (mandatory) in Company of Company ID
+#         ForeignKeyField part 0 in Employee is SurrogateKey (foreignkey) in Company of Company ID
 #         IndexField part 0 in Company references SurrogateKey (surrogate) in Company of Company ID
 #       Foreign Key from Meeting to Company over Absorption (existential) in Meeting of Company in "Meeting is held by Company"
-#         ForeignKeyField part 0 in Meeting is SurrogateKey (mandatory) in Company of Company ID
+#         ForeignKeyField part 0 in Meeting is SurrogateKey (foreignkey) in Company of Company ID
 #         IndexField part 0 in Company references SurrogateKey (surrogate) in Company of Company ID
 #   Composite Mapping (top) of Directorship
 #     Columns
 #       Mapping (top) of Directorship
 #         0: SurrogateKey (surrogate) in Directorship of Directorship ID
 #         1: Absorption (existential) in Directorship of Director in "Directorship involves Person"
-#           0: SurrogateKey (mandatory) in Director of Person ID
+#           0: SurrogateKey (foreignkey) in Director of Person ID
 #         2: Absorption (existential) in Directorship of Company in "Directorship involves Company"
-#           0: SurrogateKey (mandatory) in Company of Company ID
+#           0: SurrogateKey (foreignkey) in Company of Company ID
 #         3: Absorption (mandatory) in Directorship of Appointment Date in "Directorship began on appointment-Date"
 #     Indices
 #       Primary index to Directorship
 #         IndexField part 0 in Directorship references SurrogateKey (surrogate) in Directorship of Directorship ID
-#       Unique index to Directorship over PresenceConstraint over (Director, Company in "Person directs Company") occurs at most one time
-#         IndexField part 0 in Directorship references SurrogateKey (mandatory) in Director of Person ID
-#         IndexField part 1 in Directorship references SurrogateKey (mandatory) in Company of Company ID
+#       Natural index to Directorship(Director, Company in "Person directs Company")
+#         IndexField part 0 in Directorship references SurrogateKey (foreignkey) in Director of Person ID
+#         IndexField part 1 in Directorship references SurrogateKey (foreignkey) in Company of Company ID
 #     Foreign keys outbound
 #       Foreign Key from Directorship to Company over Absorption (existential) in Directorship of Company in "Directorship involves Company"
-#         ForeignKeyField part 0 in Directorship is SurrogateKey (mandatory) in Company of Company ID
+#         ForeignKeyField part 0 in Directorship is SurrogateKey (foreignkey) in Company of Company ID
 #         IndexField part 0 in Company references SurrogateKey (surrogate) in Company of Company ID
 #       Foreign Key from Directorship to Person over Absorption (existential) in Directorship of Director in "Directorship involves Person"
-#         ForeignKeyField part 0 in Directorship is SurrogateKey (mandatory) in Director of Person ID
+#         ForeignKeyField part 0 in Directorship is SurrogateKey (foreignkey) in Director of Person ID
 #         IndexField part 0 in Person references SurrogateKey (surrogate) in Person of Person ID
 #   Composite Mapping (top) of Employee
 #     Columns
@@ -66,71 +66,71 @@
 #         0: SurrogateKey (surrogate) in Employee of Employee ID
 #         1: Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
 #         2: Absorption (mandatory) in Employee of Company in "Employee works at Company"
-#           0: SurrogateKey (mandatory) in Company of Company ID
+#           0: SurrogateKey (foreignkey) in Company of Company ID
 #         3: Absorption (optional) in Employee of Manager in "Employee is supervised by Manager"
 #           0: Absorption (supertype) in Manager of Employee in "Manager is a kind of Employee"
-#             0: SurrogateKey (mandatory) in Employee of Employee ID
+#             0: SurrogateKey (foreignkey) in Employee of Employee ID
 #         4: Absorption (subtype) in Employee of Manager (full) in "Employee is a Manager"
 #           0: Indicator "Manager is ceo" (as "Is Ceo")
 #     Indices
 #       Primary index to Employee
 #         IndexField part 0 in Employee references SurrogateKey (surrogate) in Employee of Employee ID
-#       Unique index to Employee over PresenceConstraint over (Employee Nr in "Employee has Employee Nr") occurs at most one time
+#       Natural index to Employee(Employee Nr in "Employee has Employee Nr")
 #         IndexField part 0 in Employee references Absorption (existential) in Employee of Employee Nr in "Employee has Employee Nr"
 #     Foreign keys inbound
 #       Foreign Key from Employee to Employee over Absorption (optional) in Employee of Manager in "Employee is supervised by Manager"
-#         ForeignKeyField part 0 in Employee is SurrogateKey (mandatory) in Employee of Employee ID
+#         ForeignKeyField part 0 in Employee is SurrogateKey (foreignkey) in Employee of Employee ID
 #         IndexField part 0 in Employee references SurrogateKey (surrogate) in Employee of Employee ID
 #       Foreign Key from Employment to Employee over Absorption (existential) in Employment of Employee in "Employment involves Employee"
-#         ForeignKeyField part 0 in Employment is SurrogateKey (mandatory) in Employee of Employee ID
+#         ForeignKeyField part 0 in Employment is SurrogateKey (foreignkey) in Employee of Employee ID
 #         IndexField part 0 in Employee references SurrogateKey (surrogate) in Employee of Employee ID
 #     Foreign keys outbound
 #       Foreign Key from Employee to Company over Absorption (mandatory) in Employee of Company in "Employee works at Company"
-#         ForeignKeyField part 0 in Employee is SurrogateKey (mandatory) in Company of Company ID
+#         ForeignKeyField part 0 in Employee is SurrogateKey (foreignkey) in Company of Company ID
 #         IndexField part 0 in Company references SurrogateKey (surrogate) in Company of Company ID
 #       Foreign Key from Employee to Employee over Absorption (optional) in Employee of Manager in "Employee is supervised by Manager"
-#         ForeignKeyField part 0 in Employee is SurrogateKey (mandatory) in Employee of Employee ID
+#         ForeignKeyField part 0 in Employee is SurrogateKey (foreignkey) in Employee of Employee ID
 #         IndexField part 0 in Employee references SurrogateKey (surrogate) in Employee of Employee ID
 #   Composite Mapping (top) of Employment
 #     Columns
 #       Mapping (top) of Employment
 #         0: Absorption (existential) in Employment of Person in "Employment involves Person"
-#           0: SurrogateKey (mandatory) in Person of Person ID
+#           0: SurrogateKey (foreignkey) in Person of Person ID
 #         1: Absorption (existential) in Employment of Employee in "Employment involves Employee"
-#           0: SurrogateKey (mandatory) in Employee of Employee ID
+#           0: SurrogateKey (foreignkey) in Employee of Employee ID
 #     Indices
-#       Primary index to Employment over PresenceConstraint over (Person, Employee in "Person works as Employee") occurs at most one time
-#         IndexField part 0 in Employment references SurrogateKey (mandatory) in Person of Person ID
-#         IndexField part 1 in Employment references SurrogateKey (mandatory) in Employee of Employee ID
+#       Primary index to Employment(Person, Employee in "Person works as Employee")
+#         IndexField part 0 in Employment references SurrogateKey (foreignkey) in Person of Person ID
+#         IndexField part 1 in Employment references SurrogateKey (foreignkey) in Employee of Employee ID
 #     Foreign keys outbound
 #       Foreign Key from Employment to Employee over Absorption (existential) in Employment of Employee in "Employment involves Employee"
-#         ForeignKeyField part 0 in Employment is SurrogateKey (mandatory) in Employee of Employee ID
+#         ForeignKeyField part 0 in Employment is SurrogateKey (foreignkey) in Employee of Employee ID
 #         IndexField part 0 in Employee references SurrogateKey (surrogate) in Employee of Employee ID
 #       Foreign Key from Employment to Person over Absorption (existential) in Employment of Person in "Employment involves Person"
-#         ForeignKeyField part 0 in Employment is SurrogateKey (mandatory) in Person of Person ID
+#         ForeignKeyField part 0 in Employment is SurrogateKey (foreignkey) in Person of Person ID
 #         IndexField part 0 in Person references SurrogateKey (surrogate) in Person of Person ID
 #   Composite Mapping (top) of Meeting
 #     Columns
 #       Mapping (top) of Meeting
 #         0: SurrogateKey (surrogate) in Meeting of Meeting ID
 #         1: Absorption (existential) in Meeting of Company in "Meeting is held by Company"
-#           0: SurrogateKey (mandatory) in Company of Company ID
+#           0: SurrogateKey (foreignkey) in Company of Company ID
 #         2: Absorption (existential) in Meeting of Date in "Meeting is held on Date"
 #         3: Indicator "Meeting is board meeting" (as "Is Board Meeting")
 #     Indices
 #       Primary index to Meeting
 #         IndexField part 0 in Meeting references SurrogateKey (surrogate) in Meeting of Meeting ID
-#       Unique index to Meeting over PresenceConstraint over (Company, Date, Is Board Meeting in "Meeting is held by Company", "Meeting is held on Date", "Meeting is board meeting") occurs at most one time
-#         IndexField part 0 in Meeting references SurrogateKey (mandatory) in Company of Company ID
+#       Natural index to Meeting(Company, Date, Is Board Meeting in "Meeting is held by Company", "Meeting is held on Date", "Meeting is board meeting")
+#         IndexField part 0 in Meeting references SurrogateKey (foreignkey) in Company of Company ID
 #         IndexField part 1 in Meeting references Absorption (existential) in Meeting of Date in "Meeting is held on Date"
 #         IndexField part 2 in Meeting references Indicator "Meeting is board meeting"
 #     Foreign keys inbound
 #       Foreign Key from Attendance to Meeting over Absorption (existential) in Attendance of Meeting in "Attendance involves Meeting"
-#         ForeignKeyField part 0 in Attendance is SurrogateKey (mandatory) in Meeting of Meeting ID
+#         ForeignKeyField part 0 in Attendance is SurrogateKey (foreignkey) in Meeting of Meeting ID
 #         IndexField part 0 in Meeting references SurrogateKey (surrogate) in Meeting of Meeting ID
 #     Foreign keys outbound
 #       Foreign Key from Meeting to Company over Absorption (existential) in Meeting of Company in "Meeting is held by Company"
-#         ForeignKeyField part 0 in Meeting is SurrogateKey (mandatory) in Company of Company ID
+#         ForeignKeyField part 0 in Meeting is SurrogateKey (foreignkey) in Company of Company ID
 #         IndexField part 0 in Company references SurrogateKey (surrogate) in Company of Company ID
 #   Composite Mapping (top) of Person
 #     Columns
@@ -142,16 +142,16 @@
 #     Indices
 #       Primary index to Person
 #         IndexField part 0 in Person references SurrogateKey (surrogate) in Person of Person ID
-#       Unique index to Person over PresenceConstraint over (Given Name, Family Name in "Person has given-Name", "family-Name is of Person") occurs at most one time
+#       Natural index to Person(Given Name, Family Name in "Person has given-Name", "family-Name is of Person")
 #         IndexField part 0 in Person references Absorption (existential) in Person of Given Name in "Person has given-Name"
 #         IndexField part 1 in Person references Absorption (existential) in Person of Family Name in "Person is called family-Name"
 #     Foreign keys inbound
 #       Foreign Key from Attendance to Person over Absorption (existential) in Attendance of Attendee in "Attendance involves Person"
-#         ForeignKeyField part 0 in Attendance is SurrogateKey (mandatory) in Attendee of Person ID
+#         ForeignKeyField part 0 in Attendance is SurrogateKey (foreignkey) in Attendee of Person ID
 #         IndexField part 0 in Person references SurrogateKey (surrogate) in Person of Person ID
 #       Foreign Key from Directorship to Person over Absorption (existential) in Directorship of Director in "Directorship involves Person"
-#         ForeignKeyField part 0 in Directorship is SurrogateKey (mandatory) in Director of Person ID
+#         ForeignKeyField part 0 in Directorship is SurrogateKey (foreignkey) in Director of Person ID
 #         IndexField part 0 in Person references SurrogateKey (surrogate) in Person of Person ID
 #       Foreign Key from Employment to Person over Absorption (existential) in Employment of Person in "Employment involves Person"
-#         ForeignKeyField part 0 in Employment is SurrogateKey (mandatory) in Person of Person ID
+#         ForeignKeyField part 0 in Employment is SurrogateKey (foreignkey) in Person of Person ID
 #         IndexField part 0 in Person references SurrogateKey (surrogate) in Person of Person ID

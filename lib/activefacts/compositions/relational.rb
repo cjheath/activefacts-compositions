@@ -14,7 +14,7 @@ module ActiveFacts
 
       def self.options
         {
-          surrogates: ['Boolean', "Inject a surrogate key into each table that needs it"],
+          surrogates: [%w{true field_name_pattern}, "Inject a surrogate key into each table that needs it"],
           fk: [%w{primary natural}, "Enforce foreign keys using the primary (surrogate) or natural keys"],
         }.merge(Compositor.options)
       end
@@ -22,6 +22,7 @@ module ActiveFacts
       def initialize constellation, name, options = {}, compositor_name = 'Relational'
         # Extract recognised options:
         @option_surrogates = options.delete('surrogates')
+        @surrogate_name_pattern = [true, '', 'true', 'yes', nil].include?(t = @option_surrogates) ? '+ ID' : t
         fk = options.delete('fk')
         @fk_natural = false if @fk_natural == nil # Don't override subclass default
         case fk
@@ -305,6 +306,10 @@ module ActiveFacts
         end
       end
 
+      def patterned_name pattern, name
+        pattern.sub(/\+/, name)
+      end
+
       def inject_surrogates
         composites = @composition.all_composite.to_a
         return if composites.empty?
@@ -317,27 +322,13 @@ module ActiveFacts
         end
       end
 
-      def surrogate_type
-        @surrogate_type ||= begin
-          surrogate_type_name = [true, '', 'true', 'yes', nil].include?(t = @option_surrogates) ? 'Auto Counter' : t
-          # REVISIT: Crappy: choose the first (currently always single)
-          vocabulary = @composition.all_composite.to_a[0].mapping.object_type.vocabulary
-          @constellation.ValueType(
-            vocabulary: vocabulary,
-            name: surrogate_type_name,
-            concept: [:new, :implication_rule => "surrogate injection"]
-          )
-        end
-      end
-
-      def inject_surrogate composite, extension = ' ID'
+      def inject_surrogate composite, name_pattern = @surrogate_name_pattern
         trace :surrogates, "Injecting surrogate for #{composite.inspect}" do
           surrogate_component =
             @constellation.SurrogateKey(
               :new,
               parent: composite.mapping,
-              name: composite.mapping.name+extension,
-              object_type: surrogate_type,
+              name: patterned_name(name_pattern, composite.mapping.name),
               injection_annotation: "surrogate"
             )
           index =
@@ -749,7 +740,7 @@ module ActiveFacts
       end
 
       def augment_paths paths, mapping
-        return unless MM::Indicator === mapping || MM::ValueType === mapping.object_type
+        return unless !(MM::Mapping === mapping) || MM::ValueType === mapping.object_type
 
         if MM::ValueField === mapping && mapping.parent.composite   # ValueType that's a composite (table) by itself
           # This AccessPath has exactly one field and no presence constraint, so just make the index.

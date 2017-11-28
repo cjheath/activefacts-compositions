@@ -1,10 +1,10 @@
 Summary of Person
 Batch
-	Batch->Batch ID[1.0] as "Batch ID"
+	Batch->Batch ID[PN1] as "Batch ID"
 	Batch->Start DateTime as "Start Date Time"
 Person STG
-	Person STG->Family Name[1.0] as "Family Name"
-	Person STG->Given Name[1.1] as "Given Name"
-	Person STG->{Batch}->[Batch ID] as "Batch ID"
+	Person STG->Family Name[PN1.0] as "Family Name"
+	Person STG->Given Name[PN1.1] as "Given Name"
+	Person STG->[Batch]->Batch ID as "Batch ID"
 	Person STG->LoadTime as "Load Time"
 	Person STG->RecordSource as "Record Source"

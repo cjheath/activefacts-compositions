@@ -1,7 +1,7 @@
 CREATE TABLE Country (
 	-- Country has Country Code
 	CountryCode                             CHARACTER(3) NOT NULL,
-	-- Primary index to Country over PresenceConstraint over (Country Code in "Country has Country Code") occurs at most one time
+	-- Primary index to Country(Country Code in "Country has Country Code")
 	PRIMARY KEY(CountryCode, CountryCode)
 );
 
@@ -16,4 +16,3 @@ CREATE TABLE CountryCode (
 
 ALTER TABLE Country
 	ADD FOREIGN KEY (CountryCode) REFERENCES CountryCode (CountryCodeValue);
-

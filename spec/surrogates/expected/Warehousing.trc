@@ -4,22 +4,22 @@
 #       Mapping (top) of Back Order Allocation
 #         0: SurrogateKey (surrogate) in Back Order Allocation of Back Order Allocation ID
 #         1: Absorption (existential) in Back Order Allocation of Purchase Order Item in "Back Order Allocation involves Purchase Order Item"
-#           0: SurrogateKey (mandatory) in Purchase Order Item of Purchase Order Item ID
+#           0: SurrogateKey (foreignkey) in Purchase Order Item of Purchase Order Item ID
 #         2: Absorption (existential) in Back Order Allocation of Sales Order Item in "Back Order Allocation involves Sales Order Item"
-#           0: SurrogateKey (mandatory) in Sales Order Item of Sales Order Item ID
+#           0: SurrogateKey (foreignkey) in Sales Order Item of Sales Order Item ID
 #         3: Absorption (mandatory) in Back Order Allocation of Quantity in "Back Order Allocation is for Quantity"
 #     Indices
 #       Primary index to Back Order Allocation
 #         IndexField part 0 in Back Order Allocation references SurrogateKey (surrogate) in Back Order Allocation of Back Order Allocation ID
-#       Unique index to Back Order Allocation over PresenceConstraint over (Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item") occurs at most one time
-#         IndexField part 0 in Back Order Allocation references SurrogateKey (mandatory) in Purchase Order Item of Purchase Order Item ID
-#         IndexField part 1 in Back Order Allocation references SurrogateKey (mandatory) in Sales Order Item of Sales Order Item ID
+#       Natural index to Back Order Allocation(Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item")
+#         IndexField part 0 in Back Order Allocation references SurrogateKey (foreignkey) in Purchase Order Item of Purchase Order Item ID
+#         IndexField part 1 in Back Order Allocation references SurrogateKey (foreignkey) in Sales Order Item of Sales Order Item ID
 #     Foreign keys outbound
 #       Foreign Key from Back Order Allocation to Purchase Order Item over Absorption (existential) in Back Order Allocation of Purchase Order Item in "Back Order Allocation involves Purchase Order Item"
-#         ForeignKeyField part 0 in Back Order Allocation is SurrogateKey (mandatory) in Purchase Order Item of Purchase Order Item ID
+#         ForeignKeyField part 0 in Back Order Allocation is SurrogateKey (foreignkey) in Purchase Order Item of Purchase Order Item ID
 #         IndexField part 0 in Purchase Order Item references SurrogateKey (surrogate) in Purchase Order Item of Purchase Order Item ID
 #       Foreign Key from Back Order Allocation to Sales Order Item over Absorption (existential) in Back Order Allocation of Sales Order Item in "Back Order Allocation involves Sales Order Item"
-#         ForeignKeyField part 0 in Back Order Allocation is SurrogateKey (mandatory) in Sales Order Item of Sales Order Item ID
+#         ForeignKeyField part 0 in Back Order Allocation is SurrogateKey (foreignkey) in Sales Order Item of Sales Order Item ID
 #         IndexField part 0 in Sales Order Item references SurrogateKey (surrogate) in Sales Order Item of Sales Order Item ID
 #   Composite Mapping (top) of Bin
 #     Columns
@@ -31,7 +31,7 @@
 #         3: Absorption (optional) in Bin of Warehouse in "Warehouse contains Bin"
 #           0: Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Indices
-#       Primary index to Bin over PresenceConstraint over (Bin ID in "Bin has Bin ID") occurs at most one time
+#       Primary index to Bin(Bin ID in "Bin has Bin ID")
 #         IndexField part 0 in Bin references Absorption (existential) in Bin of Bin ID in "Bin has Bin ID"
 #     Foreign keys outbound
 #       Foreign Key from Bin to Product over Absorption (optional) in Bin of Product in "Bin contains Product"
@@ -50,18 +50,18 @@
 #         3: Absorption (optional) in Dispatch Item of Dispatch in "Dispatch Item is for Dispatch"
 #           0: Absorption (existential) in Dispatch of Dispatch ID in "Dispatch has Dispatch ID"
 #         4: Absorption (optional) in Dispatch Item of Sales Order Item in "Dispatch Item is for Sales Order Item"
-#           0: SurrogateKey (mandatory) in Sales Order Item of Sales Order Item ID
+#           0: SurrogateKey (foreignkey) in Sales Order Item of Sales Order Item ID
 #         5: Absorption (optional) in Dispatch Item of Transfer Request in "Dispatch Item is for Transfer Request"
 #           0: Absorption (existential) in Transfer Request of Transfer Request ID in "Transfer Request has Transfer Request ID"
 #     Indices
-#       Primary index to Dispatch Item over PresenceConstraint over (Dispatch Item ID in "Dispatch Item has Dispatch Item ID") occurs at most one time
+#       Primary index to Dispatch Item(Dispatch Item ID in "Dispatch Item has Dispatch Item ID")
 #         IndexField part 0 in Dispatch Item references Absorption (existential) in Dispatch Item of Dispatch Item ID in "Dispatch Item has Dispatch Item ID"
 #     Foreign keys outbound
 #       Foreign Key from Dispatch Item to Product over Absorption (mandatory) in Dispatch Item of Product in "Dispatch Item is Product"
 #         ForeignKeyField part 0 in Dispatch Item is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #         IndexField part 0 in Product references Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Dispatch Item to Sales Order Item over Absorption (optional) in Dispatch Item of Sales Order Item in "Dispatch Item is for Sales Order Item"
-#         ForeignKeyField part 0 in Dispatch Item is SurrogateKey (mandatory) in Sales Order Item of Sales Order Item ID
+#         ForeignKeyField part 0 in Dispatch Item is SurrogateKey (foreignkey) in Sales Order Item of Sales Order Item ID
 #         IndexField part 0 in Sales Order Item references SurrogateKey (surrogate) in Sales Order Item of Sales Order Item ID
 #       Foreign Key from Dispatch Item to Transfer Request over Absorption (optional) in Dispatch Item of Transfer Request in "Dispatch Item is for Transfer Request"
 #         ForeignKeyField part 0 in Dispatch Item is Absorption (existential) in Transfer Request of Transfer Request ID in "Transfer Request has Transfer Request ID"
@@ -73,7 +73,7 @@
 #         1: Absorption (subtype) in Party of Customer (full) in "Party is a Customer"
 #         2: Absorption (subtype) in Party of Supplier (full) in "Party is a Supplier"
 #     Indices
-#       Primary index to Party over PresenceConstraint over (Party ID in "Party has Party ID") occurs at most one time
+#       Primary index to Party(Party ID in "Party has Party ID")
 #         IndexField part 0 in Party references Absorption (existential) in Party of Party ID in "Party has Party ID"
 #     Foreign keys inbound
 #       Foreign Key from Purchase Order to Party over Absorption (mandatory) in Purchase Order of Supplier in "Purchase Order is to Supplier"
@@ -87,7 +87,7 @@
 #       Mapping (top) of Product
 #         0: Absorption (existential) in Product of Product ID in "Product has Product ID"
 #     Indices
-#       Primary index to Product over PresenceConstraint over (Product ID in "Product has Product ID") occurs at most one time
+#       Primary index to Product(Product ID in "Product has Product ID")
 #         IndexField part 0 in Product references Absorption (existential) in Product of Product ID in "Product has Product ID"
 #     Foreign keys inbound
 #       Foreign Key from Bin to Product over Absorption (optional) in Bin of Product in "Bin contains Product"
@@ -118,7 +118,7 @@
 #         2: Absorption (mandatory) in Purchase Order of Warehouse in "Purchase Order is to Warehouse"
 #           0: Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Indices
-#       Primary index to Purchase Order over PresenceConstraint over (Purchase Order ID in "Purchase Order has Purchase Order ID") occurs at most one time
+#       Primary index to Purchase Order(Purchase Order ID in "Purchase Order has Purchase Order ID")
 #         IndexField part 0 in Purchase Order references Absorption (existential) in Purchase Order of Purchase Order ID in "Purchase Order has Purchase Order ID"
 #     Foreign keys inbound
 #       Foreign Key from Purchase Order Item to Purchase Order over Absorption (existential) in Purchase Order Item of Purchase Order in "Purchase Order Item is part of Purchase Order"
@@ -143,15 +143,15 @@
 #     Indices
 #       Primary index to Purchase Order Item
 #         IndexField part 0 in Purchase Order Item references SurrogateKey (surrogate) in Purchase Order Item of Purchase Order Item ID
-#       Unique index to Purchase Order Item over PresenceConstraint over (Purchase Order, Product in "Purchase Order includes Purchase Order Item", "Purchase Order Item is for Product") occurs at most one time
+#       Natural index to Purchase Order Item(Purchase Order, Product in "Purchase Order includes Purchase Order Item", "Purchase Order Item is for Product")
 #         IndexField part 0 in Purchase Order Item references Absorption (existential) in Purchase Order of Purchase Order ID in "Purchase Order has Purchase Order ID"
 #         IndexField part 1 in Purchase Order Item references Absorption (existential) in Product of Product ID in "Product has Product ID"
 #     Foreign keys inbound
 #       Foreign Key from Back Order Allocation to Purchase Order Item over Absorption (existential) in Back Order Allocation of Purchase Order Item in "Back Order Allocation involves Purchase Order Item"
-#         ForeignKeyField part 0 in Back Order Allocation is SurrogateKey (mandatory) in Purchase Order Item of Purchase Order Item ID
+#         ForeignKeyField part 0 in Back Order Allocation is SurrogateKey (foreignkey) in Purchase Order Item of Purchase Order Item ID
 #         IndexField part 0 in Purchase Order Item references SurrogateKey (surrogate) in Purchase Order Item of Purchase Order Item ID
 #       Foreign Key from Received Item to Purchase Order Item over Absorption (optional) in Received Item of Purchase Order Item in "Received Item is for Purchase Order Item"
-#         ForeignKeyField part 0 in Received Item is SurrogateKey (mandatory) in Purchase Order Item of Purchase Order Item ID
+#         ForeignKeyField part 0 in Received Item is SurrogateKey (foreignkey) in Purchase Order Item of Purchase Order Item ID
 #         IndexField part 0 in Purchase Order Item references SurrogateKey (surrogate) in Purchase Order Item of Purchase Order Item ID
 #     Foreign keys outbound
 #       Foreign Key from Purchase Order Item to Product over Absorption (existential) in Purchase Order Item of Product in "Purchase Order Item is for Product"
@@ -168,20 +168,20 @@
 #           0: Absorption (existential) in Product of Product ID in "Product has Product ID"
 #         2: Absorption (mandatory) in Received Item of Quantity in "Received Item is in Quantity"
 #         3: Absorption (optional) in Received Item of Purchase Order Item in "Received Item is for Purchase Order Item"
-#           0: SurrogateKey (mandatory) in Purchase Order Item of Purchase Order Item ID
+#           0: SurrogateKey (foreignkey) in Purchase Order Item of Purchase Order Item ID
 #         4: Absorption (optional) in Received Item of Receipt in "Received Item has Receipt"
 #           0: Absorption (existential) in Receipt of Receipt ID in "Receipt has Receipt ID"
 #         5: Absorption (optional) in Received Item of Transfer Request in "Received Item is for Transfer Request"
 #           0: Absorption (existential) in Transfer Request of Transfer Request ID in "Transfer Request has Transfer Request ID"
 #     Indices
-#       Primary index to Received Item over PresenceConstraint over (Received Item ID in "Received Item has Received Item ID") occurs at most one time
+#       Primary index to Received Item(Received Item ID in "Received Item has Received Item ID")
 #         IndexField part 0 in Received Item references Absorption (existential) in Received Item of Received Item ID in "Received Item has Received Item ID"
 #     Foreign keys outbound
 #       Foreign Key from Received Item to Product over Absorption (mandatory) in Received Item of Product in "Received Item is Product"
 #         ForeignKeyField part 0 in Received Item is Absorption (existential) in Product of Product ID in "Product has Product ID"
 #         IndexField part 0 in Product references Absorption (existential) in Product of Product ID in "Product has Product ID"
 #       Foreign Key from Received Item to Purchase Order Item over Absorption (optional) in Received Item of Purchase Order Item in "Received Item is for Purchase Order Item"
-#         ForeignKeyField part 0 in Received Item is SurrogateKey (mandatory) in Purchase Order Item of Purchase Order Item ID
+#         ForeignKeyField part 0 in Received Item is SurrogateKey (foreignkey) in Purchase Order Item of Purchase Order Item ID
 #         IndexField part 0 in Purchase Order Item references SurrogateKey (surrogate) in Purchase Order Item of Purchase Order Item ID
 #       Foreign Key from Received Item to Transfer Request over Absorption (optional) in Received Item of Transfer Request in "Received Item is for Transfer Request"
 #         ForeignKeyField part 0 in Received Item is Absorption (existential) in Transfer Request of Transfer Request ID in "Transfer Request has Transfer Request ID"
@@ -196,7 +196,7 @@
 #         2: Absorption (mandatory) in Sales Order of Warehouse in "Sales Order is from Warehouse"
 #           0: Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Indices
-#       Primary index to Sales Order over PresenceConstraint over (Sales Order ID in "Sales Order has Sales Order ID") occurs at most one time
+#       Primary index to Sales Order(Sales Order ID in "Sales Order has Sales Order ID")
 #         IndexField part 0 in Sales Order references Absorption (existential) in Sales Order of Sales Order ID in "Sales Order has Sales Order ID"
 #     Foreign keys inbound
 #       Foreign Key from Sales Order Item to Sales Order over Absorption (existential) in Sales Order Item of Sales Order in "Sales Order Item is part of Sales Order"
@@ -221,15 +221,15 @@
 #     Indices
 #       Primary index to Sales Order Item
 #         IndexField part 0 in Sales Order Item references SurrogateKey (surrogate) in Sales Order Item of Sales Order Item ID
-#       Unique index to Sales Order Item over PresenceConstraint over (Sales Order, Product in "Sales Order includes Sales Order Item", "Sales Order Item is for Product") occurs at most one time
+#       Natural index to Sales Order Item(Sales Order, Product in "Sales Order includes Sales Order Item", "Sales Order Item is for Product")
 #         IndexField part 0 in Sales Order Item references Absorption (existential) in Sales Order of Sales Order ID in "Sales Order has Sales Order ID"
 #         IndexField part 1 in Sales Order Item references Absorption (existential) in Product of Product ID in "Product has Product ID"
 #     Foreign keys inbound
 #       Foreign Key from Back Order Allocation to Sales Order Item over Absorption (existential) in Back Order Allocation of Sales Order Item in "Back Order Allocation involves Sales Order Item"
-#         ForeignKeyField part 0 in Back Order Allocation is SurrogateKey (mandatory) in Sales Order Item of Sales Order Item ID
+#         ForeignKeyField part 0 in Back Order Allocation is SurrogateKey (foreignkey) in Sales Order Item of Sales Order Item ID
 #         IndexField part 0 in Sales Order Item references SurrogateKey (surrogate) in Sales Order Item of Sales Order Item ID
 #       Foreign Key from Dispatch Item to Sales Order Item over Absorption (optional) in Dispatch Item of Sales Order Item in "Dispatch Item is for Sales Order Item"
-#         ForeignKeyField part 0 in Dispatch Item is SurrogateKey (mandatory) in Sales Order Item of Sales Order Item ID
+#         ForeignKeyField part 0 in Dispatch Item is SurrogateKey (foreignkey) in Sales Order Item of Sales Order Item ID
 #         IndexField part 0 in Sales Order Item references SurrogateKey (surrogate) in Sales Order Item of Sales Order Item ID
 #     Foreign keys outbound
 #       Foreign Key from Sales Order Item to Product over Absorption (existential) in Sales Order Item of Product in "Sales Order Item is for Product"
@@ -250,7 +250,7 @@
 #         4: Absorption (mandatory) in Transfer Request of To Warehouse in "Transfer Request is to Warehouse"
 #           0: Absorption (existential) in To Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Indices
-#       Primary index to Transfer Request over PresenceConstraint over (Transfer Request ID in "Transfer Request has Transfer Request ID") occurs at most one time
+#       Primary index to Transfer Request(Transfer Request ID in "Transfer Request has Transfer Request ID")
 #         IndexField part 0 in Transfer Request references Absorption (existential) in Transfer Request of Transfer Request ID in "Transfer Request has Transfer Request ID"
 #     Foreign keys inbound
 #       Foreign Key from Dispatch Item to Transfer Request over Absorption (optional) in Dispatch Item of Transfer Request in "Dispatch Item is for Transfer Request"
@@ -274,7 +274,7 @@
 #       Mapping (top) of Warehouse
 #         0: Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Indices
-#       Primary index to Warehouse over PresenceConstraint over (Warehouse ID in "Warehouse has Warehouse ID") occurs at most one time
+#       Primary index to Warehouse(Warehouse ID in "Warehouse has Warehouse ID")
 #         IndexField part 0 in Warehouse references Absorption (existential) in Warehouse of Warehouse ID in "Warehouse has Warehouse ID"
 #     Foreign keys inbound
 #       Foreign Key from Bin to Warehouse over Absorption (optional) in Bin of Warehouse in "Warehouse contains Bin"

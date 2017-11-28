@@ -25,7 +25,7 @@ module ActiveFacts
         datavault_options.
         merge({
           reference: ['Boolean', "Emit the reference (static) tables as well. Default is to omit them"],
-          id: ['String', "Append this to data vault surrogate keys (default HID)"],
+          id: ['String', "Append this to data vault surrogate key names (default HID)"],
           hubname: ['String', "Suffix or pattern for naming hub tables. Include a + to insert the name. Default 'HUB'"],
           linkname: ['String', "Suffix or pattern for naming link tables. Include a + to insert the name. Default 'LINK'"],
           satname: ['String', "Suffix or pattern for naming satellite tables. Include a + to insert the name. Default 'SAT'"],
@@ -34,14 +34,14 @@ module ActiveFacts
           refname: ['String', "Suffix or pattern for naming reference tables. Include a + to insert the name. Default '+'"],
         }).
         merge(Relational.options).
-        reject{|k,v| [:surrogates].include?(k) }  # Datavault surrogates are not optional
+        reject{|k,v| [:fk, :surrogates].include?(k) }  # Datavault surrogates are not optional
       end
 
       def initialize constellation, name, options = {}
         # Extract recognised options:
         datavault_initialize options
         @option_reference = options.delete('reference')
-        @option_id = ' ' + (options.delete('id') || 'HID')
+        @option_id = '+ ' + (options.delete('id') || 'HID')
         @option_hub_name = options.delete('hubname') || 'HUB'
         @option_hub_name.sub!(/^/,'+ ') unless @option_hub_name =~ /\+/
         @option_link_name = options.delete('linkname') || 'LINK'
@@ -95,7 +95,7 @@ module ActiveFacts
       end
 
       # Change the default extension from our superclass':
-      def inject_surrogate composite, extension = @option_id
+      def inject_surrogate composite, name_pattern = @option_id
         super
       end
 
@@ -333,6 +333,7 @@ module ActiveFacts
 
       end
 
+      # A Point-In-Time table links a hub to its satellites applicable at a particular time
       def devolve_pit(pit_composite)
         # inject standard PIT components: surrogate key, hub hash key and snapshot date time
         inject_surrogate(pit_composite)
@@ -371,7 +372,7 @@ module ActiveFacts
 
         sat_composites.each do |sat_composite|
           sat_name = sat_composite.mapping.name
-          sat_hash_name = "#{sat_name}#{@option_id}"
+          sat_hash_name = patterned_name(@option_id, sat_name)
 
           src_hash_field = hub_hash_field.fork_to_new_parent(pit_composite.mapping)
           src_hash_field.name = sat_hash_name
@@ -541,7 +542,7 @@ module ActiveFacts
 
       def name_satellite component
         name, is_computed = *satellite_base_name_and_type(component)
-        [apply_name(@option_sat_name, name), is_computed != nil]
+        [patterned_name(@option_sat_name, name), is_computed != nil]
       end
 
       # Create a new satellite for the same object_type as this composite
@@ -693,28 +694,24 @@ module ActiveFacts
         end
       end
 
-      def apply_name pattern, name
-        pattern.sub(/\+/, name)
-      end
-
       def apply_composite_name_pattern
         @reference_composites.each do |composite|
-          composite.mapping.name = apply_name(@option_ref_name, composite.mapping.name)
+          composite.mapping.name = patterned_name(@option_ref_name, composite.mapping.name)
         end
         @hub_composites.each do |composite|
-          composite.mapping.name = apply_name(@option_hub_name, composite.mapping.name)
+          composite.mapping.name = patterned_name(@option_hub_name, composite.mapping.name)
         end
         @link_composites.each do |composite|
-          composite.mapping.name = apply_name(@option_link_name, composite.mapping.name)
+          composite.mapping.name = patterned_name(@option_link_name, composite.mapping.name)
         end
         @bdv_link_composites.each do |composite|
-          composite.mapping.name = apply_name(@option_link_name, composite.mapping.name)
+          composite.mapping.name = patterned_name(@option_link_name, composite.mapping.name)
         end
         @pit_composites.each do |composite|
-          composite.mapping.name = apply_name(@option_pit_name, composite.mapping.name)
+          composite.mapping.name = patterned_name(@option_pit_name, composite.mapping.name)
         end
         @bridge_composites.each do |composite|
-          composite.mapping.name = apply_name(@option_bridge_name, composite.mapping.name)
+          composite.mapping.name = patterned_name(@option_bridge_name, composite.mapping.name)
         end
       end
 

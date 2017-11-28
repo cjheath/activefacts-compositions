@@ -5,7 +5,7 @@ CREATE TABLE ACCEPTABLE_SUBSTITUTION (
 	ALTERNATE_PRODUCT_NAME                  VARCHAR NOT NULL,
 	-- Acceptable Substitution involves Season
 	SEASON                                  VARCHAR(6) NOT NULL CHECK(SEASON = 'Autumn' OR SEASON = 'Spring' OR SEASON = 'Summer' OR SEASON = 'Winter'),
-	-- Primary index to Acceptable Substitution over PresenceConstraint over (Product, Alternate Product, Season in "Product may be substituted by alternate-Product in Season") occurs at most one time
+	-- Primary index to Acceptable Substitution(Product, Alternate Product, Season in "Product may be substituted by alternate-Product in Season")
 	PRIMARY KEY(PRODUCT_NAME, ALTERNATE_PRODUCT_NAME, SEASON)
 );
 
@@ -15,7 +15,7 @@ CREATE TABLE "MONTH" (
 	MONTH_NR                                INTEGER NOT NULL CHECK((MONTH_NR >= 1 AND MONTH_NR <= 12)),
 	-- Month is in Season
 	SEASON                                  VARCHAR(6) NOT NULL CHECK(SEASON = 'Autumn' OR SEASON = 'Spring' OR SEASON = 'Summer' OR SEASON = 'Winter'),
-	-- Primary index to Month over PresenceConstraint over (Month Nr in "Month has Month Nr") occurs at most one time
+	-- Primary index to Month(Month Nr in "Month has Month Nr")
 	PRIMARY KEY(MONTH_NR)
 );
 
@@ -23,7 +23,7 @@ CREATE TABLE "MONTH" (
 CREATE TABLE PRODUCT (
 	-- Product has Product Name
 	PRODUCT_NAME                            VARCHAR NOT NULL,
-	-- Primary index to Product over PresenceConstraint over (Product Name in "Product has Product Name") occurs at most one time
+	-- Primary index to Product(Product Name in "Product has Product Name")
 	PRIMARY KEY(PRODUCT_NAME)
 );
 
@@ -41,7 +41,7 @@ CREATE TABLE PRODUCTION_FORECAST (
 	QUANTITY                                INTEGER NOT NULL,
 	-- maybe Production Forecast predicts Cost
 	COST                                    MONEY NULL,
-	-- Primary index to Production Forecast over PresenceConstraint over (Refinery, Supply Period, Product in "Refinery in Supply Period will make Product in Quantity") occurs one time
+	-- Primary index to Production Forecast(Refinery, Supply Period, Product in "Refinery in Supply Period will make Product in Quantity")
 	PRIMARY KEY(REFINERY_NAME, SUPPLY_PERIOD_YEAR_NR, SUPPLY_PERIOD_MONTH_NR, PRODUCT_NAME),
 	FOREIGN KEY (PRODUCT_NAME) REFERENCES PRODUCT (PRODUCT_NAME)
 );
@@ -50,7 +50,7 @@ CREATE TABLE PRODUCTION_FORECAST (
 CREATE TABLE REFINERY (
 	-- Refinery has Refinery Name
 	REFINERY_NAME                           VARCHAR(80) NOT NULL,
-	-- Primary index to Refinery over PresenceConstraint over (Refinery Name in "Refinery has Refinery Name") occurs at most one time
+	-- Primary index to Refinery(Refinery Name in "Refinery has Refinery Name")
 	PRIMARY KEY(REFINERY_NAME)
 );
 
@@ -58,7 +58,7 @@ CREATE TABLE REFINERY (
 CREATE TABLE REGION (
 	-- Region has Region Name
 	REGION_NAME                             VARCHAR NOT NULL,
-	-- Primary index to Region over PresenceConstraint over (Region Name in "Region has Region Name") occurs at most one time
+	-- Primary index to Region(Region Name in "Region has Region Name")
 	PRIMARY KEY(REGION_NAME)
 );
 
@@ -74,7 +74,7 @@ CREATE TABLE REGIONAL_DEMAND (
 	PRODUCT_NAME                            VARCHAR NOT NULL,
 	-- Regional Demand involves Quantity
 	QUANTITY                                INTEGER NOT NULL,
-	-- Primary index to Regional Demand over PresenceConstraint over (Region, Supply Period, Product in "Region in Supply Period will need Product in Quantity") occurs one time
+	-- Primary index to Regional Demand(Region, Supply Period, Product in "Region in Supply Period will need Product in Quantity")
 	PRIMARY KEY(REGION_NAME, SUPPLY_PERIOD_YEAR_NR, SUPPLY_PERIOD_MONTH_NR, PRODUCT_NAME),
 	FOREIGN KEY (PRODUCT_NAME) REFERENCES PRODUCT (PRODUCT_NAME),
 	FOREIGN KEY (REGION_NAME) REFERENCES REGION (REGION_NAME)
@@ -86,7 +86,7 @@ CREATE TABLE SUPPLY_PERIOD (
 	YEAR_NR                                 INTEGER NOT NULL,
 	-- Supply Period is in Month that has Month Nr
 	MONTH_NR                                INTEGER NOT NULL CHECK((MONTH_NR >= 1 AND MONTH_NR <= 12)),
-	-- Primary index to Supply Period over PresenceConstraint over (Year, Month in "Supply Period is in Year", "Supply Period is in Month") occurs at most one time
+	-- Primary index to Supply Period(Year, Month in "Supply Period is in Year", "Supply Period is in Month")
 	PRIMARY KEY(YEAR_NR, MONTH_NR),
 	FOREIGN KEY (MONTH_NR) REFERENCES "MONTH" (MONTH_NR)
 );
@@ -101,7 +101,7 @@ CREATE TABLE TRANSPORT_ROUTE (
 	REGION_NAME                             VARCHAR NOT NULL,
 	-- maybe Transport Route incurs Cost per kl
 	COST                                    MONEY NULL,
-	-- Primary index to Transport Route over PresenceConstraint over (Transport Mode, Refinery, Region in "Transport Mode transportation is available from Refinery to Region") occurs at most one time
+	-- Primary index to Transport Route(Transport Mode, Refinery, Region in "Transport Mode transportation is available from Refinery to Region")
 	PRIMARY KEY(TRANSPORT_MODE, REFINERY_NAME, REGION_NAME),
 	FOREIGN KEY (REFINERY_NAME) REFERENCES REFINERY (REFINERY_NAME),
 	FOREIGN KEY (REGION_NAME) REFERENCES REGION (REGION_NAME)
@@ -111,19 +111,14 @@ CREATE TABLE TRANSPORT_ROUTE (
 ALTER TABLE ACCEPTABLE_SUBSTITUTION
 	ADD FOREIGN KEY (ALTERNATE_PRODUCT_NAME) REFERENCES PRODUCT (PRODUCT_NAME);
 
-
 ALTER TABLE ACCEPTABLE_SUBSTITUTION
 	ADD FOREIGN KEY (PRODUCT_NAME) REFERENCES PRODUCT (PRODUCT_NAME);
-
 
 ALTER TABLE PRODUCTION_FORECAST
 	ADD FOREIGN KEY (REFINERY_NAME) REFERENCES REFINERY (REFINERY_NAME);
 
-
 ALTER TABLE PRODUCTION_FORECAST
 	ADD FOREIGN KEY (SUPPLY_PERIOD_YEAR_NR, SUPPLY_PERIOD_MONTH_NR) REFERENCES SUPPLY_PERIOD (YEAR_NR, MONTH_NR);
 
-
 ALTER TABLE REGIONAL_DEMAND
 	ADD FOREIGN KEY (SUPPLY_PERIOD_YEAR_NR, SUPPLY_PERIOD_MONTH_NR) REFERENCES SUPPLY_PERIOD (YEAR_NR, MONTH_NR);
-

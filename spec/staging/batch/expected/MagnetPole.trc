@@ -1,15 +1,15 @@
 Summary of MagnetPole
 Batch
-	Batch->Batch ID[1.0] as "Batch ID"
+	Batch->Batch ID[PN1] as "Batch ID"
 	Batch->Start DateTime as "Start Date Time"
 Magnet STG
-	Magnet STG->Magnet AutoCounter[1.0] as "Magnet Auto Counter"
-	Magnet STG->{Batch}->[Batch ID] as "Batch ID"
+	Magnet STG->Magnet AutoCounter[PN1] as "Magnet Auto Counter"
+	Magnet STG->[Batch]->Batch ID as "Batch ID"
 	Magnet STG->LoadTime as "Load Time"
 	Magnet STG->RecordSource as "Record Source"
 MagnetPole STG
-	MagnetPole STG->{Magnet}->[Magnet AutoCounter][1.0] as "Magnet Auto Counter"
-	MagnetPole STG->Is North?[1.1] as "Is North"
-	MagnetPole STG->{Batch}->[Batch ID] as "Batch ID"
+	MagnetPole STG->[Magnet]->Magnet AutoCounter[PN1.0] as "Magnet Auto Counter"
+	MagnetPole STG->Is North?[PN1.1] as "Is North"
+	MagnetPole STG->[Batch]->Batch ID as "Batch ID"
 	MagnetPole STG->LoadTime as "Load Time"
 	MagnetPole STG->RecordSource as "Record Source"

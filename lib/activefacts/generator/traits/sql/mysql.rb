@@ -59,27 +59,23 @@ module ActiveFacts
             ''
           end
 
-          # text to add to a column's data type to make it auto-increment
-          def auto_increment_modifier
-            ' AUTO_INCREMENT'
-          end
-
           def index_kind(index)
             super
           end
 
-          def normalise_type(type_name, length, value_constraint, options)
-            type = MM::DataType.normalise(type_name)
-            case type
+          def choose_sql_type(type_name, value_constraint, component, options)
+            case MM::DataType.intrinsic_type(type_name)
             when MM::DataType::TYPE_Integer
-              if aa = options[:auto_assign]
+              # The :auto_assign key is set for auto-assigned types, but with a nil value in foreign keys
+              if options.has_key?(:auto_assign)
+                options[:default] = ' AUTO_INCREMENT' if options[:auto_assign]
                 'BIGINT'
               else
                 super
               end
 
             when MM::DataType::TYPE_Money
-              ['DECIMAL', length]
+              'DECIMAL'
 
             when MM::DataType::TYPE_DateTime
               'DATETIME'
@@ -88,15 +84,19 @@ module ActiveFacts
               'DATETIME'
 
             when MM::DataType::TYPE_Binary
-              if aa = normalise_binary_as_guid(type_name, length, value_constraint, options)
-                if aa == :auto_assign
-                  options[:default] = " DEFAULT UNHEX(REPLACE(UUID(),'-',''))"
-                end
-                return ['BINARY', 16]
+              case binary_surrogate(type_name, value_constraint, options)
+              when :guid_fk             # A GUID surrogate that's auto-assigned elsewhere
+                options[:length] = 16
+              when :guid                # A GUID
+                options[:length] = 16
+                options[:default] = " DEFAULT UNHEX(REPLACE(UUID(),'-',''))"
+              when :hash                # A hash of the natural key
+                raise "REVISIT: Implement hash surrogates"
+              else                      # Not a surrogate
+                # MySQL has various non-standard blob types also
               end
+              'BINARY'
 
-              super type_name, length, value_constraint, options
-              # MySQL has various non-standard blob types also
             else
               super
             end
@@ -183,10 +183,6 @@ module ActiveFacts
               WAIT WARNINGS WEEK WEIGHT_STRING X509 XA XID
             }
             super + @mysql_key_words
-          end
-
-          def go s = ''
-            super
           end
 
           def open_escape

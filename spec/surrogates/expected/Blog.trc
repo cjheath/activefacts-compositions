@@ -5,9 +5,9 @@
 #         0: Absorption (existential) in Author of Author Id in "Author has Author Id"
 #         1: Absorption (mandatory) in Author of Author Name in "Author is called Name"
 #     Indices
-#       Primary index to Author over PresenceConstraint over (Author Id in "Author has Author Id") occurs at most one time
+#       Primary index to Author(Author Id in "Author has Author Id")
 #         IndexField part 0 in Author references Absorption (existential) in Author of Author Id in "Author has Author Id"
-#       Unique index to Author over PresenceConstraint over (Author Name in "author-Name is of Author") occurs at most one time
+#       Unique index to Author(Author Name in "author-Name is of Author")
 #         IndexField part 0 in Author references Absorption (mandatory) in Author of Author Name in "Author is called Name"
 #     Foreign keys inbound
 #       Foreign Key from Comment to Author over Absorption (mandatory) in Comment of Author in "Comment was written by Author"
@@ -26,16 +26,16 @@
 #           0: Absorption (existential) in Content of Style in "Content is of Style"
 #           1: Absorption (existential) in Content of Text in "Content has Text"
 #         3: Absorption (mandatory) in Comment of Paragraph in "Comment is on Paragraph"
-#           0: SurrogateKey (mandatory) in Paragraph of Paragraph ID
+#           0: SurrogateKey (foreignkey) in Paragraph of Paragraph ID
 #     Indices
-#       Primary index to Comment over PresenceConstraint over (Comment Id in "Comment has Comment Id") occurs at most one time
+#       Primary index to Comment(Comment Id in "Comment has Comment Id")
 #         IndexField part 0 in Comment references Absorption (existential) in Comment of Comment Id in "Comment has Comment Id"
 #     Foreign keys outbound
 #       Foreign Key from Comment to Author over Absorption (mandatory) in Comment of Author in "Comment was written by Author"
 #         ForeignKeyField part 0 in Comment is Absorption (existential) in Author of Author Id in "Author has Author Id"
 #         IndexField part 0 in Author references Absorption (existential) in Author of Author Id in "Author has Author Id"
 #       Foreign Key from Comment to Paragraph over Absorption (mandatory) in Comment of Paragraph in "Comment is on Paragraph"
-#         ForeignKeyField part 0 in Comment is SurrogateKey (mandatory) in Paragraph of Paragraph ID
+#         ForeignKeyField part 0 in Comment is SurrogateKey (foreignkey) in Paragraph of Paragraph ID
 #         IndexField part 0 in Paragraph references SurrogateKey (surrogate) in Paragraph of Paragraph ID
 #   Composite Mapping (top) of Paragraph
 #     Columns
@@ -50,12 +50,12 @@
 #     Indices
 #       Primary index to Paragraph
 #         IndexField part 0 in Paragraph references SurrogateKey (surrogate) in Paragraph of Paragraph ID
-#       Unique index to Paragraph over PresenceConstraint over (Post, Ordinal in "Post includes Ordinal paragraph") occurs at most one time
+#       Natural index to Paragraph(Post, Ordinal in "Post includes Ordinal paragraph")
 #         IndexField part 0 in Paragraph references Absorption (existential) in Post of Post Id in "Post has Post Id"
 #         IndexField part 1 in Paragraph references Absorption (existential) in Paragraph of Ordinal in "Paragraph involves Ordinal"
 #     Foreign keys inbound
 #       Foreign Key from Comment to Paragraph over Absorption (mandatory) in Comment of Paragraph in "Comment is on Paragraph"
-#         ForeignKeyField part 0 in Comment is SurrogateKey (mandatory) in Paragraph of Paragraph ID
+#         ForeignKeyField part 0 in Comment is SurrogateKey (foreignkey) in Paragraph of Paragraph ID
 #         IndexField part 0 in Paragraph references SurrogateKey (surrogate) in Paragraph of Paragraph ID
 #     Foreign keys outbound
 #       Foreign Key from Paragraph to Post over Absorption (existential) in Paragraph of Post in "Paragraph involves Post"
@@ -70,7 +70,7 @@
 #         2: Absorption (mandatory) in Post of Topic in "Post belongs to Topic"
 #           0: Absorption (existential) in Topic of Topic Id in "Topic has Topic Id"
 #     Indices
-#       Primary index to Post over PresenceConstraint over (Post Id in "Post has Post Id") occurs at most one time
+#       Primary index to Post(Post Id in "Post has Post Id")
 #         IndexField part 0 in Post references Absorption (existential) in Post of Post Id in "Post has Post Id"
 #     Foreign keys inbound
 #       Foreign Key from Paragraph to Post over Absorption (existential) in Paragraph of Post in "Paragraph involves Post"
@@ -91,9 +91,9 @@
 #         2: Absorption (optional) in Topic of Parent Topic in "Topic belongs to parent-Topic"
 #           0: Absorption (existential) in Parent Topic of Topic Id in "Topic has Topic Id"
 #     Indices
-#       Primary index to Topic over PresenceConstraint over (Topic Id in "Topic has Topic Id") occurs at most one time
+#       Primary index to Topic(Topic Id in "Topic has Topic Id")
 #         IndexField part 0 in Topic references Absorption (existential) in Topic of Topic Id in "Topic has Topic Id"
-#       Unique index to Topic over PresenceConstraint over (Topic Name in "Topic is called topic-Name") occurs at most one time
+#       Unique index to Topic(Topic Name in "Topic is called topic-Name")
 #         IndexField part 0 in Topic references Absorption (mandatory) in Topic of Topic Name in "Topic is called topic-Name"
 #     Foreign keys inbound
 #       Foreign Key from Post to Topic over Absorption (mandatory) in Post of Topic in "Post belongs to Topic"

@@ -59,13 +59,18 @@ module ActiveFacts
             SQLServerDataTypeContext
           end
 
-          def auto_increment_modifier
-            ' IDENTITY'
-          end
-
-          def normalise_type(type_name, length, value_constraint, options)
-            type = MM::DataType.normalise(type_name)
+          def choose_sql_type(type_name, value_constraint, component, options)
+            type = MM::DataType.intrinsic_type(type_name)
             case type
+            when MM::DataType::TYPE_Integer
+              # The :auto_assign key is set for auto-assigned types, but with a nil value in foreign keys
+              if options.has_key?(:auto_assign)
+                options[:default] = ' IDENTITY' if options[:auto_assign]
+                'BIGINT'
+              else
+                super
+              end
+
             when MM::DataType::TYPE_Money
               'MONEY'
 
@@ -76,16 +81,26 @@ module ActiveFacts
               'DATETIME'
 
             when MM::DataType::TYPE_Binary
-              if aa = normalise_binary_as_guid(type_name, length, value_constraint, options)
-                if aa == :auto_assign
-                  options[:default] = " DEFAULT NEWID()"
+              length = options[:length]
+              case binary_surrogate(type_name, value_constraint, options)
+              when :guid_fk             # A GUID surrogate that's auto-assigned elsewhere
+                'UNIQUEIDENTIFIER'
+              when :guid                # A GUID
+                options[:default] = " DEFAULT NEWID()"
+                # NEWSEQUENTIALID improves indexing locality and page fill factor.
+                # However, it makes values more easily guessable, and
+                # exposes the MAC address of the generating computer(!)
+                # options[:default] = " DEFAULT NEWSEQUENTIALID()"
+                'UNIQUEIDENTIFIER'
+              when :hash                # A hash of the natural key
+                raise "REVISIT: Implement hash surrogates"
+              else                      # Not a surrogate
+                length = options[:length]
+                if length && length <= 8192
+                  super
+                else
+                  'IMAGE'
                 end
-                return ['UNIQUEIDENTIFIER', nil]
-              end
-              if length && length <= 8192
-                super
-              else
-                'IMAGE'
               end
             else
               super
@@ -124,7 +139,7 @@ module ActiveFacts
           # Although SQL Server accepts ; as a statement separator,
           # it runs commands in batches when the "GO" command is issued.
           def go s = ''
-            "#{s}\nGO\n"
+            "#{s.sub(/\A\n+/,'')}\nGO\n"
           end
 
           def open_escape

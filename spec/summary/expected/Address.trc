@@ -1,6 +1,6 @@
 Summary of test
 Company
-	Company->Company Name[1.0] as "Company Name"
+	Company->Company Name[PN1] as "Company Name"
 	Company->Address?->Street Number? as "Address Street Number"
 	Company->Address?->Street->First Street Line as "Address Street First Street Line"
 	Company->Address?->Street->Second Street Line? as "Address Street Second Street Line"
@@ -10,8 +10,8 @@ Company
 		### restricted to {1000..9999}
 	### SubsetConstraint((Street, Third Street Line in "Street includes third-Street Line") only if (Street, Second Street Line in "Street includes second-Street Line"))
 Person
-	Person->Family->Family Name[1.0] as "Family Name"
-	Person->Given Names[1.1] as "Given Names"
+	Person->Family->Family Name[PN1.0] as "Family Name"
+	Person->Given Names[PN1.1] as "Given Names"
 	Person->Address?->Street Number? as "Address Street Number"
 	Person->Address?->Street->First Street Line as "Address Street First Street Line"
 	Person->Address?->Street->Second Street Line? as "Address Street Second Street Line"

@@ -1,7 +1,7 @@
 CREATE TABLE OT (
 	-- OT is called Name
 	Name                                    VARCHAR NOT NULL,
-	-- Primary index to OT over PresenceConstraint over (Name in "OT is called Name") occurs at most one time
+	-- Primary index to OT(Name in "OT is called Name")
 	PRIMARY KEY(Name)
 );
 
@@ -11,7 +11,7 @@ CREATE TABLE VTP (
 	VTName                                  VARCHAR NOT NULL,
 	-- VTP involves Name
 	Name                                    VARCHAR NOT NULL,
-	-- Primary index to VTP over PresenceConstraint over (VT, Name in "VT has facet called Name") occurs at most one time
+	-- Primary index to VTP(VT, Name in "VT has facet called Name")
 	PRIMARY KEY(VTName, Name),
 	FOREIGN KEY (VTName) REFERENCES OT (Name)
 );
@@ -24,7 +24,7 @@ CREATE TABLE VTPRestriction (
 	VTPVTName                               VARCHAR NOT NULL,
 	-- VTPRestriction involves VTP that involves Name
 	VTPName                                 VARCHAR NOT NULL,
-	-- Primary index to VTPRestriction over PresenceConstraint over (VT, VTP in "VT receives VTP") occurs at most one time
+	-- Primary index to VTPRestriction(VT, VTP in "VT receives VTP")
 	PRIMARY KEY(VTName, VTPVTName, VTPName),
 	FOREIGN KEY (VTName) REFERENCES OT (Name),
 	FOREIGN KEY (VTPVTName, VTPName) REFERENCES VTP (VTName, Name)

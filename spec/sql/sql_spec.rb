@@ -2,7 +2,6 @@
 # Test the relational composition from CQL files by comparing generated SQL output
 #
 
-ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../../Gemfile', __FILE__)
 require 'bundler/setup' # Set up gems listed in the Gemfile.
 
 require 'spec_helper'
@@ -11,7 +10,7 @@ require 'activefacts/compositions/names'
 require 'activefacts/generator/sql'
 require 'activefacts/input/cql'
 
-SQL_CQL_DIR = Pathname.new(__FILE__+'/../../cql').relative_path_from(Pathname(Dir.pwd)).to_s
+SQL_CQL_DIR ||= Pathname.new(__FILE__+'/../../cql').relative_path_from(Pathname(Dir.pwd)).to_s
 SQL_TEST_DIR = Pathname.new(__FILE__+'/..').relative_path_from(Pathname(Dir.pwd)).to_s
 
 RSpec::Matchers.define :be_like do |expected|
@@ -67,39 +66,4 @@ describe "SQL schema from CQL" do
       end
     end
   end
-
-  context "underscores as word separator" do
-    it 'should generate schema with underscores in table names and field names' do
-      vocabulary = ActiveFacts::Input::CQL.readfile(SQL_CQL_DIR + '/MagnetPole.cql')
-      vocabulary.finalise
-      compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, "test")
-      compositor.generate
-
-      output = ActiveFacts::Generators::SQL.new(compositor.composition, {'columns' => 'snake'}).generate
-      expect(output).to eq <<EOS
-CREATE TABLE Magnet (
-	-- Magnet has Magnet AutoCounter
-	magnet_auto_counter                     BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-	-- Primary index to Magnet over PresenceConstraint over (Magnet AutoCounter in "Magnet has Magnet AutoCounter") occurs at most one time
-	PRIMARY KEY(magnet_auto_counter)
-);
-
-
-CREATE TABLE MagnetPole (
-	-- MagnetPole belongs to Magnet that has Magnet AutoCounter
-	magnet_auto_counter                     BIGINT NOT NULL,
-	-- MagnetPole Is North
-	is_north                                BOOLEAN,
-	-- Primary index to MagnetPole over PresenceConstraint over (Magnet, Is North in "MagnetPole belongs to Magnet", "MagnetPole is north") occurs at most one time
-	PRIMARY KEY(magnet_auto_counter, is_north),
-	FOREIGN KEY (magnet_auto_counter) REFERENCES Magnet (magnet_auto_counter)
-);
-
-
-EOS
-
-    end
-  end
-
-
 end

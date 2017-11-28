@@ -5,9 +5,9 @@ CREATE TABLE author (
 	author_id                               BIGSERIAL NOT NULL,
 	-- Author is called Name
 	author_name                             VARCHAR(64) NOT NULL,
-	-- Primary index to Author over PresenceConstraint over (Author Id in "Author has Author Id") occurs at most one time
+	-- Primary index to Author(Author Id in "Author has Author Id")
 	PRIMARY KEY(author_id),
-	-- Unique index to Author over PresenceConstraint over (Author Name in "author-Name is of Author") occurs at most one time
+	-- Unique index to Author(Author Name in "author-Name is of Author")
 	UNIQUE(author_name)
 );
 
@@ -23,7 +23,7 @@ CREATE TABLE comment (
 	content_text                            VARCHAR(MAX) NOT NULL,
 	-- Comment is on Paragraph
 	paragraph_id                            BIGINT NOT NULL,
-	-- Primary index to Comment over PresenceConstraint over (Comment Id in "Comment has Comment Id") occurs at most one time
+	-- Primary index to Comment(Comment Id in "Comment has Comment Id")
 	PRIMARY KEY(comment_id),
 	FOREIGN KEY (author_id) REFERENCES author (author_id)
 );
@@ -40,10 +40,10 @@ CREATE TABLE paragraph (
 	content_style                           VARCHAR(20) NULL,
 	-- Paragraph contains Content that has Text
 	content_text                            VARCHAR(MAX) NOT NULL,
+	-- Natural index to Paragraph(Post, Ordinal in "Post includes Ordinal paragraph")
+	UNIQUE(post_id, ordinal),
 	-- Primary index to Paragraph
-	PRIMARY KEY(paragraph_id),
-	-- Unique index to Paragraph over PresenceConstraint over (Post, Ordinal in "Post includes Ordinal paragraph") occurs at most one time
-	UNIQUE(post_id, ordinal)
+	PRIMARY KEY(paragraph_id)
 );
 
 
@@ -54,7 +54,7 @@ CREATE TABLE post (
 	author_id                               BIGINT NOT NULL,
 	-- Post belongs to Topic that has Topic Id
 	topic_id                                BIGINT NOT NULL,
-	-- Primary index to Post over PresenceConstraint over (Post Id in "Post has Post Id") occurs at most one time
+	-- Primary index to Post(Post Id in "Post has Post Id")
 	PRIMARY KEY(post_id),
 	FOREIGN KEY (author_id) REFERENCES author (author_id)
 );
@@ -67,9 +67,9 @@ CREATE TABLE topic (
 	topic_name                              VARCHAR(64) NOT NULL,
 	-- maybe Topic belongs to parent-Topic and Topic has Topic Id
 	parent_topic_id                         BIGINT NULL,
-	-- Primary index to Topic over PresenceConstraint over (Topic Id in "Topic has Topic Id") occurs at most one time
+	-- Primary index to Topic(Topic Id in "Topic has Topic Id")
 	PRIMARY KEY(topic_id),
-	-- Unique index to Topic over PresenceConstraint over (Topic Name in "Topic is called topic-Name") occurs at most one time
+	-- Unique index to Topic(Topic Name in "Topic is called topic-Name")
 	UNIQUE(topic_name),
 	FOREIGN KEY (parent_topic_id) REFERENCES topic (topic_id)
 );
@@ -78,11 +78,8 @@ CREATE TABLE topic (
 ALTER TABLE comment
 	ADD FOREIGN KEY (paragraph_id) REFERENCES paragraph (paragraph_id);
 
-
 ALTER TABLE paragraph
 	ADD FOREIGN KEY (post_id) REFERENCES post (post_id);
 
-
 ALTER TABLE post
 	ADD FOREIGN KEY (topic_id) REFERENCES topic (topic_id);
-

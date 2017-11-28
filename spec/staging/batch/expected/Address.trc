@@ -1,10 +1,10 @@
 Summary of Address
 Batch
-	Batch->Batch ID[1.0] as "Batch ID"
+	Batch->Batch ID[PN1] as "Batch ID"
 	Batch->Start DateTime as "Start Date Time"
 Company STG
-	Company STG->Company Name[1.0] as "Company Name"
-	Company STG->{Batch}->[Batch ID] as "Batch ID"
+	Company STG->Company Name[PN1] as "Company Name"
+	Company STG->[Batch]->Batch ID as "Batch ID"
 	Company STG->LoadTime as "Load Time"
 	Company STG->RecordSource as "Record Source"
 	Company STG->Address?->Street Number? as "Address Street Number"
@@ -16,9 +16,9 @@ Company STG
 		### restricted to {1000..9999}
 	### SubsetConstraint((Street, Third Street Line in "Street includes third-Street Line") only if (Street, Second Street Line in "Street includes second-Street Line"))
 Person STG
-	Person STG->Family->Family Name[1.0] as "Family Name"
-	Person STG->Given Names[1.1] as "Given Names"
-	Person STG->{Batch}->[Batch ID] as "Batch ID"
+	Person STG->Family->Family Name[PN1.0] as "Family Name"
+	Person STG->Given Names[PN1.1] as "Given Names"
+	Person STG->[Batch]->Batch ID as "Batch ID"
 	Person STG->LoadTime as "Load Time"
 	Person STG->RecordSource as "Record Source"
 	Person STG->Address?->Street Number? as "Address Street Number"

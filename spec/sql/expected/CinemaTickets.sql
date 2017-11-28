@@ -3,7 +3,7 @@ CREATE TABLE AllocatableCinemaSection (
 	CinemaID                                BIGINT NOT NULL,
 	-- AllocatableCinemaSection involves Section that has Section Name
 	SectionName                             VARCHAR NOT NULL,
-	-- Primary index to AllocatableCinemaSection over PresenceConstraint over (Cinema, Section in "Cinema provides allocated seating in Section") occurs at most one time
+	-- Primary index to AllocatableCinemaSection(Cinema, Section in "Cinema provides allocated seating in Section")
 	PRIMARY KEY(CinemaID, SectionName)
 );
 
@@ -35,9 +35,9 @@ CREATE TABLE Booking (
 	CollectionCode                          INTEGER NULL,
 	-- maybe Booking is for seats in Section that has Section Name
 	SectionName                             VARCHAR NULL,
-	-- Primary index to Booking over PresenceConstraint over (Booking Nr in "Booking has Booking Nr") occurs at most one time
+	-- Primary index to Booking(Booking Nr in "Booking has Booking Nr")
 	PRIMARY KEY(BookingNr),
-	-- Unique index to Booking over PresenceConstraint over (Person, Session in "Person booked Session for Number of places") occurs one time
+	-- Unique index to Booking(Person, Session in "Person booked Session for Number of places")
 	UNIQUE(PersonID, SessionCinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute)
 );
 
@@ -47,9 +47,9 @@ CREATE TABLE Cinema (
 	CinemaID                                BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- Cinema has Name
 	Name                                    VARCHAR NOT NULL,
-	-- Primary index to Cinema over PresenceConstraint over (Cinema ID in "Cinema has Cinema ID") occurs at most one time
+	-- Primary index to Cinema(Cinema ID in "Cinema has Cinema ID")
 	PRIMARY KEY(CinemaID),
-	-- Unique index to Cinema over PresenceConstraint over (Name in "Cinema has Name") occurs at most one time
+	-- Unique index to Cinema(Name in "Cinema has Name")
 	UNIQUE(Name)
 );
 
@@ -61,9 +61,9 @@ CREATE TABLE Film (
 	Name                                    VARCHAR NOT NULL,
 	-- maybe Film was made in Year that has Year Nr
 	YearNr                                  INTEGER NULL CHECK((YearNr >= 1900 AND YearNr <= 9999)),
-	-- Primary index to Film over PresenceConstraint over (Film ID in "Film has Film ID") occurs at most one time
+	-- Primary index to Film(Film ID in "Film has Film ID")
 	PRIMARY KEY(FilmID),
-	-- Unique index to Film over PresenceConstraint over (Name, Year in "Film has Name", "Film was made in Year") occurs at most one time
+	-- Unique index to Film(Name, Year in "Film has Name", "Film was made in Year")
 	UNIQUE(Name, YearNr)
 );
 
@@ -75,9 +75,9 @@ CREATE TABLE Person (
 	EncryptedPassword                       VARCHAR NULL,
 	-- maybe Person has login-Name
 	LoginName                               VARCHAR NULL,
-	-- Primary index to Person over PresenceConstraint over (Person ID in "Person has Person ID") occurs at most one time
+	-- Primary index to Person(Person ID in "Person has Person ID")
 	PRIMARY KEY(PersonID),
-	-- Unique index to Person over PresenceConstraint over (Login Name in "Person has login-Name") occurs at most one time
+	-- Unique index to Person(Login Name in "Person has login-Name")
 	UNIQUE(LoginName)
 );
 
@@ -89,7 +89,7 @@ CREATE TABLE PlacesPaid (
 	PaymentMethodCode                       VARCHAR NOT NULL CHECK(PaymentMethodCode = 'Card' OR PaymentMethodCode = 'Cash' OR PaymentMethodCode = 'Gift Voucher' OR PaymentMethodCode = 'Loyalty Voucher'),
 	-- Places Paid involves Number
 	Number                                  SMALLINT NOT NULL CHECK(Number >= 1),
-	-- Primary index to Places Paid over PresenceConstraint over (Booking, Payment Method in "Number of places for Booking have been paid for by Payment Method") occurs one time
+	-- Primary index to Places Paid(Booking, Payment Method in "Number of places for Booking have been paid for by Payment Method")
 	PRIMARY KEY(BookingNr, PaymentMethodCode),
 	FOREIGN KEY (BookingNr) REFERENCES Booking (BookingNr)
 );
@@ -104,7 +104,7 @@ CREATE TABLE Seat (
 	SeatNumber                              SMALLINT NOT NULL,
 	-- maybe Seat is in Section that has Section Name
 	SectionName                             VARCHAR NULL,
-	-- Primary index to Seat over PresenceConstraint over (Row, Seat Number in "Seat is in Row", "Seat has Seat Number") occurs at most one time
+	-- Primary index to Seat(Row, Seat Number in "Seat is in Row", "Seat has Seat Number")
 	PRIMARY KEY(RowCinemaID, RowNr, SeatNumber),
 	FOREIGN KEY (RowCinemaID) REFERENCES Cinema (CinemaID)
 );
@@ -119,7 +119,7 @@ CREATE TABLE SeatAllocation (
 	AllocatedSeatRowNr                      CHARACTER(2) NOT NULL,
 	-- Seat Allocation involves allocated-Seat and Seat has Seat Number
 	AllocatedSeatNumber                     SMALLINT NOT NULL,
-	-- Primary index to Seat Allocation over PresenceConstraint over (Booking, Allocated Seat in "Booking has allocated-Seat") occurs at most one time
+	-- Primary index to Seat Allocation(Booking, Allocated Seat in "Booking has allocated-Seat")
 	PRIMARY KEY(BookingNr, AllocatedSeatRowCinemaID, AllocatedSeatRowNr, AllocatedSeatNumber),
 	FOREIGN KEY (AllocatedSeatRowCinemaID, AllocatedSeatRowNr, AllocatedSeatNumber) REFERENCES Seat (RowCinemaID, RowNr, SeatNumber),
 	FOREIGN KEY (BookingNr) REFERENCES Booking (BookingNr)
@@ -145,7 +145,7 @@ CREATE TABLE "Session" (
 	UsesAllocatedSeating                    BOOLEAN,
 	-- Session involves Film that has Film ID
 	FilmID                                  BIGINT NOT NULL,
-	-- Primary index to Session over PresenceConstraint over (Cinema, Session Time in "Cinema shows Film on Session Time") occurs one time
+	-- Primary index to Session(Cinema, Session Time in "Cinema shows Film on Session Time")
 	PRIMARY KEY(CinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute),
 	FOREIGN KEY (CinemaID) REFERENCES Cinema (CinemaID),
 	FOREIGN KEY (FilmID) REFERENCES Film (FilmID)
@@ -171,7 +171,7 @@ CREATE TABLE TicketPricing (
 	HighDemand                              BOOLEAN NOT NULL,
 	-- Ticket Pricing involves Price
 	Price                                   DECIMAL NOT NULL,
-	-- Primary index to Ticket Pricing over PresenceConstraint over (Session Time, Cinema, Section, High Demand in "tickets on Session Time at Cinema in Section for High Demand have Price") occurs one time
+	-- Primary index to Ticket Pricing(Session Time, Cinema, Section, High Demand in "tickets on Session Time at Cinema in Section for High Demand have Price")
 	PRIMARY KEY(SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute, CinemaID, SectionName, HighDemand),
 	FOREIGN KEY (CinemaID) REFERENCES Cinema (CinemaID)
 );
@@ -180,11 +180,8 @@ CREATE TABLE TicketPricing (
 ALTER TABLE AllocatableCinemaSection
 	ADD FOREIGN KEY (CinemaID) REFERENCES Cinema (CinemaID);
 
-
 ALTER TABLE Booking
 	ADD FOREIGN KEY (PersonID) REFERENCES Person (PersonID);
 
-
 ALTER TABLE Booking
 	ADD FOREIGN KEY (SessionCinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute) REFERENCES "Session" (CinemaID, SessionTimeYearNr, SessionTimeMonthNr, SessionTimeDay, SessionTimeHour, SessionTimeMinute);
-

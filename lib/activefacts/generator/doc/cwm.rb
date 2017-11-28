@@ -386,7 +386,7 @@ module ActiveFacts
 
         # Return CWM type, typenum for the passed base type
         def normalise_type_cwm(type_name, length)
-          type = MM::DataType.normalise(type_name)
+          type = MM::DataType.intrinsic_type(type_name)
 
           case type
           when MM::DataType::TYPE_Boolean;  ['boolean', 16]
@@ -408,8 +408,8 @@ module ActiveFacts
             ['real', 7, data_type_context.default_length(type, type_name)]
           when MM::DataType::TYPE_Decimal;  ['decimal', 3]
           when MM::DataType::TYPE_Money;    ['decimal', 3]
-          when MM::DataType::TYPE_Char;     ['char', 12, length || data_type_context.char_default_length]
-          when MM::DataType::TYPE_String;   ['varchar', 12, length || data_type_context.varchar_default_length]
+          when MM::DataType::TYPE_Char;     ['char', 12, length]
+          when MM::DataType::TYPE_String;   ['varchar', 12, length]
           when MM::DataType::TYPE_Text;     ['text', 2005, length || 'MAX']
           when MM::DataType::TYPE_Date;     ['date', 91]
           when MM::DataType::TYPE_Time;     ['time', 92]
@@ -490,7 +490,7 @@ module ActiveFacts
           end
 
           def surrogate_type
-            type_name, = choose_integer_type(0, 2**(default_surrogate_length-1)-1)
+            type_name, = choose_integer_range(0, 2**(default_surrogate_length-1)-1)
             type_name
           end
 
@@ -510,14 +510,6 @@ module ActiveFacts
           def default_varchar_type
             (@unicode ? 'NATIONAL ' : '') +
             'VARCHAR'
-          end
-
-          def char_default_length
-            nil
-          end
-
-          def varchar_default_length
-            nil
           end
 
           def default_surrogate_length

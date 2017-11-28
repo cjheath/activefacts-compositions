@@ -6,7 +6,7 @@
 #         1: Absorption (subtype) in OT of DOT (full) in "OT is a DOT"
 #           0: Absorption (subtype) in DOT of VT in "DOT is a VT"
 #     Indices
-#       Primary index to OT over PresenceConstraint over (Name in "OT is called Name") occurs at most one time
+#       Primary index to OT(Name in "OT is called Name")
 #         IndexField part 0 in OT references Absorption (existential) in OT of Name in "OT is called Name"
 #     Foreign keys inbound
 #       Foreign Key from VTP to OT over Absorption (existential) in VTP of VT in "VTP involves VT"
@@ -24,7 +24,7 @@
 #               0: Absorption (existential) in OT of Name in "OT is called Name"
 #         1: Absorption (existential) in VTP of Name in "VTP involves Name"
 #     Indices
-#       Primary index to VTP over PresenceConstraint over (VT, Name in "VT has facet called Name") occurs at most one time
+#       Primary index to VTP(VT, Name in "VT has facet called Name")
 #         IndexField part 0 in VTP references Absorption (existential) in OT of Name in "OT is called Name"
 #         IndexField part 1 in VTP references Absorption (existential) in VTP of Name in "VTP involves Name"
 #     Foreign keys inbound
@@ -51,7 +51,7 @@
 #                 0: Absorption (existential) in OT of Name in "OT is called Name"
 #           1: Absorption (existential) in VTP of Name in "VTP involves Name"
 #     Indices
-#       Primary index to VTPRestriction over PresenceConstraint over (VT, VTP in "VT receives VTP") occurs at most one time
+#       Primary index to VTPRestriction(VT, VTP in "VT receives VTP")
 #         IndexField part 0 in VTPRestriction references Absorption (existential) in OT of Name in "OT is called Name"
 #         IndexField part 1 in VTPRestriction references Absorption (existential) in OT of Name in "OT is called Name"
 #         IndexField part 2 in VTPRestriction references Absorption (existential) in VTP of Name in "VTP involves Name"

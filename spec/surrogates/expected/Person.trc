@@ -8,6 +8,6 @@
 #     Indices
 #       Primary index to Person
 #         IndexField part 0 in Person references SurrogateKey (surrogate) in Person of Person ID
-#       Unique index to Person over PresenceConstraint over (Family Name, Given Name in "Person has family-Name", "Person has given-Name") occurs at most one time
+#       Natural index to Person(Family Name, Given Name in "Person has family-Name", "Person has given-Name")
 #         IndexField part 0 in Person references Absorption (existential) in Person of Family Name in "Person has family-Name"
 #         IndexField part 1 in Person references Absorption (existential) in Person of Given Name in "Person has given-Name"

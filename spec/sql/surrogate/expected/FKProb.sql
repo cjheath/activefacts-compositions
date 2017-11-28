@@ -5,10 +5,10 @@ CREATE TABLE ot (
 	ot_id                                   BIGSERIAL NOT NULL,
 	-- OT is called Name
 	name                                    VARCHAR NOT NULL,
+	-- Natural index to OT(Name in "OT is called Name")
+	UNIQUE(name),
 	-- Primary index to OT
-	PRIMARY KEY(ot_id),
-	-- Unique index to OT over PresenceConstraint over (Name in "OT is called Name") occurs at most one time
-	UNIQUE(name)
+	PRIMARY KEY(ot_id)
 );
 
 
@@ -19,10 +19,10 @@ CREATE TABLE vtp (
 	vt_ot_id                                BIGINT NOT NULL,
 	-- VTP involves Name
 	name                                    VARCHAR NOT NULL,
+	-- Natural index to VTP(VT, Name in "VT has facet called Name")
+	UNIQUE(vt_ot_id, name),
 	-- Primary index to VTP
 	PRIMARY KEY(vtp_id),
-	-- Unique index to VTP over PresenceConstraint over (VT, Name in "VT has facet called Name") occurs at most one time
-	UNIQUE(vt_ot_id, name),
 	FOREIGN KEY (vt_ot_id) REFERENCES ot (ot_id)
 );
 
@@ -32,7 +32,7 @@ CREATE TABLE vtp_restriction (
 	vt_ot_id                                BIGINT NOT NULL,
 	-- VTPRestriction involves VTP
 	vtp_id                                  BIGINT NOT NULL,
-	-- Primary index to VTPRestriction over PresenceConstraint over (VT, VTP in "VT receives VTP") occurs at most one time
+	-- Primary index to VTPRestriction(VT, VTP in "VT receives VTP")
 	PRIMARY KEY(vt_ot_id, vtp_id),
 	FOREIGN KEY (vt_ot_id) REFERENCES ot (ot_id),
 	FOREIGN KEY (vtp_id) REFERENCES vtp (vtp_id)
