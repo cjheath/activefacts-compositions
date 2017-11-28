@@ -95,11 +95,12 @@ module ActiveFacts
       end
 
       def column_type component, column_name
+        # Get the base data type name and options:
         type_name, options = component.data_type(data_type_context)
         options ||= {}
-        length = options[:length]
         value_constraint = options[:value_constraint]
-        type_name, length = normalise_type(type_name, length, value_constraint, options)
+        type_name = choose_sql_type(type_name, value_constraint, options)
+        length = options[:length]
 
         "#{
           type_name
@@ -109,8 +110,6 @@ module ActiveFacts
           ((options[:mandatory] ? ' NOT' : '') + ' NULL') if options.has_key?(:mandatory)
         }#{
           options[:default] || ''
-        }#{
-          auto_increment_modifier if a = options[:auto_assign] && a != 'assert'
         }#{
           check_clause(column_name, value_constraint) if value_constraint
         }"

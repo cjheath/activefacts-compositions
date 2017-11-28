@@ -23,14 +23,13 @@ module ActiveFacts
         # Options available in this flavour of SQL
         def options
           {
-            delay_fks: ['Boolean', "Delay emitting all foreign keys until the bottom of the file"],
             keywords: ['Boolean', "Quote all keywords, not just reserved words"],
             restrict: ['String', "Restrict generation to tables in the specified group (e.g. bdv, rdv)"],
             joiner: ['String', "Use 'str' instead of the default joiner between words in table and column names"],
             unicode: ['Boolean', "Use Unicode for all text fields by default"],
             tables: [%w{cap title camel snake shout}, "Case to use for table names"],
             columns: [%w{cap title camel snake shout}, "Case to use for table names"],
-            guids: ['Boolean', "Use GUID or UUID for surrogate keys instead of counters"],
+            surrogates: [%w{counter guid hash}, "Method to use for assigning surrogate keys"],
             fks: [%w{no yes delay}, "Emit foreign keys, delay them to the end, or omit them"],
             # Legacy: datavault: ['String', "Generate 'raw' or 'business' data vault tables"],
           }
@@ -46,7 +45,6 @@ module ActiveFacts
 
           @quote_keywords = {nil=>true, 't'=>true, 'f'=>false, 'y'=>true, 'n'=>false}[@options.delete 'keywords']
           @quote_keywords = false if @keywords == nil  # Set default
-          @delay_fks = @options.delete "delay_fks"
           case (@options.delete "fks" || true)
           when true, '', 't', 'y', 'yes'
             @fks = true
@@ -58,7 +56,8 @@ module ActiveFacts
           end
           @unicode = @options.delete "unicode"
           @restrict = @options.delete "restrict"
-          @guids = {nil=>false, true=>true, 't'=>true, 'f'=>false, 'y'=>true, 'n'=>false}[@options.delete 'guids']
+          @surrogate_method = @options.delete('surrogates') || 'counter'
+          raise "Unknown surrogate assignment method" unless %w{counter guid hash}.include?(@surrogate_method)
 
           # Name configuration options:
           @joiner = @options.delete('joiner')
@@ -86,7 +85,7 @@ module ActiveFacts
         end
 
         def data_type_context
-          @data_type_context ||= data_type_context_class.new :guids => @guids
+          @data_type_context ||= data_type_context_class.new(surrogate_method: @surrogate_method)
         end
 
         def data_type_context_class
@@ -114,67 +113,64 @@ module ActiveFacts
           ''
         end
 
-        # text to add to a column's data type to make it auto-increment
-        def auto_increment_modifier
-          ' GENERATED ALWAYS AS IDENTITY'
-        end
-
         def index_kind(index)
           ''
         end
 
-        def normalise_binary_as_guid(type_name, length, value_constraint, options)
-          if type_name =~ /^(guid|uuid)$/i && (!length || length == 16)
+        def binary_surrogate(type_name, value_constraint, options)
+          if type_name =~ /^(guid|uuid)$/i
+            options[:length] ||= 16
             if ![nil, ''].include?(options[:auto_assign])
               options.delete(:auto_assign)  # Don't auto-assign foreign keys
-              :auto_assign
+              :guid
             else
-              true
+              :guid_fk
             end
+          # REVISIT: Detect Hash keys here and return :hash
           else
             false
           end
         end
 
         # Return SQL type and (modified?) length for the passed base type
-        def normalise_type(type_name, length, value_constraint, options)
-          type = MM::DataType.normalise(type_name)
-
-          case type
+        def choose_sql_type(type_name, value_constraint, options)
+          case MM::DataType.intrinsic_type(type_name)
           when MM::DataType::TYPE_Boolean
             data_type_context.boolean_type
 
           when MM::DataType::TYPE_Integer
             # The :auto_assign key is set for auto-assigned types, but with a nil value in foreign keys
+            length = options[:length]
             if options.has_key?(:auto_assign)
-              MM::DataType.normalise_int_length(
-                'int',
-                data_type_context.default_autoincrement_length,
-                value_constraint,
-                data_type_context
-              )[0]
-            else
-              v, = MM::DataType.normalise_int_length(type_name, length, value_constraint, data_type_context)
-              v   # The typename here has the appropriate length, don't return a length
+              options[:default] ||= ' GENERATED ALWAYS AS IDENTITY' if options[:auto_assign]
+              length = data_type_context.default_autoincrement_length
+              type_name = 'int'
+            end
+            if chosen = MM::DataType.choose_integer(type_name, length, value_constraint, data_type_context)
+              options.delete(:length)
+              chosen
+            else  # No available integer seems to suit. Use the defined type and length
+              type_name
             end
 
           when MM::DataType::TYPE_Real
-            ["FLOAT", data_type_context.default_length(type, type_name)]
+            'FLOAT'
 
           when MM::DataType::TYPE_Decimal
-            ['DECIMAL', length]
+            'DECIMAL'
 
           when MM::DataType::TYPE_Money
-            ['DECIMAL', length]
+            'DECIMAL'
 
           when MM::DataType::TYPE_Char
-            [data_type_context.default_char_type, length || data_type_context.char_default_length]
+            data_type_context.default_char_type
 
           when MM::DataType::TYPE_String
-            [data_type_context.default_varchar_type, length || data_type_context.varchar_default_length]
+            data_type_context.default_varchar_type
 
           when MM::DataType::TYPE_Text
-            [data_type_context.default_text_type, length || 'MAX']
+            options[:length] ||= 'MAX'
+            data_type_context.default_text_type
 
           when MM::DataType::TYPE_Date
             'DATE'
@@ -189,16 +185,15 @@ module ActiveFacts
             'TIMESTAMP'
 
           when MM::DataType::TYPE_Binary
-            if normalise_binary_as_guid(type_name, length, value_constraint, options)
-              length ||= 16
-            end
-            if length
-              ['BINARY', length]
+            # If it's a surrogate, that might change the length we use
+            binary_surrogate(type_name, value_constraint, options)
+            if options[:length]
+              'BINARY'          # Fixed length
             else
-              ['VARBINARY', length]
+              'VARBINARY'
             end
           else
-            [type_name, length]
+            type_name
           end
         end
 
@@ -400,7 +395,7 @@ module ActiveFacts
 
         class SQLDataTypeContext < MM::DataType::Context
           def initialize options = {}
-            @guids = options.delete :guids
+            @surrogate_method = options.delete(:surrogate_method) || "counter"
             super
           end
 
@@ -447,12 +442,19 @@ module ActiveFacts
             safe_column_name
           end
 
+          def hash_type
+            ['BINARY', {length: 32, auto_assign: 'hash' }]
+          end
+
           # What type to use for a Metamodel::SurrogateKey
           def surrogate_type
-            if @guids
-              "GUID"
-            else
-              type_name, = choose_integer_type(0, 2**(default_autoincrement_length-1)-1)
+            case @surrogate_method
+            when 'guid'
+              ["GUID", {auto_assign: 'guid'}]
+            when 'hash'
+              hash_type
+            else  # counter
+              type_name, min, max, length = choose_integer_range(0, 2**(default_autoincrement_length-1)-1)
               type_name
             end
           end
@@ -474,14 +476,6 @@ module ActiveFacts
           def default_varchar_type
             (@unicode ? 'NATIONAL ' : '') +
             'VARCHAR'
-          end
-
-          def char_default_length
-            nil
-          end
-
-          def varchar_default_length
-            nil
           end
 
           # Number of bits in an auto-counter

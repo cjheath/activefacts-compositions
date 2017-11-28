@@ -50,11 +50,11 @@ CREATE TABLE Container (
 	-- Container has Alternate Date Time
 	AlternateDateTime                       TIMESTAMP NOT NULL,
 	-- Container has Alternate Double
-	AlternateDouble                         FLOAT(53) NOT NULL,
+	AlternateDouble                         FLOAT NOT NULL,
 	-- Container has Alternate Fixed Length Text
 	AlternateFixedLengthText                CHARACTER NOT NULL,
 	-- Container has Alternate Float
-	AlternateFloat                          FLOAT(53) NOT NULL,
+	AlternateFloat                          FLOAT NOT NULL,
 	-- Container has Alternate Guid
 	AlternateGuid                           BINARY(16) NOT NULL,
 	-- Container has Alternate Int
@@ -120,7 +120,7 @@ CREATE TABLE Container (
 	-- Container has Fundamental Money
 	FundamentalMoney                        DECIMAL NOT NULL,
 	-- Container has Fundamental Real
-	FundamentalReal                         FLOAT(53) NOT NULL,
+	FundamentalReal                         FLOAT NOT NULL,
 	-- Container has Fundamental String
 	FundamentalString                       VARCHAR NOT NULL,
 	-- Container has Fundamental Text
@@ -140,17 +140,17 @@ CREATE TABLE Container (
 	-- Container has Int8
 	Int8                                    SMALLINT NOT NULL,
 	-- Container has Int80
-	Int80                                   int NOT NULL,
+	Int80                                   Integer(80) NOT NULL,
 	-- Container has Large
 	"Large"                                 BIGINT NOT NULL CHECK(("Large" >= -9223372036854775808999 AND "Large" <= 9223372036854775807999)),
 	-- Container has Quad
 	Quad                                    BIGINT NOT NULL CHECK((Quad >= -9223372036854775808 AND Quad <= 9223372036854775807)),
 	-- Container has Real32
-	Real32                                  FLOAT(53) NOT NULL,
+	Real32                                  FLOAT(32) NOT NULL,
 	-- Container has Real64
-	Real64                                  FLOAT(53) NOT NULL,
+	Real64                                  FLOAT(64) NOT NULL,
 	-- Container has Real80
-	Real80                                  FLOAT(53) NOT NULL,
+	Real80                                  FLOAT(80) NOT NULL,
 	-- Container has String255
 	String255                               VARCHAR(255) NOT NULL,
 	-- Container has Text65536

@@ -17,7 +17,7 @@ CREATE TABLE AAC_SUB (
 
 CREATE TABLE AG_ET (
 	-- AG_ET has Alternate Guid
-	ALTERNATE_GUID                          RAW(32) NOT NULL DEFAULT SYS_GUID(),
+	ALTERNATE_GUID                          RAW(16) NOT NULL DEFAULT SYS_GUID(),
 	-- Primary index to AG_ET(Alternate Guid in "AG_ET has Alternate Guid")
 	PRIMARY KEY(ALTERNATE_GUID)
 );
@@ -25,7 +25,7 @@ CREATE TABLE AG_ET (
 
 CREATE TABLE AG_SUB (
 	-- AG_Sub is a kind of AG_ET that has Alternate Guid
-	AG_ET_ALTERNATE_GUID                    RAW(32) NOT NULL,
+	AG_ET_ALTERNATE_GUID                    RAW(16) NOT NULL,
 	-- Primary index to AG_Sub(AG_ET in "AG_Sub is a kind of AG_ET")
 	PRIMARY KEY(AG_ET_ALTERNATE_GUID),
 	FOREIGN KEY (AG_ET_ALTERNATE_GUID) REFERENCES AG_ET (ALTERNATE_GUID)
@@ -50,13 +50,13 @@ CREATE TABLE CONTAINER (
 	-- Container has Alternate Date Time
 	ALTERNATE_DATE_TIME                     DATETIME NOT NULL,
 	-- Container has Alternate Double
-	ALTERNATE_DOUBLE                        FLOAT(53) NOT NULL,
+	ALTERNATE_DOUBLE                        FLOAT NOT NULL,
 	-- Container has Alternate Fixed Length Text
 	ALTERNATE_FIXED_LENGTH_TEXT             VARCHAR NOT NULL,
 	-- Container has Alternate Float
-	ALTERNATE_FLOAT                         FLOAT(53) NOT NULL,
+	ALTERNATE_FLOAT                         FLOAT NOT NULL,
 	-- Container has Alternate Guid
-	ALTERNATE_GUID                          RAW(32) NOT NULL,
+	ALTERNATE_GUID                          RAW(16) NOT NULL,
 	-- Container has Alternate Int
 	ALTERNATE_INT                           INTEGER NOT NULL CHECK((ALTERNATE_INT >= -2147483648 AND ALTERNATE_INT <= 2147483647)),
 	-- Container has Alternate Large Length Text
@@ -120,7 +120,7 @@ CREATE TABLE CONTAINER (
 	-- Container has Fundamental Money
 	FUNDAMENTAL_MONEY                       MONEY NOT NULL,
 	-- Container has Fundamental Real
-	FUNDAMENTAL_REAL                        FLOAT(53) NOT NULL,
+	FUNDAMENTAL_REAL                        FLOAT NOT NULL,
 	-- Container has Fundamental String
 	FUNDAMENTAL_STRING                      VARCHAR NOT NULL,
 	-- Container has Fundamental Text
@@ -140,17 +140,17 @@ CREATE TABLE CONTAINER (
 	-- Container has Int8
 	INT8                                    SHORTINTEGER NOT NULL,
 	-- Container has Int80
-	INT80                                   int NOT NULL,
+	INT80                                   Integer(80) NOT NULL,
 	-- Container has Large
 	"LARGE"                                 LONGINTEGER NOT NULL CHECK(("LARGE" >= -9223372036854775808999 AND "LARGE" <= 9223372036854775807999)),
 	-- Container has Quad
 	QUAD                                    LONGINTEGER NOT NULL CHECK((QUAD >= -9223372036854775808 AND QUAD <= 9223372036854775807)),
 	-- Container has Real32
-	REAL32                                  FLOAT(53) NOT NULL,
+	REAL32                                  FLOAT(32) NOT NULL,
 	-- Container has Real64
-	REAL64                                  FLOAT(53) NOT NULL,
+	REAL64                                  FLOAT(64) NOT NULL,
 	-- Container has Real80
-	REAL80                                  FLOAT(53) NOT NULL,
+	REAL80                                  FLOAT(80) NOT NULL,
 	-- Container has String255
 	STRING255                               VARCHAR(255) NOT NULL,
 	-- Container has Text65536

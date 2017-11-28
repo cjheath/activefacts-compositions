@@ -244,7 +244,7 @@ module ActiveFacts
           end
 
           def surrogate_type
-            type_name, = choose_integer_type(0, 2**(default_surrogate_length-1)-1)
+            type_name, = choose_integer_range(0, 2**(default_surrogate_length-1)-1)
             type_name
           end
 
@@ -271,7 +271,7 @@ module ActiveFacts
 
         # Return SQL type and (modified?) length for the passed base type
         def normalise_type type_name
-          type = MM::DataType.normalise(type_name)
+          type = MM::DataType.intrinsic_type(type_name)
 
           [
             type,
