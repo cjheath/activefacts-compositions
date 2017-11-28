@@ -95,12 +95,8 @@ module ActiveFacts
               when :hash                # A hash of the natural key
                 raise "REVISIT: Implement hash surrogates"
               else                      # Not a surrogate
-                length = options[:length]
-                if length && length <= 8192
-                  super
-                else
-                  'IMAGE'
-                end
+                options.delete(:length)
+                'BYTEA'
               end
 
             else
