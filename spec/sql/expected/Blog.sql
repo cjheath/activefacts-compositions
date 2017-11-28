@@ -74,11 +74,8 @@ CREATE TABLE Topic (
 ALTER TABLE Comment
 	ADD FOREIGN KEY (ParagraphPostId, ParagraphOrdinal) REFERENCES Paragraph (PostId, Ordinal);
 
-
 ALTER TABLE Paragraph
 	ADD FOREIGN KEY (PostId) REFERENCES Post (PostId);
 
-
 ALTER TABLE Post
 	ADD FOREIGN KEY (TopicId) REFERENCES Topic (TopicId);
-

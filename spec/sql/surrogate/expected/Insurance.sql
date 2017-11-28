@@ -457,55 +457,41 @@ CREATE TABLE witness (
 ALTER TABLE claim
 	ADD FOREIGN KEY (incident_address_state_id) REFERENCES state (state_id);
 
-
 ALTER TABLE claim
 	ADD FOREIGN KEY (lodgement_person_id) REFERENCES party (party_id);
 
-
 ALTER TABLE claim
 	ADD FOREIGN KEY (policy_id) REFERENCES policy (policy_id);
-
 
 ALTER TABLE contractor_appointment
 	ADD FOREIGN KEY (contractor_id) REFERENCES party (party_id);
 
-
 ALTER TABLE cover
 	ADD FOREIGN KEY (cover_type_id) REFERENCES cover_type (cover_type_id);
-
 
 ALTER TABLE cover
 	ADD FOREIGN KEY (policy_id) REFERENCES policy (policy_id);
 
-
 ALTER TABLE party
 	ADD FOREIGN KEY (person_address_state_id) REFERENCES state (state_id);
-
 
 ALTER TABLE party
 	ADD FOREIGN KEY (postal_address_state_id) REFERENCES state (state_id);
 
-
 ALTER TABLE policy
 	ADD FOREIGN KEY (p_product_id) REFERENCES product (product_id);
-
 
 ALTER TABLE policy
 	ADD FOREIGN KEY (p_state_id) REFERENCES state (state_id);
 
-
 ALTER TABLE property_damage
 	ADD FOREIGN KEY (address_state_id) REFERENCES state (state_id);
-
 
 ALTER TABLE third_party
 	ADD FOREIGN KEY (vehicle_incident_claim_id) REFERENCES vehicle_incident (incident_claim_id);
 
-
 ALTER TABLE underwriting_demerit
 	ADD FOREIGN KEY (underwriting_question_id) REFERENCES underwriting_question (underwriting_question_id);
 
-
 ALTER TABLE underwriting_demerit
 	ADD FOREIGN KEY (vehicle_incident_claim_id) REFERENCES vehicle_incident (incident_claim_id);
-

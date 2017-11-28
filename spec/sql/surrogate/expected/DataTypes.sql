@@ -74,7 +74,7 @@ CREATE TABLE container (
 	-- Container has Alternate Nvarchar
 	alternate_nvarchar                      VARCHAR NOT NULL,
 	-- Container has Alternate Picture Raw Data
-	alternate_picture_raw_data              IMAGE NOT NULL,
+	alternate_picture_raw_data              BYTEA NOT NULL,
 	-- Container has Alternate Signed Int
 	alternate_signed_int                    INTEGER NOT NULL,
 	-- Container has Alternate Signed Integer
@@ -94,7 +94,7 @@ CREATE TABLE container (
 	-- Container has Alternate Varchar
 	alternate_varchar                       VARCHAR NOT NULL,
 	-- Container has Alternate Variable Length Raw Data
-	alternate_variable_length_raw_data      IMAGE NOT NULL,
+	alternate_variable_length_raw_data      BYTEA NOT NULL,
 	-- Container has Alternate Variable Length Text
 	alternate_variable_length_text          VARCHAR NOT NULL,
 	-- Container has Byte
@@ -108,7 +108,7 @@ CREATE TABLE container (
 	-- Container has Decimal8_3
 	decimal8__3                             DECIMAL(8, 3) NOT NULL,
 	-- Container has Fundamental Binary
-	fundamental_binary                      IMAGE NOT NULL,
+	fundamental_binary                      BYTEA NOT NULL,
 	-- Container has Fundamental Boolean
 	fundamental_boolean                     BOOLEAN NOT NULL,
 	-- Container has Fundamental Char

@@ -29,4 +29,3 @@ CREATE TABLE person (
 
 ALTER TABLE company
 	ADD FOREIGN KEY (party_id) REFERENCES party (party_id);
-

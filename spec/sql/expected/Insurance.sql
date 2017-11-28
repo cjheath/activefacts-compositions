@@ -419,55 +419,41 @@ CREATE TABLE Witness (
 ALTER TABLE Claim
 	ADD FOREIGN KEY (IncidentAddressStateCode) REFERENCES State (StateCode);
 
-
 ALTER TABLE Claim
 	ADD FOREIGN KEY (LodgementPersonID) REFERENCES Party (PartyID);
 
-
 ALTER TABLE Claim
 	ADD FOREIGN KEY (PolicyPYearNr, PolicyPProductCode, PolicyPStateCode, PolicyPSerial) REFERENCES Policy (PYearNr, PProductCode, PStateCode, PSerial);
-
 
 ALTER TABLE ContractorAppointment
 	ADD FOREIGN KEY (ContractorID) REFERENCES Party (PartyID);
 
-
 ALTER TABLE Cover
 	ADD FOREIGN KEY (CoverTypeCode) REFERENCES CoverType (CoverTypeCode);
-
 
 ALTER TABLE Cover
 	ADD FOREIGN KEY (PolicyPYearNr, PolicyPProductCode, PolicyPStateCode, PolicyPSerial) REFERENCES Policy (PYearNr, PProductCode, PStateCode, PSerial);
 
-
 ALTER TABLE Party
 	ADD FOREIGN KEY (PersonAddressStateCode) REFERENCES State (StateCode);
-
 
 ALTER TABLE Party
 	ADD FOREIGN KEY (PostalAddressStateCode) REFERENCES State (StateCode);
 
-
 ALTER TABLE Policy
 	ADD FOREIGN KEY (PProductCode) REFERENCES Product (ProductCode);
-
 
 ALTER TABLE Policy
 	ADD FOREIGN KEY (PStateCode) REFERENCES State (StateCode);
 
-
 ALTER TABLE PropertyDamage
 	ADD FOREIGN KEY (AddressStateCode) REFERENCES State (StateCode);
-
 
 ALTER TABLE ThirdParty
 	ADD FOREIGN KEY (VehicleIncidentClaimID) REFERENCES VehicleIncident (IncidentClaimID);
 
-
 ALTER TABLE UnderwritingDemerit
 	ADD FOREIGN KEY (UnderwritingQuestionID) REFERENCES UnderwritingQuestion (UnderwritingQuestionID);
 
-
 ALTER TABLE UnderwritingDemerit
 	ADD FOREIGN KEY (VehicleIncidentClaimID) REFERENCES VehicleIncident (IncidentClaimID);
-

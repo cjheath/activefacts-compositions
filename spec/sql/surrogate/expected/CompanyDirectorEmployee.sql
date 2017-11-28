@@ -108,15 +108,11 @@ CREATE TABLE person (
 ALTER TABLE attendance
 	ADD FOREIGN KEY (attendee_person_id) REFERENCES person (person_id);
 
-
 ALTER TABLE attendance
 	ADD FOREIGN KEY (meeting_id) REFERENCES meeting (meeting_id);
-
 
 ALTER TABLE directorship
 	ADD FOREIGN KEY (director_person_id) REFERENCES person (person_id);
 
-
 ALTER TABLE employment
 	ADD FOREIGN KEY (person_id) REFERENCES person (person_id);
-

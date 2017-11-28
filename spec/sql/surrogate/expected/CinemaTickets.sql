@@ -192,11 +192,8 @@ CREATE TABLE ticket_pricing (
 ALTER TABLE allocatable_cinema_section
 	ADD FOREIGN KEY (cinema_id) REFERENCES cinema (cinema_id);
 
-
 ALTER TABLE booking
 	ADD FOREIGN KEY (person_id) REFERENCES person (person_id);
 
-
 ALTER TABLE booking
 	ADD FOREIGN KEY (session_id) REFERENCES "session" (session_id);
-

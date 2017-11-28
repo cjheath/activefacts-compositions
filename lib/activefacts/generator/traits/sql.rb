@@ -118,7 +118,9 @@ module ActiveFacts
         end
 
         def binary_surrogate(type_name, value_constraint, options)
-          if type_name =~ /^(guid|uuid)$/i
+          if options[:auto_assign] == 'hash'
+            :hash
+          elsif type_name =~ /^(guid|uuid)$/i
             options[:length] ||= 16
             if ![nil, ''].include?(options[:auto_assign])
               options.delete(:auto_assign)  # Don't auto-assign foreign keys
@@ -126,14 +128,13 @@ module ActiveFacts
             else
               :guid_fk
             end
-          # REVISIT: Detect Hash keys here and return :hash
           else
             false
           end
         end
 
         # Return SQL type and (modified?) length for the passed base type
-        def choose_sql_type(type_name, value_constraint, options)
+        def choose_sql_type(type_name, value_constraint, component, options)
           case MM::DataType.intrinsic_type(type_name)
           when MM::DataType::TYPE_Boolean
             data_type_context.boolean_type
@@ -195,6 +196,12 @@ module ActiveFacts
           else
             type_name
           end
+        end
+
+        # The Components passed as leaves are fields in a table.
+        # Return an array of expressions for their names
+        def safe_column_names leaves
+          leaves.map{|l| safe_column_name(l)}
         end
 
         def reserved_words
@@ -323,7 +330,7 @@ module ActiveFacts
         end
 
         def go s = ''
-          "#{s};\n\n"
+          "#{s.sub(/\A\n+/,'')};\n"
         end
 
         def sql_value(value)

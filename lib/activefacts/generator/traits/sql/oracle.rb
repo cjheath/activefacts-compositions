@@ -66,7 +66,7 @@ module ActiveFacts
             super
           end
 
-          def choose_sql_type(type_name, value_constraint, options)
+          def choose_sql_type(type_name, value_constraint, component, options)
             type = MM::DataType.intrinsic_type(type_name)
             case type
             when MM::DataType::TYPE_Integer
@@ -152,10 +152,6 @@ module ActiveFacts
               TABLESPACE THREAD TRACING TRIGGERS UNLIMITED USE
             }
             super + @oracle_key_words
-          end
-
-          def go s = ''
-            super
           end
 
           def open_escape

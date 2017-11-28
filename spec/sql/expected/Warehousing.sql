@@ -168,47 +168,35 @@ CREATE TABLE Warehouse (
 ALTER TABLE BackOrderAllocation
 	ADD FOREIGN KEY (PurchaseOrderItemPurchaseOrderID, PurchaseOrderItemProductID) REFERENCES PurchaseOrderItem (PurchaseOrderID, ProductID);
 
-
 ALTER TABLE BackOrderAllocation
 	ADD FOREIGN KEY (SalesOrderItemSalesOrderID, SalesOrderItemProductID) REFERENCES SalesOrderItem (SalesOrderID, ProductID);
 
-
 ALTER TABLE Bin
 	ADD FOREIGN KEY (ProductID) REFERENCES Product (ProductID);
-
 
 ALTER TABLE Bin
 	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID);
 
-
 ALTER TABLE DispatchItem
 	ADD FOREIGN KEY (ProductID) REFERENCES Product (ProductID);
-
 
 ALTER TABLE DispatchItem
 	ADD FOREIGN KEY (SalesOrderItemSalesOrderID, SalesOrderItemProductID) REFERENCES SalesOrderItem (SalesOrderID, ProductID);
 
-
 ALTER TABLE DispatchItem
 	ADD FOREIGN KEY (TransferRequestID) REFERENCES TransferRequest (TransferRequestID);
-
 
 ALTER TABLE PurchaseOrder
 	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID);
 
-
 ALTER TABLE ReceivedItem
 	ADD FOREIGN KEY (TransferRequestID) REFERENCES TransferRequest (TransferRequestID);
-
 
 ALTER TABLE SalesOrder
 	ADD FOREIGN KEY (WarehouseID) REFERENCES Warehouse (WarehouseID);
 
-
 ALTER TABLE TransferRequest
 	ADD FOREIGN KEY (FromWarehouseID) REFERENCES Warehouse (WarehouseID);
 
-
 ALTER TABLE TransferRequest
 	ADD FOREIGN KEY (ToWarehouseID) REFERENCES Warehouse (WarehouseID);
-

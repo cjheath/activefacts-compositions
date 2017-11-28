@@ -63,7 +63,7 @@ module ActiveFacts
             super
           end
 
-          def choose_sql_type(type_name, value_constraint, options)
+          def choose_sql_type(type_name, value_constraint, component, options)
             case MM::DataType.intrinsic_type(type_name)
             when MM::DataType::TYPE_Integer
               # The :auto_assign key is set for auto-assigned types, but with a nil value in foreign keys
@@ -183,10 +183,6 @@ module ActiveFacts
               WAIT WARNINGS WEEK WEIGHT_STRING X509 XA XID
             }
             super + @mysql_key_words
-          end
-
-          def go s = ''
-            super
           end
 
           def open_escape

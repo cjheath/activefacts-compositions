@@ -49,7 +49,7 @@ module ActiveFacts
 
       def generate_table composite
         @tables_emitted[composite] = true
-        delayed_indices = []
+        @delayed_statements = []
 
         "CREATE TABLE #{safe_table_name composite} (\n" +
         (
@@ -60,7 +60,7 @@ module ActiveFacts
             generate_column leaf
           end +
           composite.all_index.map do |index|
-            generate_index index, delayed_indices
+            generate_index index
           end.compact.sort +
           composite.all_foreign_key_as_source_composite.map do |fk|
             next nil if @fks == false
@@ -79,10 +79,10 @@ module ActiveFacts
             '-- '+constraint.inspect    # REVISIT: Emit local constraints
           end
         ).compact.flat_map{|f| "\t#{f}" }*",\n"+"\n" +
-        go(")") +
-        delayed_indices.sort.map do |delayed_index|
-          go delayed_index
-        end*"\n"
+        go(")") + "\n" +
+        @delayed_statements.sort.map do |delayed_statement|
+          go delayed_statement
+        end*''
       end
 
       def generate_column leaf
@@ -99,7 +99,8 @@ module ActiveFacts
         type_name, options = component.data_type(data_type_context)
         options ||= {}
         value_constraint = options[:value_constraint]
-        type_name = choose_sql_type(type_name, value_constraint, options)
+        type_name = choose_sql_type(type_name, value_constraint, component, options)
+        @delayed_statements += options.delete(:delayed) if options[:delayed]
         length = options[:length]
 
         "#{
@@ -115,7 +116,7 @@ module ActiveFacts
         }"
       end
 
-      def generate_index index, delayed_indices
+      def generate_index index
         nullable_columns =
           index.all_index_field.select do |ixf|
             !ixf.component.path_mandatory
@@ -134,7 +135,7 @@ module ActiveFacts
           if contains_nullable_columns and @closed_world_indices
             # Implement open-world uniqueness using a filtered index:
             table_name = safe_table_name(index.composite)
-            delayed_indices <<
+            @delayed_statements <<
               'CREATE UNIQUE'+index_kind(index)+' INDEX '+
               escape("#{table_name(index.composite)}By#{column_names*''}", index_name_max) +
               " ON #{table_name}("+column_names.map{|n| escape(n, column_name_max)}*', ' +
@@ -153,7 +154,7 @@ module ActiveFacts
           end
         else
           # REVISIT: If the fields of this index is a prefix of another index, it can be omitted
-          delayed_indices <<
+          @delayed_statements <<
             'CREATE'+index_kind(index)+' INDEX '+
             escape("#{table_name(index.composite)}By#{column_names*''}", index_name_max) +
             " ON #{table_name}(" +

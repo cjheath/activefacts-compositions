@@ -18,4 +18,3 @@ CREATE TABLE country_code (
 
 ALTER TABLE country
 	ADD FOREIGN KEY (country_code) REFERENCES country_code (country_code_value);
-

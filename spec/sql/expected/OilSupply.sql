@@ -111,19 +111,14 @@ CREATE TABLE TransportRoute (
 ALTER TABLE AcceptableSubstitution
 	ADD FOREIGN KEY (AlternateProductName) REFERENCES Product (ProductName);
 
-
 ALTER TABLE AcceptableSubstitution
 	ADD FOREIGN KEY (ProductName) REFERENCES Product (ProductName);
-
 
 ALTER TABLE ProductionForecast
 	ADD FOREIGN KEY (RefineryName) REFERENCES Refinery (RefineryName);
 
-
 ALTER TABLE ProductionForecast
 	ADD FOREIGN KEY (SupplyPeriodYearNr, SupplyPeriodMonthNr) REFERENCES SupplyPeriod (YearNr, MonthNr);
 
-
 ALTER TABLE RegionalDemand
 	ADD FOREIGN KEY (SupplyPeriodYearNr, SupplyPeriodMonthNr) REFERENCES SupplyPeriod (YearNr, MonthNr);
-

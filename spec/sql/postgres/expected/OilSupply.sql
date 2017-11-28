@@ -113,19 +113,14 @@ CREATE TABLE transport_route (
 ALTER TABLE acceptable_substitution
 	ADD FOREIGN KEY (alternate_product_name) REFERENCES product (product_name);
 
-
 ALTER TABLE acceptable_substitution
 	ADD FOREIGN KEY (product_name) REFERENCES product (product_name);
-
 
 ALTER TABLE production_forecast
 	ADD FOREIGN KEY (refinery_name) REFERENCES refinery (refinery_name);
 
-
 ALTER TABLE production_forecast
 	ADD FOREIGN KEY (supply_period_year_nr, supply_period_month_nr) REFERENCES supply_period (year_nr, month_nr);
 
-
 ALTER TABLE regional_demand
 	ADD FOREIGN KEY (supply_period_year_nr, supply_period_month_nr) REFERENCES supply_period (year_nr, month_nr);
-

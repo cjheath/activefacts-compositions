@@ -96,15 +96,11 @@ CREATE TABLE Person (
 ALTER TABLE Attendance
 	ADD FOREIGN KEY (AttendeeGivenName, AttendeeFamilyName) REFERENCES Person (GivenName, FamilyName);
 
-
 ALTER TABLE Attendance
 	ADD FOREIGN KEY (MeetingCompanyName, MeetingDate, MeetingIsBoardMeeting) REFERENCES Meeting (CompanyName, "Date", IsBoardMeeting);
-
 
 ALTER TABLE Directorship
 	ADD FOREIGN KEY (DirectorGivenName, DirectorFamilyName) REFERENCES Person (GivenName, FamilyName);
 
-
 ALTER TABLE Employment
 	ADD FOREIGN KEY (PersonGivenName, PersonFamilyName) REFERENCES Person (GivenName, FamilyName);
-

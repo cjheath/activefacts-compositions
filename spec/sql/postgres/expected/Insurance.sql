@@ -421,55 +421,41 @@ CREATE TABLE witness (
 ALTER TABLE claim
 	ADD FOREIGN KEY (incident_address_state_code) REFERENCES state (state_code);
 
-
 ALTER TABLE claim
 	ADD FOREIGN KEY (lodgement_person_id) REFERENCES party (party_id);
 
-
 ALTER TABLE claim
 	ADD FOREIGN KEY (policy_p_year_nr, policy_p_product_code, policy_p_state_code, policy_p_serial) REFERENCES policy (p_year_nr, p_product_code, p_state_code, p_serial);
-
 
 ALTER TABLE contractor_appointment
 	ADD FOREIGN KEY (contractor_id) REFERENCES party (party_id);
 
-
 ALTER TABLE cover
 	ADD FOREIGN KEY (cover_type_code) REFERENCES cover_type (cover_type_code);
-
 
 ALTER TABLE cover
 	ADD FOREIGN KEY (policy_p_year_nr, policy_p_product_code, policy_p_state_code, policy_p_serial) REFERENCES policy (p_year_nr, p_product_code, p_state_code, p_serial);
 
-
 ALTER TABLE party
 	ADD FOREIGN KEY (person_address_state_code) REFERENCES state (state_code);
-
 
 ALTER TABLE party
 	ADD FOREIGN KEY (postal_address_state_code) REFERENCES state (state_code);
 
-
 ALTER TABLE policy
 	ADD FOREIGN KEY (p_product_code) REFERENCES product (product_code);
-
 
 ALTER TABLE policy
 	ADD FOREIGN KEY (p_state_code) REFERENCES state (state_code);
 
-
 ALTER TABLE property_damage
 	ADD FOREIGN KEY (address_state_code) REFERENCES state (state_code);
-
 
 ALTER TABLE third_party
 	ADD FOREIGN KEY (vehicle_incident_claim_id) REFERENCES vehicle_incident (incident_claim_id);
 
-
 ALTER TABLE underwriting_demerit
 	ADD FOREIGN KEY (underwriting_question_id) REFERENCES underwriting_question (underwriting_question_id);
 
-
 ALTER TABLE underwriting_demerit
 	ADD FOREIGN KEY (vehicle_incident_claim_id) REFERENCES vehicle_incident (incident_claim_id);
-

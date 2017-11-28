@@ -55,10 +55,11 @@ module ActiveFacts
           end
 
           def schema_prefix
-            go "CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public"
+            go("CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public") +
+            "\n"
           end
 
-          def choose_sql_type(type_name, value_constraint, options)
+          def choose_sql_type(type_name, value_constraint, component, options)
             type = MM::DataType.intrinsic_type(type_name)
             case type
             when MM::DataType::TYPE_Integer
@@ -93,7 +94,9 @@ module ActiveFacts
                 options[:default] = " DEFAULT 'gen_random_uuid()'"
                 'UUID'
               when :hash                # A hash of the natural key
-                raise "REVISIT: Implement hash surrogates"
+                options.delete(:length) # 20 bytes, assuming SHA-1. SHA-256 would need 32 bytes
+                options[:delayed] = trigger_hash_assignment(component, component.root.natural_index.all_index_field.map(&:component))
+                'BYTEA'
               else                      # Not a surrogate
                 options.delete(:length)
                 'BYTEA'
@@ -102,6 +105,59 @@ module ActiveFacts
             else
               super
             end
+          end
+
+          # Return an array of SQL statements that arrange for the hash_field
+          # to be populated with a hash of the values of the leaves.
+          def trigger_hash_assignment hash_field, leaves
+            table_name = safe_table_name(hash_field.root)
+            trigger_function = escape('assign_'+column_name(hash_field), 128)
+            [
+              %Q{
+                CREATE OR REPLACE FUNCTION #{trigger_function}() RETURNS TRIGGER AS $$
+                    BEGIN
+                        NEW.#{safe_column_name(hash_field)} = #{hash(concatenate(as_text(table_qual('NEW', safe_column_names(leaves)))))};
+                        RETURN NEW;	
+                    END
+                $$ language 'plpgsql'}.
+              unindent,
+              %Q{
+                CREATE TRIGGER trig_#{trigger_function}
+                    BEFORE INSERT ON #{table_name}
+                    FOR EACH ROW EXECUTE PROCEDURE #{trigger_function}()}.
+              unindent
+            ]
+          end
+
+          # Return an SQL expression that concatenates the given expressions (which must be text)
+          def concatenate expressions
+            "'|'::text || " +
+            expressions * " || '|'::text || " +
+            " || '|'::text"
+          end
+
+          # Some or all of the SQL expressions may have non-text values.
+          # Return an SQL expression that coerces them to text.
+          def as_text expressions
+            if Array === expressions
+              expressions.map{|e| as_text(e)}
+            else
+              expressions+"::text"
+            end
+          end
+
+          # Qualify each of the column names with the given table name
+          def table_qual table_name, column_names
+            if Array === column_names
+              column_names.map{|c| table_qual(table_name, c)}
+            else
+              table_name+'.'+column_names
+            end
+          end
+
+          # Return an expression that yields a hash of the given expression
+          def hash expr, algo = 'sha1'
+            "digest(#{expr}, '#{algo}')"
           end
 
           # Reserved words cannot be used anywhere without quoting.
@@ -139,10 +195,6 @@ module ActiveFacts
               GREATEST LEAST SETOF XMLROOT 
             }
             super + @postgres_key_words + @postgres_key_words_func_type
-          end
-
-          def go s = ''
-            "#{s};\n\n"
           end
 
           def open_escape
@@ -191,6 +243,7 @@ module ActiveFacts
               'TIMESTAMP'
             end
           end
+
         end
 
       end

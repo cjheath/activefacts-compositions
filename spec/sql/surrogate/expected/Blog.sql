@@ -78,11 +78,8 @@ CREATE TABLE topic (
 ALTER TABLE comment
 	ADD FOREIGN KEY (paragraph_id) REFERENCES paragraph (paragraph_id);
 
-
 ALTER TABLE paragraph
 	ADD FOREIGN KEY (post_id) REFERENCES post (post_id);
 
-
 ALTER TABLE post
 	ADD FOREIGN KEY (topic_id) REFERENCES topic (topic_id);
-

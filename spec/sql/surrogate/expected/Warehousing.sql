@@ -174,47 +174,35 @@ CREATE TABLE warehouse (
 ALTER TABLE back_order_allocation
 	ADD FOREIGN KEY (purchase_order_item_id) REFERENCES purchase_order_item (purchase_order_item_id);
 
-
 ALTER TABLE back_order_allocation
 	ADD FOREIGN KEY (sales_order_item_id) REFERENCES sales_order_item (sales_order_item_id);
 
-
 ALTER TABLE bin
 	ADD FOREIGN KEY (product_id) REFERENCES product (product_id);
-
 
 ALTER TABLE bin
 	ADD FOREIGN KEY (warehouse_id) REFERENCES warehouse (warehouse_id);
 
-
 ALTER TABLE dispatch_item
 	ADD FOREIGN KEY (product_id) REFERENCES product (product_id);
-
 
 ALTER TABLE dispatch_item
 	ADD FOREIGN KEY (sales_order_item_id) REFERENCES sales_order_item (sales_order_item_id);
 
-
 ALTER TABLE dispatch_item
 	ADD FOREIGN KEY (transfer_request_id) REFERENCES transfer_request (transfer_request_id);
-
 
 ALTER TABLE purchase_order
 	ADD FOREIGN KEY (warehouse_id) REFERENCES warehouse (warehouse_id);
 
-
 ALTER TABLE received_item
 	ADD FOREIGN KEY (transfer_request_id) REFERENCES transfer_request (transfer_request_id);
-
 
 ALTER TABLE sales_order
 	ADD FOREIGN KEY (warehouse_id) REFERENCES warehouse (warehouse_id);
 
-
 ALTER TABLE transfer_request
 	ADD FOREIGN KEY (from_warehouse_id) REFERENCES warehouse (warehouse_id);
 
-
 ALTER TABLE transfer_request
 	ADD FOREIGN KEY (to_warehouse_id) REFERENCES warehouse (warehouse_id);
-
