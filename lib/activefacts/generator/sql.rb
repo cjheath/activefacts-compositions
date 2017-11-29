@@ -102,6 +102,7 @@ module ActiveFacts
         type_name = choose_sql_type(type_name, value_constraint, component, options)
         @delayed_statements += options.delete(:delayed) if options[:delayed]
         length = options[:length]
+        return options[:computed] if options[:computed]
 
         "#{
           type_name

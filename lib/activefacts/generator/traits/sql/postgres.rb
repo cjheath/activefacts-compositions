@@ -94,7 +94,7 @@ module ActiveFacts
                 options[:default] = " DEFAULT 'gen_random_uuid()'"
                 'UUID'
               when :hash                # A hash of the natural key
-                options.delete(:length) # 20 bytes, assuming SHA-1. SHA-256 would need 32 bytes
+                options.delete(:length) # 20 bytes, assuming SHA-1, but we don't need to specify it. SHA-256 would need 32 bytes
                 options[:delayed] = trigger_hash_assignment(component, component.root.natural_index.all_index_field.map(&:component))
                 'BYTEA'
               else                      # Not a surrogate
@@ -115,18 +115,32 @@ module ActiveFacts
             [
               %Q{
                 CREATE OR REPLACE FUNCTION #{trigger_function}() RETURNS TRIGGER AS $$
-                    BEGIN
-                        NEW.#{safe_column_name(hash_field)} = #{hash(concatenate(as_text(table_qual('NEW', safe_column_names(leaves)))))};
+                BEGIN
+                        NEW.#{safe_column_name(hash_field)} = #{hash(concatenate(na_if_null(as_text(table_qual('NEW', safe_column_names(leaves))))))};
                         RETURN NEW;	
-                    END
+                END
                 $$ language 'plpgsql'}.
               unindent,
               %Q{
                 CREATE TRIGGER trig_#{trigger_function}
-                    BEFORE INSERT ON #{table_name}
-                    FOR EACH ROW EXECUTE PROCEDURE #{trigger_function}()}.
+                        BEFORE INSERT OR UPDATE ON #{table_name}
+                        FOR EACH ROW EXECUTE PROCEDURE #{trigger_function}()}.
               unindent
             ]
+          end
+
+          # Some or all of the SQL expressions may have non-text values.
+          # Return an SQL expression that coerces them to text.
+          def as_text expressions
+            return expressions.map{|e| as_text(e)} if Array === expressions
+
+            expressions+"::text"
+          end
+
+          def na_if_null expressions
+            return expressions.map{|e| na_if_null(e)} if Array === expressions
+            # REVISIT: We need a way to know if the expression could be null
+            "COALESCE(#{expressions}, 'NA')"
           end
 
           # Return an SQL expression that concatenates the given expressions (which must be text)
@@ -134,16 +148,6 @@ module ActiveFacts
             "'|'::text || " +
             expressions * " || '|'::text || " +
             " || '|'::text"
-          end
-
-          # Some or all of the SQL expressions may have non-text values.
-          # Return an SQL expression that coerces them to text.
-          def as_text expressions
-            if Array === expressions
-              expressions.map{|e| as_text(e)}
-            else
-              expressions+"::text"
-            end
           end
 
           # Qualify each of the column names with the given table name
