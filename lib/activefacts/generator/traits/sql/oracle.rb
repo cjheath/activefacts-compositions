@@ -98,7 +98,6 @@ module ActiveFacts
                 'RAW'
               when :hash                # A hash of the natural key
                 options[:length] = 20   # Assuming SHA-1. SHA-256 would need 32 bytes
-                # options[:default] = natural_hash(composite)
                 leaves = component.root.natural_index.all_index_field.map(&:component)
                 options[:default] = " GENERATED ALWAYS AS #{hash(concatenate(coalesce(as_text(safe_column_exprs(leaves)))))}"
                 'RAW'

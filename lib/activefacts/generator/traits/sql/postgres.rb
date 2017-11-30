@@ -116,7 +116,9 @@ module ActiveFacts
               %Q{
                 CREATE OR REPLACE FUNCTION #{trigger_function}() RETURNS TRIGGER AS $$
                 BEGIN
-                        NEW.#{safe_column_name(hash_field)} = #{hash(concatenate(coalesce(as_text(safe_column_exprs(leaves, 'NEW')))))};
+                        NEW.#{safe_column_name(hash_field)} = #{
+                          hash(concatenate(coalesce(as_text(safe_column_exprs(leaves, 'NEW')))))
+                        };
                         RETURN NEW;	
                 END
                 $$ language 'plpgsql'}.
