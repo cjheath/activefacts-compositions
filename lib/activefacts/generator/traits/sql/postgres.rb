@@ -116,7 +116,7 @@ module ActiveFacts
               %Q{
                 CREATE OR REPLACE FUNCTION #{trigger_function}() RETURNS TRIGGER AS $$
                 BEGIN
-                        NEW.#{safe_column_name(hash_field)} = #{hash(concatenate(na_if_null(as_text(table_qual('NEW', safe_column_names(leaves))))))};
+                        NEW.#{safe_column_name(hash_field)} = #{hash(concatenate(coalesce(as_text(safe_column_exprs(leaves, 'NEW')))))};
                         RETURN NEW;	
                 END
                 $$ language 'plpgsql'}.
@@ -131,37 +131,26 @@ module ActiveFacts
 
           # Some or all of the SQL expressions may have non-text values.
           # Return an SQL expression that coerces them to text.
-          def as_text expressions
-            return expressions.map{|e| as_text(e)} if Array === expressions
+          def as_text exprs
+            return exprs.map{|e| as_text(e)} if Array === exprs
 
-            expressions+"::text"
+            Expression.new("#{exprs}::text", MM::DataType::TYPE_String, exprs.is_mandatory)
           end
 
-          def na_if_null expressions
-            return expressions.map{|e| na_if_null(e)} if Array === expressions
-            # REVISIT: We need a way to know if the expression could be null
-            "COALESCE(#{expressions}, 'NA')"
-          end
-
-          # Return an SQL expression that concatenates the given expressions (which must be text)
+          # Return an SQL expression that concatenates the given expressions (which must yield a string type)
           def concatenate expressions
-            "'|'::text || " +
-            expressions * " || '|'::text || " +
-            " || '|'::text"
-          end
-
-          # Qualify each of the column names with the given table name
-          def table_qual table_name, column_names
-            if Array === column_names
-              column_names.map{|c| table_qual(table_name, c)}
-            else
-              table_name+'.'+column_names
-            end
+            Expression.new(
+              "'|'::text || " +
+              expressions.map(&:to_s) * " || '|'::text || " +
+              " || '|'::text",
+              MM::DataType::TYPE_String,
+              true
+            )
           end
 
           # Return an expression that yields a hash of the given expression
           def hash expr, algo = 'sha1'
-            "digest(#{expr}, '#{algo}')"
+            Expression.new("digest(#{expr}, '#{algo}')", MM::DataType::TYPE_Binary, expr.is_mandatory)
           end
 
           # Reserved words cannot be used anywhere without quoting.

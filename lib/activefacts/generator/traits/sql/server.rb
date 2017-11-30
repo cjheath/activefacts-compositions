@@ -113,35 +113,43 @@ module ActiveFacts
             table_name = safe_table_name(hash_field.root)
             trigger_function = escape('assign_'+column_name(hash_field), 128)
             %Q{
-            AS #{hash(concatenate(na_if_null(as_text(safe_column_names(leaves)))))}
-            PERSISTED}.gsub(/\s+/,' ')
+            AS #{hash(concatenate(coalesce(as_text(safe_column_exprs(leaves)))))}
+            PERSISTED}.gsub(/\s+/,' ').strip
           end
 
           # Some or all of the SQL expressions may have non-text values.
           # Return an SQL expression that coerces them to text.
-          def as_text expressions
-            return expressions.map{|e| as_text(e)} if Array === expressions
-            # REVISIT: We need a better way to know the type of the expression.
-            style = expressions =~ /date/i ? ', 121' : ''
-            "CONVERT(VARCHAR, #{expressions}#{style})"
-          end
+          def as_text exprs
+            return exprs.map{|e| as_text(e)} if Array === exprs
 
-          def na_if_null expressions
-            return expressions.map{|e| na_if_null(e)} if Array === expressions
-            "ISNULL(#{expressions}, 'NA')"
+            return exprs.map{|e| as_text(e)} if Array === exprs
+
+            style =
+              case exprs.type_num
+              when MM::DataType::TYPE_Date, MM::DataType::TYPE_DateTime, MM::DataType::TYPE_Timestamp
+                ', 121'
+              # REVISIT: What about MM::DataType::TYPE_Time?
+              else
+                ''
+              end
+            Expression.new("CONVERT(VARCHAR, #{exprs}#{style})", MM::DataType::TYPE_String, exprs.is_mandatory)
           end
 
           # Return an SQL expression that concatenates the given expressions (which must be text)
-          def concatenate expressions
-            # SQL Server 2012 onwards: %Q{CONCAT('|'+#{expressions.flat_map{|e| [e, "+'|'"]}*''})}
-            %Q{('|'+#{
-              expressions.flat_map{|e| [e, "'|'"] } * '+'
-              })}
+          def concatenate exprs
+            # SQL Server 2012 onwards: %Q{CONCAT('|'+#{exprs.flat_map{|e| [e.to_s, "+'|'"]}*''})}
+            Expression.new(
+              %Q{('|'+#{
+                exprs.flat_map{|e| [e.to_s, "'|'"] } * '+'
+                })},
+              MM::DataType::TYPE_String,
+              true
+            )
           end
 
           # Return an expression that yields a hash of the given expression
           def hash expr, algo = 'SHA1'
-            "CONVERT(BINARY(32), HASHBYTES('#{algo}', #{expr}), 2)"
+            Expression.new("CONVERT(BINARY(32), HASHBYTES('#{algo}', #{expr}), 2)", MM::DataType::TYPE_Binary, expr.is_mandatory)
           end
 
           # Reserved words cannot be used anywhere without quoting.

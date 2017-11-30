@@ -91,7 +91,7 @@ module ActiveFacts
         constraints = leaf.all_leaf_constraint
 
         "-- #{leaf.comment}\n" +
-        "\t#{column_name}#{padding}#{column_type leaf, column_name}"
+        "\t#{column_name}#{padding}#{column_type(leaf, column_name)}"
       end
 
       def column_type component, column_name
