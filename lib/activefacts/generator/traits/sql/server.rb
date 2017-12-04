@@ -35,6 +35,10 @@ module ActiveFacts
             @closed_world_indices = true
           end
 
+          def data_type_context_class
+            SQLServerDataTypeContext
+          end
+
           def table_name_max
             128
           end
@@ -53,10 +57,6 @@ module ActiveFacts
 
           def schema_prefix
             ''
-          end
-
-          def data_type_context_class
-            SQLServerDataTypeContext
           end
 
           def choose_sql_type(type_name, value_constraint, component, options)
@@ -93,7 +93,9 @@ module ActiveFacts
                 # options[:default] = " DEFAULT NEWSEQUENTIALID()"
                 'UNIQUEIDENTIFIER'
               when :hash                # A hash of the natural key
-                raise "REVISIT: Implement hash surrogates"
+                options[:length] = 20   # Assuming SHA-1. SHA-256 would need 32 bytes
+                options[:computed] = hash_assignment(component, component.root.natural_index.all_index_field.map(&:component))
+                'BINARY'
               else                      # Not a surrogate
                 length = options[:length]
                 if length && length <= 8192
@@ -105,6 +107,49 @@ module ActiveFacts
             else
               super
             end
+          end
+
+          def hash_assignment hash_field, leaves
+            table_name = safe_table_name(hash_field.root)
+            trigger_function = escape('assign_'+column_name(hash_field), 128)
+            %Q{
+            AS #{hash(concatenate(coalesce(as_text(safe_column_exprs(leaves)))))}
+            PERSISTED}.gsub(/\s+/,' ').strip
+          end
+
+          # Some or all of the SQL expressions may have non-text values.
+          # Return an SQL expression that coerces them to text.
+          def as_text exprs
+            return exprs.map{|e| as_text(e)} if Array === exprs
+
+            return exprs.map{|e| as_text(e)} if Array === exprs
+
+            style =
+              case exprs.type_num
+              when MM::DataType::TYPE_Date, MM::DataType::TYPE_DateTime, MM::DataType::TYPE_Timestamp
+                ', 121'
+              # REVISIT: What about MM::DataType::TYPE_Time?
+              else
+                ''
+              end
+            Expression.new("CONVERT(VARCHAR, #{exprs}#{style})", MM::DataType::TYPE_String, exprs.is_mandatory)
+          end
+
+          # Return an SQL expression that concatenates the given expressions (which must be text)
+          def concatenate exprs
+            # SQL Server 2012 onwards: %Q{CONCAT('|'+#{exprs.flat_map{|e| [e.to_s, "+'|'"]}*''})}
+            Expression.new(
+              %Q{('|'+#{
+                exprs.flat_map{|e| [e.to_s, "'|'"] } * '+'
+                })},
+              MM::DataType::TYPE_String,
+              true
+            )
+          end
+
+          # Return an expression that yields a hash of the given expression
+          def hash expr, algo = 'SHA1'
+            Expression.new("CONVERT(BINARY(32), HASHBYTES('#{algo}', #{expr}), 2)", MM::DataType::TYPE_Binary, expr.is_mandatory)
           end
 
           # Reserved words cannot be used anywhere without quoting.
@@ -189,6 +234,24 @@ module ActiveFacts
               'DATETIME'
             end
           end
+
+          def cast_as_string d
+            # select right('0000000000'+cast(1234.45 as varchar(10)), 11);  -- Only good for +ve numbers!
+            # set @x = -12345;
+            # select right('0000000000'+convert(varchar(10), 1234.45, style), 11);  -- Use styles
+            # select convert(varchar, GETDATE(), 21); -- 'YYYY-MM-DD HH:mm:ss.123'
+            #
+            # declare @x decimal(10,3);
+            # set @x = -12345.67;
+            # select case when @x < 0 then '-'+right('0000000000'+cast(-@x as varchar(10)), 11)
+            #        else ' '+right('0000000000'+cast(@x as varchar(10)), 11)
+            #        end;
+            #
+            # declare @x money; set @x = 123.456; select CONVERT(varchar, @x, 0);
+            #
+            # declare @x float; set @x = 123.456; select CONVERT(varchar, @x, 2); -- Always 16 characters, exponential notation
+          end
+
         end
 
       end

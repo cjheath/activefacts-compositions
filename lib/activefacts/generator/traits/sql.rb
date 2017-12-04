@@ -16,6 +16,27 @@ require 'activefacts/generator'
 
 module ActiveFacts
   module Generators
+    class Expression
+      attr_reader :value          # String representation of the expression
+      attr_reader :type_num       # ActiveFacts::Metamodel::DataType number
+      attr_reader :is_mandatory   # false if nullable
+
+      # Construct an expression that addresses a field from a Metamodel::Component
+      def initialize value, type_num, is_mandatory
+        @type_num = type_num
+        @value = value
+        @is_mandatory = is_mandatory
+      end
+
+      def to_s
+        value
+      end
+
+      def inspect
+        "Expression(#{value.inspect}, #{@type_num ? MM::DataTypes::TypeNames[@type_num] : 'unknown'}, #{@is_mandatory ? 'mandatory' : 'nullable'})"
+      end
+    end
+
     module Traits
       module SQL
         MM = ActiveFacts::Metamodel unless const_defined?(:MM)
@@ -199,9 +220,41 @@ module ActiveFacts
         end
 
         # The Components passed as leaves are fields in a table.
-        # Return an array of expressions for their names
+        # Return an array of SQL field names.
         def safe_column_names leaves
-          leaves.map{|l| safe_column_name(l)}
+          leaves.map &method(:safe_column_name)
+        end
+
+        # Return an Expression for the Component passed as leaf, optionally using a table or alias name
+        def safe_column_expr leaf, table_prefix = ''
+          column_name = safe_column_name(leaf)
+          type_name, = leaf.data_type(data_type_context)
+          type_num = MM::DataType.intrinsic_type(type_name)
+          Expression.new(table_prefix+column_name, type_num, leaf.is_mandatory)
+        end
+
+        # Return an array of Expressions for the fields, optionally qualified with a table or alias name
+        def safe_column_exprs leaves, use_table_name = nil
+          leaves.map{|leaf| safe_column_expr(leaf, table_prefix(leaf, use_table_name))}
+        end
+
+        # Return the string to prefix a column expression with to qualify it with a table or alias name
+        def table_prefix component, use_table_name = nil
+          case use_table_name
+          when false, nil
+            ''
+          when true
+            safe_table_name(component)+'.'
+          else
+            use_table_name+'.'
+          end
+        end
+
+        # For an (array of) Expression, return expressions that have value "na" if NULL
+        def coalesce exprs, na = "'NA'"
+          return exprs.map{|expr| coalesce(expr)} if Array === exprs
+          return exprs if exprs.is_mandatory
+          Expression.new("COALESCE(#{exprs}, #{na})", exprs.type_num, true)
         end
 
         def reserved_words

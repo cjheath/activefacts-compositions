@@ -97,13 +97,68 @@ module ActiveFacts
                 options[:default] = " DEFAULT SYS_GUID()"
                 'RAW'
               when :hash                # A hash of the natural key
-                raise "REVISIT: Implement hash surrogates"
+                options[:length] = 20   # Assuming SHA-1. SHA-256 would need 32 bytes
+                leaves = component.root.natural_index.all_index_field.map(&:component)
+                options[:default] = " GENERATED ALWAYS AS #{hash(concatenate(coalesce(as_text(safe_column_exprs(leaves)))))}"
+                'RAW'
               else
                 'LOB'                   # Not a surrogate, just use the type
               end
             else
               super
             end
+          end
+
+=begin
+          # Return an array of SQL statements that arrange for the hash_field
+          # to be populated with a hash of the values of the leaves.
+          def trigger_hash_assignment hash_field, leaves
+            table_name = safe_table_name(hash_field.root)
+            trigger_function = escape('assign_'+column_name(hash_field), 128)
+            [
+              %Q{
+                CREATE OR REPLACE
+                FUNCTION #{trigger_function}() RETURN RAW DETERMINISTIC
+                AS
+                   PRAGMA UDF;
+                BEGIN
+                   RETURN #{hash(concatenate(coalesce(as_text(safe_column_exprs(leaves, 'NEW')))))};
+                END #{trigger_function}}.
+              unindent,
+              %Q{     -- This is the Postgres syntax
+                CREATE TRIGGER trig_#{trigger_function}
+                        BEFORE INSERT OR UPDATE ON #{table_name}
+                        FOR EACH ROW EXECUTE PROCEDURE #{trigger_function}()}.
+              unindent
+            ]
+          end
+=end
+
+          # Some or all of the SQL expressions may have non-text values.
+          # Return an SQL expression that coerces them to text.
+          def as_text exprs
+            return exprs.map{|e| as_text(e)} if Array === exprs
+
+            Expression.new("#{exprs}", MM::DataType::TYPE_String, exprs.is_mandatory)
+          end
+
+          # Return an SQL expression that concatenates the given expressions (which must yield a string type)
+          def concatenate expressions
+            Expression.new(
+              "'|' || " +
+              expressions.map(&:to_s) * " || '|' || " +
+              " || '|'",
+              MM::DataType::TYPE_String,
+              true
+            )
+          end
+
+          # Return an expression that yields a hash of the given expression
+          def hash expr, algo = 'SHA-1'
+            # Since Oracle 12.1:
+            Expression.new("STANDARD_HASH(#{expr}, '#{algo}')", MM::DataType::TYPE_Binary, expr.is_mandatory)
+
+            # Expression.new("utl_raw.cast_to_raw(dbms_crypto.hash(#{expr}, dbms_crypto.hash_#{algo}))", MM::DataType::TYPE_Binary, expr.is_mandatory)
           end
 
           # Reserved words cannot be used anywhere without quoting.

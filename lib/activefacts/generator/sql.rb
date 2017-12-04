@@ -91,7 +91,7 @@ module ActiveFacts
         constraints = leaf.all_leaf_constraint
 
         "-- #{leaf.comment}\n" +
-        "\t#{column_name}#{padding}#{column_type leaf, column_name}"
+        "\t#{column_name}#{padding}#{column_type(leaf, column_name)}"
       end
 
       def column_type component, column_name
@@ -102,6 +102,7 @@ module ActiveFacts
         type_name = choose_sql_type(type_name, value_constraint, component, options)
         @delayed_statements += options.delete(:delayed) if options[:delayed]
         length = options[:length]
+        return options[:computed] if options[:computed]
 
         "#{
           type_name

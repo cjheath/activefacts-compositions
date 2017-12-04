@@ -94,7 +94,7 @@ module ActiveFacts
                 options[:default] = " DEFAULT 'gen_random_uuid()'"
                 'UUID'
               when :hash                # A hash of the natural key
-                options.delete(:length) # 20 bytes, assuming SHA-1. SHA-256 would need 32 bytes
+                options.delete(:length) # 20 bytes, assuming SHA-1, but we don't need to specify it. SHA-256 would need 32 bytes
                 options[:delayed] = trigger_hash_assignment(component, component.root.natural_index.all_index_field.map(&:component))
                 'BYTEA'
               else                      # Not a surrogate
@@ -115,49 +115,44 @@ module ActiveFacts
             [
               %Q{
                 CREATE OR REPLACE FUNCTION #{trigger_function}() RETURNS TRIGGER AS $$
-                    BEGIN
-                        NEW.#{safe_column_name(hash_field)} = #{hash(concatenate(as_text(table_qual('NEW', safe_column_names(leaves)))))};
+                BEGIN
+                        NEW.#{safe_column_name(hash_field)} = #{
+                          hash(concatenate(coalesce(as_text(safe_column_exprs(leaves, 'NEW')))))
+                        };
                         RETURN NEW;	
-                    END
+                END
                 $$ language 'plpgsql'}.
               unindent,
               %Q{
                 CREATE TRIGGER trig_#{trigger_function}
-                    BEFORE INSERT ON #{table_name}
-                    FOR EACH ROW EXECUTE PROCEDURE #{trigger_function}()}.
+                        BEFORE INSERT OR UPDATE ON #{table_name}
+                        FOR EACH ROW EXECUTE PROCEDURE #{trigger_function}()}.
               unindent
             ]
           end
 
-          # Return an SQL expression that concatenates the given expressions (which must be text)
-          def concatenate expressions
-            "'|'::text || " +
-            expressions * " || '|'::text || " +
-            " || '|'::text"
-          end
-
           # Some or all of the SQL expressions may have non-text values.
           # Return an SQL expression that coerces them to text.
-          def as_text expressions
-            if Array === expressions
-              expressions.map{|e| as_text(e)}
-            else
-              expressions+"::text"
-            end
+          def as_text exprs
+            return exprs.map{|e| as_text(e)} if Array === exprs
+
+            Expression.new("#{exprs}::text", MM::DataType::TYPE_String, exprs.is_mandatory)
           end
 
-          # Qualify each of the column names with the given table name
-          def table_qual table_name, column_names
-            if Array === column_names
-              column_names.map{|c| table_qual(table_name, c)}
-            else
-              table_name+'.'+column_names
-            end
+          # Return an SQL expression that concatenates the given expressions (which must yield a string type)
+          def concatenate expressions
+            Expression.new(
+              "'|'::text || " +
+              expressions.map(&:to_s) * " || '|'::text || " +
+              " || '|'::text",
+              MM::DataType::TYPE_String,
+              true
+            )
           end
 
           # Return an expression that yields a hash of the given expression
           def hash expr, algo = 'sha1'
-            "digest(#{expr}, '#{algo}')"
+            Expression.new("digest(#{expr}, '#{algo}')", MM::DataType::TYPE_Binary, expr.is_mandatory)
           end
 
           # Reserved words cannot be used anywhere without quoting.
