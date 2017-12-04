@@ -295,15 +295,11 @@ CREATE TABLE SalesAgentHUB (
 ALTER TABLE AirplanePartLINK
 	ADD FOREIGN KEY (PartHID) REFERENCES PartHUB (PartHID);
 
-
 ALTER TABLE AssignedAirplaneLINK
 	ADD FOREIGN KEY (ConnectionHID) REFERENCES ConnectionHUB (ConnectionHID);
-
 
 ALTER TABLE BookingLINK
 	ADD FOREIGN KEY (PassengerHID) REFERENCES PassengerHUB (PassengerHID);
 
-
 ALTER TABLE BookingLINK
 	ADD FOREIGN KEY (SalesAgentHID) REFERENCES SalesAgentHUB (SalesAgentHID);
-
