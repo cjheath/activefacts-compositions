@@ -187,8 +187,8 @@ module ActiveFacts
 
           def phonetics expr
             [
-              Expression.new("dmetaphone(#{expr}, '[^[:alnum:]]+', ' ', 'g')", MM::DataType::TYPE_String, expr.is_mandatory),
-              Expression.new("dmetaphone_alt(#{expr}, '[^[:alnum:]]+', ' ', 'g')", MM::DataType::TYPE_String, expr.is_mandatory)
+              Expression.new("dmetaphone(#{expr})", MM::DataType::TYPE_String, expr.is_mandatory),
+              Expression.new("dmetaphone_alt(#{expr})", MM::DataType::TYPE_String, expr.is_mandatory)
             ]
           end
 
