@@ -119,7 +119,7 @@ module ActiveFacts
                         NEW.#{safe_column_name(hash_field)} = #{
                           hash(concatenate(coalesce(as_text(safe_column_exprs(leaves, 'NEW')))))
                         };
-                        RETURN NEW;	
+                        RETURN NEW;
                 END
                 $$ language 'plpgsql'}.
               unindent,
@@ -155,6 +155,43 @@ module ActiveFacts
             Expression.new("digest(#{expr}, '#{algo}')", MM::DataType::TYPE_Binary, expr.is_mandatory)
           end
 
+          def truncate expr, length
+            Expression.new("substring(#{expr} for #{length})", MM::DataType::TYPE_String, expr.is_mandatory)
+          end
+
+          # Produce a lexically-sortable decimal representation of the given numeric expression, to the overall specified length and scale
+          def lexical_decimal expr, length, scale = 0
+            fraction_pattern = scale > 0 ? '.'+'0'*scale : ''
+            Expression.new(
+              "to_char(#{expr}, 'MI#{'0'*(length-fraction_pattern.length-1)+fraction_pattern})",
+              MM::DataType::TYPE_String,
+              expr.is_mandatory
+            )
+          end
+
+          def lexical_date expr
+            Expression.new("to_char(#{expr}, 'YYYY-MM-DD')", MM::DataType::TYPE_String, expr.is_mandatory)
+          end
+
+          def lexical_datetime expr
+            Expression.new("to_char(#{expr}, 'YYYY-MM-DD HH24:MI:SS.US')", MM::DataType::TYPE_String, expr.is_mandatory)
+          end
+
+          def lexical_time expr
+            Expression.new("to_char(#{expr}, 'HH24:MI:SS.US')", MM::DataType::TYPE_String, expr.is_mandatory)
+          end
+
+          def as_alpha expr
+            Expression.new("btrim(lower(regexp_replace(#{expr}, '[^[:alnum:]]+', ' ', 'g')))", MM::DataType::TYPE_String, expr.is_mandatory)
+          end
+
+          def phonetics expr
+            [
+              Expression.new("dmetaphone(#{expr}, '[^[:alnum:]]+', ' ', 'g')", MM::DataType::TYPE_String, expr.is_mandatory),
+              Expression.new("dmetaphone_alt(#{expr}, '[^[:alnum:]]+', ' ', 'g')", MM::DataType::TYPE_String, expr.is_mandatory)
+            ]
+          end
+
           # Reserved words cannot be used anywhere without quoting.
           # Keywords have existing definitions, so should not be used without quoting.
           # Both lists here are added to the supertype's lists
@@ -187,7 +224,7 @@ module ActiveFacts
 
             # These keywords cannot be used for type or functions (and should not for columns or tables)
             @postgres_key_words_func_type ||= %w{
-              GREATEST LEAST SETOF XMLROOT 
+              GREATEST LEAST SETOF XMLROOT
             }
             super + @postgres_key_words + @postgres_key_words_func_type
           end

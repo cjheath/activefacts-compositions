@@ -9,23 +9,43 @@ require 'activefacts/metamodel/datatypes'
 require 'activefacts/compositions'
 require 'activefacts/compositions/names'
 require 'activefacts/generator'
-require 'activefacts/generator/traits/sql/postgres'
+require 'activefacts/generator/traits/sql'
 
 module ActiveFacts
   module Generators
     module ETL
       class Unidex
+        include Traits::SQL
+        extend Traits::SQL
+
         MM = ActiveFacts::Metamodel unless const_defined?(:MM)
         def self.options
-          # REVISIT: Need all the SQL trait options here
-          {
-          }
+          # REVISIT: There's no way to support SQL dialect options here
+          super.merge(
+            {
+              dialect: [String, "SQL Dialect to use"],
+              value_width: [Integer, "Number of characters to index from long values"],
+              phonetic_confidence: [Integer, "Percentage confidence for a phonetic match"],
+            }
+          )
         end
 
         def initialize composition, options = {}
           @composition = composition
           @options = options
-          # REVISIT: Need all the SQL trait options here
+          @value_width = (options.delete('value_width') || 32).to_i
+          @phonetic_confidence = (options.delete('phonetic_confidence') || 70).to_i
+
+          @trait = ActiveFacts::Generators::Traits::SQL
+          if @dialect = options.delete("dialect")
+            require 'activefacts/generator/traits/sql/'+@dialect
+            trait_name = ActiveFacts::Generators::Traits::SQL.constants.detect{|c| c.to_s =~ %r{#{@dialect}}i}
+            @trait = @trait.const_get(trait_name)
+            self.class.include @trait
+            self.class.extend @trait
+            extend @trait
+          end
+          process_options options
         end
 
         def generate
@@ -95,9 +115,9 @@ module ActiveFacts
 
         def generate_indicator leaf
           nil # REVISIT: Do we need anything here?
-          # select leaf.root, safe_column_name(leaf), 1, 1
+          # select leaf.root, safe_column_name(leaf), 1, column_name(leaf), 1
         end
-        
+
         # This foreign key connects two composites (tables)
         def generate_joined_value foreign_key
           return nil unless foreign_key.composite.mapping.object_type.is_static
@@ -114,17 +134,17 @@ module ActiveFacts
               next unless MM::Absorption === component &&
                 (value_type = component.object_type) &&
                 MM::ValueType === value_type
-              search_settings = value_type.applicable_parameter_restrictions('Search')
-              search_settings.reject!{|vtpr| m = vtpr.value_range.minimum_bound and m.value == 'none'}
-              if search_settings.empty?
+              search_methods = value_type.applicable_parameter_restrictions('Search')
+              search_methods.reject!{|vtpr| m = vtpr.value_range.minimum_bound and m.value == 'none'}
+              if search_methods.empty?
                 false
               else
-                search_index_by[ix] = search_settings
+                search_index_by[ix] = search_methods
               end
             end
           return nil if search_index_by.empty?
           search_index_by.map do |si, settings|
-            trace :unidex, "Search #{table_name foreign_key.source_composite} via #{table_name si.composite}.#{column_name si.all_index_field.single.component} using #{settings.inspect}"
+            trace :unidex, "Search #{table_name foreign_key.source_composite} via #{table_name si.composite}.#{column_name si.all_index_field.single.component} using #{settings.map(&:inspect)*', '}"
 
             # REVISIT: Generate search join expression
 
@@ -141,75 +161,99 @@ module ActiveFacts
           value_constraint = options[:value_constraint]
 
           # Look for instructions on how to index this leaf for search:
-          search_settings = value_type.applicable_parameter_restrictions('Search')
-          search_settings.reject!{|vtpr| m = vtpr.value_range.minimum_bound and m.value == 'none'}
-          return nil if search_settings.empty?
+          search_methods = value_type.applicable_parameter_restrictions('Search')
+          search_methods.reject!{|vtpr| m = vtpr.value_range.minimum_bound and m.value == 'none'}
+          return nil if search_methods.empty?
+          search_methods.map!{|sm| sm.value_range.minimum_bound.value.effective_value}
 
           # Convert from the model's data type to a metamodel type, if possible
-          normalised = MM::DataType.intrinsic_type(type_name)
-          data_type_name = normalised ? MM::DataType::TypeNames[normalised] : type_name
-          trace :unidex, "Search #{table_name leaf.root}.#{column_name(leaf)} as #{data_type_name} using #{search_settings.inspect}"
+          intrinsic_type = MM::DataType.intrinsic_type(type_name)
+          data_type_name = intrinsic_type ? MM::DataType::TypeNames[intrinsic_type] : type_name
+          trace :unidex, "Search #{table_name leaf.root}.#{column_name(leaf)} as #{data_type_name} using #{search_methods.map(&:inspect)*', '}"
 
-return nil
+          col_expr = Expression.new(safe_column_name(leaf), intrinsic_type, leaf.is_mandatory)
+          source = column_name(leaf)
+          case intrinsic_type
+          when MM::DataType::TYPE_Char,
+               MM::DataType::TYPE_String,
+               MM::DataType::TYPE_Text
+            # Produce a truncated value with the requested search
+            search_methods.flat_map do |sm|
+              case sm
+              when 'none'         # Do not index this value
+                nil
+              when 'simple'       # Disregard white-space only
+                select(leaf.root, truncate(col_expr, @value_width), 'simple', source, 1.0)
 
-          case normalised
+              when 'alpha'        # Strip white space and punctuation, just use alphabetic characters
+                select(leaf.root, truncate(as_alpha(col_expr), @value_width), 'alpha', source, 0.9)
+
+              when 'words'        # Break the text into words and match each word like alpha
+                nil # REVISIT: Implement this type
+
+              # when 'phrases'    # Words, but where adjacent sequences of words matter
+              when 'typo'         # Use trigram similarity to detect typographic errors
+                nil # REVISIT: Implement this type
+
+              when 'phonetic'     # Use phonetic matching as well as trigrams
+                phonetics(col_expr).map do |p|
+                  select(leaf.root, p, 'phonetic', source, @phonetic_confidence/100.0)
+                end
+
+              when 'names'        # Break the text into words and match each word like phonetic
+                nil # REVISIT: Implement this type
+
+              when 'text'         # Index a large text field using significant words and phrases
+                nil # REVISIT: Implement this type
+              else
+                raise "Unknown search method #{sm}"
+              end
+            end
+
           when MM::DataType::TYPE_Boolean
-          when MM::DataType::TYPE_Integer   ####
-          when MM::DataType::TYPE_Real
-          when MM::DataType::TYPE_Decimal   ####
-          when MM::DataType::TYPE_Money
-          when MM::DataType::TYPE_Char      ####
-          when MM::DataType::TYPE_String    ####
-          when MM::DataType::TYPE_Text      ####
+            nil # REVISIT: Implement this type
+
+          when MM::DataType::TYPE_Integer,
+               MM::DataType::TYPE_Real,
+               MM::DataType::TYPE_Decimal,
+               MM::DataType::TYPE_Money
+            # Produce a right-justified value
+            select(leaf.root, lexical_decimal(col_expr, @value_width, value_type.scale), 'simple', source, 1)
+
           when MM::DataType::TYPE_Date
+            # Produce an ISO representation that sorts lexically (YYYY-MM-DD)
+            # REVISIT: Support search methods here
+            select(leaf.root, lexical_date(col_expr), 'simple', source, 1)
+
+          when MM::DataType::TYPE_DateTime,
+               MM::DataType::TYPE_Timestamp
+            # Produce an ISO representation that sorts lexically (YYYY-MM-DD HH:mm:ss)
+            # REVISIT: Support search methods here
+            select(leaf.root, lexical_datetime(col_expr), 'simple', source, 1)
+
           when MM::DataType::TYPE_Time
-          when MM::DataType::TYPE_DateTime
-          when MM::DataType::TYPE_Timestamp
+            # Produce an ISO representation that sorts lexically (YYYY-MM-DD HH:mm:ss)
+            select(leaf.root, lexical_time(col_expr), 'simple', source, 1)
+
           when MM::DataType::TYPE_Binary
+            nil   # No indexing applied
           when nil   # Data Type is unknown
           else
           end
-
-          # REVISIT: Use the data type parameters, when they're implemented
-          [
-            # REVISIT: First key should be lexically cleansed and down-cased
-            select(leaf.root, safe_column_name(leaf), 1, 1),
-            select(leaf.root, 'dmetaphone('+safe_column_name(leaf)+')', 1, 0.7),
-            select(leaf.root, 'dmetaphone_alt('+safe_column_name(leaf)+')', 1, 0.7),
-
-            # REVISIT: Strings should be indexed by exact words
-            # REVISIT: Strings should be indexed by metaphone and metaphone_alt
-            # REVISIT: Strings should be indexed by trigram
-            # REVISIT: Dates should be indexed by round-down(5 years) and round-up(5 years)
-            # REVISIT: Numbers could be indexed by round-down(some range) and round-up(some range)
-          ].compact
         end
 
-        def select composite, expression, processing_level, confidence = 1
+        def select composite, expression, processing, source, confidence = 1
+          # These fields are in order of index precedence, to co-locate
+          # comparable values regardless of source record type or column
           %Q{
-          SELECT  #{processing_level} AS ProcLevel,
+          SELECT  '#{processing}' AS Processing,
                   #{expression} AS Value,
                   LoadBatchID,
-                  #{confidence} AS Confidence,
+                  #{"%.2f" % confidence} AS Confidence,
                   RecordUUID,
-                  '#{expression}' AS Column
+                  '#{source}' AS Source
           FROM    #{table_name(composite)}}.
           unindent
-        end
-
-        def safe_column_name component
-          # escape(column_name(component), column_name_max)
-          column_name(component)
-        end
-
-        def column_name component
-          # words = component.column_name.send(@column_case)
-          # words*@column_joiner
-          component.column_name.snakecase
-        end
-
-        def table_name composite
-          composite.mapping.name.words.snakecase
         end
 
       end
