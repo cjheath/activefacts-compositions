@@ -9,23 +9,38 @@ require 'activefacts/metamodel/datatypes'
 require 'activefacts/compositions'
 require 'activefacts/compositions/names'
 require 'activefacts/generator'
-require 'activefacts/generator/traits/sql/postgres'
+require 'activefacts/generator/traits/sql'
 
 module ActiveFacts
   module Generators
     module ETL
       class Unidex
+        include Traits::SQL 
+        extend Traits::SQL
+
         MM = ActiveFacts::Metamodel unless const_defined?(:MM)
         def self.options
-          # REVISIT: Need all the SQL trait options here
-          {
-          }
+          # REVISIT: There's no way to support SQL dialect options here
+          super.merge(
+            {
+              dialect: ['String', "SQL Dialect to use"],
+            }
+          )
         end
 
         def initialize composition, options = {}
           @composition = composition
           @options = options
-          # REVISIT: Need all the SQL trait options here
+          @trait = ActiveFacts::Generators::Traits::SQL
+          if @dialect = options.delete("dialect")
+            require 'activefacts/generator/traits/sql/'+@dialect
+            trait_name = ActiveFacts::Generators::Traits::SQL.constants.detect{|c| c.to_s =~ %r{#{@dialect}}i}
+            @trait = @trait.const_get(trait_name)
+            self.class.include @trait
+            self.class.extend @trait
+            extend @trait
+          end
+          process_options options
         end
 
         def generate
@@ -114,17 +129,17 @@ module ActiveFacts
               next unless MM::Absorption === component &&
                 (value_type = component.object_type) &&
                 MM::ValueType === value_type
-              search_settings = value_type.applicable_parameter_restrictions('Search')
-              search_settings.reject!{|vtpr| m = vtpr.value_range.minimum_bound and m.value == 'none'}
-              if search_settings.empty?
+              search_methods = value_type.applicable_parameter_restrictions('Search')
+              search_methods.reject!{|vtpr| m = vtpr.value_range.minimum_bound and m.value == 'none'}
+              if search_methods.empty?
                 false
               else
-                search_index_by[ix] = search_settings
+                search_index_by[ix] = search_methods
               end
             end
           return nil if search_index_by.empty?
           search_index_by.map do |si, settings|
-            trace :unidex, "Search #{table_name foreign_key.source_composite} via #{table_name si.composite}.#{column_name si.all_index_field.single.component} using #{settings.inspect}"
+            trace :unidex, "Search #{table_name foreign_key.source_composite} via #{table_name si.composite}.#{column_name si.all_index_field.single.component} using #{settings.map(&:inspect)*', '}"
 
             # REVISIT: Generate search join expression
 
@@ -141,31 +156,42 @@ module ActiveFacts
           value_constraint = options[:value_constraint]
 
           # Look for instructions on how to index this leaf for search:
-          search_settings = value_type.applicable_parameter_restrictions('Search')
-          search_settings.reject!{|vtpr| m = vtpr.value_range.minimum_bound and m.value == 'none'}
-          return nil if search_settings.empty?
+          search_methods = value_type.applicable_parameter_restrictions('Search')
+          search_methods.reject!{|vtpr| m = vtpr.value_range.minimum_bound and m.value == 'none'}
+          return nil if search_methods.empty?
 
           # Convert from the model's data type to a metamodel type, if possible
-          normalised = MM::DataType.intrinsic_type(type_name)
-          data_type_name = normalised ? MM::DataType::TypeNames[normalised] : type_name
-          trace :unidex, "Search #{table_name leaf.root}.#{column_name(leaf)} as #{data_type_name} using #{search_settings.inspect}"
+          intrinsic_type = MM::DataType.intrinsic_type(type_name)
+          data_type_name = intrinsic_type ? MM::DataType::TypeNames[intrinsic_type] : type_name
+          trace :unidex, "Search #{table_name leaf.root}.#{column_name(leaf)} as #{data_type_name} using #{search_methods.map(&:inspect)*', '}"
 
 return nil
 
-          case normalised
-          when MM::DataType::TYPE_Boolean
-          when MM::DataType::TYPE_Integer   ####
-          when MM::DataType::TYPE_Real
-          when MM::DataType::TYPE_Decimal   ####
-          when MM::DataType::TYPE_Money
-          when MM::DataType::TYPE_Char      ####
-          when MM::DataType::TYPE_String    ####
-          when MM::DataType::TYPE_Text      ####
+          case intrinsic_type
+          when MM::DataType::TYPE_Char,
+               MM::DataType::TYPE_String,
+               MM::DataType::TYPE_Text
+            # Produce a truncated value with the requested search
+
+          when MM::DataType::TYPE_Boolean,
+               MM::DataType::TYPE_Integer,
+               MM::DataType::TYPE_Real,
+               MM::DataType::TYPE_Decimal,
+               MM::DataType::TYPE_Money
+            # Produce a right-justified value
+
           when MM::DataType::TYPE_Date
+            # Produce an ISO representation that sorts lexically (YYYY-MM-DD)
+
+          when MM::DataType::TYPE_DateTime,
+               MM::DataType::TYPE_Timestamp
+            # Produce an ISO representation that sorts lexically (YYYY-MM-DD HH:mm:ss)
+
           when MM::DataType::TYPE_Time
-          when MM::DataType::TYPE_DateTime
-          when MM::DataType::TYPE_Timestamp
+            # Produce an ISO representation that sorts lexically (YYYY-MM-DD HH:mm:ss)
+
           when MM::DataType::TYPE_Binary
+            # No indexing applied
           when nil   # Data Type is unknown
           else
           end
@@ -195,21 +221,6 @@ return nil
                   '#{expression}' AS Column
           FROM    #{table_name(composite)}}.
           unindent
-        end
-
-        def safe_column_name component
-          # escape(column_name(component), column_name_max)
-          column_name(component)
-        end
-
-        def column_name component
-          # words = component.column_name.send(@column_case)
-          # words*@column_joiner
-          component.column_name.snakecase
-        end
-
-        def table_name composite
-          composite.mapping.name.words.snakecase
         end
 
       end
