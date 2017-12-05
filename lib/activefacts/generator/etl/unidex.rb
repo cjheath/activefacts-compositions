@@ -136,6 +136,7 @@ module ActiveFacts
                 MM::ValueType === value_type
               search_methods = value_type.applicable_parameter_restrictions('Search')
               search_methods.reject!{|vtpr| m = vtpr.value_range.minimum_bound and m.value == 'none'}
+              search_methods.map!{|sm| sm.value_range.minimum_bound.value.effective_value}
               if search_methods.empty?
                 false
               else
@@ -143,12 +144,27 @@ module ActiveFacts
               end
             end
           return nil if search_index_by.empty?
-          search_index_by.map do |si, settings|
-            trace :unidex, "Search #{table_name foreign_key.source_composite} via #{table_name si.composite}.#{column_name si.all_index_field.single.component} using #{settings.map(&:inspect)*', '}"
 
-            # REVISIT: Generate search join expression
+          search_index_by.flat_map do |search_index, search_methods|
+            trace :unidex, "Search #{table_name foreign_key.source_composite} via #{table_name search_index.composite}.#{column_name search_index.all_index_field.single.component} using #{search_methods.map(&:inspect)*', '}"
 
-            nil
+            fk_leaf = foreign_key.all_foreign_key_field.single.component  # Link from this FK field
+            pk_leaf = foreign_key.all_index_field.single.component        # To this PK field
+            source = table_name(foreign_key.composite)                    # In this table
+            leaf = search_index.all_index_field.single.component          # Returning this natural index value
+            type_name, options = leaf.data_type(data_type_context)        # Which has this type_name
+            intrinsic_type = MM::DataType.intrinsic_type(type_name)       # Which corresponds to this intrinsic type
+
+            col_expr = Expression.new(
+              %Q{
+                (SELECT  #{safe_column_name(leaf)}
+                 FROM    #{source} AS f
+                 WHERE   #{table_name foreign_key.source_composite}.#{safe_column_name(fk_leaf)} = f.#{safe_column_name(pk_leaf)})}.
+              gsub(/\s+/,' '),
+              intrinsic_type,
+              fk_leaf.is_mandatory
+            )
+            search_expr foreign_key.source_composite, intrinsic_type, col_expr, search_methods, source
           end
         end
 
@@ -156,7 +172,7 @@ module ActiveFacts
           return nil unless leaf.is_a?(MM::Absorption)
 
           value_type = leaf.object_type
-          type_name, options = leaf.data_type(MM::DataType::DefaultContext)
+          type_name, options = leaf.data_type(data_type_context)
           length = options[:length]
           value_constraint = options[:value_constraint]
 
@@ -173,6 +189,11 @@ module ActiveFacts
 
           col_expr = Expression.new(safe_column_name(leaf), intrinsic_type, leaf.is_mandatory)
           source = column_name(leaf)
+
+          search_expr leaf.root, intrinsic_type, col_expr, search_methods, source
+        end
+
+        def search_expr composite, intrinsic_type, col_expr, search_methods, source
           case intrinsic_type
           when MM::DataType::TYPE_Char,
                MM::DataType::TYPE_String,
@@ -183,21 +204,22 @@ module ActiveFacts
               when 'none'         # Do not index this value
                 nil
               when 'simple'       # Disregard white-space only
-                select(leaf.root, truncate(col_expr, @value_width), 'simple', source, 1.0)
+                select(composite, truncate(col_expr, @value_width), 'simple', source, 1.0)
 
               when 'alpha'        # Strip white space and punctuation, just use alphabetic characters
-                select(leaf.root, truncate(as_alpha(col_expr), @value_width), 'alpha', source, 0.9)
+                select(composite, truncate(as_alpha(col_expr), @value_width), 'alpha', source, 0.9)
 
               when 'words'        # Break the text into words and match each word like alpha
                 nil # REVISIT: Implement this type
 
               # when 'phrases'    # Words, but where adjacent sequences of words matter
               when 'typo'         # Use trigram similarity to detect typographic errors
-                nil # REVISIT: Implement this type
+                # REVISIT: Implement this type properly
+                select(composite, truncate(as_alpha(col_expr), @value_width), 'typo', source, 0.9)
 
               when 'phonetic'     # Use phonetic matching as well as trigrams
                 phonetics(col_expr).map do |p|
-                  select(leaf.root, p, 'phonetic', source, @phonetic_confidence/100.0)
+                  select(composite, p, 'phonetic', source, @phonetic_confidence/100.0)
                 end
 
               when 'names'        # Break the text into words and match each word like phonetic
@@ -218,22 +240,22 @@ module ActiveFacts
                MM::DataType::TYPE_Decimal,
                MM::DataType::TYPE_Money
             # Produce a right-justified value
-            select(leaf.root, lexical_decimal(col_expr, @value_width, value_type.scale), 'simple', source, 1)
+            select(composite, lexical_decimal(col_expr, @value_width, value_type.scale), 'simple', source, 1)
 
           when MM::DataType::TYPE_Date
             # Produce an ISO representation that sorts lexically (YYYY-MM-DD)
             # REVISIT: Support search methods here
-            select(leaf.root, lexical_date(col_expr), 'simple', source, 1)
+            select(composite, lexical_date(col_expr), 'simple', source, 1)
 
           when MM::DataType::TYPE_DateTime,
                MM::DataType::TYPE_Timestamp
             # Produce an ISO representation that sorts lexically (YYYY-MM-DD HH:mm:ss)
             # REVISIT: Support search methods here
-            select(leaf.root, lexical_datetime(col_expr), 'simple', source, 1)
+            select(composite, lexical_datetime(col_expr), 'simple', source, 1)
 
           when MM::DataType::TYPE_Time
             # Produce an ISO representation that sorts lexically (YYYY-MM-DD HH:mm:ss)
-            select(leaf.root, lexical_time(col_expr), 'simple', source, 1)
+            select(composite, lexical_time(col_expr), 'simple', source, 1)
 
           when MM::DataType::TYPE_Binary
             nil   # No indexing applied
