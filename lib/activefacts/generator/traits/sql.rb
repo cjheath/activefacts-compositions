@@ -33,7 +33,7 @@ module ActiveFacts
       end
 
       def inspect
-        "Expression(#{value.inspect}, #{@type_num ? MM::DataTypes::TypeNames[@type_num] : 'unknown'}, #{@is_mandatory ? 'mandatory' : 'nullable'})"
+        "Expression(#{value.inspect}, #{@type_num ? ActiveFacts::Metamodel::DataType::TypeNames[@type_num] : 'unknown'}, #{@is_mandatory ? 'mandatory' : 'nullable'})"
       end
     end
 
