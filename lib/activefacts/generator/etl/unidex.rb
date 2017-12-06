@@ -288,7 +288,7 @@ module ActiveFacts
           if where.empty?
             select
           else
-            "\nSELECT * FROM (#{select}) AS s\nWHERE #{where*' AND '}"
+            "\nSELECT * FROM (#{select}\n) AS s WHERE #{where*' AND '}"
           end
 
         end
