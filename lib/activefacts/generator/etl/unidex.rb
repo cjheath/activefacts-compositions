@@ -275,12 +275,14 @@ module ActiveFacts
           # These fields are in order of index precedence, to co-locate
           # comparable values regardless of source record type or column
           where << 'Value IS NOT NULL' if expression.to_s =~ /\bNULL\b/
+          load_batch_id = "LoadBatchID".words.send(@column_case)*@column_joiner
+          record_guid = "RecordGUID".words.send(@column_case)*@column_joiner
           select = %Q{
             SELECT  '#{processing}' AS Processing,
                     #{expression} AS Value,
-                    LoadBatchID,
+                    #{load_batch_id},
                     #{"%.2f" % confidence} AS Confidence,
-                    RecordUUID,
+                    #{record_guid},
                     '#{source}' AS Source
             FROM    #{table_name(composite)}}.
             unindent
