@@ -146,7 +146,7 @@ module ActiveFacts
                 map{|column_name| column_name + ' IS NOT NULL'} *
                 ' AND '
               }"
-            nil
+            nil   # Nothing inline
           else
             '-- '+index.inspect + "\n\t" +
             (primary ? 'PRIMARY KEY' : 'UNIQUE') +
@@ -155,15 +155,17 @@ module ActiveFacts
           end
         else
           # REVISIT: If the fields of this index is a prefix of another index, it can be omitted
-          @delayed_statements <<
+          tn = table_name(index.composite)
+          create_index =
             'CREATE'+index_kind(index)+' INDEX '+
-            escape("#{table_name(index.composite)}By#{column_names*''}", index_name_max) +
-            " ON #{table_name}(" +
+            escape("#{tn}By#{column_names*''}", index_name_max) +
+            " ON #{tn}(" +
             column_names.map{|n|
               escape(n, column_name_max)
             }*', ' +
             ')'
-          nil
+          @delayed_statements << create_index
+          nil   # Nothing inline
         end
       end
 
