@@ -91,7 +91,7 @@ module ActiveFacts
               when :guid                # A GUID
                 # This requires the pgcrypto extension
                 options[:length] = nil
-                options[:default] = " DEFAULT 'gen_random_uuid()'"
+                options[:default] = " DEFAULT gen_random_uuid()"
                 'UUID'
               when :hash                # A hash of the natural key
                 options.delete(:length) # 20 bytes, assuming SHA-1, but we don't need to specify it. SHA-256 would need 32 bytes
