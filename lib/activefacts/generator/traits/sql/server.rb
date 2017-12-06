@@ -16,7 +16,7 @@ module ActiveFacts
     module Traits
       module SQL
         module Server
-          prepend Traits::SQL
+          include Traits::SQL
 
           def options
             super.merge({

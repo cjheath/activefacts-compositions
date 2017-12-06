@@ -13,30 +13,10 @@ require 'activefacts/metamodel/datatypes'
 require 'activefacts/compositions'
 require 'activefacts/compositions/names'
 require 'activefacts/generator'
+require 'activefacts/generator/traits/expr'
 
 module ActiveFacts
   module Generators
-    class Expression
-      attr_reader :value          # String representation of the expression
-      attr_reader :type_num       # ActiveFacts::Metamodel::DataType number
-      attr_reader :is_mandatory   # false if nullable
-
-      # Construct an expression that addresses a field from a Metamodel::Component
-      def initialize value, type_num, is_mandatory
-        @type_num = type_num
-        @value = value
-        @is_mandatory = is_mandatory
-      end
-
-      def to_s
-        value
-      end
-
-      def inspect
-        "Expression(#{value.inspect}, #{@type_num ? ActiveFacts::Metamodel::DataType::TypeNames[@type_num] : 'unknown'}, #{@is_mandatory ? 'mandatory' : 'nullable'})"
-      end
-    end
-
     module Traits
       module SQL
         MM = ActiveFacts::Metamodel unless const_defined?(:MM)

@@ -15,7 +15,7 @@ module ActiveFacts
     # * underscore 
     class SQL
       class MySQL < SQL
-        include Traits::SQL::MySQL
+        prepend Traits::SQL::MySQL
         extend Traits::SQL::MySQL   # Needed for class methods, like options
       end
 

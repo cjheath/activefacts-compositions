@@ -15,13 +15,14 @@ module ActiveFacts
   module Generators
     module ETL
       class Unidex
-        include Traits::SQL
-        extend Traits::SQL
 
         MM = ActiveFacts::Metamodel unless const_defined?(:MM)
         def self.options
           # REVISIT: There's no way to support SQL dialect options here
-          super.merge(
+          sql_trait = ActiveFacts::Generators::Traits::SQL
+          Class.new.extend(sql_trait).  # Anonymous class to enable access to traits module instance methods
+          options.
+          merge(
             {
               dialect: [String, "SQL Dialect to use"],
               value_width: [Integer, "Number of characters to index from long values"],
@@ -33,19 +34,25 @@ module ActiveFacts
         def initialize composition, options = {}
           @composition = composition
           @options = options
-          @value_width = (options.delete('value_width') || 32).to_i
-          @phonetic_confidence = (options.delete('phonetic_confidence') || 70).to_i
 
           @trait = ActiveFacts::Generators::Traits::SQL
           if @dialect = options.delete("dialect")
             require 'activefacts/generator/traits/sql/'+@dialect
             trait_name = ActiveFacts::Generators::Traits::SQL.constants.detect{|c| c.to_s =~ %r{#{@dialect}}i}
             @trait = @trait.const_get(trait_name)
-            self.class.include @trait
-            self.class.extend @trait
-            extend @trait
           end
+          self.class.include @trait
+          self.class.extend @trait
+          extend @trait
+
           process_options options
+        end
+
+        def process_options options
+          @value_width = (options.delete('value_width') || 32).to_i
+          @phonetic_confidence = (options.delete('phonetic_confidence') || 70).to_i
+
+          super
         end
 
         def generate
@@ -100,7 +107,7 @@ module ActiveFacts
               "/*\n"+
               " * View to extract unified index values for #{table_name(composite)}\n"+
               " */\n"+
-              "CREATE VIEW #{table_name(composite)}_unidex ON" +
+              "CREATE VIEW #{table_name(composite)}_unidex AS" +
               union +
               ";\n"
             else
@@ -264,18 +271,26 @@ module ActiveFacts
           end
         end
 
-        def select composite, expression, processing, source, confidence = 1
+        def select composite, expression, processing, source, confidence = 1, where = []
           # These fields are in order of index precedence, to co-locate
           # comparable values regardless of source record type or column
-          %Q{
-          SELECT  '#{processing}' AS Processing,
-                  #{expression} AS Value,
-                  LoadBatchID,
-                  #{"%.2f" % confidence} AS Confidence,
-                  RecordUUID,
-                  '#{source}' AS Source
-          FROM    #{table_name(composite)}}.
-          unindent
+          where << 'Value IS NOT NULL' if expression.to_s =~ /\bNULL\b/
+          select = %Q{
+            SELECT  '#{processing}' AS Processing,
+                    #{expression} AS Value,
+                    LoadBatchID,
+                    #{"%.2f" % confidence} AS Confidence,
+                    RecordUUID,
+                    '#{source}' AS Source
+            FROM    #{table_name(composite)}}.
+            unindent
+
+          if where.empty?
+            select
+          else
+            "\nSELECT * FROM (#{select}) AS s\nWHERE #{where*' AND '}"
+          end
+
         end
 
       end

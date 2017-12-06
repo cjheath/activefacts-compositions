@@ -16,7 +16,7 @@ module ActiveFacts
     module Traits
       module SQL
         module Postgres
-          prepend Traits::SQL
+          include Traits::SQL
 
           def options
             super.merge({
@@ -186,9 +186,11 @@ module ActiveFacts
           end
 
           def phonetics expr
+            dmetaphone = "dmetaphone(#{expr})"
+            dmetaphone_alt = "dmetaphone_alt(#{expr})"
             [
-              Expression.new("dmetaphone(#{expr})", MM::DataType::TYPE_String, expr.is_mandatory),
-              Expression.new("dmetaphone_alt(#{expr})", MM::DataType::TYPE_String, expr.is_mandatory)
+              Expression.new(dmetaphone, MM::DataType::TYPE_String, expr.is_mandatory),
+              Expression.new("CASE WHEN #{dmetaphone} <> #{dmetaphone_alt} THEN #{dmetaphone_alt} ELSE NULL END", MM::DataType::TYPE_String, expr.is_mandatory)
             ]
           end
 
