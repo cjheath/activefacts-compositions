@@ -57,7 +57,11 @@ module ActiveFacts
 
         def generate
           header +
-          @composition.all_composite.map{|c| generate_composite c}.compact*"\n"+
+          @composition.
+            all_composite.
+            sort_by{|c| c.mapping.object_type.name}.
+            map{|c| generate_composite c}.
+            compact*"\n" +
           trailer
         end
 
@@ -93,7 +97,7 @@ module ActiveFacts
                 raise "Unexpected non-Absorption" unless MM::Absorption === member
                 if member.foreign_key
                   # Index this record by the natural key of the FK target record, if possible
-                  generate_joined_value member.foreign_key
+                  generate_joined_value member
                 # elsif member.full_absorption  # REVISIT: Anything special to do here?
                 else
                   (member.all_member.size > 0 ? member.all_leaf : [member]).flat_map do |leaf|
@@ -126,7 +130,8 @@ module ActiveFacts
         end
 
         # This foreign key connects two composites (tables)
-        def generate_joined_value foreign_key
+        def generate_joined_value member
+          foreign_key = member.foreign_key
           # REVISIT: Is this restriction even necessary?
           return nil unless foreign_key.composite.mapping.object_type.is_static
 
@@ -160,8 +165,8 @@ module ActiveFacts
             fk_pairs =
                   foreign_key.all_foreign_key_field.to_a.
               zip foreign_key.all_index_field.to_a
-            source = table_name(foreign_key.composite)                    # In this table
             leaf = search_index.all_index_field.to_a[0].component         # Returning this natural index value
+            source = (member.column_name+leaf.column_name).elide_repeated_subsequences*' '
             type_name, options = leaf.data_type(data_type_context)        # Which has this type_name
             intrinsic_type = MM::DataType.intrinsic_type(type_name)       # Which corresponds to this intrinsic type
 
@@ -202,7 +207,7 @@ module ActiveFacts
           trace :unidex, "Search #{table_name leaf.root}.#{column_name(leaf)} as #{data_type_name} using #{search_methods.map(&:inspect)*', '}"
 
           col_expr = Expression.new(safe_column_name(leaf), intrinsic_type, leaf.is_mandatory)
-          source = column_name(leaf)
+          source = leaf.column_name*' '
 
           search_expr leaf.root, intrinsic_type, col_expr, search_methods, source
         end
