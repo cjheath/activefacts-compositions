@@ -62,6 +62,7 @@ module ActiveFacts
         end
 
         def header
+          schema_prefix
         end
 
         def generate_composite composite
@@ -126,6 +127,7 @@ module ActiveFacts
 
         # This foreign key connects two composites (tables)
         def generate_joined_value foreign_key
+          # REVISIT: Is this restriction even necessary?
           return nil unless foreign_key.composite.mapping.object_type.is_static
 
           # Index the source table by the natural key of the target, if we can find one
@@ -135,11 +137,12 @@ module ActiveFacts
           search_index_by = {}
           searchable_indices =
             indices.select do |ix|
-              next false if !ix.is_unique || ix.all_index_field.size > 1
-              component = ix.all_index_field.single.component
-              next unless MM::Absorption === component &&
-                (value_type = component.object_type) &&
-                MM::ValueType === value_type
+              next false if !ix.is_unique
+              non_fk_components = ix.all_index_field.map(&:component) - foreign_key.all_index_field.map(&:component)
+              next unless non_fk_components.size == 1
+              component = non_fk_components[0]
+              next unless MM::Absorption === component
+              value_type = component.object_type
               search_methods = value_type.applicable_parameter_restrictions('Search')
               search_methods.reject!{|vtpr| m = vtpr.value_range.minimum_bound and m.value == 'none'}
               search_methods.map!{|sm| sm.value_range.minimum_bound.value.effective_value}
@@ -152,12 +155,13 @@ module ActiveFacts
           return nil if search_index_by.empty?
 
           search_index_by.flat_map do |search_index, search_methods|
-            trace :unidex, "Search #{table_name foreign_key.source_composite} via #{table_name search_index.composite}.#{column_name search_index.all_index_field.single.component} using #{search_methods.map(&:inspect)*', '}"
+            trace :unidex, "Search #{table_name foreign_key.source_composite} via #{table_name search_index.composite}.#{column_name search_index.all_index_field.to_a[0].component} using #{search_methods.map(&:inspect)*', '}"
 
-            fk_leaf = foreign_key.all_foreign_key_field.single.component  # Link from this FK field
-            pk_leaf = foreign_key.all_index_field.single.component        # To this PK field
+            fk_pairs =
+                  foreign_key.all_foreign_key_field.to_a.
+              zip foreign_key.all_index_field.to_a
             source = table_name(foreign_key.composite)                    # In this table
-            leaf = search_index.all_index_field.single.component          # Returning this natural index value
+            leaf = search_index.all_index_field.to_a[0].component         # Returning this natural index value
             type_name, options = leaf.data_type(data_type_context)        # Which has this type_name
             intrinsic_type = MM::DataType.intrinsic_type(type_name)       # Which corresponds to this intrinsic type
 
@@ -165,10 +169,14 @@ module ActiveFacts
               %Q{
                 (SELECT  #{safe_column_name(leaf)}
                  FROM    #{source} AS f
-                 WHERE   #{table_name foreign_key.source_composite}.#{safe_column_name(fk_leaf)} = f.#{safe_column_name(pk_leaf)})}.
+                 WHERE   #{
+                  fk_pairs.map do |fkf, ixf|
+                    "#{table_name foreign_key.source_composite}.#{safe_column_name(fkf.component)} = f.#{safe_column_name(ixf.component)}"
+                  end*' AND '
+                 })}.
               gsub(/\s+/,' '),
               intrinsic_type,
-              fk_leaf.is_mandatory
+              foreign_key.all_foreign_key_field.to_a.all?{|fkf| fkf.component.path_mandatory}
             )
             search_expr foreign_key.source_composite, intrinsic_type, col_expr, search_methods, source
           end
@@ -270,19 +278,27 @@ module ActiveFacts
           end
         end
 
+        def stylise_column_name name
+          name.words.send(@column_case)*@column_joiner
+        end
+
         def select composite, expression, processing, source, confidence = 1, where = []
           # These fields are in order of index precedence, to co-locate
           # comparable values regardless of source record type or column
           where << 'Value IS NOT NULL' if expression.to_s =~ /\bNULL\b/
-          load_batch_id = "LoadBatchID".words.send(@column_case)*@column_joiner
-          record_guid = "RecordGUID".words.send(@column_case)*@column_joiner
+          processing_name = stylise_column_name("Processing")
+          value_name = stylise_column_name("Value")
+          load_batch_id_name = stylise_column_name("LoadBatchID")
+          record_guid_name = stylise_column_name("RecordGUID")
+          confidence_name = stylise_column_name("Confidence")
+          source_name = stylise_column_name("Source")
           select = %Q{
-            SELECT  '#{processing}' AS Processing,
-                    #{expression} AS Value,
-                    #{load_batch_id},
-                    #{"%.2f" % confidence} AS Confidence,
-                    #{record_guid},
-                    '#{source}' AS Source
+            SELECT  '#{processing}' AS #{processing_name},
+                    #{expression} AS #{value_name},
+                    #{load_batch_id_name},
+                    #{"%.2f" % confidence} AS #{confidence_name},
+                    #{record_guid_name},
+                    '#{source}' AS #{source_name}
             FROM    #{table_name(composite)}}.
             unindent
 
