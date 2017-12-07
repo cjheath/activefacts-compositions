@@ -1,4 +1,5 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+CREATE EXTENSION IF NOT EXISTS fuzzystrmatch WITH SCHEMA public;
 
 CREATE TABLE aac_et (
 	-- AAC_ET has Alternate Auto Counter
@@ -19,7 +20,7 @@ CREATE TABLE aac_sub (
 
 CREATE TABLE ag_et (
 	-- AG_ET has Alternate Guid
-	alternate_guid                          UUID NOT NULL DEFAULT 'gen_random_uuid()',
+	alternate_guid                          UUID NOT NULL DEFAULT gen_random_uuid(),
 	-- Primary index to AG_ET(Alternate Guid in "AG_ET has Alternate Guid")
 	PRIMARY KEY(alternate_guid)
 );

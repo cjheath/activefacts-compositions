@@ -55,7 +55,8 @@ module ActiveFacts
           end
 
           def schema_prefix
-            go("CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public") +
+            go('CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public') +
+            go('CREATE EXTENSION IF NOT EXISTS fuzzystrmatch WITH SCHEMA public') +
             "\n"
           end
 

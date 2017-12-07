@@ -1,4 +1,5 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+CREATE EXTENSION IF NOT EXISTS fuzzystrmatch WITH SCHEMA public;
 
 CREATE TABLE back_order_allocation (
 	-- Back Order Allocation involves Purchase Order Item that is part of Purchase Order that has Purchase Order ID

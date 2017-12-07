@@ -62,7 +62,6 @@ module ActiveFacts
         end
 
         def header
-          ''
         end
 
         def generate_composite composite
