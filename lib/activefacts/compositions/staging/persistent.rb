@@ -58,6 +58,24 @@ module ActiveFacts
           remake_primary_keys
         end
 
+        def load_batch_field composite
+          load_batch_role =
+            composite.mapping.object_type.all_role.detect do |role|
+              c = role.counterpart and c.object_type == @loadbatch_entity_type
+            end
+          trace :index, "Found LoadBatch role in #{load_batch_role.fact_type.default_reading}" if load_batch_role
+          # There can only be one absorption of LoadBatch, because we added it,
+          # but if you have separate subtypes, we need to select the one for the right composite:
+          absorptions = load_batch_role.
+            counterpart.
+            all_absorption_as_child_role.
+            select{|a| a.root == composite}
+          # There should now always be exactly one.
+          raise "Missing or ambiguous FK to LoadBatch from #{composite.inspect}" if absorptions.size != 1
+          absorptions[0].all_leaf[0]
+          # This is the absorption of LoadBatchID
+        end
+
         def remake_primary_keys
           trace :relational_paths, "Remaking primary keys" do
             @composition.all_composite.each do |composite|
@@ -76,22 +94,20 @@ module ActiveFacts
 
                   # Add LoadBatchID to the new primary index:
                   trace :index, "Appending LoadBatch to primary key #{primary_key.inspect}" do
-                    load_batch_role =
-                      composite.mapping.object_type.all_role.detect do |role|
-                        c = role.counterpart and c.object_type == @loadbatch_entity_type
+                    target_batch_id = load_batch_field(composite)
+                    @constellation.IndexField(access_path: primary_key, ordinal: primary_key.all_index_field.size, component: target_batch_id)
+
+                    # Now fix the foreign keys unsupported by this changed primary key:
+                    composite.
+                    all_foreign_key_as_target_composite.
+                    each do |fk|
+                      trace :index, "Appending LoadBatch to #{fk.inspect}" do
+                        source_batch_id = load_batch_field(fk.source_composite)
+                        trace :index, "ForeignKeyField is #{source_batch_id.root.mapping.name}.#{source_batch_id.inspect}"
+                        trace :index, "IndexField is #{target_batch_id.root.mapping.name}.#{target_batch_id.inspect}"
+                        @constellation.ForeignKeyField(foreign_key: fk, ordinal: fk.all_foreign_key_field.size, component: source_batch_id)
+                        @constellation.IndexField(access_path: fk, ordinal: fk.all_index_field.size, component: target_batch_id)
                       end
-                    trace :index, "Found LoadBatch role in #{load_batch_role.fact_type.default_reading}" if load_batch_role
-                    # There can only be one absorption of LoadBatch, because we added it,
-                    # but if you have separate subtypes, we need to select the one for the right composite:
-                    absorptions = load_batch_role.
-                      counterpart.
-                      all_absorption_as_child_role.
-                      select{|a| a.root == composite}
-                    # There should now always be exactly one.
-                    raise "Missing or ambiguous FK to LoadBatch from #{composite.inspect}" if absorptions.size != 1
-                    absorption = absorptions[0]
-                    absorption.all_leaf.each do |leaf|
-                      @constellation.IndexField(access_path: primary_key, ordinal: primary_key.all_index_field.size, component: leaf)
                     end
                   end
                   composite.natural_index.is_unique = false
