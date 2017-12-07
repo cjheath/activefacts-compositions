@@ -9,12 +9,14 @@
 # with injected foreign keys to a LoadBatch table, as for transient
 # staging.
 #
-# Where it differs is that all unique constraints are disabled, and
-# replaced by a primary key that is the source schema's PK appended
-# with the LoadBatchID. Each record also has a ValidUntil timestamp,
-# which is NULL for the most recent record. This allows a load batch
-# to load a new version of any record, and the key value will be
-# adjacent to the previous versions of that record.
+# Where it differs is that all unique constraints are appended with
+# the LoadBatchID. This allows multiple complete copies of the source
+# data to be loaded.
+#
+# Each record also has a ValidUntil timestamp, which is NULL for the
+# most recent record. This allows a load batch to load a new version
+# of any record, and the key value will be adjacent to the previous
+# versions of that record.
 #
 # After a batch is complete, any updated record keys will address
 # more than one record with a NULL ValidUntil timestamp, and this
@@ -55,7 +57,7 @@ module ActiveFacts
         def complete_foreign_keys
           super
 
-          remake_primary_keys
+          augment_keys
         end
 
         def load_batch_field composite
@@ -76,28 +78,32 @@ module ActiveFacts
           # This is the absorption of LoadBatchID
         end
 
-        def remake_primary_keys
-          trace :relational_paths, "Remaking primary keys" do
+        def augment_keys
+          trace :index, "Augmenting keys" do
             @composition.all_composite.each do |composite|
               next if composite.mapping.object_type == @loadbatch_entity_type
+              target_batch_id = load_batch_field(composite)
               composite.all_access_path.each do |path|
-                # Ignore foreign keys:
-                next unless MM::Index === path
+                # Ignore foreign keys and non-unique indices:
+                next unless MM::Index === path and path.is_unique
 
-                # If we found the natural key, clone it as a modified primary key:
+                # Don't meddle with the surrogate
+                next if path.all_index_field.size == 1 && MM::SurrogateKey === path.all_index_field.single.component
+
+                trace :index, "Add LoadBatchID to #{path.inspect}" do
+                  @constellation.IndexField(access_path: path, ordinal: path.all_index_field.size, component: target_batch_id)
+                end
+
+                # Note that the RecordGUID will have become the primary key.
+                # Foreign keys would be enforced onto the natural key, but we
+                # want the natural key to be clustering, so we switch them around
                 if composite.natural_index == path
-                  primary_key = @composition.constellation.fork(path, guid: :new)
-                  composite.primary_index = primary_key
-                  path.all_index_field.each do |ixf|
-                    @composition.constellation.fork(ixf, access_path: primary_key)
-                  end
+                  pk = composite.primary_index
+                  composite.primary_index = composite.natural_index
+                  composite.natural_index = pk
 
-                  # Add LoadBatchID to the new primary index:
-                  trace :index, "Appending LoadBatch to primary key #{primary_key.inspect}" do
-                    target_batch_id = load_batch_field(composite)
-                    @constellation.IndexField(access_path: primary_key, ordinal: primary_key.all_index_field.size, component: target_batch_id)
-
-                    # Now fix the foreign keys unsupported by this changed primary key:
+                  # Fix the foreign keys that use this changed natural key:
+                  trace :index, "Appending LoadBatch to foreign keys to #{composite.mapping.name}" do
                     composite.
                     all_foreign_key_as_target_composite.
                     each do |fk|
@@ -110,16 +116,8 @@ module ActiveFacts
                       end
                     end
                   end
-                  composite.natural_index.is_unique = false
-                elsif path.is_unique
-                  # Don't retract the surrogate
-                  next if path.all_index_field.size == 1 && MM::SurrogateKey === path.all_index_field.single.component
-
-                  # Make other unique keys non-unique:
-                  trace :index, "Make secondary #{path.inspect} non-unique" do
-                    path.is_unique = false
-                  end
                 end
+
               end
             end
           end
