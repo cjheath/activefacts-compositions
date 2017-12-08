@@ -37,24 +37,26 @@ module ActiveFacts
       end
 
       def generate
-        create_loadbatch if @option_loadbatch
+        create_loadbatch if @option_audit == 'batch'
         super
       end
 
-      def inject_value_fields
-        super
-        inject_loadbatch_relationships if @option_loadbatch
+      def inject_all_audit_fields
+        inject_loadbatch_relationships if @option_audit == 'batch'
       end
 
-      def inject_all_datetime_recordsource
+      def apply_all_audit_transformations
         composites = @composition.all_composite.to_a
         return if composites.empty?
 
         trace :staging, "Injecting load datetime and record source" do
           @composition.all_composite.each do |composite|
-            next if composite.mapping.object_type.name == @option_loadbatch
-            inject_datetime_recordsource composite.mapping
-            composite.mapping.re_rank
+            is_loadbatch_composite = composite.mapping.object_type == @loadbatch_entity_type
+            composite.mapping.injection_annotation = 'loadbatch' if is_loadbatch_composite
+            if @option_audit == 'record' || is_loadbatch_composite
+              inject_audit_fields composite
+              composite.mapping.re_rank
+            end
           end
         end
       end
@@ -63,7 +65,7 @@ module ActiveFacts
         # Rename composites with STG prefix
         apply_composite_name_pattern
 
-        inject_all_datetime_recordsource
+        apply_all_audit_transformations
       end
 
     end

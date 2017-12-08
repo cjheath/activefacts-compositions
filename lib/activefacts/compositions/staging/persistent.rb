@@ -44,14 +44,12 @@ module ActiveFacts
           merge({
             # Add Persistent options here
           }).
-          reject{|k,v| [:loadbatch].include?(k) }
+          reject{|k,v| [:audit].include?(k) }   # The default value "batch" must be used for audit
         end
 
         def initialize constellation, name, options = {}
           # Extract recognised options:
-          super(constellation, name, {'surrogates'=>'Record GUID', 'fk'=>'natural', "loadbatch"=>true}.merge(options))
-
-          raise "--staging/persistent requires the loadbatch option (you can't disable it)" unless @option_loadbatch
+          super(constellation, name, {'surrogates'=>'Record GUID', 'fk'=>'natural', "audit"=>"batch"}.merge(options))
         end
 
         def complete_foreign_keys

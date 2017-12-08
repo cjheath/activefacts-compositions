@@ -2,19 +2,16 @@ Summary of Separate
 Base STG
 	Base STG->Base GUID[PN1] as "Base GUID"
 	Base STG->[Batch]->Batch ID as "Batch ID"
-	Base STG->LoadTime as "Load Time"
-	Base STG->RecordSource as "Record Source"
 	Base STG->Base Val as "Base Val"
 Batch
 	Batch->Batch ID[PN1] as "Batch ID"
-	Batch->Start DateTime as "Start Date Time"
+	Batch->LoadTime as "Load Time"
+	Batch->RecordSource as "Record Source"
 Partition STG
 	Partition STG->Base->Base GUID[PN1] as "Base GUID"
 	Partition STG->Base->Base Val as "Base Val"
 	Partition STG->Base->[Batch]->Batch ID as "Base Batch ID"
 	Partition STG->[Batch]->Batch ID as "Batch ID"
-	Partition STG->LoadTime as "Load Time"
-	Partition STG->RecordSource as "Record Source"
 	Partition STG->Part Val as "Part Val"
 PartitionInd STG
 	PartitionInd STG->Base->Base GUID[U1] as "Base GUID"
@@ -22,12 +19,8 @@ PartitionInd STG
 	PartitionInd STG->Base->[Batch]->Batch ID as "Base Batch ID"
 	PartitionInd STG->PartitionInd Key[PN2] as "Partition Ind Key"
 	PartitionInd STG->[Batch]->Batch ID as "Batch ID"
-	PartitionInd STG->LoadTime as "Load Time"
-	PartitionInd STG->RecordSource as "Record Source"
 	PartitionInd STG->AbsorbedPart?->Abs Part Val as "Absorbed Part Abs Part Val"
 Separate STG
 	Separate STG->[Base]->Base GUID[PN1] as "Base GUID"
 	Separate STG->[Batch]->Batch ID as "Batch ID"
-	Separate STG->LoadTime as "Load Time"
-	Separate STG->RecordSource as "Record Source"
 	Separate STG->Sep Val as "Sep Val"

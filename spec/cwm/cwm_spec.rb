@@ -57,7 +57,7 @@ describe "CWM schema from CQL" do
         
         compositor = case format
         when 'REL' then ActiveFacts::Compositions::Relational.new(vocabulary.constellation, "test")
-        when 'STG' then ActiveFacts::Compositions::Staging.new(vocabulary.constellation, "test")
+        when 'STG' then ActiveFacts::Compositions::Staging.new(vocabulary.constellation, "test", "audit"=>"record")
         end
         compositor.generate
 

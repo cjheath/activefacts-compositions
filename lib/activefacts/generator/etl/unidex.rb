@@ -59,7 +59,7 @@ module ActiveFacts
           header +
           @composition.
             all_composite.
-            sort_by{|c| c.mapping.object_type.name}.
+            sort_by{|c| c.mapping.name}.
             map{|c| generate_composite c}.
             compact*"\n" +
           trailer

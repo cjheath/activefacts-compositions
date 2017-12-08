@@ -40,6 +40,7 @@ module ActiveFacts
       def initialize constellation, name, options = {}
         # Extract recognised options:
         datavault_initialize options
+
         @option_reference = options.delete('reference')
         @option_id = '+ ' + (options.delete('id') || 'HID')
         @option_hub_name = options.delete('hubname') || 'HUB'
@@ -60,11 +61,9 @@ module ActiveFacts
         @option_surrogates = true   # Always inject surrogates regardless of superclass
       end
 
-      # We need to find links that need surrogate keys before we inject the surrogates
-      def inject_surrogates
+      def inject_all_audit_fields
+        # We need to find links that need surrogate keys before we inject the surrogates
         classify_composites
-
-        super
       end
 
       def composite_is_reference composite
@@ -306,7 +305,7 @@ module ActiveFacts
         apply_composite_name_pattern
 
         # inject datetime and record source for rdv hubs and links
-        inject_all_datetime_recordsource
+        apply_all_audit_transformations
 
         unless @option_reference
           if trace :reference_retraction
@@ -489,7 +488,7 @@ module ActiveFacts
           fk_field = fk_target.component.fork_to_new_parent satellite.mapping
 
           # Add a load DateTime value and record source
-          date_field = inject_datetime_recordsource(satellite.mapping)
+          date_field = inject_audit_fields(satellite)
 
           # Add a primary and natural key:
           natural_index =
@@ -674,21 +673,6 @@ module ActiveFacts
             absorption.foreign_key.retract
           end
 
-=begin
-          issues = 0
-          link.validate do |object, problem|
-            $stderr.puts "#{object.inspect}: #{problem}"
-            issues += 1
-          end
-          debugger if issues > 0
-=end
-
-
-          # # Add a load DateTime value
-          # date_field = add_datetime_recordsource(mapping)
-
-          #link.mapping.re_rank
-
           # devolve link, false
           @link_composites << link
         end
@@ -715,12 +699,12 @@ module ActiveFacts
         end
       end
 
-      def inject_all_datetime_recordsource
+      def apply_all_audit_transformations
         @link_composites.each do |composite|
-          inject_datetime_recordsource(composite.mapping)
+          inject_audit_fields(composite)
         end
         @hub_composites.each do |composite|
-          inject_datetime_recordsource(composite.mapping)
+          inject_audit_fields(composite)
         end
       end
 

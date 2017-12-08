@@ -1,8 +1,9 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+CREATE EXTENSION IF NOT EXISTS fuzzystrmatch WITH SCHEMA public;
 
 CREATE TABLE base (
 	-- Base has Base GUID
-	base_guid                               UUID NOT NULL DEFAULT 'gen_random_uuid()',
+	base_guid                               UUID NOT NULL DEFAULT gen_random_uuid(),
 	-- Base has base-Val
 	base_val                                Val NOT NULL,
 	-- Primary index to Base(Base GUID in "Base has Base GUID")
@@ -12,7 +13,7 @@ CREATE TABLE base (
 
 CREATE TABLE "partition" (
 	-- Partition is a kind of Base that has Base GUID
-	base_guid                               UUID NOT NULL DEFAULT 'gen_random_uuid()',
+	base_guid                               UUID NOT NULL DEFAULT gen_random_uuid(),
 	-- Partition is a kind of Base that has base-Val
 	base_val                                Val NOT NULL,
 	-- Partition has part-Val

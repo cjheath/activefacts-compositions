@@ -59,6 +59,9 @@ module ActiveFacts
           # If a value type has been mapped to a table, add a column to hold its value
           inject_value_fields
 
+          # If the compositor calls for audit fields, add them here
+          inject_all_audit_fields
+
           # Inject surrogate keys if the options ask for that
           inject_surrogates if @option_surrogates
 
@@ -306,6 +309,9 @@ module ActiveFacts
         end
       end
 
+      def inject_all_audit_fields
+      end
+
       def patterned_name pattern, name
         pattern.sub(/\+/, name)
       end
@@ -502,7 +508,7 @@ module ActiveFacts
         accumulator
       end
 
-      # Overwritten by Staging and Datavault subclasses
+      # Overwritten by subclasses to modify a structurally-complete schema
       def apply_schema_transformations
       end
 
@@ -693,7 +699,7 @@ module ActiveFacts
         end
         pcs = non_absorption_pcs
 
-        trace :relational_paths, "Uniqueness Constraints for #{mapping.object_type.name}" do
+        trace :relational_paths, "Uniqueness Constraints for #{mapping.name}" do
           pcs.each do |pc|
             trace :relational_paths, "#{pc.describe.inspect}#{pc.is_preferred_identifier ? ' (PI)' : ''}"
           end

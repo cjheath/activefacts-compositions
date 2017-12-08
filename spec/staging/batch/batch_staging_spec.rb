@@ -48,7 +48,7 @@ describe "Staging schema from CQL" do
 
       vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
       vocabulary.finalise
-      compositor = ActiveFacts::Compositions::Staging.new(vocabulary.constellation, basename, "loadbatch" => "Batch")
+      compositor = ActiveFacts::Compositions::Staging.new(vocabulary.constellation, basename, "audit" => "batch", "loadbatch" => "Batch")
       compositor.generate
 
       output = ActiveFacts::Generators::Summary.new(compositor.composition).generate

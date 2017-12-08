@@ -4,51 +4,69 @@ module ActiveFacts
       module DataVault
         def datavault_options
           {
-            datestamp: ['String', "Data type name to use for data vault date stamps (default: DateTime)"],
-            recordsource: ['String', "Data type name to use for data vault record source (default: String)"],
-            loadbatch: ['String', "Create a load batch table using this name, default LoadBatch"],
-            # recordhash: ['Boolean', "Create a RecordHash field to be populated with a hash of all fields in the source record"],
-            # sathash: ['Boolean', "Create a SatHash field for each satellite to be populated with a hash of all fields in the source record for each satellite"],
-            # surrogate: ['Boolean', "Add a RecordGUID field to be auto-populated on every insert"],
+            # Structural options:
+            audit: [%w{record batch}, "Add date/source auditing fields to each record (hub/link/staging) or via a LoadBatch table"],
+            hash: [%w{record satellite all}, "Add computed hash fields to assist with change detection"],
+            guid: [String, "Add a RecordGUID field as a global surrogate"],
+            # Variation options:
+            loadbatch: ['String', "Change the name of the load batch table from LoadBatch"],
+            datestamp: ['String', "Data type name to use for audit date stamps (default: DateTime)"],
+            source: ['String', "Data type name to use for audit source (default: String)"],
           }
         end
 
         def datavault_initialize options
-          @option_datestamp = options.delete('datestamp')
-          @option_datestamp = 'DateTime' if [true, '', 'true', 'yes', nil].include?(@option_datestamp)
+          @option_audit = options.delete('audit')
+          @option_hash = options.delete('hash')
+          @option_guid = options.delete('guid')
 
-          @option_recordsource = options.delete('recordsource')
-          @option_recordsource = 'String' if [true, '', 'true', 'yes', nil].include?(@option_recordsource)
+          case @option_loadbatch = options.delete('loadbatch')
+          when true, 'true', 'yes'
+            @option_loadbatch = 'LoadBatch'
+          when false, 'false'
+            @option_loadbatch = nil
+          end
+          @option_loadbatch ||= 'LoadBatch' if @option_audit == 'batch'
 
-          @option_loadbatch = options.delete('loadbatch')
-          @option_loadbatch = 'LoadBatch' if [true, 'true', 'yes'].include?(@option_loadbatch)
-          @option_loadbatch = nil if [false, 'false', ''].include?(@option_loadbatch)
+          case @option_datestamp = options.delete('datestamp')
+          when true, '', 'true', 'yes', nil
+            @option_datestamp = 'DateTime'
+          when false, 'false'
+            @option_datestamp = nil
+          end
+
+          case @option_source = options.delete('source')
+          when true, '', 'true', 'yes', nil
+            @option_source = 'String'
+          when false, 'false'
+            @option_source = nil
+          end
+
+        end
+
+        def compile text
+          @vocabulary = @constellation.Vocabulary.values[0]
+          @compiler ||= ActiveFacts::CQL::Compiler.new(@vocabulary, constellation: @constellation)
+          @compiler.compile("schema #{@vocabulary.name};\n"+text)
         end
 
         def create_loadbatch
-          vocabulary = @constellation.Vocabulary.values[0]
+          return unless @option_audit == 'batch' && @option_loadbatch
 
           schema_text = %Q{
-            schema #{vocabulary.name};
-
             each #{@option_loadbatch} ID is written as an Auto Counter auto-assigned at commit;
             each #{@option_loadbatch} is independent identified by its ID;
-            each #{@option_datestamp} is written as a #{@option_datestamp};
-            #{@option_loadbatch} began at one start-#{@option_datestamp};
           }
-          @compiler = ActiveFacts::CQL::Compiler.new(@vocabulary, constellation: @constellation)
-          @compiler.compile(schema_text)
-          @loadbatch_entity_type = @constellation.EntityType[[vocabulary.identifying_role_values, @option_loadbatch]]
+          compile(schema_text)
+          @loadbatch_entity_type = @constellation.EntityType[[@vocabulary.identifying_role_values, @option_loadbatch]]
         end
 
         def inject_loadbatch_relationships
-          return unless @option_loadbatch
+          return unless @option_audit == 'batch'
+
           @composition.all_composite.each do |composite|
-            if composite.mapping.object_type.name == @option_loadbatch
-              composite.mapping.injection_annotation = 'loadbatch'
-            else
-              @compiler.compile("#{composite.mapping.name} was loaded in one #{@option_loadbatch};")
-            end
+            next if composite.mapping.object_type == @loadbatch_entity_type
+            compile("#{composite.mapping.name} was loaded in one #{@option_loadbatch};")
           end
           @loadbatch_entity_type.all_role.each do |role|
             populate_reference(role).injection_annotation = 'loadbatch'
@@ -56,23 +74,27 @@ module ActiveFacts
           end
         end
 
-        def inject_datetime_recordsource mapping
-          # Add a load DateTime value
-          date_field = @constellation.ValidFrom(:new,
-            parent: mapping,
-            name: "LoadTime",
-            object_type: datestamp_type,
-            injection_annotation: "datavault"
-          )
+        def inject_audit_fields composite
+          if datestamp_type
+            # Add a load DateTime value
+            date_field = @constellation.ValidFrom(:new,
+              parent: composite.mapping,
+              name: "LoadTime",
+              object_type: datestamp_type,
+              injection_annotation: "datavault"
+            )
+          end
 
-          # Add a load DateTime value
-          recsrc_field = @constellation.ValueField(:new,
-            parent: mapping,
-            name: "RecordSource",
-            object_type: recordsource_type,
-            injection_annotation: "datavault"
-          )
-          mapping.re_rank
+          if recordsource_type
+            # Add a load DateTime value
+            recsrc_field = @constellation.ValueField(:new,
+              parent: composite.mapping,
+              name: "RecordSource",
+              object_type: recordsource_type,
+              injection_annotation: "datavault"
+            )
+          end
+          composite.mapping.re_rank
           date_field
         end
 
@@ -82,10 +104,10 @@ module ActiveFacts
 
         def datestamp_type
           @datestamp_type ||= begin
-            vocabulary = @composition.all_composite.to_a[0].mapping.object_type.vocabulary
-            @constellation.ObjectType[[[vocabulary.name], datestamp_type_name]] or
+            @vocabulary ||= @composition.all_composite.to_a[0].mapping.object_type.vocabulary
+            @constellation.ObjectType[[[@vocabulary.name], datestamp_type_name]] or
               @constellation.ValueType(
-                vocabulary: vocabulary,
+                vocabulary: @vocabulary,
                 name: datestamp_type_name,
                 concept: [:new, :implication_rule => "datestamp injection"]
               )
@@ -93,15 +115,15 @@ module ActiveFacts
         end
 
         def recordsource_type_name
-          @option_recordsource
+          @option_source
         end
 
         def recordsource_type
           @recordsource_type ||= begin
-            vocabulary = @composition.all_composite.to_a[0].mapping.object_type.vocabulary
-            @constellation.ObjectType[[[vocabulary.name], recordsource_type_name]] or
+            @vocabulary ||= @composition.all_composite.to_a[0].mapping.object_type.vocabulary
+            @constellation.ObjectType[[[@vocabulary.name], recordsource_type_name]] or
               @constellation.ValueType(
-                vocabulary: vocabulary,
+                vocabulary: @vocabulary,
                 name: recordsource_type_name,
                 concept: [:new]
               )
@@ -117,7 +139,7 @@ module ActiveFacts
 
         def apply_composite_name_pattern
           @composites.each do |key, composite|
-            next if composite.mapping.object_type.name == @option_loadbatch
+            next if composite.mapping.name == @option_loadbatch
             composite.mapping.name = apply_name_pattern(@option_stg_name, composite.mapping.name)
           end
         end

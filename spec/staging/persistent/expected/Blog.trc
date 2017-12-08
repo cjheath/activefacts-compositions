@@ -2,16 +2,12 @@ Summary of Blog
 Author STG
 	Author STG->Author Id[P1.0] as "Author Id"
 	Author STG->[LoadBatch]->LoadBatch ID[P1.1,U3.1] as "Load Batch ID"
-	Author STG->LoadTime as "Load Time"
 	Author STG->Record GUID[N2] as "Record GUID"
-	Author STG->RecordSource as "Record Source"
 	Author STG->Author Name[U3.0] as "Author Name"
 Comment STG
 	Comment STG->Comment Id[P1.0] as "Comment Id"
 	Comment STG->[LoadBatch]->LoadBatch ID[P1.1] as "Load Batch ID"
-	Comment STG->LoadTime as "Load Time"
 	Comment STG->Record GUID[N2] as "Record GUID"
-	Comment STG->RecordSource as "Record Source"
 	Comment STG->[Author]->Author Id as "Author Id"
 	Comment STG->Content->Style? as "Content Style"
 	Comment STG->Content->Text as "Content Text"
@@ -20,31 +16,26 @@ Comment STG
 ### exactly one of (Content in "Content provides text of Comment") or (Content in "Content is of Paragraph")
 LoadBatch
 	LoadBatch->LoadBatch ID[PN1] as "Load Batch ID"
-	LoadBatch->Start DateTime as "Start Date Time"
+	LoadBatch->LoadTime as "Load Time"
+	LoadBatch->RecordSource as "Record Source"
 Paragraph STG
 	Paragraph STG->[Post]->Post Id[P1.0] as "Post Id"
 	Paragraph STG->Ordinal[P1.1] as "Ordinal"
 	Paragraph STG->[LoadBatch]->LoadBatch ID[P1.2] as "Load Batch ID"
-	Paragraph STG->LoadTime as "Load Time"
 	Paragraph STG->Record GUID[N2] as "Record GUID"
-	Paragraph STG->RecordSource as "Record Source"
 	Paragraph STG->Content->Style? as "Content Style"
 	Paragraph STG->Content->Text as "Content Text"
 ### exactly one of (Content in "Content provides text of Comment") or (Content in "Content is of Paragraph")
 Post STG
 	Post STG->Post Id[P1.0] as "Post Id"
 	Post STG->[LoadBatch]->LoadBatch ID[P1.1] as "Load Batch ID"
-	Post STG->LoadTime as "Load Time"
 	Post STG->Record GUID[N2] as "Record GUID"
-	Post STG->RecordSource as "Record Source"
 	Post STG->[Author]->Author Id as "Author Id"
 	Post STG->[Topic]->Topic Id as "Topic Id"
 Topic STG
 	Topic STG->Topic Id[P1.0] as "Topic Id"
 	Topic STG->[LoadBatch]->LoadBatch ID[P1.1,U3.1] as "Load Batch ID"
-	Topic STG->LoadTime as "Load Time"
 	Topic STG->Record GUID[N2] as "Record GUID"
-	Topic STG->RecordSource as "Record Source"
 	Topic STG->Topic Name[U3.0] as "Topic Name"
 	Topic STG->[Parent Topic]?->Topic Id as "Parent Topic Id"
 		### RingConstraint(Acyclic: Topic, Topic in Topic belongs to parent-Topic)
