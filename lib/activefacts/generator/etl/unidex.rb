@@ -166,6 +166,7 @@ module ActiveFacts
                   foreign_key.all_foreign_key_field.to_a.
               zip foreign_key.all_index_field.to_a
             leaf = search_index.all_index_field.to_a[0].component         # Returning this natural index value
+            source_table = table_name(foreign_key.composite)
             source = (member.column_name+leaf.column_name).elide_repeated_subsequences*' '
             type_name, options = leaf.data_type(data_type_context)        # Which has this type_name
             intrinsic_type = MM::DataType.intrinsic_type(type_name)       # Which corresponds to this intrinsic type
@@ -173,7 +174,7 @@ module ActiveFacts
             col_expr = Expression.new(
               %Q{
                 (SELECT  #{safe_column_name(leaf)}
-                 FROM    #{source} AS f
+                 FROM    #{source_table} AS f
                  WHERE   #{
                   fk_pairs.map do |fkf, ixf|
                     "#{table_name foreign_key.source_composite}.#{safe_column_name(fkf.component)} = f.#{safe_column_name(ixf.component)}"
