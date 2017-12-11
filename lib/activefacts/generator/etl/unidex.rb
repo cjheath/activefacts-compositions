@@ -305,7 +305,8 @@ module ActiveFacts
                     #{"%.2f" % confidence} AS #{confidence_name},
                     #{record_guid_name},
                     '#{source}' AS #{source_name}
-            FROM    #{table_name(composite)}}.
+            FROM    #{table_name(composite)}
+            WHERE   COALESCE(#{expression},'') <> ''}.
             unindent
 
           if where.empty?
