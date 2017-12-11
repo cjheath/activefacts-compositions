@@ -105,7 +105,7 @@ module ActiveFacts
                   end
                 end
               end
-            end.compact * "\nUNION"
+            end.compact * "\nUNION ALL"
 
             if union.size > 0
               "/*\n"+
