@@ -230,6 +230,11 @@ module ActiveFacts
           end
         end
 
+        def create_or_replace(name, kind)
+          # There's no standard SQL way to do this. Do it anyway.
+          "CREATE OR REPLACE #{kind} #{name}"
+        end
+
         # For an (array of) Expression, return expressions that have value "na" if NULL
         def coalesce exprs, na = "'NA'"
           return exprs.map{|expr| coalesce(expr)} if Array === exprs

@@ -109,6 +109,12 @@ module ActiveFacts
             end
           end
 
+          def create_or_replace(name, kind)
+            # From SQL Server 2016 onwards, you can use "CREATE OR ALTER ..."
+            go("IF OBJECT_ID('#{name}') IS NOT NULL\n\tDROP #{kind} #{name}") +
+            "CREATE #{kind} #{name}"
+          end
+
           def hash_assignment hash_field, leaves
             table_name = safe_table_name(hash_field.root)
             trigger_function = escape('assign_'+column_name(hash_field), 128)

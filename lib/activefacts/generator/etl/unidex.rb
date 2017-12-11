@@ -111,7 +111,7 @@ module ActiveFacts
               "/*\n"+
               " * View to extract unified index values for #{table_name(composite)}\n"+
               " */\n"+
-              "CREATE OR REPLACE VIEW #{table_name(composite)}_unidex AS" +
+              create_or_replace("#{table_name(composite)}_unidex", 'VIEW') + " AS" +
               union +
               ";\n"
             else
