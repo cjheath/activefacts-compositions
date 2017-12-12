@@ -6,8 +6,6 @@ module ActiveFacts
           {
             # Structural options:
             audit: [%w{record batch}, "Add date/source auditing fields to each record (hub/link/staging) or via a LoadBatch table"],
-            hash: [%w{record satellite all}, "Add computed hash fields to assist with change detection"],
-            guid: [String, "Add a RecordGUID field as a global surrogate"],
             # Variation options:
             loadbatch: ['String', "Change the name of the load batch table from LoadBatch"],
             datestamp: ['String', "Data type name to use for audit date stamps (default: DateTime)"],
@@ -17,8 +15,6 @@ module ActiveFacts
 
         def datavault_initialize options
           @option_audit = options.delete('audit')
-          @option_hash = options.delete('hash')
-          @option_guid = options.delete('guid')
 
           case @option_loadbatch = options.delete('loadbatch')
           when true, 'true', 'yes'

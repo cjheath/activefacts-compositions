@@ -17,6 +17,7 @@ module ActiveFacts
       def self.options
         datavault_options.
         merge({
+          cdc: [%w{record satellite all}, "Add computed hash fields for change detection"],
           stgname: ['String', "Suffix or pattern for naming staging tables. Include a + to insert the name. Default 'STG'"],
         }).
         merge(Relational.options)
@@ -25,10 +26,12 @@ module ActiveFacts
       def initialize constellation, name, options = {}
         # Extract recognised options:
         datavault_initialize options
+        @option_cdc = options.delete('cdc')
+
         @option_stg_name = options.delete('stgname') || 'STG'
         @option_stg_name.sub!(/^/,'+ ') unless @option_stg_name =~ /\+/
-        @fk_natural = true
 
+        @fk_natural = true      # Default value
         super constellation, name, options, 'Staging'
       end
 
