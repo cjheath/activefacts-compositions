@@ -44,6 +44,7 @@ module DispatchItem
     # maybe Dispatch Item is for Transfer Request
     belongs_to :transfer_request, :foreign_key => :transfer_request_id
 
+    validates :dispatch_id, :presence => true
     validates :product_id, :presence => true
     validates :quantity, :presence => true
   end
@@ -147,6 +148,7 @@ module ReceivedItem
 
     validates :product_id, :presence => true
     validates :quantity, :presence => true
+    validates :receipt_id, :presence => true
   end
 end
 

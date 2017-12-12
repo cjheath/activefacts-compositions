@@ -56,8 +56,8 @@ Dispatch Item SAT
 	Dispatch Item SAT->Dispatch Item HID[PN1.0] as "Dispatch Item HID"
 	Dispatch Item SAT->LoadTime[PN1.1] as "Load Time"
 	Dispatch Item SAT->RecordSource as "Record Source"
+	Dispatch Item SAT->Dispatch->Dispatch ID as "Dispatch ID"
 	Dispatch Item SAT->Quantity as "Quantity"
-	Dispatch Item SAT->Dispatch?->Dispatch ID as "Dispatch ID"
 Party HUB
 	Party HUB->Party HID[P1] as "Party HID"
 	Party HUB->Party ID[N2] as "Party ID"
@@ -129,7 +129,7 @@ Received Item SAT
 	Received Item SAT->LoadTime[PN1.1] as "Load Time"
 	Received Item SAT->RecordSource as "Record Source"
 	Received Item SAT->Quantity as "Quantity"
-	Received Item SAT->Receipt?->Receipt ID as "Receipt ID"
+	Received Item SAT->Receipt->Receipt ID as "Receipt ID"
 Sales Order HUB
 	Sales Order HUB->Sales Order HID[P1] as "Sales Order HID"
 	Sales Order HUB->Sales Order ID[N2] as "Sales Order ID"

@@ -19,9 +19,9 @@ Dispatch Item STG
 	Dispatch Item STG->Dispatch Item ID[P1.0] as "Dispatch Item ID"
 	Dispatch Item STG->[LoadBatch]->LoadBatch ID[P1.1] as "Load Batch ID"
 	Dispatch Item STG->Record GUID[N2] as "Record GUID"
+	Dispatch Item STG->Dispatch->Dispatch ID as "Dispatch ID"
 	Dispatch Item STG->[Product]->Product ID as "Product ID"
 	Dispatch Item STG->Quantity as "Quantity"
-	Dispatch Item STG->Dispatch?->Dispatch ID as "Dispatch ID"
 	Dispatch Item STG->[Sales Order Item]?->Sales Order->Sales Order ID as "Sales Order Item Sales Order ID"
 	Dispatch Item STG->[Sales Order Item]?->Product->Product ID as "Sales Order Item Product ID"
 	Dispatch Item STG->[Transfer Request]?->Transfer Request ID as "Transfer Request ID"
@@ -59,9 +59,9 @@ Received Item STG
 	Received Item STG->Record GUID[N2] as "Record GUID"
 	Received Item STG->[Product]->Product ID as "Product ID"
 	Received Item STG->Quantity as "Quantity"
+	Received Item STG->Receipt->Receipt ID as "Receipt ID"
 	Received Item STG->[Purchase Order Item]?->Purchase Order->Purchase Order ID as "Purchase Order Item Purchase Order ID"
 	Received Item STG->[Purchase Order Item]?->Product->Product ID as "Purchase Order Item Product ID"
-	Received Item STG->Receipt?->Receipt ID as "Receipt ID"
 	Received Item STG->[Transfer Request]?->Transfer Request ID as "Transfer Request ID"
 	### exactly one of (Received Item in "Received Item is for Purchase Order Item") or (Received Item in "Received Item is for Transfer Request")
 Sales Order Item STG

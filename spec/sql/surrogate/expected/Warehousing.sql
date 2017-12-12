@@ -34,12 +34,12 @@ CREATE TABLE bin (
 CREATE TABLE dispatch_item (
 	-- Dispatch Item has Dispatch Item ID
 	dispatch_item_id                        BIGSERIAL NOT NULL,
+	-- Dispatch Item is for Dispatch that has Dispatch ID
+	dispatch_id                             BIGINT NOT NULL,
 	-- Dispatch Item is Product that has Product ID
 	product_id                              BIGINT NOT NULL,
 	-- Dispatch Item is in Quantity
 	quantity                                INTEGER NOT NULL,
-	-- maybe Dispatch Item is for Dispatch that has Dispatch ID
-	dispatch_id                             BIGINT NULL,
 	-- maybe Dispatch Item is for Sales Order Item
 	sales_order_item_id                     BIGINT NULL,
 	-- maybe Dispatch Item is for Transfer Request that has Transfer Request ID
@@ -103,10 +103,10 @@ CREATE TABLE received_item (
 	product_id                              BIGINT NOT NULL,
 	-- Received Item is in Quantity
 	quantity                                INTEGER NOT NULL,
+	-- Received Item has Receipt that has Receipt ID
+	receipt_id                              BIGINT NOT NULL,
 	-- maybe Received Item is for Purchase Order Item
 	purchase_order_item_id                  BIGINT NULL,
-	-- maybe Received Item has Receipt that has Receipt ID
-	receipt_id                              BIGINT NULL,
 	-- maybe Received Item is for Transfer Request that has Transfer Request ID
 	transfer_request_id                     BIGINT NULL,
 	-- Primary index to Received Item(Received Item ID in "Received Item has Received Item ID")

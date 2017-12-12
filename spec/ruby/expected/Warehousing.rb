@@ -118,9 +118,9 @@ module Warehousing
   class DispatchItem
     identified_by   :dispatch_item_id
     one_to_one      :dispatch_item_id, mandatory: true, class: DispatchItemID  # Dispatch Item has Dispatch Item ID, see DispatchItemID#dispatch_item_as_dispatch_item_id
+    has_one         :dispatch, mandatory: true          # Dispatch Item is for Dispatch, see Dispatch#all_dispatch_item
     has_one         :product, mandatory: true           # Dispatch Item is Product, see Product#all_dispatch_item
     has_one         :quantity, mandatory: true          # Dispatch Item is in Quantity, see Quantity#all_dispatch_item
-    has_one         :dispatch                           # Dispatch Item is for Dispatch, see Dispatch#all_dispatch_item
     has_one         :sales_order_item                   # Dispatch Item is for Sales Order Item, see SalesOrderItem#all_dispatch_item
     has_one         :transfer_request                   # Dispatch Item is for Transfer Request, see TransferRequest#all_dispatch_item
   end
@@ -147,8 +147,8 @@ module Warehousing
     one_to_one      :received_item_id, mandatory: true, class: ReceivedItemID  # Received Item has Received Item ID, see ReceivedItemID#received_item_as_received_item_id
     has_one         :product, mandatory: true           # Received Item is Product, see Product#all_received_item
     has_one         :quantity, mandatory: true          # Received Item is in Quantity, see Quantity#all_received_item
+    has_one         :receipt, mandatory: true           # Received Item has Receipt, see Receipt#all_received_item
     has_one         :purchase_order_item                # Received Item is for Purchase Order Item, see PurchaseOrderItem#all_received_item
-    has_one         :receipt                            # Received Item has Receipt, see Receipt#all_received_item
     has_one         :transfer_request                   # Received Item is for Transfer Request, see TransferRequest#all_received_item
   end
 end
