@@ -330,6 +330,7 @@ module ActiveFacts
           devolve_pit(composite)
         end
 
+        super
       end
 
       # A Point-In-Time table links a hub to its satellites applicable at a particular time

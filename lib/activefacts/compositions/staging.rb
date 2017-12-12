@@ -66,6 +66,8 @@ module ActiveFacts
         apply_composite_name_pattern
 
         apply_all_audit_transformations
+
+        super
       end
 
     end
