@@ -357,9 +357,10 @@ module ActiveFacts
         )
 
         natural_index =
-          @constellation.Index(:new, composite: pit_composite, is_unique: true,
-            presence_constraint: nil, composite_as_natural_index: pit_composite #, composite_as_primary_index: pit_composite
-            )
+          @constellation.Index(
+            :new, composite: pit_composite, is_unique: true,
+            composite_as_natural_index: pit_composite #, composite_as_primary_index: pit_composite
+          )
         @constellation.IndexField(access_path: natural_index, ordinal: 0, component: pit_hub_field)
         @constellation.IndexField(access_path: natural_index, ordinal: 1, component: date_field)
 
