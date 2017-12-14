@@ -78,35 +78,59 @@ module ActiveFacts
             compile("#{composite.mapping.name} was loaded in one #{@option_loadbatch};")
 
             role = composite.mapping.object_type.all_role.detect{|r| c = r.counterpart and c.object_type == @loadbatch_entity_type}
-            populate_reference(role.counterpart).injection_annotation = 'loadbatch'
-            populate_reference(role).injection_annotation = 'loadbatch'
+            version_field = populate_reference(role)
+            version_field.injection_annotation = 'loadbatch'
             composite.mapping.re_rank
             loadbatch_composite.mapping.re_rank
+            version_field
           end
         end
 
-        def inject_audit_fields composite
-          if datestamp_type
-            # Add a load DateTime value
-            date_field = @constellation.ValidFrom(:new,
-              parent: composite.mapping,
-              name: "LoadTime",
-              object_type: datestamp_type,
-              injection_annotation: "datavault"
-            )
-          end
+        def inject_audit_fields composite, copy_from = nil
+          version_field = begin
+            if @option_audit == 'batch' && composite != @loadbatch_composite
+              if copy_from
+                # Our hub or link has an FK to LoadBatch already. Fork a copy to use on the satellite
+                trace :batch, "Copying LoadBatchID from #{copy_from.mapping.name} into #{composite.mapping.name}" do
+                  parent_version_field = @version_fields[copy_from]
+                  load_batch = parent_version_field.fork_to_new_parent composite.mapping
+                  leaves = parent_version_field.all_leaf
+                  raise "WARNING: unexpected audit structure" unless leaves.size == 1
+                  version_field = leaves[0].fork_to_new_parent load_batch
+                  load_batch.injection_annotation =
+                  version_field.injection_annotation =
+                    parent_version_field.injection_annotation
+                  version_field
+                end
+              else
+                inject_loadbatch_relationship composite
+              end
+            else
+              if datestamp_type
+                # Add a load DateTime value
+                version_field = @constellation.ValidFrom(:new,
+                  parent: composite.mapping,
+                  name: "LoadTime",
+                  object_type: datestamp_type,
+                  injection_annotation: "datavault"
+                )
+              end
 
-          if recordsource_type
-            # Add a load DateTime value
-            recsrc_field = @constellation.ValueField(:new,
-              parent: composite.mapping,
-              name: "RecordSource",
-              object_type: recordsource_type,
-              injection_annotation: "datavault"
-            )
+              if recordsource_type
+                # Add a load DateTime value
+                recsrc_field = @constellation.ValueField(:new,
+                  parent: composite.mapping,
+                  name: "RecordSource",
+                  object_type: recordsource_type,
+                  injection_annotation: "datavault"
+                )
+              end
+              version_field
+            end
+
           end
           composite.mapping.re_rank
-          date_field
+          (@version_fields ||= {})[composite] = version_field
         end
 
         def datestamp_type_name
