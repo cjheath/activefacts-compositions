@@ -1,17 +1,19 @@
 #
-# Test the relational composition from CQL files by comparing generated SQL output
+# Test relational identification styles from CQL files by comparing summary output
 #
 
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../../Gemfile', __FILE__)
 require 'bundler/setup' # Set up gems listed in the Gemfile.
 
-require 'spec_helper'
+require_relative '../spec_helper'
 require 'activefacts/compositions/relational'
-require 'activefacts/compositions/names'
-require 'activefacts/generator/sql'
+require 'activefacts/generator/validate'
+require 'activefacts/generator/summary'
 require 'activefacts/input/cql'
+require 'activefacts/generator/sql/server'
 
-SQL_CQL_DIR ||= Pathname.new(__FILE__+'/../../cql').relative_path_from(Pathname(Dir.pwd)).to_s
-SQL_TEST_DIR = Pathname.new(__FILE__+'/..').relative_path_from(Pathname(Dir.pwd)).to_s
+IDENT_TEST_DIR = Pathname.new(__FILE__+'/..').relative_path_from(Pathname(Dir.pwd)).to_s
+IDENT_CQL_DIR = IDENT_TEST_DIR+'/cql'
 
 RSpec::Matchers.define :be_like do |expected|
   match do |actual|
@@ -25,10 +27,10 @@ RSpec::Matchers.define :be_like do |expected|
   diffable
 end
 
-describe "SQL schema from CQL" do
-  dir = ENV['CQL_DIR'] || SQL_CQL_DIR
-  actual_dir = (ENV['CQL_DIR'] ? '' : SQL_TEST_DIR+'/') + 'actual'
-  expected_dir = (ENV['CQL_DIR'] ? '' : SQL_TEST_DIR+'/') + 'expected'
+describe "Summary of some identification patterns" do
+  dir = ENV['CQL_DIR'] || IDENT_CQL_DIR
+  actual_dir = (ENV['CQL_DIR'] ? '' : IDENT_TEST_DIR+'/') + 'actual'
+  expected_dir = (ENV['CQL_DIR'] ? '' : IDENT_TEST_DIR+'/') + 'expected'
   Dir.mkdir actual_dir unless Dir.exist? actual_dir
   if f = ENV['TEST_FILES']
     files = Dir[dir+"/#{f}*.cql"]
@@ -44,13 +46,13 @@ describe "SQL schema from CQL" do
     end
     next unless expected_text || ENV['TEST_FILES']
 
-    it "produces the expected Standard SQL for #{cql_file}" do
+    it "produces the expected SQL Server schema for #{cql_file}" do
       vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
       vocabulary.finalise
       compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, "test")
       compositor.generate
 
-      output = ActiveFacts::Generators::SQL.new(compositor.composition).generate
+      output = ActiveFacts::Generators::SQL::Server.new(compositor.composition).generate
 
       # Save or delete the actual output file:
       if expected_text != output
