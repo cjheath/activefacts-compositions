@@ -2,18 +2,18 @@
 # Test the relational composition from CQL files by comparing generated Datavault summary output
 #
 
-ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../../Gemfile', __FILE__)
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../../../Gemfile', __FILE__)
 require 'bundler/setup' # Set up gems listed in the Gemfile.
 
-require 'spec_helper'
+require_relative '../../spec_helper'
 require 'activefacts/compositions/datavault'
 require 'activefacts/compositions/names'
 require 'activefacts/generator/summary'
 require 'activefacts/generator/sql'
 require 'activefacts/input/cql'
 
-DV_CQL_DIR = Pathname.new(__FILE__+'/../../cql').relative_path_from(Pathname(Dir.pwd)).to_s
-DV_TEST_DIR = Pathname.new(__FILE__+'/..').relative_path_from(Pathname(Dir.pwd)).to_s
+BATCHDV_CQL_DIR = Pathname.new(__FILE__+'/../../../cql').relative_path_from(Pathname(Dir.pwd)).to_s
+BATCHDV_TEST_DIR = Pathname.new(__FILE__+'/..').relative_path_from(Pathname(Dir.pwd)).to_s
 
 RSpec::Matchers.define :be_like do |expected|
   match do |actual|
@@ -28,9 +28,9 @@ RSpec::Matchers.define :be_like do |expected|
 end
 
 describe "DataVault schema from CQL" do
-  dir = ENV['CQL_DIR'] || DV_CQL_DIR
-  actual_dir = (ENV['CQL_DIR'] ? '' : DV_TEST_DIR+'/') + 'actual'
-  expected_dir = (ENV['CQL_DIR'] ? '' : DV_TEST_DIR+'/') + 'expected'
+  dir = ENV['CQL_DIR'] || BATCHDV_CQL_DIR
+  actual_dir = (ENV['CQL_DIR'] ? '' : BATCHDV_TEST_DIR+'/') + 'actual'
+  expected_dir = (ENV['CQL_DIR'] ? '' : BATCHDV_TEST_DIR+'/') + 'expected'
   Dir.mkdir actual_dir unless Dir.exist? actual_dir
   if f = ENV['TEST_FILES']
     files = Dir[dir+"/#{f}*.cql"]
@@ -48,9 +48,10 @@ describe "DataVault schema from CQL" do
     next unless expected_text || ENV['TEST_FILES']
 
     it "produces the expected DataVault summary for #{cql_file}" do
+
       vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
       vocabulary.finalise
-      compositor = ActiveFacts::Compositions::DataVault.new(vocabulary.constellation, basename)
+      compositor = ActiveFacts::Compositions::DataVault.new(vocabulary.constellation, basename, "audit" => "batch")
       compositor.generate
 
       output = ActiveFacts::Generators::Summary.new(compositor.composition).generate

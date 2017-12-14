@@ -1,0 +1,47 @@
+Summary of Separate
+Base HUB
+	Base HUB->Base HID[P1] as "Base HID"
+	Base HUB->Base GUID[N2] as "Base GUID"
+	Base HUB->LoadBatch->LoadBatch ID as "Load Batch ID"
+Base SAT
+	Base SAT->Base HID[PN1.0] as "Base HID"
+	Base SAT->LoadBatch->LoadBatch ID[PN1.1] as "Load Batch ID"
+	Base SAT->Base Val as "Base Val"
+LoadBatch
+	LoadBatch->LoadBatch ID[PN1] as "Load Batch ID"
+	LoadBatch->LoadTime as "Load Time"
+	LoadBatch->RecordSource as "Record Source"
+Partition HUB
+	Partition HUB->Partition HID[P1] as "Partition HID"
+	Partition HUB->Base->Base GUID[N2] as "Base GUID"
+	Partition HUB->Base->Base HID as "Base HID"
+	Partition HUB->Base->Base Val as "Base Val"
+	Partition HUB->LoadBatch->LoadBatch ID as "Load Batch ID"
+Partition SAT
+	Partition SAT->Partition HID[PN1.0] as "Partition HID"
+	Partition SAT->LoadBatch->LoadBatch ID[PN1.1] as "Load Batch ID"
+	Partition SAT->Part Val as "Part Val"
+PartitionInd HUB
+	PartitionInd HUB->PartitionInd HID[P1] as "Partition Ind HID"
+	PartitionInd HUB->PartitionInd Key[N2] as "Partition Ind Key"
+	PartitionInd HUB->LoadBatch->LoadBatch ID as "Load Batch ID"
+PartitionInd SAT
+	PartitionInd SAT->PartitionInd HID[PN1.0] as "Partition Ind HID"
+	PartitionInd SAT->Base->Base GUID as "Base GUID"
+	PartitionInd SAT->Base->Base HID as "Base HID"
+	PartitionInd SAT->Base->Base Val as "Base Val"
+	PartitionInd SAT->LoadBatch->LoadBatch ID[PN1.1] as "Load Batch ID"
+	PartitionInd SAT->AbsorbedPart?->Abs Part Val as "Absorbed Part Abs Part Val"
+Separate HUB
+	Separate HUB->Separate HID[P1] as "Separate HID"
+	Separate HUB->Base->Base GUID[N2] as "Base GUID"
+	Separate HUB->LoadBatch->LoadBatch ID as "Load Batch ID"
+Separate Is A Kind Of Base LINK
+	Separate Is A Kind Of Base LINK->Separate Is A Kind Of Base HID[P1] as "Separate Is A Kind Of Base HID"
+	Separate Is A Kind Of Base LINK->LoadBatch->LoadBatch ID as "Load Batch ID"
+	Separate Is A Kind Of Base LINK->Base HID[N2.1] as "Base HID"
+	Separate Is A Kind Of Base LINK->Separate HID[N2.0] as "Separate HID"
+Separate SAT
+	Separate SAT->Separate HID[PN1.0] as "Separate HID"
+	Separate SAT->LoadBatch->LoadBatch ID[PN1.1] as "Load Batch ID"
+	Separate SAT->Sep Val as "Sep Val"

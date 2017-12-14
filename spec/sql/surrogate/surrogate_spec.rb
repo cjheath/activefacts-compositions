@@ -33,14 +33,15 @@ describe "SQL schema with surrogates from CQL" do
     files = `git ls-files "#{dir}/*.cql"`.split(/\n/)
   end
   files.each do |cql_file|
-    it "produces the expected SQL with surrogates for #{cql_file}" do
-      expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, expected_dir+'/\2.sql')
-      actual = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, actual_dir+'/\2.sql')
-      begin
-        expected_text = File.read(expected)
-      rescue Errno::ENOENT => exception
-      end
+    expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, expected_dir+'/\2.sql')
+    actual = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, actual_dir+'/\2.sql')
+    begin
+      expected_text = File.read(expected)
+    rescue Errno::ENOENT => exception
+    end
+    next unless expected_text || ENV['TEST_FILES']
 
+    it "produces the expected SQL with surrogates for #{cql_file}" do
       vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
       vocabulary.finalise
       compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, "test", 'surrogates' => true)

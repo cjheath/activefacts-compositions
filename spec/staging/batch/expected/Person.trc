@@ -1,9 +1,0 @@
-Summary of Person
-Batch
-	Batch->Batch ID[PN1] as "Batch ID"
-	Batch->LoadTime as "Load Time"
-	Batch->RecordSource as "Record Source"
-Person STG
-	Person STG->Family Name[PN1.0] as "Family Name"
-	Person STG->Given Name[PN1.1] as "Given Name"
-	Person STG->[Batch]->Batch ID as "Batch ID"

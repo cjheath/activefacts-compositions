@@ -37,15 +37,16 @@ describe "Ruby schema from CQL" do
     files = `git ls-files "#{dir}/*.cql"`.split(/\n/)
   end
   files.each do |cql_file|
-    it "produces the expected Ruby for #{cql_file}" do
-      basename = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, '\2')
-      expected = expected_dir+'/'+basename+'.rb'
-      actual = actual_dir+'/'+basename+'.rb'
-      begin
-        expected_text = File.read(expected)
-      rescue Errno::ENOENT => exception
-      end
+    basename = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, '\2')
+    expected = expected_dir+'/'+basename+'.rb'
+    actual = actual_dir+'/'+basename+'.rb'
+    begin
+      expected_text = File.read(expected)
+    rescue Errno::ENOENT => exception
+    end
+    next unless expected_text || ENV['TEST_FILES']
 
+    it "produces the expected Ruby for #{cql_file}" do
       vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
       vocabulary.finalise
       compositor = ActiveFacts::Compositions::Binary.new(vocabulary.constellation, basename)

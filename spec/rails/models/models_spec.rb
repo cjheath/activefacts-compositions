@@ -37,15 +37,16 @@ describe "Rails Models from CQL" do
     files = `git ls-files "#{dir}/*.cql"`.split(/\n/)
   end
   files.each do |cql_file|
-    it "produces the expected Rails Models for #{cql_file}" do
-      basename = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, '\2')
-      expected = expected_dir+'/'+basename+'.models'
-      actual = actual_dir+'/'+basename+'.models'
-      begin
-        expected_text = File.read(expected)
-      rescue Errno::ENOENT => exception
-      end
+    basename = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, '\2')
+    expected = expected_dir+'/'+basename+'.models'
+    actual = actual_dir+'/'+basename+'.models'
+    begin
+      expected_text = File.read(expected)
+    rescue Errno::ENOENT => exception
+    end
+    next unless expected_text || ENV['TEST_FILES']
 
+    it "produces the expected Rails Models for #{cql_file}" do
       vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
       vocabulary.finalise
       compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, basename, "surrogates" => true)
