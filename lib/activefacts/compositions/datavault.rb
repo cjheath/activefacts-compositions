@@ -661,8 +661,7 @@ module ActiveFacts
 
           # Add a natural key:
           natural_index =
-            @constellation.Index(:new, composite: link, is_unique: true,
-              presence_constraint: nil, composite_as_natural_index: link)
+            @constellation.Index(:new, composite: link, is_unique: true, composite_as_natural_index: link)
           @constellation.IndexField(access_path: natural_index, ordinal: 0, component: fk1_component)
           @constellation.IndexField(access_path: natural_index, ordinal: 1, component: fk2_component)
 

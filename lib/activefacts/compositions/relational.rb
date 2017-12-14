@@ -339,7 +339,7 @@ module ActiveFacts
             )
           index =
             @constellation.Index(:new, composite: composite, is_unique: true,
-              presence_constraint: nil, composite_as_primary_index: composite)
+              composite_as_primary_index: composite)
           @constellation.IndexField(access_path: index, ordinal: 0, component: surrogate_component)
           composite.mapping.re_rank
           surrogate_component
@@ -752,7 +752,7 @@ module ActiveFacts
           # This AccessPath has exactly one field and no presence constraint, so just make the index.
           composite = mapping.parent.composite
           paths[nil] =
-            index = @constellation.Index(:new, composite: mapping.root, is_unique: true, presence_constraint: nil, composite_as_natural_index: composite)
+            index = @constellation.Index(:new, composite: mapping.root, is_unique: true, composite_as_natural_index: composite)
           composite.primary_index ||= index
         end
 
