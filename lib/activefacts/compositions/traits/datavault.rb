@@ -57,16 +57,31 @@ module ActiveFacts
           @loadbatch_entity_type = @constellation.EntityType[[@vocabulary.identifying_role_values, @option_loadbatch]]
         end
 
+        # This method only works after the LoadBatch composite has been asserted, of course
+        def loadbatch_composite
+          @loadbatch_composite ||= @composition.
+            all_composite.detect{|c| c.mapping.object_type == @loadbatch_entity_type}
+        end
+
         def inject_loadbatch_relationships
           return unless @option_audit == 'batch'
-
-          @composition.all_composite.each do |composite|
-            next if composite.mapping.object_type == @loadbatch_entity_type
-            compile("#{composite.mapping.name} was loaded in one #{@option_loadbatch};")
+          trace :batch, "Injecting LoadBatch relationships" do
+            @composition.all_composite.each do |composite|
+              inject_loadbatch_relationship composite
+            end
           end
-          @loadbatch_entity_type.all_role.each do |role|
-            populate_reference(role).injection_annotation = 'loadbatch'
+        end
+
+        def inject_loadbatch_relationship composite
+          return if composite == loadbatch_composite
+          trace :batch, "Injecting LoadBatch relationship into #{composite.mapping.name}" do
+            compile("#{composite.mapping.name} was loaded in one #{@option_loadbatch};")
+
+            role = composite.mapping.object_type.all_role.detect{|r| c = r.counterpart and c.object_type == @loadbatch_entity_type}
             populate_reference(role.counterpart).injection_annotation = 'loadbatch'
+            populate_reference(role).injection_annotation = 'loadbatch'
+            composite.mapping.re_rank
+            loadbatch_composite.mapping.re_rank
           end
         end
 
