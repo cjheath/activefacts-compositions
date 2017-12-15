@@ -16,7 +16,7 @@ module ActiveFacts
 
       BDV_ANNOTATIONS = /same as link|hierarchy link|computed link|exploration link|computed satellite|point in time|bridge/
       BDV_LINK_ANNOTATIONS = /same as link|hierarchy link|computed link|exploration link/
-      BDV_SAT_ANNOTATIONS = /computed satellite/
+      BDV_SAT_ANNOTATIONS = /computed satellite/    # Not used yet
       BDV_PIT_ANNOTATIONS = /point in time/
       BDV_BRIDGE_ANNOTATIONS = /bridge/
 
@@ -420,9 +420,10 @@ module ActiveFacts
         end
       end
 
-      def prefer_natural_key building_natural_key, source_composite, target_composite
-        return false if building_natural_key && (@link_composites.include?(source_composite) || @bdv_link_composites.include?(source_composite))
-        building_natural_key && @hub_composites.include?(target_composite)
+      def preferred_fk_type building_natural_key, source_composite, target_composite
+        return :hash if @option_fk == :hash
+        return :primary if building_natural_key && (@link_composites+@bdv_link_composites).include?(source_composite)
+        building_natural_key && @hub_composites.include?(target_composite) ? :natural : :primary
       end
 
       # For each member of this composite, decide whether to split it to a satellite

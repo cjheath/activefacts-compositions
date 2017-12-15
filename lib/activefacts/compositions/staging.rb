@@ -37,7 +37,7 @@ module ActiveFacts
 
         datavault_initialize options
 
-        @fk_natural = true      # Default value
+        @option_fk = :natural      # Default value
         super constellation, name, options, 'Staging'
       end
 

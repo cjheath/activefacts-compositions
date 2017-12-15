@@ -24,12 +24,14 @@ module ActiveFacts
         @option_surrogates = options.delete('surrogates')
         @surrogate_name_pattern = [true, '', 'true', 'yes', nil].include?(t = @option_surrogates) ? '+ ID' : t
         fk = options.delete('fk')
-        @fk_natural = false if @fk_natural == nil # Don't override subclass default
+        @option_fk = :primary unless @option_fk != nil # Don't override subclass default
         case fk
         when 'primary', '', nil
-          @fk_natural = false
+          @option_fk = :primary
         when 'natural'
-          @fk_natural = true
+          @option_fk = :natural
+        when 'hash'
+          @option_fk = :hash
         else
           raise "Value #{fk.inspect} for fk option is not supported"
         end
@@ -550,31 +552,35 @@ module ActiveFacts
 
         # REVISIT: if member.is_partitioned_here, don't absorb sibling subtypes!
         trace :relational_columns?, "Absorbing all of #{member.child_role.name} in #{member.inspect_reading}" do
+          if MM::Absorption === member && !member.parent_role.is_mandatory && MM::EntityType === member.object_type
+            # REVISIT: If this is an absorbed subtype or full_absorption, add an indicator to that effect
+            # Perhaps only if the member contains any non-mandatory leaves?
+            trace :relational_columns, "REVISIT: Absorb an indicator for absorbed #{member.inspect}"
+          end
           absorb_all member, child_mapping, paths
         end
       end
 
       # May be overridden in subclasses
-      def prefer_natural_key building_natural_key, source_composite, target_composite
-        @fk_natural
+      def preferred_fk_type building_natural_key, source_composite, target_composite
+        @option_fk == :natural
       end
 
       # Recursively add members to this component for the existential roles of
       # the composite mapping for the absorbed (child_role) object:
       def absorb_key mapping, target, paths
         building_natural_key = paths.detect{|k,i| i.is_a?(MM::Index) && i.composite_as_natural_index}
-        prefer_natural = prefer_natural_key(building_natural_key, mapping.root, target.composite)
-        prefer_natural = false unless !target.composite || target.composite.primary_index != target.composite.natural_index
+        fk_type = preferred_fk_type(building_natural_key, mapping.root, target.composite)
         target.re_rank
         target.all_member.sort_by(&:ordinal).each do |member|
           rank = member.rank_key[0]
           next unless rank <= MM::Component::RANK_IDENT
-          if rank == MM::Component::RANK_SURROGATE && prefer_natural
+          if rank == MM::Component::RANK_SURROGATE && fk_type == :natural
             next
           end
           member = member.fork_to_new_parent mapping
           augment_paths paths, member
-          if rank == MM::Component::RANK_SURROGATE && !prefer_natural
+          if rank == MM::Component::RANK_SURROGATE && fk_type != :natural
             break   # Will always be first (higher rank), and usurps others
           elsif member.is_a?(MM::Absorption)
             object_type = member.child_role.object_type
@@ -780,9 +786,9 @@ module ActiveFacts
                 target_object_type = fa.absorption.parent_role.object_type
               end
               target = @composites[target_object_type]
-              prefer_natural = prefer_natural_key(false, composite, target)
+              fk_type = preferred_fk_type(false, composite, target)
               trace :relational_paths, "Completing #{path.inspect} to #{target.mapping.inspect}"
-              index = (prefer_natural && target.natural_index) || target.primary_index
+              index = (fk_type == :natural && target.natural_index) || target.primary_index
               if index
                 index.all_index_field.each do |index_field|
                   @constellation.IndexField access_path: path, ordinal: index_field.ordinal, component: index_field.component
