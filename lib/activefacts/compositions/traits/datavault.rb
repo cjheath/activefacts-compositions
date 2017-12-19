@@ -118,7 +118,7 @@ module ActiveFacts
 
               if recordsource_type
                 # Add a load DateTime value
-                recsrc_field = @constellation.ValueField(:new,
+                recsrc_field = @constellation.Mapping(:new,
                   parent: composite.mapping,
                   name: "RecordSource",
                   object_type: recordsource_type,
