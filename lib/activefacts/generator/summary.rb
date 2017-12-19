@@ -34,7 +34,7 @@ module ActiveFacts
           [mapping.name+"\n"] +
           mapping.
           all_leaf.
-          reject{|leaf| leaf.is_a?(Absorption) && leaf.forward_absorption}.
+          reject{|leaf| leaf.is_a?(Absorption) && leaf.forward_mapping}.
           flat_map do |leaf|
 
             # Build a display of the names in this absorption path, with FK and optional indicators

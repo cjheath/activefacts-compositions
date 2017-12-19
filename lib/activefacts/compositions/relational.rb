@@ -68,7 +68,7 @@ module ActiveFacts
           inject_surrogates if @option_surrogates
 
           # Remove the un-used absorption paths
-          delete_reverse_absorptions
+          delete_reverse_mappings
 
           # Traverse the absorbed objects to build the path to each required column, including foreign keys:
           absorb_all_columns
@@ -152,7 +152,7 @@ module ActiveFacts
                   absorption.is_a?(MM::Absorption) && absorption.child_role.base_role == single_pi_role
                 end
 
-              absorbing_ref = absorbing_ref.forward_absorption || absorbing_ref.flip!
+              absorbing_ref = absorbing_ref.forward_mapping || absorbing_ref.flip!
               candidate.full_absorption =
                 @constellation.FullAbsorption(composition: @composition, absorption: absorbing_ref, object_type: object_type)
               trace :relational_optimiser, "EntityType #{single_pi_role.object_type.name} identifies EntityType #{object_type.name}, so fully absorbs it via #{absorbing_ref.inspect}"
@@ -205,7 +205,7 @@ module ActiveFacts
                 next true if a.full_absorption && child_candidate.full_absorption.absorption != a
 
                 # If our counterpart is a full absorption, don't try to reverse that!
-                next false if (aa = (a.forward_absorption || a.reverse_absorption)) && aa.full_absorption
+                next false if (aa = (a.forward_mapping || a.reverse_mapping)) && aa.full_absorption
 
                 # Otherwise the other end must already be a table or fully absorbed into one
                 next false unless child_candidate.nil? || child_candidate.is_table || child_candidate.full_absorption
@@ -223,7 +223,7 @@ module ActiveFacts
             if absorption_paths.size > 0
               trace :relational_optimiser, "#{object_type.name} is fully absorbed in #{absorption_paths.size} places" do
                 absorption_paths.each do |a|
-                  a = a.flip! if a.forward_absorption
+                  a = a.flip! if a.forward_mapping
                   trace :relational_optimiser, "#{object_type.name} is fully absorbed via #{a.inspect}"
                 end
               end
@@ -237,8 +237,8 @@ module ActiveFacts
             refs_to = candidate.references_to.reject{|a|a.parent_role.base_role.is_identifying}
             if !refs_to.empty? and non_identifying_refs_from.size == 0
               refs_to.map! do |a|
-                a = a.flip! if a.reverse_absorption   # We were forward, but the other end must be
-                a.forward_absorption
+                a = a.flip! if a.reverse_mapping   # We were forward, but the other end must be
+                a.forward_mapping
               end
               trace :relational_optimiser, "#{object_type.name} is fully absorbed in #{refs_to.size} places: #{refs_to.map{|ref| ref.inspect}*", "}"
               candidate.definitely_not_table
@@ -262,12 +262,12 @@ module ActiveFacts
       end
 
       # Remove the unused reverse absorptions:
-      def delete_reverse_absorptions
+      def delete_reverse_mappings
         @binary_mappings.each do |object_type, mapping|
           mapping.all_member.to_a.              # Avoid problems with deletion from all_member
           each do |member|
             next unless member.is_a?(MM::Absorption)
-            member.retract if member.forward_absorption # This is the reverse of some absorption
+            member.retract if member.forward_mapping # This is the reverse of some mapping
           end
           mapping.re_rank
         end
@@ -356,7 +356,7 @@ module ActiveFacts
         end
 
         non_key_members, key_members = composite.mapping.all_member.reject do |member|
-          member.is_a?(MM::Absorption) and member.forward_absorption
+          member.is_a?(MM::Absorption) and member.forward_mapping
         end.partition do |member|
           member.rank_key[0] > MM::Component::RANK_IDENT
         end
@@ -482,7 +482,7 @@ module ActiveFacts
         ordered.each do |member|
           # Only consider forward Absorptions:
           next if !member.is_a?(MM::Absorption)
-          next if member.forward_absorption
+          next if member.forward_mapping
 
           child_object_type = member.child_role.object_type
           child_mapping = @binary_mappings[child_object_type]
@@ -630,7 +630,7 @@ module ActiveFacts
             rel = paths.merge(relevant_paths(newpaths, member))
             augment_paths rel, member
 
-            if member.is_a?(MM::Absorption) && !member.forward_absorption
+            if member.is_a?(MM::Absorption) && !member.forward_mapping
               # Process forward absorptions recursively
               absorb_nested mapping, member, rel
             end
@@ -831,13 +831,21 @@ module ActiveFacts
 
         # References from us are things we can own (non-Mappings) or have a unique forward absorption for
         def references_from
-          @mapping.all_member.select{|m| !m.is_a?(MM::Absorption) or !m.forward_absorption && m.parent_role.is_unique }
+          @mapping.all_member.select do |m|
+            !m.is_a?(MM::Absorption) or
+            !m.forward_mapping && m.parent_role.is_unique  # A forward absorption has no forward absorption
+          end
         end
         alias_method :rf, :references_from
 
         # References to us are reverse absorptions where the forward absorption can absorb us
         def references_to
-          @mapping.all_member.select{|m| m.is_a?(MM::Absorption) and f = m.forward_absorption and f.parent_role.is_unique}
+          # REVISIT: If some other object has a Mapping to us, that should be in this list
+          @mapping.all_member.select do |m|
+            m.is_a?(MM::Absorption) and
+            f = m.forward_mapping and    # This Absorption has a forward counterpart, so must be reverse
+            f.parent_role.is_unique
+          end
         end
         alias_method :rt, :references_to
 
@@ -907,8 +915,8 @@ module ActiveFacts
 
               absorbing_ref = mapping.all_member.detect{|m| m.is_a?(MM::Absorption) && m.child_role.fact_type == fact_type}
 
-              absorbing_ref = absorbing_ref.flip! if absorbing_ref.reverse_absorption   # We were forward, but the other end must be
-              absorbing_ref = absorbing_ref.forward_absorption
+              absorbing_ref = absorbing_ref.flip! if absorbing_ref.reverse_mapping   # We were forward, but the other end must be
+              absorbing_ref = absorbing_ref.forward_mapping
               self.full_absorption =
                 o.constellation.FullAbsorption(composition: composition, absorption: absorbing_ref, object_type: o)
               trace :relational_defaults, "Supertype #{fact_type.supertype_role.name} fully absorbs subtype #{o.name} via #{absorbing_ref.inspect}"

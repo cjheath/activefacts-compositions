@@ -58,7 +58,7 @@ module ActiveFacts
         return true if o.name == "_ImplicitBooleanValueType"
         return false if o.supertype
         # A value type with no supertype must be emitted if it is the child in any absorption:
-        return !composite.mapping.all_member.detect{|m| m.forward_absorption}
+        return !composite.mapping.all_member.detect{|m| m.forward_mapping}
       end
 
       def retract_intrinsic_types
@@ -115,7 +115,7 @@ module ActiveFacts
           sort_by{|m| m.ordinal}.
           reject do |m|
             m.is_a?(MM::Absorption) and
-              m.forward_absorption || m.child_role.fact_type.is_a?(MM::TypeInheritance)
+              m.forward_mapping || m.child_role.fact_type.is_a?(MM::TypeInheritance)
           end
 
         if predefine_role_players

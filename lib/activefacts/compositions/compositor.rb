@@ -69,13 +69,13 @@ module ActiveFacts
               parent_role: role,
               child_role: counterpart
             )
-          # Populate the absorption/reverse_absorption (putting the "many" or optional side as reverse)
+          # Populate the absorption/reverse_mapping (putting the "many" or optional side as reverse)
           if r = @component_by_fact[role.fact_type]
             # Second occurrence of this fact type, set the direction:
             if component.is_preferred_direction
-              component.reverse_absorption = r
+              component.reverse_mapping = r
             else  # Set this as the reverse absorption
-              component.forward_absorption = r
+              component.forward_mapping = r
             end
           else
             # First occurrence of this fact type
