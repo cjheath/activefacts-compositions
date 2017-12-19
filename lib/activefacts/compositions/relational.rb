@@ -68,7 +68,7 @@ module ActiveFacts
           inject_surrogates if @option_surrogates
 
           # Remove the un-used absorption paths
-          delete_reverse_mappings
+          retract_reverse_mappings
 
           # Traverse the absorbed objects to build the path to each required column, including foreign keys:
           absorb_all_columns
@@ -262,11 +262,11 @@ module ActiveFacts
       end
 
       # Remove the unused reverse absorptions:
-      def delete_reverse_mappings
+      def retract_reverse_mappings
         @binary_mappings.each do |object_type, mapping|
           mapping.all_member.to_a.              # Avoid problems with deletion from all_member
           each do |member|
-            next unless member.is_a?(MM::Absorption)
+            next unless member.is_a?(MM::Mapping)
             member.retract if member.forward_mapping # This is the reverse of some mapping
           end
           mapping.re_rank
