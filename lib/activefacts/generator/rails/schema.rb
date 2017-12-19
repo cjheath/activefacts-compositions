@@ -248,10 +248,6 @@ module ActiveFacts
             type_name
           end
 
-          def valid_from_type
-            date_time_type
-          end
-
           def date_time_type
             'datetime'
           end

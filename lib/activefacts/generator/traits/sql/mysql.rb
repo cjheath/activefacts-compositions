@@ -256,10 +256,6 @@ module ActiveFacts
               "#{safe_column_name} = 1"
             end
 
-            def valid_from_type
-              date_time_type
-            end
-
             def default_char_type
               (@unicode ? 'N' : '') +
               'CHAR'

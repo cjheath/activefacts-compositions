@@ -504,11 +504,6 @@ module ActiveFacts
             end
           end
 
-          # What type to use for a Metamodel::ValidFrom
-          def valid_from_type
-            date_time_type
-          end
-
           def date_time_type
             'TIMESTAMP'
           end

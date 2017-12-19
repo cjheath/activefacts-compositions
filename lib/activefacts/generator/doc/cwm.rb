@@ -494,10 +494,6 @@ module ActiveFacts
             type_name
           end
 
-          def valid_from_type
-            'TIMESTAMP'
-          end
-
           def date_time_type
             'TIMESTAMP'
           end

@@ -258,10 +258,6 @@ module ActiveFacts
               safe_column_name  # psql outputs as 't' or 'f', but the bare column is a boolean expression
             end
 
-            def valid_from_type
-              'TIMESTAMP'
-            end
-
             # There is no performance benefit in using fixed-length CHAR fields,
             # and an added burden of trimming the implicitly added white-space
             def default_char_type
