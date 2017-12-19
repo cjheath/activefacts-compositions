@@ -1,8 +1,8 @@
 Summary of PartyModel
 Company STG
-	Company STG->[Party]->Party ID[P1.0] as "Party ID"
-	Company STG->[LoadBatch]->LoadBatch ID[P1.1] as "Load Batch ID"
-	Company STG->Record GUID[N2] as "Record GUID"
+	Company STG->Record GUID[P1] as "Record GUID"
+	Company STG->[Party]->Record GUID[N2] as "Party Record GUID"
+	Company STG->[LoadBatch]->LoadBatch ID as "Load Batch ID"
 	Company STG->Superannuation Company? as "Superannuation Company"
 	Company STG->Teaching Institution?->RTO? as "RTO"
 ### (Party in "Company is a kind of Party") if and only if (Party in "Party is of Party Type")
@@ -19,9 +19,9 @@ Party STG
 ### (Party in "Company is a kind of Party") if and only if (Party in "Party is of Party Type")
 ### (Party in "Person is a kind of Party") if and only if (Party in "Party is of Party Type")
 Person STG
-	Person STG->[Party]->Party ID[P1.0] as "Party ID"
-	Person STG->[LoadBatch]->LoadBatch ID[P1.1] as "Load Batch ID"
-	Person STG->Record GUID[N2] as "Record GUID"
+	Person STG->Record GUID[P1] as "Record GUID"
+	Person STG->[Party]->Record GUID[N2] as "Party Record GUID"
+	Person STG->[LoadBatch]->LoadBatch ID as "Load Batch ID"
 	Person STG->User? as "User"
 ### (Party in "Person is a kind of Party") if and only if (Party in "Party is of Party Type")
 ### exactly one of (Party in "Person is a kind of Party") or (Party in "Company is a kind of Party")

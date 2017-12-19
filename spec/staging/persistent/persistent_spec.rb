@@ -49,7 +49,7 @@ describe "Persistent Staging schema from CQL" do
     it "produces the expected Persistent Staging summary for #{cql_file}" do
       vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
       vocabulary.finalise
-      compositor = ActiveFacts::Compositions::Staging.new(vocabulary.constellation, basename, 'persistent'=>'true')
+      compositor = ActiveFacts::Compositions::Staging.new(vocabulary.constellation, basename, 'persistent'=>'true', 'fk'=>'natural')
       compositor.generate
 
       output = ActiveFacts::Generators::Summary.new(compositor.composition).generate
