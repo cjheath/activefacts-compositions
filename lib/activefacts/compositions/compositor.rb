@@ -6,6 +6,8 @@
 #       The term "reference" used here means either an Absorption
 #       (one direction of a binary fact type relating two object types),
 #       or an Indicator (for a unary fact type).
+#       Later processes may create references for bare Mappings,
+#       or may replace several Indicators by a Discriminator.
 #
 #       n-ary fact types and other objectified fact types are factored out by using the associated LinkFactTypes.
 #

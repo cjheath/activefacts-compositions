@@ -132,7 +132,7 @@ module ActiveFacts
               raise "REVISIT: Internal error" unless absorbing_ref.parent_role.object_type == object_type
               absorbing_ref = absorbing_ref.flip!
               candidate.full_absorption =
-                @constellation.FullAbsorption(composition: @composition, absorption: absorbing_ref, object_type: object_type)
+                @constellation.FullAbsorption(composition: @composition, mapping: absorbing_ref, object_type: object_type)
               trace :relational_optimiser, "Fully absorb objectified unary #{object_type.name} into #{f.all_role.single.object_type.name}"
               candidate.definitely_not_table
               next object_type
@@ -154,7 +154,7 @@ module ActiveFacts
 
               absorbing_ref = absorbing_ref.forward_mapping || absorbing_ref.flip!
               candidate.full_absorption =
-                @constellation.FullAbsorption(composition: @composition, absorption: absorbing_ref, object_type: object_type)
+                @constellation.FullAbsorption(composition: @composition, mapping: absorbing_ref, object_type: object_type)
               trace :relational_optimiser, "EntityType #{single_pi_role.object_type.name} identifies EntityType #{object_type.name}, so fully absorbs it via #{absorbing_ref.inspect}"
               candidate.definitely_not_table
               next object_type
@@ -202,7 +202,7 @@ module ActiveFacts
                 child_candidate = @candidates[a.child_role.object_type]
 
                 # It's ok if we absorbed them already
-                next true if a.full_absorption && child_candidate.full_absorption.absorption != a
+                next true if a.full_absorption && child_candidate.full_absorption.mapping != a
 
                 # If our counterpart is a full absorption, don't try to reverse that!
                 next false if (aa = (a.forward_mapping || a.reverse_mapping)) && aa.full_absorption
@@ -493,9 +493,11 @@ module ActiveFacts
           end
 
           full_absorption = child_object_type.all_full_absorption[@composition]
-          if full_absorption && full_absorption.absorption.parent_role.fact_type != member.parent_role.fact_type
+          if full_absorption &&
+              MM::Absorption === full_absorption.mapping &&
+              full_absorption.mapping.parent_role.fact_type != member.parent_role.fact_type
             begin     # Follow transitive target absorption
-              child_object_type = full_absorption.absorption.parent_role.object_type
+              child_object_type = full_absorption.mapping.parent_role.object_type
             end while full_absorption = child_object_type.all_full_absorption[@composition]
             child_mapping = @binary_mappings[child_object_type]
             trace :fks, "FK to #{child_mapping.name} in #{member.inspect_reading} (for fully-absorbed #{member.child_role.name})"
@@ -533,13 +535,14 @@ module ActiveFacts
         full_absorption = child_object_type.all_full_absorption[@composition]
         # We can't use member.full_absorption here, as it's not populated on forked copies
         # if full_absorption && full_absorption != member.full_absorption
-        if full_absorption && full_absorption.absorption.parent_role.fact_type != member.parent_role.fact_type
-
+        if full_absorption &&
+            MM::Absorption === full_absorption.mapping &&
+            full_absorption.mapping.parent_role.fact_type != member.parent_role.fact_type
           # REVISIT: This should be done by recursing to absorb_key, not using a loop
           absorption = member   # Retain this for the ForeignKey
           begin     # Follow transitive target absorption
-            member = mirror(full_absorption.absorption, member)
-            child_object_type = full_absorption.absorption.parent_role.object_type
+            member = mirror(full_absorption.mapping, member)
+            child_object_type = full_absorption.mapping.parent_role.object_type
           end while full_absorption = child_object_type.all_full_absorption[@composition]
           child_mapping = @binary_mappings[child_object_type]
 
@@ -588,12 +591,12 @@ module ActiveFacts
             if full_absorption
               # The target object is fully absorbed. Absorb a key to where it was absorbed
               # We can't recurse here, because we must descend supertype absorptions
-              while full_absorption
+              while full_absorption && MM::Absorption === full_absorption.mapping
                 trace :relational_columns?, "Absorbing key of fully absorbed #{member.child_role.name}" do
-                  member = mirror full_absorption.absorption, member
+                  member = mirror full_absorption.mapping, member
                   augment_paths paths, member
                   # Descend so the key fields get fully populated
-                  absorb_key member, full_absorption.absorption.parent, paths
+                  absorb_key member, full_absorption.mapping.parent, paths
                   full_absorption = @composition.all_full_absorption[member.child_role.object_type]
                 end
               end
@@ -684,7 +687,8 @@ module ActiveFacts
               pc.role_sequence.all_role_ref.size == 1 and
               mapping.is_a?(MM::Absorption) and
               fa = mapping.full_absorption and
-              pc.role_sequence.all_role_ref.single.role.base_role == fa.absorption.parent_role.base_role
+              fa.mapping.is_a?(MM::Absorption) and
+              pc.role_sequence.all_role_ref.single.role.base_role == fa.mapping.parent_role.base_role
             )
           end  # Alethic uniqueness constraint on far end
 
@@ -783,7 +787,7 @@ module ActiveFacts
               next if path.all_foreign_key_field.size == path.all_index_field.size
               target_object_type = path.absorption.child_role.object_type
               while fa = target_object_type.all_full_absorption[@composition]
-                target_object_type = fa.absorption.parent_role.object_type
+                target_object_type = fa.mapping.parent_role.object_type
               end
               target = @composites[target_object_type]
               fk_type = preferred_fk_type(false, composite, target)
@@ -918,7 +922,7 @@ module ActiveFacts
               absorbing_ref = absorbing_ref.flip! if absorbing_ref.reverse_mapping   # We were forward, but the other end must be
               absorbing_ref = absorbing_ref.forward_mapping
               self.full_absorption =
-                o.constellation.FullAbsorption(composition: composition, absorption: absorbing_ref, object_type: o)
+                o.constellation.FullAbsorption(composition: composition, mapping: absorbing_ref, object_type: o)
               trace :relational_defaults, "Supertype #{fact_type.supertype_role.name} fully absorbs subtype #{o.name} via #{absorbing_ref.inspect}"
               definitely_not_table
               return
