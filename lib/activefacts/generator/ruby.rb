@@ -79,7 +79,7 @@ module ActiveFacts
 
           # Does the reverse role need explicit specification?
           implied_reverse_role_name = ruby_role_name(component.root.mapping)
-          actual_reverse_role_name = ruby_role_name component.reverse_mapping
+          actual_reverse_role_name = ruby_role_name(component.reverse_mapping || component.forward_mapping)
 
           if implied_reverse_role_name != actual_reverse_role_name
             counterpart_spec = ", counterpart: :#{actual_reverse_role_name}"

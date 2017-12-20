@@ -92,6 +92,22 @@ module ActiveFacts
         "REVISIT: override class_finale\n"
       end
 
+      def exclude_as_counterpart member
+        # If emitting a role also creates its counterpart, we can exclude the counterparts.
+        # This depends on the subtype, so centralise the knowledge here where it can be overridden.
+        # Non-Mappings always get emitted:
+        return false unless MM::Mapping === member
+
+        # TypeInheritance always gets skipped:
+        return true if MM::Absorption === member && member.child_role.fact_type.is_a?(MM::TypeInheritance)
+
+        # Don't skip the mandatory counterpart of a one-to-one:
+        return false if member.is_one_to_one and member.is_mandatory
+
+        # Otherwise skip all reverse mappings (these have a forward mapping)
+        return member.forward_mapping
+      end
+
       def generate_class composite, predefine_role_players = true
         return nil if @composites_emitted[composite]
 
@@ -114,8 +130,7 @@ module ActiveFacts
           all_member.
           sort_by{|m| m.ordinal}.
           reject do |m|
-            m.is_a?(MM::Absorption) and
-              m.forward_mapping || m.child_role.fact_type.is_a?(MM::TypeInheritance)
+            exclude_as_counterpart(m)
           end
 
         if predefine_role_players

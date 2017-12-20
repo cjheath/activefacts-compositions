@@ -176,6 +176,7 @@ module Insurance
   end
 
   class Person < Party
+    one_to_one      :contact_methods, mandatory: true   # Person has Contact Methods, see ContactMethods#person
     has_one         :family_name, mandatory: true, class: Name  # Person has family-Name, see Name#all_person_as_family_name
     has_one         :given_name, mandatory: true, class: Name  # Person has given-Name, see Name#all_person_as_given_name
     has_one         :title, mandatory: true             # Person has Title, see Title#all_person

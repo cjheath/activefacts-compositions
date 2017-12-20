@@ -1,4 +1,4 @@
-### Composition
+#
 # ActiveFacts Compositions, Binary Compositor.
 #
 #       Fans of RDF will like this one.
