@@ -585,25 +585,25 @@ module ActiveFacts
           end
           member = member.fork_to_new_parent mapping
           augment_paths paths, member
-          if rank == MM::Component::RANK_SURROGATE && fk_type != :natural
+          if rank == MM::Component::RANK_SURROGATE && fk_type == :primary
             break   # Will always be first (higher rank), and usurps others
-          elsif member.is_a?(MM::Absorption)
-            object_type = member.child_role.object_type
-            full_absorption = @composition.all_full_absorption[member.child_role.object_type]
+          elsif member.is_a?(MM::Mapping) && !member.is_a?(MM::ValueField)
+            object_type = member.object_type
+            full_absorption = @composition.all_full_absorption[object_type]
             if full_absorption
               # The target object is fully absorbed. Absorb a key to where it was absorbed
               # We can't recurse here, because we must descend supertype absorptions
               while full_absorption && MM::Absorption === full_absorption.mapping
-                trace :relational_columns?, "Absorbing key of fully absorbed #{member.child_role.name}" do
+                trace :relational_columns?, "Absorbing key of fully absorbed #{object_type.name}" do
                   member = mirror full_absorption.mapping, member
                   augment_paths paths, member
                   # Descend so the key fields get fully populated
                   absorb_key member, full_absorption.mapping.parent, paths
-                  full_absorption = @composition.all_full_absorption[member.child_role.object_type]
+                  full_absorption = @composition.all_full_absorption[member.object_type]
                 end
               end
             else
-              absorb_key member, @binary_mappings[member.child_role.object_type], paths
+              absorb_key member, @binary_mappings[object_type], paths
             end
           end
         end

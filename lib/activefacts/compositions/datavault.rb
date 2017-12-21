@@ -517,7 +517,7 @@ module ActiveFacts
           # REVISIT: re-ranking members without a preferred_identifier does not rank the PK fields in order.
           satellite.mapping.re_rank
 
-          # Add a foreign key to the hub
+          # Add a foreign key to the hub or link
           fk = @constellation.ForeignKey(
               :new,
               source_composite: satellite,
