@@ -487,7 +487,7 @@ module ActiveFacts
           child_object_type = member.child_role.object_type
           child_mapping = @binary_mappings[child_object_type]
           if child_mapping.composite
-            trace :fks, "FK to #{member.child_role.name} in #{member.inspect_reading}"
+            trace :fks, "FK to #{member.child_role.name} in #{member.inspect_reason}"
             accumulator << child_mapping.composite
             next
           end
@@ -500,12 +500,12 @@ module ActiveFacts
               child_object_type = full_absorption.mapping.parent_role.object_type
             end while full_absorption = child_object_type.all_full_absorption[@composition]
             child_mapping = @binary_mappings[child_object_type]
-            trace :fks, "FK to #{child_mapping.name} in #{member.inspect_reading} (for fully-absorbed #{member.child_role.name})"
+            trace :fks, "FK to #{child_mapping.name} in #{member.inspect_reason} (for fully-absorbed #{member.child_role.name})"
             accumulator << child_mapping.composite
             next
           end
 
-          trace :fks, "Descending all of #{member.child_role.name} in #{member.inspect_reading}" do
+          trace :fks, "Descending all of #{member.child_role.name} in #{member.inspect_reason}" do
             enumerate_foreign_keys member, child_mapping, accumulator, path
           end
         end
@@ -517,15 +517,17 @@ module ActiveFacts
       end
 
       # This member is an Absorption. Process it recursively, absorbing all its members or just a key
-      # depending on whether the absorbed object is a Composite (or absorbed into one) or not.
+      # depending on whether the absorbed object is a Composite (or fully absorbed into one) or not.
       def absorb_nested mapping, member, paths
+        return if MM::ValueField === member
         # Should we absorb a foreign key or the whole contents?
-        child_object_type = member.child_role.object_type
+        child_object_type = member.object_type
         child_mapping = @binary_mappings[child_object_type]
+
         if child_mapping.composite &&     # The child is a separate table
             !member.is_partitioned_here   # We are not absorbing a partitioned supertype
-          trace :relational_columns?, "Absorbing FK to #{member.child_role.name} in #{member.inspect_reading}" do
-            paths[member] = @constellation.ForeignKey(:new, source_composite: mapping.root, composite: child_mapping.composite, absorption: member)
+          trace :relational_columns?, "Absorbing FK to #{child_mapping.composite.mapping.name} in #{member.inspect_reason}" do
+            paths[member] = @constellation.ForeignKey(:new, source_composite: mapping.root, composite: child_mapping.composite, mapping: member)
             absorb_key member, child_mapping, paths
             return
           end
@@ -539,22 +541,22 @@ module ActiveFacts
             MM::Absorption === full_absorption.mapping &&
             full_absorption.mapping.parent_role.fact_type != member.parent_role.fact_type
           # REVISIT: This should be done by recursing to absorb_key, not using a loop
-          absorption = member   # Retain this for the ForeignKey
+          top_mapping = member   # Retain this for the ForeignKey
           begin     # Follow transitive target absorption
             member = mirror(full_absorption.mapping, member)
             child_object_type = full_absorption.mapping.parent_role.object_type
           end while full_absorption = child_object_type.all_full_absorption[@composition]
           child_mapping = @binary_mappings[child_object_type]
 
-          trace :relational_columns?, "Absorbing FK to #{absorption.child_role.name} (fully absorbed into #{child_object_type.name}) in #{member.inspect_reading}" do
-            paths[absorption] = @constellation.ForeignKey(:new, source_composite: mapping.root, composite: child_mapping.composite, absorption: absorption)
+          trace :relational_columns?, "Absorbing FK to #{top_mapping.child_role.name} (fully absorbed into #{child_object_type.name}) in #{member.inspect_reason}" do
+            paths[top_mapping] = @constellation.ForeignKey(:new, source_composite: mapping.root, composite: child_mapping.composite, mapping: top_mapping)
             absorb_key member, child_mapping, paths
           end
           return
         end
 
         # REVISIT: if member.is_partitioned_here, don't absorb sibling subtypes!
-        trace :relational_columns?, "Absorbing all of #{member.child_role.name} in #{member.inspect_reading}" do
+        trace :relational_columns?, "Absorbing all of #{member.name} in #{member.inspect_reason}" do
           if MM::Absorption === member && !member.parent_role.is_mandatory && MM::EntityType === member.object_type
             # REVISIT: If this is an absorbed subtype or full_absorption, add an indicator to that effect
             # Perhaps only if the member contains any non-mandatory leaves?
@@ -615,7 +617,7 @@ module ActiveFacts
 
         pcs = []
         newpaths = {}
-        if mapping.composite || mapping.full_absorption || mapping.parent_role.fact_type.is_a?(MM::TypeInheritance)
+        if mapping.composite || mapping.full_absorption || mapping.is_type_inheritance
           pcs = find_uniqueness_constraints(mapping)
 
           # Don't build an index from the same PresenceConstraint twice on the same composite (e.g. for a subtype)
@@ -633,7 +635,7 @@ module ActiveFacts
             rel = paths.merge(relevant_paths(newpaths, member))
             augment_paths rel, member
 
-            if member.is_a?(MM::Absorption) && !member.forward_mapping
+            if member.is_a?(MM::Mapping) && !member.forward_mapping
               # Process forward absorptions recursively
               absorb_nested mapping, member, rel
             end
@@ -785,9 +787,9 @@ module ActiveFacts
               next if MM::Index === path
 
               next if path.all_foreign_key_field.size == path.all_index_field.size
-              target_object_type = path.absorption.child_role.object_type
+              target_object_type = path.mapping.object_type
               while fa = target_object_type.all_full_absorption[@composition]
-                target_object_type = fa.mapping.parent_role.object_type
+                target_object_type = fa.mapping.parent.object_type
               end
               target = @composites[target_object_type]
               fk_type = preferred_fk_type(false, composite, target)

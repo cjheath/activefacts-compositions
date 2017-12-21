@@ -145,11 +145,11 @@ module ActiveFacts
           # respective Composites. The name of a foreign key takes this into account.
 
           def from_association_name
-            absorption.column_name.snakecase
+            mapping.column_name.snakecase
           end
 
           def to_association
-            if absorption && absorption.child_role.is_unique
+            if mapping && mapping.child_role.is_unique
               [ "has_one", source_composite.rails.singular_name]
             else
               [ "has_many", source_composite.rails.plural_name]

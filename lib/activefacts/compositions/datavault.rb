@@ -368,8 +368,7 @@ module ActiveFacts
         fk = @constellation.ForeignKey(
             :new,
             source_composite: pit_composite,
-            composite: hub_composite,
-            absorption: nil           # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+            composite: hub_composite
           )
         @constellation.ForeignKeyField(foreign_key: fk, ordinal: 0, component: pit_hub_field)
         # This should be filled in by complete_foreign_keys, but there is no Absorption
@@ -400,8 +399,7 @@ module ActiveFacts
           fk = @constellation.ForeignKey(
               :new,
               source_composite: pit_composite,
-              composite: sat_composite,
-              absorption: nil           # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+              composite: sat_composite
             )
           @constellation.ForeignKeyField(foreign_key: fk, ordinal: 0, component: src_hash_field)
           @constellation.IndexField(access_path: fk, ordinal: 0, component: sat_hash_field)
@@ -523,8 +521,7 @@ module ActiveFacts
           fk = @constellation.ForeignKey(
               :new,
               source_composite: satellite,
-              composite: composite,
-              absorption: nil           # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+              composite: composite
             )
           @constellation.ForeignKeyField(foreign_key: fk, ordinal: 0, component: fk_field)
           # This should be filled in by complete_foreign_keys, but there is no Absorption
@@ -671,8 +668,7 @@ module ActiveFacts
           fk1 = @constellation.ForeignKey(
               :new,
               source_composite: link,
-              composite: link_from,
-              absorption: nil       # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+              composite: link_from
             )
           @constellation.ForeignKeyField(foreign_key: fk1, ordinal: 0, component: fk1_component)
           # REVISIT: This should be filled in by complete_foreign_keys, but it has no Absorption
@@ -682,8 +678,7 @@ module ActiveFacts
             fk2 = @constellation.ForeignKey(
                 :new,
                 source_composite: link,
-                composite: link_to,
-                absorption: nil       # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+                composite: link_to
               )
             @constellation.ForeignKeyField(foreign_key: fk2, ordinal: 0, component: fk2_component)
             # This can't be filled in by complete_foreign_keys because it has no Absorption
