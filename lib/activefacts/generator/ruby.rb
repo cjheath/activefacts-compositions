@@ -69,7 +69,7 @@ module ActiveFacts
         if component.is_a?(MM::Absorption) and
             counterpart = component.object_type and
             counterpart_composite = composite_for(counterpart)
-          counterpart_class_emitted = @composites_emitted[counterpart_composite]
+          counterpart_class_emitted = @composites_finished[counterpart_composite]
 
           counterpart_class_name = ruby_class_name counterpart_composite
           counterpart_default_role = ruby_role_name counterpart_composite.mapping

@@ -25,7 +25,8 @@ module ActiveFacts
       end
 
       def generate
-        @composites_emitted = {}
+        @composites_started = {}
+        @composites_finished = {}
 
         retract_intrinsic_types
 
@@ -108,8 +109,9 @@ module ActiveFacts
         return member.forward_mapping
       end
 
-      def generate_class composite, predefine_role_players = true
-        return nil if @composites_emitted[composite]
+      def generate_class composite, precursor_to = [], predefine_role_players = true
+        return nil if @composites_started[composite]
+        @composites_started[composite] = true
 
         mapping = composite.mapping
         object_type = mapping.object_type
@@ -120,9 +122,7 @@ module ActiveFacts
         supertype_composites =
           object_type.all_supertype.map{|s| composite_for(s) }.compact
         forward_declarations +=
-          supertype_composites.map{|c| generate_class(c, false)}.compact
-
-        @composites_emitted[composite] = true
+          supertype_composites.map{|c| generate_class(c, precursor_to+[composite], false)}.compact
 
         # Select the members that will be declared as O-O roles:
         mapping.re_rank
@@ -134,18 +134,18 @@ module ActiveFacts
           end
 
         if predefine_role_players
-          # The idea was good, but we need to avoid triggering a forward reference problem.
-          # We only do it when we're not dumping a supertype dependency.
-          #
-          # For those roles that derive from Mappings, produce class definitions to avoid forward references:
+          # To reduce forward references, emit any classes that play a role
+          # we're about to emit, unless one is a subtype of any class that
+          # is currently being processed.
           forward_composites =
             members.
               select{ |m| m.is_a?(MM::Mapping) }.
               map{ |m| composite_for m.object_type }.
+              reject{|c| precursor_to.detect{|p| c.mapping.object_type.supertypes_transitive.include?(p.mapping.object_type) }}.
               compact.
               sort_by{|c| c.mapping.name}
           forward_declarations +=
-            forward_composites.map{|c| generate_class(c)}.compact
+            forward_composites.map{|c| generate_class(c, precursor_to+[composite])}.compact
         end
 
         forward_declarations = forward_declarations.map{|f| "#{f}\n"}*''
@@ -180,6 +180,8 @@ module ActiveFacts
           else
             value_type_declaration object_type
           end
+
+        @composites_finished[composite] = true
 
         forward_declarations +
         class_prelude(object_type, primary_supertype) +
