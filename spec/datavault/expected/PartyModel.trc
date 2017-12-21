@@ -20,7 +20,7 @@ Party HUB
 	Party HUB->LoadTime as "Load Time"
 	Party HUB->RecordSource as "Record Source"
 Party SAT
-	Party SAT->Party HID[PN1.0] as "Party HID"
+	Party SAT->Party->Party HID[PN1.0] as "Party HID"
 	Party SAT->LoadTime[PN1.1] as "Load Time"
 	Party SAT->RecordSource as "Record Source"
 	Party SAT->Party Type->Party Type Code as "Party Type Code"

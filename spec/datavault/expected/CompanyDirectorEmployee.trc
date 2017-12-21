@@ -11,7 +11,7 @@ Company HUB
 	Company HUB->LoadTime as "Load Time"
 	Company HUB->RecordSource as "Record Source"
 Company SAT
-	Company SAT->Company HID[PN1.0] as "Company HID"
+	Company SAT->Company->Company HID[PN1.0] as "Company HID"
 	Company SAT->LoadTime[PN1.1] as "Load Time"
 	Company SAT->RecordSource as "Record Source"
 	Company SAT->Is Listed? as "Is Listed"
@@ -22,7 +22,7 @@ Directorship LINK
 	Directorship LINK->LoadTime as "Load Time"
 	Directorship LINK->RecordSource as "Record Source"
 Directorship SAT
-	Directorship SAT->Directorship HID[PN1.0] as "Directorship HID"
+	Directorship SAT->Directorship->Directorship HID[PN1.0] as "Directorship HID"
 	Directorship SAT->LoadTime[PN1.1] as "Load Time"
 	Directorship SAT->RecordSource as "Record Source"
 	Directorship SAT->Appointment Date as "Appointment Date"
@@ -41,7 +41,7 @@ Employee Is Supervised By Manager LINK
 		### exactly one of (Employee in "Employee is supervised by Manager") or (Employee in "Manager is a kind of Employee")
 ### exactly one of (Employee in "Employee is supervised by Manager") or (Employee in "Manager is a kind of Employee")
 Employee SAT
-	Employee SAT->Employee HID[PN1.0] as "Employee HID"
+	Employee SAT->Employee->Employee HID[PN1.0] as "Employee HID"
 	Employee SAT->LoadTime[PN1.1] as "Load Time"
 	Employee SAT->RecordSource as "Record Source"
 	Employee SAT->Manager?->Is Ceo? as "Manager Is Ceo"
@@ -78,7 +78,7 @@ Person HUB
 	Person HUB->LoadTime as "Load Time"
 	Person HUB->RecordSource as "Record Source"
 Person SAT
-	Person SAT->Person HID[PN1.0] as "Person HID"
+	Person SAT->Person->Person HID[PN1.0] as "Person HID"
 	Person SAT->LoadTime[PN1.1] as "Load Time"
 	Person SAT->RecordSource as "Record Source"
 	Person SAT->Birth Date? as "Birth Date"

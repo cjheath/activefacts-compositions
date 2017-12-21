@@ -55,11 +55,11 @@ module Party
   included do
     self.primary_key = 'party_id'
 
-    # Purchase Order is to Supplier
-    has_many :purchase_orders, :class_name => 'PurchaseOrder', :foreign_key => :supplier_id, :dependent => :destroy
-
     # Sales Order was made by Customer
     has_many :sales_orders, :class_name => 'SalesOrder', :foreign_key => :customer_id, :dependent => :destroy
+
+    # Purchase Order is to Supplier
+    has_many :purchase_orders, :class_name => 'PurchaseOrder', :foreign_key => :supplier_id, :dependent => :destroy
 
   end
 end
@@ -69,23 +69,23 @@ module Product
   included do
     self.primary_key = 'product_id'
 
-    # maybe Bin contains Product
-    has_many :bins, :class_name => 'Bin', :foreign_key => :product_id, :dependent => :destroy
-
-    # Dispatch Item is Product
-    has_many :dispatch_items, :class_name => 'DispatchItem', :foreign_key => :product_id, :dependent => :destroy
+    # Sales Order Item is for Product
+    has_many :sales_order_items, :class_name => 'SalesOrderItem', :foreign_key => :product_id, :dependent => :destroy
 
     # Purchase Order Item is for Product
     has_many :purchase_order_items, :class_name => 'PurchaseOrderItem', :foreign_key => :product_id, :dependent => :destroy
 
-    # Received Item is Product
-    has_many :received_items, :class_name => 'ReceivedItem', :foreign_key => :product_id, :dependent => :destroy
-
-    # Sales Order Item is for Product
-    has_many :sales_order_items, :class_name => 'SalesOrderItem', :foreign_key => :product_id, :dependent => :destroy
+    # Dispatch Item is Product
+    has_many :dispatch_items, :class_name => 'DispatchItem', :foreign_key => :product_id, :dependent => :destroy
 
     # Transfer Request is for Product
     has_many :transfer_requests, :class_name => 'TransferRequest', :foreign_key => :product_id, :dependent => :destroy
+
+    # Received Item is Product
+    has_many :received_items, :class_name => 'ReceivedItem', :foreign_key => :product_id, :dependent => :destroy
+
+    # maybe Bin contains Product
+    has_many :bins, :class_name => 'Bin', :foreign_key => :product_id, :dependent => :destroy
 
   end
 end
@@ -226,8 +226,11 @@ module Warehouse
   included do
     self.primary_key = 'warehouse_id'
 
-    # maybe Warehouse contains Bin
-    has_many :bins, :class_name => 'Bin', :foreign_key => :warehouse_id, :dependent => :destroy
+    # Transfer Request is from From Warehouse
+    has_many :transfer_requests, :class_name => 'TransferRequest', :foreign_key => :from_warehouse_id, :dependent => :destroy
+
+    # Transfer Request is to To Warehouse
+    has_many :transfer_requests, :class_name => 'TransferRequest', :foreign_key => :to_warehouse_id, :dependent => :destroy
 
     # Purchase Order is to Warehouse
     has_many :purchase_orders, :class_name => 'PurchaseOrder', :foreign_key => :warehouse_id, :dependent => :destroy
@@ -235,11 +238,8 @@ module Warehouse
     # Sales Order is from Warehouse
     has_many :sales_orders, :class_name => 'SalesOrder', :foreign_key => :warehouse_id, :dependent => :destroy
 
-    # Transfer Request is from From Warehouse
-    has_many :transfer_requests, :class_name => 'TransferRequest', :foreign_key => :from_warehouse_id, :dependent => :destroy
-
-    # Transfer Request is to To Warehouse
-    has_many :transfer_requests, :class_name => 'TransferRequest', :foreign_key => :to_warehouse_id, :dependent => :destroy
+    # maybe Warehouse contains Bin
+    has_many :bins, :class_name => 'Bin', :foreign_key => :warehouse_id, :dependent => :destroy
 
   end
 end

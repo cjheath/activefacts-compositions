@@ -5,7 +5,7 @@ Author HUB
 	Author HUB->LoadTime as "Load Time"
 	Author HUB->RecordSource as "Record Source"
 Author SAT
-	Author SAT->Author HID[PN1.0] as "Author HID"
+	Author SAT->Author->Author HID[PN1.0] as "Author HID"
 	Author SAT->LoadTime[PN1.1] as "Load Time"
 	Author SAT->RecordSource as "Record Source"
 	Author SAT->Author Name as "Author Name"
@@ -21,7 +21,7 @@ Comment Is On Paragraph LINK
 	Comment Is On Paragraph LINK->Comment HID[N2.0] as "Comment HID"
 	Comment Is On Paragraph LINK->[Paragraph]->Paragraph HID[N2.1] as "Paragraph HID"
 Comment SAT
-	Comment SAT->Comment HID[PN1.0] as "Comment HID"
+	Comment SAT->Comment->Comment HID[PN1.0] as "Comment HID"
 	Comment SAT->LoadTime[PN1.1] as "Load Time"
 	Comment SAT->RecordSource as "Record Source"
 	Comment SAT->Content->Style? as "Content Style"
@@ -46,7 +46,7 @@ Paragraph Involves Post LINK
 	Paragraph Involves Post LINK->Paragraph HID[N2.0] as "Paragraph HID"
 	Paragraph Involves Post LINK->Post HID[N2.1] as "Post HID"
 Paragraph SAT
-	Paragraph SAT->Paragraph HID[PN1.0] as "Paragraph HID"
+	Paragraph SAT->Paragraph->Paragraph HID[PN1.0] as "Paragraph HID"
 	Paragraph SAT->LoadTime[PN1.1] as "Load Time"
 	Paragraph SAT->RecordSource as "Record Source"
 	Paragraph SAT->Content->Style? as "Content Style"
@@ -82,7 +82,7 @@ Topic HUB
 	Topic HUB->LoadTime as "Load Time"
 	Topic HUB->RecordSource as "Record Source"
 Topic SAT
-	Topic SAT->Topic HID[PN1.0] as "Topic HID"
+	Topic SAT->Topic->Topic HID[PN1.0] as "Topic HID"
 	Topic SAT->LoadTime[PN1.1] as "Load Time"
 	Topic SAT->RecordSource as "Record Source"
 	Topic SAT->Topic Name as "Topic Name"

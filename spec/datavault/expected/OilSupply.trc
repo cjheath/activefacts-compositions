@@ -22,7 +22,7 @@ Production Forecast LINK
 	Production Forecast LINK->LoadTime as "Load Time"
 	Production Forecast LINK->RecordSource as "Record Source"
 Production Forecast SAT
-	Production Forecast SAT->Production Forecast HID[PN1.0] as "Production Forecast HID"
+	Production Forecast SAT->Production Forecast->Production Forecast HID[PN1.0] as "Production Forecast HID"
 	Production Forecast SAT->LoadTime[PN1.1] as "Load Time"
 	Production Forecast SAT->RecordSource as "Record Source"
 	Production Forecast SAT->Quantity as "Quantity"
@@ -47,7 +47,7 @@ Regional Demand LINK
 	Regional Demand LINK->LoadTime as "Load Time"
 	Regional Demand LINK->RecordSource as "Record Source"
 Regional Demand SAT
-	Regional Demand SAT->Regional Demand HID[PN1.0] as "Regional Demand HID"
+	Regional Demand SAT->Regional Demand->Regional Demand HID[PN1.0] as "Regional Demand HID"
 	Regional Demand SAT->LoadTime[PN1.1] as "Load Time"
 	Regional Demand SAT->RecordSource as "Record Source"
 	Regional Demand SAT->Quantity as "Quantity"
@@ -59,7 +59,7 @@ Transport Route LINK
 	Transport Route LINK->LoadTime as "Load Time"
 	Transport Route LINK->RecordSource as "Record Source"
 Transport Route SAT
-	Transport Route SAT->Transport Route HID[PN1.0] as "Transport Route HID"
+	Transport Route SAT->Transport Route->Transport Route HID[PN1.0] as "Transport Route HID"
 	Transport Route SAT->LoadTime[PN1.1] as "Load Time"
 	Transport Route SAT->RecordSource as "Record Source"
 	Transport Route SAT->Cost? as "Cost"

@@ -7,7 +7,7 @@ Back Order Allocation LINK
 	Back Order Allocation LINK->RecordSource as "Record Source"
 ### SubsetConstraint((Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item") only if (Purchase Order Item, Sales Order Item in "Purchase Order Item is for Product", "Sales Order Item is for Product"))
 Back Order Allocation SAT
-	Back Order Allocation SAT->Back Order Allocation HID[PN1.0] as "Back Order Allocation HID"
+	Back Order Allocation SAT->Back Order Allocation->Back Order Allocation HID[PN1.0] as "Back Order Allocation HID"
 	Back Order Allocation SAT->LoadTime[PN1.1] as "Load Time"
 	Back Order Allocation SAT->RecordSource as "Record Source"
 	Back Order Allocation SAT->Quantity as "Quantity"
@@ -23,7 +23,7 @@ Bin HUB
 	Bin HUB->LoadTime as "Load Time"
 	Bin HUB->RecordSource as "Record Source"
 Bin SAT
-	Bin SAT->Bin HID[PN1.0] as "Bin HID"
+	Bin SAT->Bin->Bin HID[PN1.0] as "Bin HID"
 	Bin SAT->LoadTime[PN1.1] as "Load Time"
 	Bin SAT->RecordSource as "Record Source"
 	Bin SAT->Quantity as "Quantity"
@@ -53,7 +53,7 @@ Dispatch Item Is Product LINK
 	Dispatch Item Is Product LINK->Dispatch Item HID[N2.0] as "Dispatch Item HID"
 	Dispatch Item Is Product LINK->[Product]->Product HID[N2.1] as "Product HID"
 Dispatch Item SAT
-	Dispatch Item SAT->Dispatch Item HID[PN1.0] as "Dispatch Item HID"
+	Dispatch Item SAT->Dispatch Item->Dispatch Item HID[PN1.0] as "Dispatch Item HID"
 	Dispatch Item SAT->LoadTime[PN1.1] as "Load Time"
 	Dispatch Item SAT->RecordSource as "Record Source"
 	Dispatch Item SAT->Dispatch->Dispatch ID as "Dispatch ID"
@@ -95,7 +95,7 @@ Purchase Order Item HUB
 	Purchase Order Item HUB->RecordSource as "Record Source"
 ### SubsetConstraint((Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item") only if (Purchase Order Item, Sales Order Item in "Purchase Order Item is for Product", "Sales Order Item is for Product"))
 Purchase Order Item SAT
-	Purchase Order Item SAT->Purchase Order Item HID[PN1.0] as "Purchase Order Item HID"
+	Purchase Order Item SAT->Purchase Order Item->Purchase Order Item HID[PN1.0] as "Purchase Order Item HID"
 	Purchase Order Item SAT->LoadTime[PN1.1] as "Load Time"
 	Purchase Order Item SAT->RecordSource as "Record Source"
 	Purchase Order Item SAT->Quantity as "Quantity"
@@ -125,7 +125,7 @@ Received Item Is Product LINK
 	Received Item Is Product LINK->Received Item HID[N2.0] as "Received Item HID"
 	Received Item Is Product LINK->[Product]->Product HID[N2.1] as "Product HID"
 Received Item SAT
-	Received Item SAT->Received Item HID[PN1.0] as "Received Item HID"
+	Received Item SAT->Received Item->Received Item HID[PN1.0] as "Received Item HID"
 	Received Item SAT->LoadTime[PN1.1] as "Load Time"
 	Received Item SAT->RecordSource as "Record Source"
 	Received Item SAT->Quantity as "Quantity"
@@ -149,7 +149,7 @@ Sales Order Item HUB
 	Sales Order Item HUB->RecordSource as "Record Source"
 ### SubsetConstraint((Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item") only if (Purchase Order Item, Sales Order Item in "Purchase Order Item is for Product", "Sales Order Item is for Product"))
 Sales Order Item SAT
-	Sales Order Item SAT->Sales Order Item HID[PN1.0] as "Sales Order Item HID"
+	Sales Order Item SAT->Sales Order Item->Sales Order Item HID[PN1.0] as "Sales Order Item HID"
 	Sales Order Item SAT->LoadTime[PN1.1] as "Load Time"
 	Sales Order Item SAT->RecordSource as "Record Source"
 	Sales Order Item SAT->Quantity as "Quantity"
@@ -183,7 +183,7 @@ Transfer Request Is To To Warehouse LINK
 	Transfer Request Is To To Warehouse LINK->Transfer Request HID[N2.0] as "Transfer Request HID"
 	Transfer Request Is To To Warehouse LINK->[To Warehouse]->Warehouse HID[N2.1] as "To Warehouse HID"
 Transfer Request SAT
-	Transfer Request SAT->Transfer Request HID[PN1.0] as "Transfer Request HID"
+	Transfer Request SAT->Transfer Request->Transfer Request HID[PN1.0] as "Transfer Request HID"
 	Transfer Request SAT->LoadTime[PN1.1] as "Load Time"
 	Transfer Request SAT->RecordSource as "Record Source"
 	Transfer Request SAT->Quantity as "Quantity"

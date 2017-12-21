@@ -15,7 +15,7 @@ CREATE TABLE AirlineHUB (
 
 
 CREATE TABLE AirlineSAT (
-	-- Airline HUB surrogate key
+	-- Airline
 	AirlineHID                              BIGINT NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP NOT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE AirportHUB (
 
 
 CREATE TABLE AirportSAT (
-	-- Airport HUB surrogate key
+	-- Airport
 	AirportHID                              BIGINT NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP NOT NULL,
@@ -201,7 +201,7 @@ CREATE TABLE PartHUB (
 
 
 CREATE TABLE PartSAT (
-	-- Part HUB surrogate key
+	-- Part
 	PartHID                                 BIGINT NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP NOT NULL,
@@ -232,7 +232,7 @@ CREATE TABLE PassengerHUB (
 
 
 CREATE TABLE PassengerSAT (
-	-- Passenger HUB surrogate key
+	-- Passenger
 	PassengerHID                            BIGINT NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP NOT NULL,
@@ -247,7 +247,7 @@ CREATE TABLE PassengerSAT (
 
 
 CREATE TABLE PassengerNameSAT (
-	-- Passenger HUB surrogate key
+	-- Passenger
 	PassengerHID                            BIGINT NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP NOT NULL,
@@ -262,7 +262,7 @@ CREATE TABLE PassengerNameSAT (
 
 
 CREATE TABLE PreferredDishSAT (
-	-- Passenger HUB surrogate key
+	-- Passenger
 	PassengerHID                            BIGINT NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP NOT NULL,

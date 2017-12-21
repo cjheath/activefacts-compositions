@@ -9,7 +9,7 @@ Company HUB
 	Company HUB->Company Name[N2] as "Company Name"
 	Company HUB->LoadBatch->LoadBatch ID as "Load Batch ID"
 Company SAT
-	Company SAT->Company HID[PN1.0] as "Company HID"
+	Company SAT->Company->Company HID[PN1.0] as "Company HID"
 	Company SAT->LoadBatch->LoadBatch ID[PN1.1] as "Load Batch ID"
 	Company SAT->Is Listed? as "Is Listed"
 Directorship LINK
@@ -18,7 +18,7 @@ Directorship LINK
 	Directorship LINK->[Company]->Company HID[N2.1] as "Company HID"
 	Directorship LINK->[LoadBatch]->LoadBatch ID as "Load Batch ID"
 Directorship SAT
-	Directorship SAT->Directorship HID[PN1.0] as "Directorship HID"
+	Directorship SAT->Directorship->Directorship HID[PN1.0] as "Directorship HID"
 	Directorship SAT->LoadBatch->LoadBatch ID[PN1.1] as "Load Batch ID"
 	Directorship SAT->Appointment Date as "Appointment Date"
 Employee HUB
@@ -34,7 +34,7 @@ Employee Is Supervised By Manager LINK
 		### exactly one of (Employee in "Employee is supervised by Manager") or (Employee in "Manager is a kind of Employee")
 ### exactly one of (Employee in "Employee is supervised by Manager") or (Employee in "Manager is a kind of Employee")
 Employee SAT
-	Employee SAT->Employee HID[PN1.0] as "Employee HID"
+	Employee SAT->Employee->Employee HID[PN1.0] as "Employee HID"
 	Employee SAT->LoadBatch->LoadBatch ID[PN1.1] as "Load Batch ID"
 	Employee SAT->Manager?->Is Ceo? as "Manager Is Ceo"
 ### exactly one of (Employee in "Employee is supervised by Manager") or (Employee in "Manager is a kind of Employee")
@@ -69,6 +69,6 @@ Person HUB
 	Person HUB->Family Name?[N2.1] as "Family Name"
 	Person HUB->LoadBatch->LoadBatch ID as "Load Batch ID"
 Person SAT
-	Person SAT->Person HID[PN1.0] as "Person HID"
+	Person SAT->Person->Person HID[PN1.0] as "Person HID"
 	Person SAT->LoadBatch->LoadBatch ID[PN1.1] as "Load Batch ID"
 	Person SAT->Birth Date? as "Birth Date"

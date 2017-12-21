@@ -17,14 +17,14 @@ module Company
   included do
     self.primary_key = 'company_id'
 
+    # Meeting is held by Company
+    has_many :meetings, :class_name => 'Meeting', :foreign_key => :company_id, :dependent => :destroy
+
     # Directorship involves Company
     has_many :directorships, :class_name => 'Directorship', :foreign_key => :company_id, :dependent => :destroy
 
     # Employee works at Company
     has_many :employees, :class_name => 'Employee', :foreign_key => :company_id, :dependent => :destroy
-
-    # Meeting is held by Company
-    has_many :meetings, :class_name => 'Meeting', :foreign_key => :company_id, :dependent => :destroy
 
     validates :company_name, :presence => true
   end
@@ -58,12 +58,12 @@ module Employee
     # maybe Employee is supervised by Manager
     belongs_to :manager, :class_name => 'Employee', :foreign_key => :manager_employee_id
 
-    # maybe Employee is supervised by Manager
-    has_many :employees, :class_name => 'Employee', :foreign_key => :manager_employee_id, :dependent => :destroy
-
     # Employment involves Employee
     has_many :employments, :class_name => 'Employment', :foreign_key => :employee_id, :dependent => :destroy
     has_many :people, :through => :employments
+
+    # maybe Employee is supervised by Manager
+    has_many :employees, :class_name => 'Employee', :foreign_key => :manager_employee_id, :dependent => :destroy
 
     validates :employee_nr, :presence => true
     validates :company_id, :presence => true
@@ -110,12 +110,12 @@ module Person
     has_many :attendances, :class_name => 'Attendance', :foreign_key => :attendee_person_id, :dependent => :destroy
     has_many :meetings, :through => :attendances
 
-    # Directorship involves Director
-    has_many :directorships, :class_name => 'Directorship', :foreign_key => :director_person_id, :dependent => :destroy
-
     # Employment involves Person
     has_many :employments, :class_name => 'Employment', :foreign_key => :person_id, :dependent => :destroy
     has_many :employees, :through => :employments
+
+    # Directorship involves Director
+    has_many :directorships, :class_name => 'Directorship', :foreign_key => :director_person_id, :dependent => :destroy
 
     validates :given_name, :presence => true
   end

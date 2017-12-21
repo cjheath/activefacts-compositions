@@ -4,7 +4,7 @@ Author HUB
 	Author HUB->Author Id[N2] as "Author Id"
 	Author HUB->LoadBatch->LoadBatch ID as "Load Batch ID"
 Author SAT
-	Author SAT->Author HID[PN1.0] as "Author HID"
+	Author SAT->Author->Author HID[PN1.0] as "Author HID"
 	Author SAT->LoadBatch->LoadBatch ID[PN1.1] as "Load Batch ID"
 	Author SAT->Author Name as "Author Name"
 Comment HUB
@@ -17,7 +17,7 @@ Comment Is On Paragraph LINK
 	Comment Is On Paragraph LINK->Comment HID[N2.0] as "Comment HID"
 	Comment Is On Paragraph LINK->[Paragraph]->Paragraph HID[N2.1] as "Paragraph HID"
 Comment SAT
-	Comment SAT->Comment HID[PN1.0] as "Comment HID"
+	Comment SAT->Comment->Comment HID[PN1.0] as "Comment HID"
 	Comment SAT->LoadBatch->LoadBatch ID[PN1.1] as "Load Batch ID"
 	Comment SAT->Content->Style? as "Content Style"
 	Comment SAT->Content->Text as "Content Text"
@@ -42,7 +42,7 @@ Paragraph Involves Post LINK
 	Paragraph Involves Post LINK->Paragraph HID[N2.0] as "Paragraph HID"
 	Paragraph Involves Post LINK->Post HID[N2.1] as "Post HID"
 Paragraph SAT
-	Paragraph SAT->Paragraph HID[PN1.0] as "Paragraph HID"
+	Paragraph SAT->Paragraph->Paragraph HID[PN1.0] as "Paragraph HID"
 	Paragraph SAT->LoadBatch->LoadBatch ID[PN1.1] as "Load Batch ID"
 	Paragraph SAT->Content->Style? as "Content Style"
 	Paragraph SAT->Content->Text as "Content Text"
@@ -72,6 +72,6 @@ Topic HUB
 	Topic HUB->Topic Id[N2] as "Topic Id"
 	Topic HUB->LoadBatch->LoadBatch ID as "Load Batch ID"
 Topic SAT
-	Topic SAT->Topic HID[PN1.0] as "Topic HID"
+	Topic SAT->Topic->Topic HID[PN1.0] as "Topic HID"
 	Topic SAT->LoadBatch->LoadBatch ID[PN1.1] as "Load Batch ID"
 	Topic SAT->Topic Name as "Topic Name"

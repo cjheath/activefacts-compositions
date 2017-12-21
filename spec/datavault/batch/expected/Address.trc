@@ -4,7 +4,7 @@ Company HUB
 	Company HUB->Company Name[N2] as "Company Name"
 	Company HUB->LoadBatch->LoadBatch ID as "Load Batch ID"
 Company SAT
-	Company SAT->Company HID[PN1.0] as "Company HID"
+	Company SAT->Company->Company HID[PN1.0] as "Company HID"
 	Company SAT->LoadBatch->LoadBatch ID[PN1.1] as "Load Batch ID"
 	Company SAT->Address?->Street Number? as "Address Street Number"
 	Company SAT->Address?->Street->First Street Line as "Address Street First Street Line"
@@ -22,7 +22,7 @@ Person HUB
 	Person HUB->Given Names[N2.1] as "Given Names"
 	Person HUB->LoadBatch->LoadBatch ID as "Load Batch ID"
 Person SAT
-	Person SAT->Person HID[PN1.0] as "Person HID"
+	Person SAT->Person->Person HID[PN1.0] as "Person HID"
 	Person SAT->LoadBatch->LoadBatch ID[PN1.1] as "Load Batch ID"
 	Person SAT->Address?->Street Number? as "Address Street Number"
 	Person SAT->Address?->Street->First Street Line as "Address Street First Street Line"

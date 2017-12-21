@@ -16,7 +16,7 @@ Claim Is On Policy LINK
 	Claim Is On Policy LINK->Claim HID[N2.0] as "Claim HID"
 	Claim Is On Policy LINK->[Policy]->Policy HID[N2.1] as "Policy HID"
 Claim SAT
-	Claim SAT->Claim HID[PN1.0] as "Claim HID"
+	Claim SAT->Claim->Claim HID[PN1.0] as "Claim HID"
 	Claim SAT->LoadTime[PN1.1] as "Load Time"
 	Claim SAT->RecordSource as "Record Source"
 	Claim SAT->P_sequence as "P Sequence"
@@ -63,7 +63,7 @@ Cover Type HUB
 	Cover Type HUB->LoadTime as "Load Time"
 	Cover Type HUB->RecordSource as "Record Source"
 Cover Type SAT
-	Cover Type SAT->Cover Type HID[PN1.0] as "Cover Type HID"
+	Cover Type SAT->Cover Type->Cover Type HID[PN1.0] as "Cover Type HID"
 	Cover Type SAT->LoadTime[PN1.1] as "Load Time"
 	Cover Type SAT->RecordSource as "Record Source"
 	Cover Type SAT->Cover Type Name as "Cover Type Name"
@@ -86,7 +86,7 @@ Loss Type HUB
 	Loss Type HUB->LoadTime as "Load Time"
 	Loss Type HUB->RecordSource as "Record Source"
 Loss Type SAT
-	Loss Type SAT->Loss Type HID[PN1.0] as "Loss Type HID"
+	Loss Type SAT->Loss Type->Loss Type HID[PN1.0] as "Loss Type HID"
 	Loss Type SAT->LoadTime[PN1.1] as "Load Time"
 	Loss Type SAT->RecordSource as "Record Source"
 	Loss Type SAT->Involves Driving? as "Involves Driving"
@@ -99,7 +99,7 @@ Lost Item HUB
 	Lost Item HUB->LoadTime as "Load Time"
 	Lost Item HUB->RecordSource as "Record Source"
 Lost Item SAT
-	Lost Item SAT->Lost Item HID[PN1.0] as "Lost Item HID"
+	Lost Item SAT->Lost Item->Lost Item HID[PN1.0] as "Lost Item HID"
 	Lost Item SAT->LoadTime[PN1.1] as "Load Time"
 	Lost Item SAT->RecordSource as "Record Source"
 	Lost Item SAT->Description as "Description"
@@ -121,7 +121,7 @@ Party HUB
 	Party HUB->Dealer? as "Dealer"
 	Party HUB->Insured? as "Insured"
 Party SAT
-	Party SAT->Party HID[PN1.0] as "Party HID"
+	Party SAT->Party->Party HID[PN1.0] as "Party HID"
 	Party SAT->LoadTime[PN1.1] as "Load Time"
 	Party SAT->RecordSource as "Record Source"
 	Party SAT->Is A Company? as "Is A Company"
@@ -170,7 +170,7 @@ Policy HUB
 	Policy HUB->Motor Policy?->Single Motor Policy? as "Single Motor Policy"
 	### exactly one of (Motor Policy in "Single Motor Policy is a kind of Motor Policy") or (Motor Policy in "Motor Fleet Policy is a kind of Motor Policy")
 Policy SAT
-	Policy SAT->Policy HID[PN1.0] as "Policy HID"
+	Policy SAT->Policy->Policy HID[PN1.0] as "Policy HID"
 	Policy SAT->LoadTime[PN1.1] as "Load Time"
 	Policy SAT->RecordSource as "Record Source"
 	Policy SAT->Application->Application Nr as "Application Nr"
@@ -181,7 +181,7 @@ Product HUB
 	Product HUB->LoadTime as "Load Time"
 	Product HUB->RecordSource as "Record Source"
 Product SAT
-	Product SAT->Product HID[PN1.0] as "Product HID"
+	Product SAT->Product->Product HID[PN1.0] as "Product HID"
 	Product SAT->LoadTime[PN1.1] as "Load Time"
 	Product SAT->RecordSource as "Record Source"
 	Product SAT->Alias? as "Alias"
@@ -196,7 +196,7 @@ Property Damage HUB
 	Property Damage HUB->LoadTime as "Load Time"
 	Property Damage HUB->RecordSource as "Record Source"
 Property Damage SAT
-	Property Damage SAT->Property Damage HID[PN1.0] as "Property Damage HID"
+	Property Damage SAT->Property Damage->Property Damage HID[PN1.0] as "Property Damage HID"
 	Property Damage SAT->LoadTime[PN1.1] as "Load Time"
 	Property Damage SAT->RecordSource as "Record Source"
 	Property Damage SAT->Owner Name? as "Owner Name"
@@ -213,7 +213,7 @@ State HUB
 	State HUB->LoadTime as "Load Time"
 	State HUB->RecordSource as "Record Source"
 State SAT
-	State SAT->State HID[PN1.0] as "State HID"
+	State SAT->State->State HID[PN1.0] as "State HID"
 	State SAT->LoadTime[PN1.1] as "Load Time"
 	State SAT->RecordSource as "Record Source"
 	State SAT->State Name? as "State Name"
@@ -242,7 +242,7 @@ Third Party Is Insured By Insurer LINK
 	Third Party Is Insured By Insurer LINK->Third Party HID[N2.0] as "Third Party HID"
 	Third Party Is Insured By Insurer LINK->[Insurer]?->Company->Party->Party HID[N2.1] as "Insurer Party HID"
 Third Party SAT
-	Third Party SAT->Third Party HID[PN1.0] as "Third Party HID"
+	Third Party SAT->Third Party->Third Party HID[PN1.0] as "Third Party HID"
 	Third Party SAT->LoadTime[PN1.1] as "Load Time"
 	Third Party SAT->RecordSource as "Record Source"
 	Third Party SAT->Model Year?->Year Nr as "Model Year Nr"
@@ -257,7 +257,7 @@ Underwriting Demerit LINK
 	Underwriting Demerit LINK->LoadTime as "Load Time"
 	Underwriting Demerit LINK->RecordSource as "Record Source"
 Underwriting Demerit SAT
-	Underwriting Demerit SAT->Underwriting Demerit HID[PN1.0] as "Underwriting Demerit HID"
+	Underwriting Demerit SAT->Underwriting Demerit->Underwriting Demerit HID[PN1.0] as "Underwriting Demerit HID"
 	Underwriting Demerit SAT->LoadTime[PN1.1] as "Load Time"
 	Underwriting Demerit SAT->RecordSource as "Record Source"
 	Underwriting Demerit SAT->Occurrence Count? as "Occurrence Count"
@@ -267,7 +267,7 @@ Underwriting Question HUB
 	Underwriting Question HUB->LoadTime as "Load Time"
 	Underwriting Question HUB->RecordSource as "Record Source"
 Underwriting Question SAT
-	Underwriting Question SAT->Underwriting Question HID[PN1.0] as "Underwriting Question HID"
+	Underwriting Question SAT->Underwriting Question->Underwriting Question HID[PN1.0] as "Underwriting Question HID"
 	Underwriting Question SAT->LoadTime[PN1.1] as "Load Time"
 	Underwriting Question SAT->RecordSource as "Record Source"
 	Underwriting Question SAT->Text as "Text"
@@ -294,7 +294,7 @@ Vehicle Incident Resulted From Loss Type LINK
 	Vehicle Incident Resulted From Loss Type LINK->Vehicle Incident HID[N2.0] as "Vehicle Incident HID"
 	Vehicle Incident Resulted From Loss Type LINK->[Loss Type]?->Loss Type HID[N2.1] as "Loss Type HID"
 Vehicle Incident SAT
-	Vehicle Incident SAT->Vehicle Incident HID[PN1.0] as "Vehicle Incident HID"
+	Vehicle Incident SAT->Vehicle Incident->Vehicle Incident HID[PN1.0] as "Vehicle Incident HID"
 	Vehicle Incident SAT->LoadTime[PN1.1] as "Load Time"
 	Vehicle Incident SAT->RecordSource as "Record Source"
 	Vehicle Incident SAT->Occurred While Being Driven? as "Occurred While Being Driven"
@@ -325,7 +325,7 @@ Vehicle Is Subject To Finance With Finance Institution LINK
 	Vehicle Is Subject To Finance With Finance Institution LINK->Vehicle HID[N2.0] as "Vehicle HID"
 	Vehicle Is Subject To Finance With Finance Institution LINK->[Finance Institution]?->Company->Party->Party HID[N2.1] as "Finance Institution Party HID"
 Vehicle SAT
-	Vehicle SAT->Vehicle HID[PN1.0] as "Vehicle HID"
+	Vehicle SAT->Vehicle->Vehicle HID[PN1.0] as "Vehicle HID"
 	Vehicle SAT->LoadTime[PN1.1] as "Load Time"
 	Vehicle SAT->RecordSource as "Record Source"
 	Vehicle SAT->Has Commercial Registration? as "Has Commercial Registration"
@@ -349,7 +349,7 @@ Witness HUB
 	Witness HUB->LoadTime as "Load Time"
 	Witness HUB->RecordSource as "Record Source"
 Witness SAT
-	Witness SAT->Witness HID[PN1.0] as "Witness HID"
+	Witness SAT->Witness->Witness HID[PN1.0] as "Witness HID"
 	Witness SAT->LoadTime[PN1.1] as "Load Time"
 	Witness SAT->RecordSource as "Record Source"
 	Witness SAT->Address?->Street as "Address Street"

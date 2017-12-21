@@ -88,7 +88,7 @@ CREATE TABLE PassengerSameAsLINK (
 
 
 CREATE TABLE PassengerComputedSAT (
-	-- Passenger HUB surrogate key
+	-- Passenger
 	PassengerHID                            BIGINT NOT NULL,
 	-- LoadTime
 	LoadTime                                TIMESTAMP NOT NULL,

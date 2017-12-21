@@ -44,11 +44,11 @@ module Cinema
     # AllocatableCinemaSection involves Cinema
     has_many :allocatable_cinema_sections, :class_name => 'AllocatableCinemaSection', :foreign_key => :cinema_id, :dependent => :destroy
 
-    # Seat is in Row that is in Cinema
-    has_many :seats, :class_name => 'Seat', :foreign_key => :row_cinema_id, :dependent => :destroy
-
     # Session involves Cinema
     has_many :sessions, :class_name => 'Session', :foreign_key => :cinema_id, :dependent => :destroy
+
+    # Seat is in Row that is in Cinema
+    has_many :seats, :class_name => 'Seat', :foreign_key => :row_cinema_id, :dependent => :destroy
 
     # Ticket Pricing involves Cinema
     has_many :ticket_pricings, :class_name => 'TicketPricing', :foreign_key => :cinema_id, :dependent => :destroy

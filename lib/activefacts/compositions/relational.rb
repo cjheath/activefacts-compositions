@@ -15,14 +15,14 @@ module ActiveFacts
       def self.options
         {
           surrogates: [%w{true field_name_pattern}, "Inject a surrogate key into each table that needs it"],
-          fk: [%w{primary natural}, "Enforce foreign keys using the primary (surrogate) or natural keys"],
+          fk: [%w{primary natural hash}, "Enforce foreign keys using the primary (surrogate), natural keys, or a hash of the natural keys"],
         }.merge(Compositor.options)
       end
 
       def initialize constellation, name, options = {}, compositor_name = 'Relational'
-        # Extract recognised options:
         @option_surrogates = options.delete('surrogates')
-        @surrogate_name_pattern = [true, '', 'true', 'yes', nil].include?(t = @option_surrogates) ? '+ ID' : t
+
+        # Extract recognised options:
         fk = options.delete('fk')
         @option_fk = :primary unless @option_fk != nil # Don't override subclass default
         case fk
@@ -32,9 +32,12 @@ module ActiveFacts
           @option_fk = :natural
         when 'hash'
           @option_fk = :hash
+          @option_surrogates = true
         else
           raise "Value #{fk.inspect} for fk option is not supported"
         end
+
+        @surrogate_name_pattern ||= [true, '', 'true', 'yes', nil].include?(t = @option_surrogates) ? '+ ID' : t
 
         super constellation, name, options, compositor_name
       end
@@ -349,6 +352,8 @@ module ActiveFacts
       end
 
       def needs_surrogate(composite)
+        return true if @option_fk == :hash
+
         object_type = composite.mapping.object_type
         if MM::ValueType === object_type
           trace :surrogates, "#{composite.inspect} is a ValueType that #{object_type.is_auto_assigned ? "is auto-assigned already" : "requires a surrogate" }"
@@ -514,6 +519,7 @@ module ActiveFacts
 
       # Overwritten by subclasses to modify a structurally-complete schema
       def apply_schema_transformations
+        # replace_exclusive_indicators_by_discriminators
       end
 
       # This member is an Absorption. Process it recursively, absorbing all its members or just a key
@@ -579,7 +585,7 @@ module ActiveFacts
         target.re_rank
         target.all_member.sort_by(&:ordinal).each do |member|
           rank = member.rank_key[0]
-          next unless rank <= MM::Component::RANK_IDENT
+          break unless rank <= MM::Component::RANK_IDENT
           if rank == MM::Component::RANK_SURROGATE && fk_type == :natural
             next
           end
@@ -622,6 +628,7 @@ module ActiveFacts
 
           # Don't build an index from the same PresenceConstraint twice on the same composite (e.g. for a subtype)
           existing_pcs = mapping.root.all_access_path.select{|ap| MM::Index === ap}.map(&:presence_constraint)
+          # REVISIT: Some of paths.keys are not PresenceConstraints here!
           newpaths = make_new_paths mapping, paths.keys+existing_pcs, pcs
         end
 
@@ -772,8 +779,13 @@ module ActiveFacts
           trace :relational_paths, "Adding #{mapping.inspect} to #{path.inspect}" do
             case path
             when MM::Index
+              # If we're using hash surrogates, refuse to include a surrogate in the natural index:
+              next if @option_fk == :hash && MM::SurrogateKey === mapping && mapping.root.primary_index == path
               @constellation.IndexField(access_path: path, ordinal: path.all_index_field.size, component: mapping)
             when MM::ForeignKey
+              # If we're using hash surrogates, foreign keys only contain surrogates.
+              # REVISIT: What if not all FK target tables have a surrogate? Answer: they do because they must.
+              next if @option_fk == :hash && !(MM::SurrogateKey === mapping)
               @constellation.ForeignKeyField(foreign_key: path, ordinal: path.all_foreign_key_field.size, component: mapping)
             end
           end

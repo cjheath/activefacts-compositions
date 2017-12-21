@@ -34,7 +34,10 @@ module ActiveFacts
           refname: ['String', "Suffix or pattern for naming reference tables. Include a + to insert the name. Default '+'"],
         }).
         merge(Relational.options).
-        reject{|k,v| [:fk, :surrogates].include?(k) }  # Datavault surrogates are not optional
+        reject{|k,v| [:fk, :surrogates].include?(k) }.  # Datavault surrogates are not optional
+        merge({
+          fk: [%w{hash}, "Enforce foreign keys using a hash of the natural keys (ala Data Vault 2)"],
+        })
       end
 
       def initialize constellation, name, options = {}
@@ -469,6 +472,7 @@ module ActiveFacts
             satellite_name, is_computed = *name_satellite(member)
             if !(satellite = satellites[satellite_name])
               satellite = satellites[satellite_name] = create_satellite(satellite_name, composite)
+              identify_satellite composite, satellite
               satellite.composite_group = (is_computed ? 'bdv' : 'rdv')
               if member.is_a?(MM::Absorption) && check_pit(member)
                 @pit_satellite[member] = satellite
@@ -486,18 +490,28 @@ module ActiveFacts
 
           # Add the audit and identity fields for the satellites:
           satellites.values.each do |satellite|
-            audit_satellite composite, satellite
+            remove_satellite_validations satellite
           end
         end
       end
 
       # Add the audit and foreign key fields to a satellite for this composite
-      def audit_satellite composite, satellite
+      def identify_satellite composite, satellite
         trace :datavault, "Adding parent key and load time to satellite #{satellite.mapping.name.inspect}" do
+          # Add a primary (which is also natural) key:
+          natural_index =
+            @constellation.Index(:new, composite: satellite, is_unique: true,
+              # composite_as_natural_index: satellite,
+              composite_as_primary_index: satellite)
 
-          # Add a Surrogate foreign Key to the parent composite
-          fk_target = composite.primary_index.all_index_field.single
-          fk_field = fk_target.component.fork_to_new_parent satellite.mapping
+          # Do a full absorb_nested, not just a fork of the surrogate
+          # REVISIT: The name here should be the renamed version of the parent's name AFTER it's been adjusted
+          member = @constellation.Mapping(guid: :new, parent: satellite.mapping, name: composite.mapping.name, object_type: composite.mapping.object_type)
+          object_type = composite.mapping.object_type
+          pc = object_type.preferred_identifier
+          paths = {pc => natural_index}
+          absorb_nested satellite.mapping, member, paths
+          satellite.natural_index = natural_index
 
           # Add the audit and time-versioning fields
           version_field =
@@ -506,30 +520,10 @@ module ActiveFacts
             else
               inject_audit_fields satellite
             end
-
-          # Add a primary and natural key:
-          natural_index =
-            @constellation.Index(:new, composite: satellite, is_unique: true,
-              composite_as_natural_index: satellite, composite_as_primary_index: satellite)
-          @constellation.IndexField(access_path: natural_index, ordinal: 0, component: fk_field)
-          @constellation.IndexField(access_path: natural_index, ordinal: 1, component: version_field)
+          @constellation.IndexField(access_path: natural_index, ordinal: natural_index.all_index_field.size, component: version_field)
 
           # REVISIT: re-ranking members without a preferred_identifier does not rank the PK fields in order.
           satellite.mapping.re_rank
-
-          # Add a foreign key to the hub or link
-          fk = @constellation.ForeignKey(
-              :new,
-              source_composite: satellite,
-              composite: composite
-            )
-          @constellation.ForeignKeyField(foreign_key: fk, ordinal: 0, component: fk_field)
-          # This should be filled in by complete_foreign_keys, but there is no Absorption
-          @constellation.IndexField(access_path: fk, ordinal: 0, component: fk_target.component)
-
-          satellite.classify_constraints
-          satellite.all_local_constraint.map(&:local_constraint).each(&:retract)
-          leaf_constraints = satellite.mapping.all_leaf.flat_map(&:all_leaf_constraint).map(&:leaf_constraint).each(&:retract)
 
           if satellite.composite_group == 'bdv'
             @bdv_sat_composites << satellite
@@ -537,6 +531,12 @@ module ActiveFacts
             @sat_composites << satellite
           end
         end
+      end
+
+      def remove_satellite_validations satellite
+        satellite.classify_constraints
+        satellite.all_local_constraint.map(&:local_constraint).each(&:retract)
+        leaf_constraints = satellite.mapping.all_leaf.flat_map(&:all_leaf_constraint).map(&:leaf_constraint).each(&:retract)
       end
 
       # Decide what to call a new satellite that will adopt this component

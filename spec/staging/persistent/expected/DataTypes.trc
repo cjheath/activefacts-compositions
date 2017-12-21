@@ -4,17 +4,17 @@ AAC_ET STG
 	AAC_ET STG->[LoadBatch]->LoadBatch ID[P1.1] as "Load Batch ID"
 	AAC_ET STG->Record GUID[N2] as "Record GUID"
 AAC_Sub STG
-	AAC_Sub STG->Record GUID[P1] as "Record GUID"
-	AAC_Sub STG->[AAC_ET]->Record GUID[N2] as "AAC ET Record GUID"
-	AAC_Sub STG->[LoadBatch]->LoadBatch ID as "Load Batch ID"
+	AAC_Sub STG->[AAC_ET]->Alternate Auto Counter[P1.0] as "AAC ET Alternate Auto Counter"
+	AAC_Sub STG->[LoadBatch]->LoadBatch ID[P1.1] as "Load Batch ID"
+	AAC_Sub STG->Record GUID[N2] as "Record GUID"
 AG_ET STG
 	AG_ET STG->Alternate Guid[P1.0] as "Alternate Guid"
 	AG_ET STG->[LoadBatch]->LoadBatch ID[P1.1] as "Load Batch ID"
 	AG_ET STG->Record GUID[N2] as "Record GUID"
 AG_Sub STG
-	AG_Sub STG->Record GUID[P1] as "Record GUID"
-	AG_Sub STG->[AG_ET]->Record GUID[N2] as "AG ET Record GUID"
-	AG_Sub STG->[LoadBatch]->LoadBatch ID as "Load Batch ID"
+	AG_Sub STG->[AG_ET]->Alternate Guid[P1.0] as "AG ET Alternate Guid"
+	AG_Sub STG->[LoadBatch]->LoadBatch ID[P1.1] as "Load Batch ID"
+	AG_Sub STG->Record GUID[N2] as "Record GUID"
 Container STG
 	Container STG->Container Name[P1.0] as "Container Name"
 	Container STG->[LoadBatch]->LoadBatch ID[P1.1] as "Load Batch ID"
