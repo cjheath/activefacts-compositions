@@ -568,7 +568,7 @@ module ActiveFacts
 
       # May be overridden in subclasses
       def preferred_fk_type building_natural_key, source_composite, target_composite
-        @option_fk == :natural
+        @option_fk
       end
 
       # Recursively add members to this component for the existential roles of
