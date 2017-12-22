@@ -1,37 +1,27 @@
 Summary of Blog
 Author STG
 	Author STG->Author Id[PN1] as "Author Id"
-	Author STG->LoadTime as "Load Time"
-	Author STG->RecordSource as "Record Source"
 	Author STG->Author Name[U2] as "Author Name"
 Comment STG
 	Comment STG->Comment Id[PN1] as "Comment Id"
-	Comment STG->LoadTime as "Load Time"
-	Comment STG->RecordSource as "Record Source"
-	Comment STG->[Author]->Author Id as "Author Id"
+	Comment STG->[F1:Author->Author Id] as "Author Id"
 	Comment STG->Content->Style? as "Content Style"
 	Comment STG->Content->Text as "Content Text"
-	Comment STG->[Paragraph]->Post->Post Id as "Paragraph Post Id"
-	Comment STG->[Paragraph]->Ordinal as "Paragraph Ordinal"
+	Comment STG->[F2:Paragraph->Post->Post Id] as "Paragraph Post Id"
+	Comment STG->[F2:Paragraph->Ordinal] as "Paragraph Ordinal"
 ### exactly one of (Content in "Content provides text of Comment") or (Content in "Content is of Paragraph")
 Paragraph STG
-	Paragraph STG->[Post]->Post Id[PN1.0] as "Post Id"
+	Paragraph STG->[F1:Post->Post Id][PN1.0] as "Post Id"
 	Paragraph STG->Ordinal[PN1.1] as "Ordinal"
-	Paragraph STG->LoadTime as "Load Time"
-	Paragraph STG->RecordSource as "Record Source"
 	Paragraph STG->Content->Style? as "Content Style"
 	Paragraph STG->Content->Text as "Content Text"
 ### exactly one of (Content in "Content provides text of Comment") or (Content in "Content is of Paragraph")
 Post STG
 	Post STG->Post Id[PN1] as "Post Id"
-	Post STG->LoadTime as "Load Time"
-	Post STG->RecordSource as "Record Source"
-	Post STG->[Author]->Author Id as "Author Id"
-	Post STG->[Topic]->Topic Id as "Topic Id"
+	Post STG->[F1:Author->Author Id] as "Author Id"
+	Post STG->[F2:Topic->Topic Id] as "Topic Id"
 Topic STG
 	Topic STG->Topic Id[PN1] as "Topic Id"
-	Topic STG->LoadTime as "Load Time"
-	Topic STG->RecordSource as "Record Source"
 	Topic STG->Topic Name[U2] as "Topic Name"
-	Topic STG->[Parent Topic]?->Topic Id as "Parent Topic Id"
+	Topic STG->[F1:Parent Topic?->Topic Id] as "Parent Topic Id"
 		### RingConstraint(Acyclic: Topic, Topic in Topic belongs to parent-Topic)

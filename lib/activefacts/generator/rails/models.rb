@@ -172,9 +172,9 @@ module ActiveFacts
             end
 
             [
-            fk.absorption ? "    \# #{fk.absorption.comment}" : nil,
+            fk.mapping ? "    \# #{fk.mapping.comment}" : nil,
             "    belongs_to :#{association_name}#{class_name}#{foreign_key}",
-            fk.absorption ? '' : nil,
+            fk.mapping ? '' : nil,
             ]
           end.compact
         end
@@ -193,13 +193,13 @@ module ActiveFacts
 
             [
               # REVISIT: We want the reverse-order comment here really
-              fk.absorption ? "    \# #{fk.absorption.comment}" : nil,
+              fk.mapping ? "    \# #{fk.mapping.comment}" : nil,
               %Q{    #{association_type} :#{association_name}} +
               %Q{, :class_name => '#{fk.source_composite.rails.class_name}'} +
               %Q{, :foreign_key => :#{fk.all_foreign_key_field.single.component.column_name.snakecase}} +
               %Q{, :dependent => :destroy}
             ] +
-            # If fk.absorption.source_composite is a join table, we can emit a has_many :through for each other key
+            # If fk.mapping.source_composite is a join table, we can emit a has_many :through for each other key
             # REVISIT: We could alternately do this for all belongs_to's in the source composite
             if fk.source_composite.primary_index.all_index_field.size > 1
               fk.source_composite.primary_index.all_index_field.map(&:component).flat_map do |ic|
@@ -212,7 +212,7 @@ module ActiveFacts
             else
               []
             end +
-            [fk.absorption ? '' : nil]
+            [fk.mapping ? '' : nil]
           end
         end
 

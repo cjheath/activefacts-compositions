@@ -34,11 +34,11 @@ CREATE TABLE PassengerPIT (
 	-- Passenger PIT surrogate key
 	PassengerPITHID                         BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
 	-- PassengerName SAT Load DateTime
-	PassengerNameSATLoadDateTime            TIMESTAMP,
+	PassengerNameSATLoadDateTime            TIMESTAMP NOT NULL,
 	-- PreferredDish SAT Load DateTime
-	PreferredDishSATLoadDateTime            TIMESTAMP,
+	PreferredDishSATLoadDateTime            TIMESTAMP NOT NULL,
 	-- Snapshot DateTime
-	SnapshotDateTime                        TIMESTAMP,
+	SnapshotDateTime                        TIMESTAMP NOT NULL,
 	-- Passenger HUB surrogate key
 	PassengerHID                            BIGINT NOT NULL,
 	-- PassengerName SAT surrogate key
@@ -88,10 +88,10 @@ CREATE TABLE PassengerSameAsLINK (
 
 
 CREATE TABLE PassengerComputedSAT (
-	-- Passenger HUB surrogate key
+	-- Passenger
 	PassengerHID                            BIGINT NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- Passenger has Age

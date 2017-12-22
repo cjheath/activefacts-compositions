@@ -1,0 +1,19 @@
+Summary of MagnetPole
+LoadBatch
+	LoadBatch->LoadBatch ID[PN1] as "Load Batch ID"
+	LoadBatch->LoadTime as "Load Time"
+	LoadBatch->RecordSource as "Record Source"
+Magnet HUB
+	Magnet HUB->Magnet HID[P1] as "Magnet HID"
+	Magnet HUB->Magnet AutoCounter[N2] as "Magnet Auto Counter"
+	Magnet HUB->LoadBatch->LoadBatch ID as "Load Batch ID"
+Magnet Pole Belongs To Magnet LINK
+	Magnet Pole Belongs To Magnet LINK->Magnet Pole Belongs To Magnet HID[P1] as "Magnet Pole Belongs To Magnet HID"
+	Magnet Pole Belongs To Magnet LINK->LoadBatch->LoadBatch ID as "Load Batch ID"
+	Magnet Pole Belongs To Magnet LINK->Magnet HID][N2.1] as "Magnet HID"
+	Magnet Pole Belongs To Magnet LINK->MagnetPole HID][N2.0] as "Magnet Pole HID"
+MagnetPole HUB
+	MagnetPole HUB->MagnetPole HID[P1] as "Magnet Pole HID"
+	MagnetPole HUB->Magnet->Magnet AutoCounter[N2.0] as "Magnet Auto Counter"
+	MagnetPole HUB->Is North?[N2.1] as "Is North"
+	MagnetPole HUB->LoadBatch->LoadBatch ID as "Load Batch ID"

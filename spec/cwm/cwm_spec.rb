@@ -44,20 +44,22 @@ describe "CWM schema from CQL" do
   end
   files.each do |cql_file|
     ['REL', 'STG'].each do |format|
+      expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, expected_dir + '/\2' + "_#{format}.cwm.xmi")
+      actual = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, actual_dir + '/\2' + "_#{format}.cwm.xmi")
+      begin
+        expected_text = File.read(expected)
+      rescue Errno::ENOENT => exception
+      end
+      next unless expected_text || ENV['TEST_FILES']
+
       it "produces the expected CWM for #{cql_file}" do
-        expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, expected_dir + '/\2' + "_#{format}.cwm.xmi")
-        actual = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, actual_dir + '/\2' + "_#{format}.cwm.xmi")
-        begin
-          expected_text = File.read(expected)
-        rescue Errno::ENOENT => exception
-        end
 
         vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
         vocabulary.finalise
         
         compositor = case format
         when 'REL' then ActiveFacts::Compositions::Relational.new(vocabulary.constellation, "test")
-        when 'STG' then ActiveFacts::Compositions::Staging.new(vocabulary.constellation, "test")
+        when 'STG' then ActiveFacts::Compositions::Staging.new(vocabulary.constellation, "test", "audit"=>"record")
         end
         compositor.generate
 

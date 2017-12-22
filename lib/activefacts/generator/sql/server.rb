@@ -15,7 +15,7 @@ module ActiveFacts
     # * underscore 
     class SQL
       class Server < SQL
-        include Traits::SQL::Server
+        prepend Traits::SQL::Server
         extend Traits::SQL::Server   # Needed for class methods, like options
       end
 

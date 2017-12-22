@@ -14,6 +14,6 @@ RSpec.configure do |config|
   else
     $stdin.reopen rd
     wr.close
-    Process.exec "tee spec/log"
+    Process.exec "tee "+Pathname.new(__FILE__+'/../log').relative_path_from(Pathname(Dir.pwd)).to_s
   end
 end

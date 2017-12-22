@@ -1,6 +1,0 @@
-Summary of test
-Country
-	Country->ISO3166Code3[PN1] as "ISO3166 Code3"
-	Country->Country Name[U2] as "Country Name"
-	Country->ISO3166Code2[U3] as "ISO3166 Code2"
-	Country->ISO3166Numeric3[U4] as "ISO3166 Numeric3"

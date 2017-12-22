@@ -241,10 +241,6 @@ module ActiveFacts
               "(#{safe_column_name} = '1' OR #{safe_column_name} = 'Y')"
             end
 
-            def valid_from_type
-              date_time_type
-            end
-
             # There is no performance benefit in using fixed-length CHAR fields,
             # and an added burden of trimming the implicitly added white-space
             def default_char_type

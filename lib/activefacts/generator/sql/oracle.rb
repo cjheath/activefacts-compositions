@@ -15,7 +15,7 @@ module ActiveFacts
     # * underscore 
     class SQL
       class Oracle < SQL
-        include Traits::SQL::Oracle
+        prepend Traits::SQL::Oracle
         extend Traits::SQL::Oracle   # Needed for class methods, like options
       end
 

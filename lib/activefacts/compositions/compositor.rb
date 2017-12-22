@@ -6,6 +6,8 @@
 #       The term "reference" used here means either an Absorption
 #       (one direction of a binary fact type relating two object types),
 #       or an Indicator (for a unary fact type).
+#       Later processes may create references for bare Mappings,
+#       or may replace several Indicators by a Discriminator.
 #
 #       n-ary fact types and other objectified fact types are factored out by using the associated LinkFactTypes.
 #
@@ -69,13 +71,13 @@ module ActiveFacts
               parent_role: role,
               child_role: counterpart
             )
-          # Populate the absorption/reverse_absorption (putting the "many" or optional side as reverse)
+          # Populate the absorption/reverse_mapping (putting the "many" or optional side as reverse)
           if r = @component_by_fact[role.fact_type]
             # Second occurrence of this fact type, set the direction:
             if component.is_preferred_direction
-              component.reverse_absorption = r
+              component.reverse_mapping = r
             else  # Set this as the reverse absorption
-              component.forward_absorption = r
+              component.forward_mapping = r
             end
           else
             # First occurrence of this fact type

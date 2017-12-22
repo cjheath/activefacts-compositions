@@ -2,11 +2,11 @@ Summary of test
 AAC_ET
 	AAC_ET->Alternate Auto Counter[PN1] as "Alternate Auto Counter"
 AAC_Sub
-	AAC_Sub->[AAC_ET]->Alternate Auto Counter[PN1] as "AAC ET Alternate Auto Counter"
+	AAC_Sub->[F1:AAC_ET->Alternate Auto Counter][PN1] as "AAC ET Alternate Auto Counter"
 AG_ET
 	AG_ET->Alternate Guid[PN1] as "Alternate Guid"
 AG_Sub
-	AG_Sub->[AG_ET]->Alternate Guid[PN1] as "AG ET Alternate Guid"
+	AG_Sub->[F1:AG_ET->Alternate Guid][PN1] as "AG ET Alternate Guid"
 Container
 	Container->Container Name[PN1] as "Container Name"
 	Container->Alternate Auto Counter as "Alternate Auto Counter"

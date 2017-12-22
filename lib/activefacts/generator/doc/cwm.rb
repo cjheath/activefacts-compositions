@@ -142,7 +142,7 @@ module ActiveFacts
             nsdef(index)
             index.all_index_field.map{|idf| idf.component.index_xmiid = index.xmiid}
           end
-          table.all_foreign_key_as_source_composite.sort_by{|fk| [fk.source_composite.mapping.name, fk.absorption.inspect] }.map do |fk|
+          table.all_foreign_key_as_source_composite.sort_by{|fk| [fk.source_composite.mapping.name, fk.mapping.inspect] }.map do |fk|
             nsdef(fk)
           end
         end
@@ -226,7 +226,7 @@ module ActiveFacts
                 generate_index(depth+2, table.xmiid, index, name, table.all_foreign_key_as_target_composite)
               end
             ) * "" +
-            (table.all_foreign_key_as_source_composite.sort_by{|fk| [fk.source_composite.mapping.name, fk.absorption.inspect] }.map do |fk|
+            (table.all_foreign_key_as_source_composite.sort_by{|fk| [fk.source_composite.mapping.name, fk.mapping.inspect] }.map do |fk|
                 generate_foreign_key(depth+2, table.xmiid, fk)
               end
             ) * "" +
@@ -492,10 +492,6 @@ module ActiveFacts
           def surrogate_type
             type_name, = choose_integer_range(0, 2**(default_surrogate_length-1)-1)
             type_name
-          end
-
-          def valid_from_type
-            'TIMESTAMP'
           end
 
           def date_time_type

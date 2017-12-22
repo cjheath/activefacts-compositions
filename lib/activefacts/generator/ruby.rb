@@ -69,7 +69,7 @@ module ActiveFacts
         if component.is_a?(MM::Absorption) and
             counterpart = component.object_type and
             counterpart_composite = composite_for(counterpart)
-          counterpart_class_emitted = @composites_emitted[counterpart_composite]
+          counterpart_class_emitted = @composites_finished[counterpart_composite]
 
           counterpart_class_name = ruby_class_name counterpart_composite
           counterpart_default_role = ruby_role_name counterpart_composite.mapping
@@ -79,7 +79,7 @@ module ActiveFacts
 
           # Does the reverse role need explicit specification?
           implied_reverse_role_name = ruby_role_name(component.root.mapping)
-          actual_reverse_role_name = ruby_role_name component.reverse_absorption
+          actual_reverse_role_name = ruby_role_name(component.reverse_mapping || component.forward_mapping)
 
           if implied_reverse_role_name != actual_reverse_role_name
             counterpart_spec = ", counterpart: :#{actual_reverse_role_name}"

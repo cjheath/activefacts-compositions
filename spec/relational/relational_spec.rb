@@ -53,17 +53,18 @@ describe "Relational absorption from CQL" do
     files = `git ls-files "#{dir}/*.cql"`.split(/\n/)
   end
   files.each do |cql_file|
+    expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, expected_dir+'/\2.trc')
+    actual = actual_dir + cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, '/\2.trc')
+    begin
+      expected_text = File.read(expected)
+    rescue Errno::ENOENT => exception
+    end
+    next unless expected_text || ENV['TEST_FILES']
+
     it "produces the expected relational absorption for #{cql_file}" do
       clean_traces
       trace.reinitialize
       trace.enable :relational
-
-      expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, expected_dir+'/\2.trc')
-      actual = actual_dir + cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, '/\2.trc')
-      begin
-        expected_text = File.read(expected)
-      rescue Errno::ENOENT => exception
-      end
 
       vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
       vocabulary.finalise

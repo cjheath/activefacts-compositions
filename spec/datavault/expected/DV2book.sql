@@ -4,7 +4,7 @@ CREATE TABLE AirlineHUB (
 	-- Airline has Airline ID
 	AirlineID                               BIGINT NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- Natural index to Airline HUB(Airline ID in "Airline has Airline ID")
@@ -15,10 +15,10 @@ CREATE TABLE AirlineHUB (
 
 
 CREATE TABLE AirlineSAT (
-	-- Airline HUB surrogate key
+	-- Airline
 	AirlineHID                              BIGINT NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- maybe Airline has Flight Code
@@ -35,7 +35,7 @@ CREATE TABLE AirplaneHUB (
 	-- Airplane has Tail Number
 	TailNumber                              VARCHAR(12) NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- Natural index to Airplane HUB(Tail Number in "Airplane has Tail Number")
@@ -53,7 +53,7 @@ CREATE TABLE AirplanePartLINK (
 	-- Airplane Part involves Part
 	PartHID                                 BIGINT NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- Natural index to Airplane Part LINK(Airplane, Part in "Airplane has Part")
@@ -70,7 +70,7 @@ CREATE TABLE AirportHUB (
 	-- Airport has Airport Name
 	AirportName                             VARCHAR(48) NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- Natural index to Airport HUB(Airport Name in "Airport has Airport Name")
@@ -81,10 +81,10 @@ CREATE TABLE AirportHUB (
 
 
 CREATE TABLE AirportSAT (
-	-- Airport HUB surrogate key
+	-- Airport
 	AirportHID                              BIGINT NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- Airport has at Telephone Number
@@ -113,7 +113,7 @@ CREATE TABLE AssignedAirplaneLINK (
 	-- Assigned Airplane involves Connection
 	ConnectionHID                           BIGINT NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- Natural index to Assigned Airplane LINK(Airplane, Connection in "Airplane is assigned to Connection")
@@ -132,7 +132,7 @@ CREATE TABLE BookingLINK (
 	-- Booking involves Sales Agent
 	SalesAgentHID                           BIGINT NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- Natural index to Booking LINK(Passenger, Sales Agent in "Passenger books flight with Sales Agent")
@@ -154,7 +154,7 @@ CREATE TABLE ConnectionHUB (
 	-- Connection involves Flight Number
 	FlightNumber                            VARCHAR(12) NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- Natural index to Connection HUB(Airline, Origin Airport, Destination Airport, Flight Number in "Airline flies from origin-Airport to destination-Airport with flight Flight Number")
@@ -172,7 +172,7 @@ CREATE TABLE FixedBaseOperatorLINK (
 	-- Fixed Base Operator involves Airport
 	AirportHID                              BIGINT NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- Natural index to Fixed Base Operator LINK(Airline, Airport in "Airline flies from Airport")
@@ -190,7 +190,7 @@ CREATE TABLE PartHUB (
 	-- Part has Part ID
 	PartID                                  BIGINT NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- Natural index to Part HUB(Part ID in "Part has Part ID")
@@ -201,10 +201,10 @@ CREATE TABLE PartHUB (
 
 
 CREATE TABLE PartSAT (
-	-- Part HUB surrogate key
+	-- Part
 	PartHID                                 BIGINT NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- Part is built by Manufacturer that has Manufacturer ID
@@ -221,7 +221,7 @@ CREATE TABLE PassengerHUB (
 	-- Passenger has Passenger ID
 	PassengerID                             BIGINT NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- Natural index to Passenger HUB(Passenger ID in "Passenger has Passenger ID")
@@ -232,10 +232,10 @@ CREATE TABLE PassengerHUB (
 
 
 CREATE TABLE PassengerSAT (
-	-- Passenger HUB surrogate key
+	-- Passenger
 	PassengerHID                            BIGINT NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- Passenger has Birth Date
@@ -247,10 +247,10 @@ CREATE TABLE PassengerSAT (
 
 
 CREATE TABLE PassengerNameSAT (
-	-- Passenger HUB surrogate key
+	-- Passenger
 	PassengerHID                            BIGINT NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- Passenger has Name
@@ -262,10 +262,10 @@ CREATE TABLE PassengerNameSAT (
 
 
 CREATE TABLE PreferredDishSAT (
-	-- Passenger HUB surrogate key
+	-- Passenger
 	PassengerHID                            BIGINT NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- Passenger has Preferred Dish
@@ -282,7 +282,7 @@ CREATE TABLE SalesAgentHUB (
 	-- Sales Agent has Sales Agent Name
 	SalesAgentName                          VARCHAR(48) NOT NULL,
 	-- LoadTime
-	LoadTime                                TIMESTAMP,
+	LoadTime                                TIMESTAMP NOT NULL,
 	-- RecordSource
 	RecordSource                            VARCHAR NOT NULL,
 	-- Natural index to Sales Agent HUB(Sales Agent Name in "Sales Agent has Sales Agent Name")

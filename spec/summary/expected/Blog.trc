@@ -4,24 +4,24 @@ Author
 	Author->Author Name[U2] as "Author Name"
 Comment
 	Comment->Comment Id[PN1] as "Comment Id"
-	Comment->[Author]->Author Id as "Author Id"
+	Comment->[F1:Author->Author Id] as "Author Id"
 	Comment->Content->Style? as "Content Style"
 	Comment->Content->Text as "Content Text"
-	Comment->[Paragraph]->Post->Post Id as "Paragraph Post Id"
-	Comment->[Paragraph]->Ordinal as "Paragraph Ordinal"
+	Comment->[F2:Paragraph->Post->Post Id] as "Paragraph Post Id"
+	Comment->[F2:Paragraph->Ordinal] as "Paragraph Ordinal"
 ### exactly one of (Content in "Content provides text of Comment") or (Content in "Content is of Paragraph")
 Paragraph
-	Paragraph->[Post]->Post Id[PN1.0] as "Post Id"
+	Paragraph->[F1:Post->Post Id][PN1.0] as "Post Id"
 	Paragraph->Ordinal[PN1.1] as "Ordinal"
 	Paragraph->Content->Style? as "Content Style"
 	Paragraph->Content->Text as "Content Text"
 ### exactly one of (Content in "Content provides text of Comment") or (Content in "Content is of Paragraph")
 Post
 	Post->Post Id[PN1] as "Post Id"
-	Post->[Author]->Author Id as "Author Id"
-	Post->[Topic]->Topic Id as "Topic Id"
+	Post->[F1:Author->Author Id] as "Author Id"
+	Post->[F2:Topic->Topic Id] as "Topic Id"
 Topic
 	Topic->Topic Id[PN1] as "Topic Id"
 	Topic->Topic Name[U2] as "Topic Name"
-	Topic->[Parent Topic]?->Topic Id as "Parent Topic Id"
+	Topic->[F1:Parent Topic?->Topic Id] as "Parent Topic Id"
 		### RingConstraint(Acyclic: Topic, Topic in Topic belongs to parent-Topic)

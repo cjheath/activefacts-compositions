@@ -25,7 +25,8 @@ module ActiveFacts
       end
 
       def generate
-        @composites_emitted = {}
+        @composites_started = {}
+        @composites_finished = {}
 
         retract_intrinsic_types
 
@@ -58,7 +59,7 @@ module ActiveFacts
         return true if o.name == "_ImplicitBooleanValueType"
         return false if o.supertype
         # A value type with no supertype must be emitted if it is the child in any absorption:
-        return !composite.mapping.all_member.detect{|m| m.forward_absorption}
+        return !composite.mapping.all_member.detect{|m| m.forward_mapping}
       end
 
       def retract_intrinsic_types
@@ -92,8 +93,25 @@ module ActiveFacts
         "REVISIT: override class_finale\n"
       end
 
-      def generate_class composite, predefine_role_players = true
-        return nil if @composites_emitted[composite]
+      def exclude_as_counterpart member
+        # If emitting a role also creates its counterpart, we can exclude the counterparts.
+        # This depends on the subtype, so centralise the knowledge here where it can be overridden.
+        # Non-Mappings always get emitted:
+        return false unless MM::Mapping === member
+
+        # TypeInheritance always gets skipped:
+        return true if MM::Absorption === member && member.child_role.fact_type.is_a?(MM::TypeInheritance)
+
+        # Don't skip the mandatory counterpart of a one-to-one:
+        return false if member.is_one_to_one and member.is_mandatory
+
+        # Otherwise skip all reverse mappings (these have a forward mapping)
+        return member.forward_mapping
+      end
+
+      def generate_class composite, precursor_to = [], predefine_role_players = true
+        return nil if @composites_started[composite]
+        @composites_started[composite] = true
 
         mapping = composite.mapping
         object_type = mapping.object_type
@@ -104,9 +122,7 @@ module ActiveFacts
         supertype_composites =
           object_type.all_supertype.map{|s| composite_for(s) }.compact
         forward_declarations +=
-          supertype_composites.map{|c| generate_class(c, false)}.compact
-
-        @composites_emitted[composite] = true
+          supertype_composites.map{|c| generate_class(c, precursor_to+[composite], false)}.compact
 
         # Select the members that will be declared as O-O roles:
         mapping.re_rank
@@ -114,23 +130,22 @@ module ActiveFacts
           all_member.
           sort_by{|m| m.ordinal}.
           reject do |m|
-            m.is_a?(MM::Absorption) and
-              m.forward_absorption || m.child_role.fact_type.is_a?(MM::TypeInheritance)
+            exclude_as_counterpart(m)
           end
 
         if predefine_role_players
-          # The idea was good, but we need to avoid triggering a forward reference problem.
-          # We only do it when we're not dumping a supertype dependency.
-          #
-          # For those roles that derive from Mappings, produce class definitions to avoid forward references:
+          # To reduce forward references, emit any classes that play a role
+          # we're about to emit, unless one is a subtype of any class that
+          # is currently being processed.
           forward_composites =
             members.
               select{ |m| m.is_a?(MM::Mapping) }.
               map{ |m| composite_for m.object_type }.
+              reject{|c| precursor_to.detect{|p| c.mapping.object_type.supertypes_transitive.include?(p.mapping.object_type) }}.
               compact.
               sort_by{|c| c.mapping.name}
           forward_declarations +=
-            forward_composites.map{|c| generate_class(c)}.compact
+            forward_composites.map{|c| generate_class(c, precursor_to+[composite])}.compact
         end
 
         forward_declarations = forward_declarations.map{|f| "#{f}\n"}*''
@@ -165,6 +180,8 @@ module ActiveFacts
           else
             value_type_declaration object_type
           end
+
+        @composites_finished[composite] = true
 
         forward_declarations +
         class_prelude(object_type, primary_supertype) +

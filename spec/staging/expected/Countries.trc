@@ -1,9 +1,0 @@
-Summary of Countries
-Country Code STG
-	Country Code STG->Country Code Value[PN1] as "Country Code Value"
-	Country Code STG->LoadTime as "Load Time"
-	Country Code STG->RecordSource as "Record Source"
-Country STG
-	Country STG->[Country Code]->Country Code[PN1.1] as "Country Code"
-	Country STG->LoadTime as "Load Time"
-	Country STG->RecordSource as "Record Source"

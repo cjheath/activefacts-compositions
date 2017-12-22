@@ -5,7 +5,7 @@
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../../Gemfile', __FILE__)
 require 'bundler/setup' # Set up gems listed in the Gemfile.
 
-require 'spec_helper'
+require_relative '../spec_helper'
 require 'activefacts/compositions/binary'
 require 'activefacts/generator/validate'
 require 'activefacts/input/cql'
@@ -51,17 +51,18 @@ describe "Binary absorption from CQL" do
     files = `git ls-files "#{dir}/*.cql"`.split(/\n/)
   end
   files.each do |cql_file|
+    expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, dir+'/expected/\2.trc')
+    actual = actual_dir + cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, '/\2.trc')
+    begin
+      expected_text = File.read(expected)
+    rescue Errno::ENOENT => exception
+    end
+    next unless expected_text || ENV['TEST_FILES']
+
     it "produces the expected binary absorption for #{cql_file}" do
       trace.reinitialize
       clean_traces
       trace.enable :composition
-
-      expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, dir+'/expected/\2.trc')
-      actual = actual_dir + cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, '/\2.trc')
-      begin
-        expected_text = File.read(expected)
-      rescue Errno::ENOENT => exception
-      end
 
       vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
       vocabulary.finalise

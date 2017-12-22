@@ -1,24 +1,24 @@
 Summary of test
 Back Order Allocation
-	Back Order Allocation->[Purchase Order Item]->Purchase Order->Purchase Order ID[PN1.0] as "Purchase Order Item Purchase Order ID"
-	Back Order Allocation->[Purchase Order Item]->Product->Product ID[PN1.1] as "Purchase Order Item Product ID"
-	Back Order Allocation->[Sales Order Item]->Sales Order->Sales Order ID[PN1.2] as "Sales Order Item Sales Order ID"
-	Back Order Allocation->[Sales Order Item]->Product->Product ID[PN1.3] as "Sales Order Item Product ID"
+	Back Order Allocation->[F1:Purchase Order Item->Purchase Order->Purchase Order ID][PN1.0] as "Purchase Order Item Purchase Order ID"
+	Back Order Allocation->[F1:Purchase Order Item->Product->Product ID][PN1.1] as "Purchase Order Item Product ID"
+	Back Order Allocation->[F2:Sales Order Item->Sales Order->Sales Order ID][PN1.2] as "Sales Order Item Sales Order ID"
+	Back Order Allocation->[F2:Sales Order Item->Product->Product ID][PN1.3] as "Sales Order Item Product ID"
 	Back Order Allocation->Quantity as "Quantity"
 ### SubsetConstraint((Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item") only if (Purchase Order Item, Sales Order Item in "Purchase Order Item is for Product", "Sales Order Item is for Product"))
 Bin
 	Bin->Bin ID[PN1] as "Bin ID"
 	Bin->Quantity as "Quantity"
-	Bin->[Product]?->Product ID as "Product ID"
-	Bin->[Warehouse]?->Warehouse ID as "Warehouse ID"
+	Bin->[F1:Product?->Product ID] as "Product ID"
+	Bin->[F2:Warehouse?->Warehouse ID] as "Warehouse ID"
 Dispatch Item
 	Dispatch Item->Dispatch Item ID[PN1] as "Dispatch Item ID"
-	Dispatch Item->[Product]->Product ID as "Product ID"
+	Dispatch Item->Dispatch->Dispatch ID as "Dispatch ID"
+	Dispatch Item->[F1:Product->Product ID] as "Product ID"
 	Dispatch Item->Quantity as "Quantity"
-	Dispatch Item->Dispatch?->Dispatch ID as "Dispatch ID"
-	Dispatch Item->[Sales Order Item]?->Sales Order->Sales Order ID as "Sales Order Item Sales Order ID"
-	Dispatch Item->[Sales Order Item]?->Product->Product ID as "Sales Order Item Product ID"
-	Dispatch Item->[Transfer Request]?->Transfer Request ID as "Transfer Request ID"
+	Dispatch Item->[F2:Sales Order Item?->Sales Order->Sales Order ID] as "Sales Order Item Sales Order ID"
+	Dispatch Item->[F2:Sales Order Item?->Product->Product ID] as "Sales Order Item Product ID"
+	Dispatch Item->[F3:Transfer Request?->Transfer Request ID] as "Transfer Request ID"
 	### exactly one of (Dispatch Item in "Dispatch Item is for Transfer Request") or (Dispatch Item in "Dispatch Item is for Sales Order Item")
 Party
 	Party->Party ID[PN1] as "Party ID"
@@ -28,36 +28,36 @@ Product
 	Product->Product ID[PN1] as "Product ID"
 Purchase Order
 	Purchase Order->Purchase Order ID[PN1] as "Purchase Order ID"
-	Purchase Order->[Supplier]->Party->Party ID as "Supplier ID"
-	Purchase Order->[Warehouse]->Warehouse ID as "Warehouse ID"
+	Purchase Order->[F1:Supplier->Party->Party ID] as "Supplier ID"
+	Purchase Order->[F2:Warehouse->Warehouse ID] as "Warehouse ID"
 Purchase Order Item
-	Purchase Order Item->[Purchase Order]->Purchase Order ID[PN1.0] as "Purchase Order ID"
-	Purchase Order Item->[Product]->Product ID[PN1.1] as "Product ID"
+	Purchase Order Item->[F1:Purchase Order->Purchase Order ID][PN1.0] as "Purchase Order ID"
+	Purchase Order Item->[F2:Product->Product ID][PN1.1] as "Product ID"
 	Purchase Order Item->Quantity as "Quantity"
 ### SubsetConstraint((Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item") only if (Purchase Order Item, Sales Order Item in "Purchase Order Item is for Product", "Sales Order Item is for Product"))
 Received Item
 	Received Item->Received Item ID[PN1] as "Received Item ID"
-	Received Item->[Product]->Product ID as "Product ID"
+	Received Item->[F1:Product->Product ID] as "Product ID"
 	Received Item->Quantity as "Quantity"
-	Received Item->[Purchase Order Item]?->Purchase Order->Purchase Order ID as "Purchase Order Item Purchase Order ID"
-	Received Item->[Purchase Order Item]?->Product->Product ID as "Purchase Order Item Product ID"
-	Received Item->Receipt?->Receipt ID as "Receipt ID"
-	Received Item->[Transfer Request]?->Transfer Request ID as "Transfer Request ID"
+	Received Item->Receipt->Receipt ID as "Receipt ID"
+	Received Item->[F2:Purchase Order Item?->Purchase Order->Purchase Order ID] as "Purchase Order Item Purchase Order ID"
+	Received Item->[F2:Purchase Order Item?->Product->Product ID] as "Purchase Order Item Product ID"
+	Received Item->[F3:Transfer Request?->Transfer Request ID] as "Transfer Request ID"
 	### exactly one of (Received Item in "Received Item is for Purchase Order Item") or (Received Item in "Received Item is for Transfer Request")
 Sales Order
 	Sales Order->Sales Order ID[PN1] as "Sales Order ID"
-	Sales Order->[Customer]->Party->Party ID as "Customer ID"
-	Sales Order->[Warehouse]->Warehouse ID as "Warehouse ID"
+	Sales Order->[F1:Customer->Party->Party ID] as "Customer ID"
+	Sales Order->[F2:Warehouse->Warehouse ID] as "Warehouse ID"
 Sales Order Item
-	Sales Order Item->[Sales Order]->Sales Order ID[PN1.0] as "Sales Order ID"
-	Sales Order Item->[Product]->Product ID[PN1.1] as "Product ID"
+	Sales Order Item->[F1:Sales Order->Sales Order ID][PN1.0] as "Sales Order ID"
+	Sales Order Item->[F2:Product->Product ID][PN1.1] as "Product ID"
 	Sales Order Item->Quantity as "Quantity"
 ### SubsetConstraint((Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item") only if (Purchase Order Item, Sales Order Item in "Purchase Order Item is for Product", "Sales Order Item is for Product"))
 Transfer Request
 	Transfer Request->Transfer Request ID[PN1] as "Transfer Request ID"
-	Transfer Request->[From Warehouse]->Warehouse ID as "From Warehouse ID"
-	Transfer Request->[Product]->Product ID as "Product ID"
+	Transfer Request->[F1:From Warehouse->Warehouse ID] as "From Warehouse ID"
+	Transfer Request->[F2:Product->Product ID] as "Product ID"
 	Transfer Request->Quantity as "Quantity"
-	Transfer Request->[To Warehouse]->Warehouse ID as "To Warehouse ID"
+	Transfer Request->[F3:To Warehouse->Warehouse ID] as "To Warehouse ID"
 Warehouse
 	Warehouse->Warehouse ID[PN1] as "Warehouse ID"

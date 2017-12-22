@@ -1,0 +1,36 @@
+Summary of FKProb
+LoadBatch
+	LoadBatch->LoadBatch ID[PN1] as "Load Batch ID"
+	LoadBatch->LoadTime as "Load Time"
+	LoadBatch->RecordSource as "Record Source"
+OT HUB
+	OT HUB->OT HID[P1] as "OT HID"
+	OT HUB->Name[N2] as "Name"
+	OT HUB->LoadBatch->LoadBatch ID as "Load Batch ID"
+	OT HUB->DOT?->VT? as "VT"
+VTP HUB
+	VTP HUB->VTP HID[P1] as "VTP HID"
+	VTP HUB->VT->DOT->OT->Name[N2.0] as "VT Name"
+	VTP HUB->Name[N2.1] as "Name"
+	VTP HUB->LoadBatch->LoadBatch ID as "Load Batch ID"
+VTP Involves VT LINK
+	VTP Involves VT LINK->VTP Involves VT HID[P1] as "VTP Involves VT HID"
+	VTP Involves VT LINK->LoadBatch->LoadBatch ID as "Load Batch ID"
+	VTP Involves VT LINK->OT HID][N2.1] as "OT HID"
+	VTP Involves VT LINK->VTP HID][N2.0] as "VTP HID"
+VTP Restriction Involves VT LINK
+	VTP Restriction Involves VT LINK->VTP Restriction Involves VT HID[P1] as "VTP Restriction Involves VT HID"
+	VTP Restriction Involves VT LINK->LoadBatch->LoadBatch ID as "Load Batch ID"
+	VTP Restriction Involves VT LINK->OT HID][N2.1] as "OT HID"
+	VTP Restriction Involves VT LINK->VTPRestriction HID][N2.0] as "VTP Restriction HID"
+VTP Restriction Involves VTP LINK
+	VTP Restriction Involves VTP LINK->VTP Restriction Involves VTP HID[P1] as "VTP Restriction Involves VTP HID"
+	VTP Restriction Involves VTP LINK->LoadBatch->LoadBatch ID as "Load Batch ID"
+	VTP Restriction Involves VTP LINK->VTP HID][N2.1] as "VTP HID"
+	VTP Restriction Involves VTP LINK->VTPRestriction HID][N2.0] as "VTP Restriction HID"
+VTPRestriction HUB
+	VTPRestriction HUB->VTPRestriction HID[P1] as "VTP Restriction HID"
+	VTPRestriction HUB->VT->DOT->OT->Name[N2.0] as "VT Name"
+	VTPRestriction HUB->VTP->VT->DOT->OT->Name[N2.1] as "VTP VT Name"
+	VTPRestriction HUB->VTP->Name[N2.2] as "VTP Name"
+	VTPRestriction HUB->LoadBatch->LoadBatch ID as "Load Batch ID"

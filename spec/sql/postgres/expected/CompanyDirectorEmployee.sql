@@ -1,4 +1,5 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+CREATE EXTENSION IF NOT EXISTS fuzzystrmatch WITH SCHEMA public;
 
 CREATE TABLE attendance (
 	-- Attendance involves Attendee and Person has given-Name

@@ -16,7 +16,7 @@ module ActiveFacts
     module Traits
       module SQL
         module Postgres
-          prepend Traits::SQL
+          include Traits::SQL
 
           def options
             super.merge({
@@ -55,7 +55,8 @@ module ActiveFacts
           end
 
           def schema_prefix
-            go("CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public") +
+            go('CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public') +
+            go('CREATE EXTENSION IF NOT EXISTS fuzzystrmatch WITH SCHEMA public') +
             "\n"
           end
 
@@ -91,7 +92,7 @@ module ActiveFacts
               when :guid                # A GUID
                 # This requires the pgcrypto extension
                 options[:length] = nil
-                options[:default] = " DEFAULT 'gen_random_uuid()'"
+                options[:default] = " DEFAULT gen_random_uuid()"
                 'UUID'
               when :hash                # A hash of the natural key
                 options.delete(:length) # 20 bytes, assuming SHA-1, but we don't need to specify it. SHA-256 would need 32 bytes
@@ -186,9 +187,11 @@ module ActiveFacts
           end
 
           def phonetics expr
+            dmetaphone = "dmetaphone(#{expr})"
+            dmetaphone_alt = "dmetaphone_alt(#{expr})"
             [
-              Expression.new("dmetaphone(#{expr}, '[^[:alnum:]]+', ' ', 'g')", MM::DataType::TYPE_String, expr.is_mandatory),
-              Expression.new("dmetaphone_alt(#{expr}, '[^[:alnum:]]+', ' ', 'g')", MM::DataType::TYPE_String, expr.is_mandatory)
+              Expression.new(dmetaphone, MM::DataType::TYPE_String, expr.is_mandatory),
+              Expression.new("CASE WHEN #{dmetaphone} <> #{dmetaphone_alt} THEN #{dmetaphone_alt} ELSE NULL END", MM::DataType::TYPE_String, expr.is_mandatory)
             ]
           end
 
@@ -253,10 +256,6 @@ module ActiveFacts
             # See https://www.postgresql.org/docs/9.0/static/datatype-boolean.html
             def boolean_expr safe_column_name
               safe_column_name  # psql outputs as 't' or 'f', but the bare column is a boolean expression
-            end
-
-            def valid_from_type
-              'TIMESTAMP'
             end
 
             # There is no performance benefit in using fixed-length CHAR fields,

@@ -1,10 +1,8 @@
 Summary of Address
 Company STG
-	Company STG->Company Name[N1,P2.0] as "Company Name"
-	Company STG->[LoadBatch]->LoadBatch ID[P2.1] as "Load Batch ID"
-	Company STG->LoadTime as "Load Time"
-	Company STG->Record GUID[U3] as "Record GUID"
-	Company STG->RecordSource as "Record Source"
+	Company STG->Company Name[P1.0] as "Company Name"
+	Company STG->[F1:LoadBatch->LoadBatch ID][P1.1] as "Load Batch ID"
+	Company STG->Record GUID[N2] as "Record GUID"
 	Company STG->Address?->Street Number? as "Address Street Number"
 	Company STG->Address?->Street->First Street Line as "Address Street First Street Line"
 	Company STG->Address?->Street->Second Street Line? as "Address Street Second Street Line"
@@ -15,14 +13,13 @@ Company STG
 	### SubsetConstraint((Street, Third Street Line in "Street includes third-Street Line") only if (Street, Second Street Line in "Street includes second-Street Line"))
 LoadBatch
 	LoadBatch->LoadBatch ID[PN1] as "Load Batch ID"
-	LoadBatch->Start DateTime as "Start Date Time"
+	LoadBatch->LoadTime as "Load Time"
+	LoadBatch->RecordSource as "Record Source"
 Person STG
-	Person STG->Family->Family Name[N1.0,P2.0] as "Family Name"
-	Person STG->Given Names[N1.1,P2.1] as "Given Names"
-	Person STG->[LoadBatch]->LoadBatch ID[P2.2] as "Load Batch ID"
-	Person STG->LoadTime as "Load Time"
-	Person STG->Record GUID[U3] as "Record GUID"
-	Person STG->RecordSource as "Record Source"
+	Person STG->Family->Family Name[P1.0] as "Family Name"
+	Person STG->Given Names[P1.1] as "Given Names"
+	Person STG->[F1:LoadBatch->LoadBatch ID][P1.2] as "Load Batch ID"
+	Person STG->Record GUID[N2] as "Record GUID"
 	Person STG->Address?->Street Number? as "Address Street Number"
 	Person STG->Address?->Street->First Street Line as "Address Street First Street Line"
 	Person STG->Address?->Street->Second Street Line? as "Address Street Second Street Line"

@@ -15,7 +15,7 @@ module ActiveFacts
     # * underscore 
     class SQL
       class Postgres < SQL
-        include Traits::SQL::Postgres
+        prepend Traits::SQL::Postgres
         extend Traits::SQL::Postgres   # Needed for class methods, like options
       end
 

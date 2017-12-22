@@ -37,18 +37,19 @@ describe "Staging schema from CQL" do
     files = `git ls-files "#{dir}/*.cql"`.split(/\n/)
   end
   files.each do |cql_file|
-    it "produces the expected Staging summary for #{cql_file}" do
-      basename = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, '\2')
-      expected = expected_dir+'/'+basename+'.trc'
-      actual = actual_dir+'/'+basename+'.trc'
-      begin
-        expected_text = File.read(expected)
-      rescue Errno::ENOENT => exception
-      end
+    basename = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, '\2')
+    expected = expected_dir+'/'+basename+'.trc'
+    actual = actual_dir+'/'+basename+'.trc'
+    begin
+      expected_text = File.read(expected)
+    rescue Errno::ENOENT => exception
+    end
+    next unless expected_text || ENV['TEST_FILES']
 
+    it "produces the expected Staging summary for #{cql_file}" do
       vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
       vocabulary.finalise
-      compositor = ActiveFacts::Compositions::Staging.new(vocabulary.constellation, basename, "loadbatch" => "Batch")
+      compositor = ActiveFacts::Compositions::Staging.new(vocabulary.constellation, basename, "audit" => "batch", "loadbatch" => "Batch")
       compositor.generate
 
       output = ActiveFacts::Generators::Summary.new(compositor.composition).generate

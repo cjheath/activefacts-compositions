@@ -16,7 +16,7 @@ module ActiveFacts
     module Traits
       module SQL
         module Server
-          prepend Traits::SQL
+          include Traits::SQL
 
           def options
             super.merge({
@@ -107,6 +107,12 @@ module ActiveFacts
             else
               super
             end
+          end
+
+          def create_or_replace(name, kind)
+            # From SQL Server 2016 onwards, you can use "CREATE OR ALTER ..."
+            go("IF OBJECT_ID('#{name}') IS NOT NULL\n\tDROP #{kind} #{name}") +
+            "CREATE #{kind} #{name}"
           end
 
           def hash_assignment hash_field, leaves
@@ -214,10 +220,6 @@ module ActiveFacts
 
             def boolean_expr safe_column_name
               "{safe_column_name} = 1"
-            end
-
-            def valid_from_type
-              'DATETIME'
             end
 
             def default_char_type

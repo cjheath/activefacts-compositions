@@ -16,7 +16,7 @@ module ActiveFacts
 
       BDV_ANNOTATIONS = /same as link|hierarchy link|computed link|exploration link|computed satellite|point in time|bridge/
       BDV_LINK_ANNOTATIONS = /same as link|hierarchy link|computed link|exploration link/
-      BDV_SAT_ANNOTATIONS = /computed satellite/
+      BDV_SAT_ANNOTATIONS = /computed satellite/    # Not used yet
       BDV_PIT_ANNOTATIONS = /point in time/
       BDV_BRIDGE_ANNOTATIONS = /bridge/
 
@@ -34,12 +34,16 @@ module ActiveFacts
           refname: ['String', "Suffix or pattern for naming reference tables. Include a + to insert the name. Default '+'"],
         }).
         merge(Relational.options).
-        reject{|k,v| [:fk, :surrogates].include?(k) }  # Datavault surrogates are not optional
+        reject{|k,v| [:fk, :surrogates].include?(k) }.  # Datavault surrogates are not optional
+        merge({
+          fk: [%w{hash}, "Enforce foreign keys using a hash of the natural keys (ala Data Vault 2)"],
+        })
       end
 
       def initialize constellation, name, options = {}
         # Extract recognised options:
         datavault_initialize options
+
         @option_reference = options.delete('reference')
         @option_id = '+ ' + (options.delete('id') || 'HID')
         @option_hub_name = options.delete('hubname') || 'HUB'
@@ -60,10 +64,8 @@ module ActiveFacts
         @option_surrogates = true   # Always inject surrogates regardless of superclass
       end
 
-      # We need to find links that need surrogate keys before we inject the surrogates
-      def inject_surrogates
-        classify_composites
-
+      def generate
+        create_loadbatch if @option_audit == 'batch'
         super
       end
 
@@ -91,6 +93,12 @@ module ActiveFacts
         # REVISIT: The following is debatable. If the natural primary key is an ok surrogate, should we inject another?
         return true if @non_reference_composites.include?(composite)
 
+        super
+      end
+
+      def inject_surrogates
+        # We need to find links that need surrogate keys before we inject the surrogates
+        classify_composites
         super
       end
 
@@ -202,7 +210,7 @@ module ActiveFacts
                 mapped_to =
                 composite_key_structure composite
 
-              # It's a Link if the preferred identifier includes more than non_reference_composite.
+              # It's a Link if the preferred identifier includes more than one non_reference_composite.
               mapped_to.compact.size > 1
             end
           end
@@ -250,7 +258,7 @@ module ActiveFacts
       end
 
       def detect_reference_tables
-        initial_composites = @composition.all_composite.to_a
+        initial_composites = @composition.all_composite.select{|c| c != loadbatch_composite }
         @reference_composites, @non_reference_composites =
           initial_composites.partition { |composite| composite_is_reference(composite) }
       end
@@ -299,14 +307,16 @@ module ActiveFacts
         # For each hub and link, move each non-identifying member
         # to a new satellite or promote it to a new link.
         (@hub_composites + @link_composites).each do |composite|
-          devolve composite
+          split_satellites_from composite
         end
 
         # Rename parents for rdv and bdv
         apply_composite_name_pattern
 
-        # inject datetime and record source for rdv hubs and links
-        inject_all_datetime_recordsource
+        # Inject datetime and record source into the LoadBatch table
+        if @option_audit == 'batch'
+          inject_audit_fields(loadbatch_composite)
+        end
 
         unless @option_reference
           if trace :reference_retraction
@@ -326,15 +336,16 @@ module ActiveFacts
           @constellation.loggers.pop if trace :reference_retraction
         end
 
-        # Devolve point in time tables, if any
+        # Populate fields of any point in time tables
         @pit_composites.each do |composite|
-          devolve_pit(composite)
+          populate_pit(composite)
         end
 
+        super
       end
 
       # A Point-In-Time table links a hub to its satellites applicable at a particular time
-      def devolve_pit(pit_composite)
+      def populate_pit(pit_composite)
         # inject standard PIT components: surrogate key, hub hash key and snapshot date time
         inject_surrogate(pit_composite)
 
@@ -349,9 +360,10 @@ module ActiveFacts
         )
 
         natural_index =
-          @constellation.Index(:new, composite: pit_composite, is_unique: true,
-            presence_constraint: nil, composite_as_natural_index: pit_composite #, composite_as_primary_index: pit_composite
-            )
+          @constellation.Index(
+            :new, composite: pit_composite, is_unique: true,
+            composite_as_natural_index: pit_composite #, composite_as_primary_index: pit_composite
+          )
         @constellation.IndexField(access_path: natural_index, ordinal: 0, component: pit_hub_field)
         @constellation.IndexField(access_path: natural_index, ordinal: 1, component: date_field)
 
@@ -359,8 +371,7 @@ module ActiveFacts
         fk = @constellation.ForeignKey(
             :new,
             source_composite: pit_composite,
-            composite: hub_composite,
-            absorption: nil           # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+            composite: hub_composite
           )
         @constellation.ForeignKeyField(foreign_key: fk, ordinal: 0, component: pit_hub_field)
         # This should be filled in by complete_foreign_keys, but there is no Absorption
@@ -391,8 +402,7 @@ module ActiveFacts
           fk = @constellation.ForeignKey(
               :new,
               source_composite: pit_composite,
-              composite: sat_composite,
-              absorption: nil           # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+              composite: sat_composite
             )
           @constellation.ForeignKeyField(foreign_key: fk, ordinal: 0, component: src_hash_field)
           @constellation.IndexField(access_path: fk, ordinal: 0, component: sat_hash_field)
@@ -411,19 +421,20 @@ module ActiveFacts
         end
       end
 
-      def prefer_natural_key building_natural_key, source_composite, target_composite
-        return false if building_natural_key && (@link_composites.include?(source_composite) || @bdv_link_composites.include?(source_composite))
-        building_natural_key && @hub_composites.include?(target_composite)
+      def preferred_fk_type building_natural_key, source_composite, target_composite
+        return :hash if @option_fk == :hash
+        return :primary if building_natural_key && (@link_composites+@bdv_link_composites).include?(source_composite)
+        building_natural_key && @hub_composites.include?(target_composite) ? :natural : :primary
       end
 
-      # For each member of this composite, decide whether to devolve it to a satellite
+      # For each member of this composite, decide whether to split it to a satellite
       # or to a new link. If it goes to a link that's still part of this natural key,
       # we need to leave that key intact, but remove the foreign key it entails.
       #
       # New links and satellites get new fields for the load date-time and a
       # references to the surrogate(s) on the hub or link, and add an index over
       # those two fields.
-      def devolve composite, devolve_links = true
+      def split_satellites_from composite, split_off_links = true
         trace :datavault?, "Devolving non-identifying fields for #{composite.inspect}" do
           # Find the members of this mapping that contain identifying leaves:
           pi = composite.primary_index
@@ -436,20 +447,23 @@ module ActiveFacts
 
           satellites = {}
           is_link = @link_composites.include?(composite) || @links_as_hubs.include?(composite)
-          composite.mapping.all_member.to_a.each do |member|
+          member_snapshot = composite.mapping.all_member.to_a
+          version_field = inject_audit_fields(composite)
+          absorb_nested composite.mapping, version_field, {} if MM::Absorption === version_field
+          member_snapshot.each do |member|
 
             # Any member that is the absorption of a foreign key to a hub or link
             # (which is all, since we removed FKs to reference tables)
             # must be converted to a Mapping for a new Entity Type that notionally
             # objectifies the absorbed fact type. This Mapping is a new link composite.
-            if devolve_links && member.is_a?(MM::Absorption) && member.foreign_key
+            if split_off_links && member.is_a?(MM::Absorption) && member.foreign_key
               next if is_link
-              devolve_absorption_to_link member, identifiers.include?(member)
+              split_off_absorption_to_link member, identifiers.include?(member)
               next
             end
 
             # If this member is in the natural or surrogate key, leave it there
-            # REVISIT: But if it is an FK to another hub, devolve it to a link as well.
+            # REVISIT: But if it is an FK to another hub, split it to a link as well.
             next if identifiers.include?(member)
 
             # We may absorb a subtype that has no contents. There's no point moving these to a satellite.
@@ -458,13 +472,14 @@ module ActiveFacts
             satellite_name, is_computed = *name_satellite(member)
             if !(satellite = satellites[satellite_name])
               satellite = satellites[satellite_name] = create_satellite(satellite_name, composite)
+              identify_satellite composite, satellite
               satellite.composite_group = (is_computed ? 'bdv' : 'rdv')
               if member.is_a?(MM::Absorption) && check_pit(member)
                 @pit_satellite[member] = satellite
               end
             end
 
-            devolve_member_to_satellite satellite, member
+            split_off_member_to_satellite satellite, member
           end
           composite.mapping.re_rank
 
@@ -473,48 +488,40 @@ module ActiveFacts
             composite.all_foreign_key_as_source_composite.to_a.each(&:retract)
           end
 
-          # Add the audit and identity fields for the satellite:
+          # Add the audit and identity fields for the satellites:
           satellites.values.each do |satellite|
-            audit_satellite composite, satellite
+            remove_satellite_validations satellite
           end
         end
       end
 
       # Add the audit and foreign key fields to a satellite for this composite
-      def audit_satellite composite, satellite
+      def identify_satellite composite, satellite
         trace :datavault, "Adding parent key and load time to satellite #{satellite.mapping.name.inspect}" do
-
-          # Add a Surrogate foreign Key to the parent composite
-          fk_target = composite.primary_index.all_index_field.single
-          fk_field = fk_target.component.fork_to_new_parent satellite.mapping
-
-          # Add a load DateTime value and record source
-          date_field = inject_datetime_recordsource(satellite.mapping)
-
-          # Add a primary and natural key:
+          # Add a primary (which is also natural) key:
           natural_index =
             @constellation.Index(:new, composite: satellite, is_unique: true,
-              presence_constraint: nil, composite_as_natural_index: satellite, composite_as_primary_index: satellite)
-          @constellation.IndexField(access_path: natural_index, ordinal: 0, component: fk_field)
-          @constellation.IndexField(access_path: natural_index, ordinal: 1, component: date_field)
+              # composite_as_natural_index: satellite,  # Must not be natural for the absorption to work correctly
+              composite_as_primary_index: satellite)
 
-          # REVISIT: re-ranking members without a preferred_identifier does not rank the PK fields in order.
+          # Absorb and index a foreign key to the hub or link. We'll add the version_field to the index.
+          # REVISIT: The name here should be the renamed version of the parent's name AFTER it's been adjusted
+          object_type = composite.mapping.object_type
+          member = @constellation.Mapping(guid: :new, parent: satellite.mapping, name: composite.mapping.name, object_type: object_type)
+          paths = {object_type.preferred_identifier => natural_index}
+          absorb_nested satellite.mapping, member, paths
+          # Satellites don't really have a natural key, but never mind...
+          satellite.natural_index = satellite.primary_index
+
+          # Add the audit and time-versioning fields
+          version_field =
+            if @option_audit == 'batch'
+              inject_audit_fields satellite, composite
+            else
+              inject_audit_fields satellite
+            end
+          @constellation.IndexField(access_path: natural_index, ordinal: natural_index.all_index_field.size, component: version_field)
           satellite.mapping.re_rank
-
-          # Add a foreign key to the hub
-          fk = @constellation.ForeignKey(
-              :new,
-              source_composite: satellite,
-              composite: composite,
-              absorption: nil           # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
-            )
-          @constellation.ForeignKeyField(foreign_key: fk, ordinal: 0, component: fk_field)
-          # This should be filled in by complete_foreign_keys, but there is no Absorption
-          @constellation.IndexField(access_path: fk, ordinal: 0, component: fk_target.component)
-
-          satellite.classify_constraints
-          satellite.all_local_constraint.map(&:local_constraint).each(&:retract)
-          leaf_constraints = satellite.mapping.all_leaf.flat_map(&:all_leaf_constraint).map(&:leaf_constraint).each(&:retract)
 
           if satellite.composite_group == 'bdv'
             @bdv_sat_composites << satellite
@@ -522,6 +529,12 @@ module ActiveFacts
             @sat_composites << satellite
           end
         end
+      end
+
+      def remove_satellite_validations satellite
+        satellite.classify_constraints
+        satellite.all_local_constraint.map(&:local_constraint).each(&:retract)
+        leaf_constraints = satellite.mapping.all_leaf.flat_map(&:all_leaf_constraint).map(&:leaf_constraint).each(&:retract)
       end
 
       # Decide what to call a new satellite that will adopt this component
@@ -571,7 +584,7 @@ module ActiveFacts
       end
 
       # Move this member from its current parent to the satellite
-      def devolve_member_to_satellite satellite, member
+      def split_off_member_to_satellite satellite, member
         remove_indices member
 
         member.parent = satellite.mapping
@@ -581,7 +594,7 @@ module ActiveFacts
 
       # This absorption reflects a time-varying fact type that involves another Hub, which becomes a new link.
       # REVISIT: "make_copy" says that the original field must remain, because it's in its parent's natural key.
-      def devolve_absorption_to_link absorption, make_copy
+      def split_off_absorption_to_link absorption, make_copy
         trace :datavault, "Promote #{absorption.inspect} to a new Link" do
 
           # REVISIT: Here we need a new objectified fact type with the same two players and the same readings,
@@ -645,8 +658,7 @@ module ActiveFacts
 
           # Add a natural key:
           natural_index =
-            @constellation.Index(:new, composite: link, is_unique: true,
-              presence_constraint: nil, composite_as_natural_index: link)
+            @constellation.Index(:new, composite: link, is_unique: true, composite_as_natural_index: link)
           @constellation.IndexField(access_path: natural_index, ordinal: 0, component: fk1_component)
           @constellation.IndexField(access_path: natural_index, ordinal: 1, component: fk2_component)
 
@@ -654,8 +666,7 @@ module ActiveFacts
           fk1 = @constellation.ForeignKey(
               :new,
               source_composite: link,
-              composite: link_from,
-              absorption: nil       # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+              composite: link_from
             )
           @constellation.ForeignKeyField(foreign_key: fk1, ordinal: 0, component: fk1_component)
           # REVISIT: This should be filled in by complete_foreign_keys, but it has no Absorption
@@ -665,31 +676,16 @@ module ActiveFacts
             fk2 = @constellation.ForeignKey(
                 :new,
                 source_composite: link,
-                composite: link_to,
-                absorption: nil       # REVISIT: This is a ForeignKey without its mandatory Absorption. That's gonna hurt
+                composite: link_to
               )
             @constellation.ForeignKeyField(foreign_key: fk2, ordinal: 0, component: fk2_component)
-            # REVISIT: This should be filled in by complete_foreign_keys, but it has no Absorption
+            # This can't be filled in by complete_foreign_keys because it has no Absorption
             @constellation.IndexField(access_path: fk2, ordinal: 0, component: fk2_target.component)
             absorption.foreign_key.retract
           end
+          inject_audit_fields link, link_from
 
-=begin
-          issues = 0
-          link.validate do |object, problem|
-            $stderr.puts "#{object.inspect}: #{problem}"
-            issues += 1
-          end
-          debugger if issues > 0
-=end
-
-
-          # # Add a load DateTime value
-          # date_field = add_datetime_recordsource(mapping)
-
-          #link.mapping.re_rank
-
-          # devolve link, false
+          # split_satellites_from link, false
           @link_composites << link
         end
       end
@@ -715,13 +711,8 @@ module ActiveFacts
         end
       end
 
-      def inject_all_datetime_recordsource
-        @link_composites.each do |composite|
-          inject_datetime_recordsource(composite.mapping)
-        end
-        @hub_composites.each do |composite|
-          inject_datetime_recordsource(composite.mapping)
-        end
+      def inject_loadbatch_relationships
+        # We can't do it the way our trait does, we treat hub+links, satellites, and fact links all differently
       end
 
     end

@@ -1,23 +1,17 @@
 Summary of PartyModel
 Company STG
-	Company STG->[Party]->Party ID[PN1] as "Party ID"
-	Company STG->LoadTime as "Load Time"
-	Company STG->RecordSource as "Record Source"
+	Company STG->[F1:Party->Party ID][PN1] as "Party ID"
 	Company STG->Superannuation Company? as "Superannuation Company"
 	Company STG->Teaching Institution?->RTO? as "RTO"
 ### (Party in "Company is a kind of Party") if and only if (Party in "Party is of Party Type")
 ### exactly one of (Party in "Person is a kind of Party") or (Party in "Company is a kind of Party")
 Party STG
 	Party STG->Party ID[PN1] as "Party ID"
-	Party STG->LoadTime as "Load Time"
-	Party STG->RecordSource as "Record Source"
 	Party STG->Party Type->Party Type Code as "Party Type Code"
 ### (Party in "Company is a kind of Party") if and only if (Party in "Party is of Party Type")
 ### (Party in "Person is a kind of Party") if and only if (Party in "Party is of Party Type")
 Person STG
-	Person STG->[Party]->Party ID[PN1] as "Party ID"
-	Person STG->LoadTime as "Load Time"
-	Person STG->RecordSource as "Record Source"
+	Person STG->[F1:Party->Party ID][PN1] as "Party ID"
 	Person STG->User? as "User"
 ### (Party in "Person is a kind of Party") if and only if (Party in "Party is of Party Type")
 ### exactly one of (Party in "Person is a kind of Party") or (Party in "Company is a kind of Party")

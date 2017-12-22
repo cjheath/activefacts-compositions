@@ -3,9 +3,9 @@ OT
 	OT->Name[PN1] as "Name"
 	OT->DOT?->VT? as "VT"
 VTP
-	VTP->[VT]->DOT->OT->Name[PN1.0] as "VT Name"
+	VTP->[F1:VT->DOT->OT->Name][PN1.0] as "VT Name"
 	VTP->Name[PN1.1] as "Name"
 VTPRestriction
-	VTPRestriction->[VT]->DOT->OT->Name[PN1.0] as "VT Name"
-	VTPRestriction->[VTP]->VT->DOT->OT->Name[PN1.1] as "VTP VT Name"
-	VTPRestriction->[VTP]->Name[PN1.2] as "VTP Name"
+	VTPRestriction->[F1:VT->DOT->OT->Name][PN1.0] as "VT Name"
+	VTPRestriction->[F2:VTP->VT->DOT->OT->Name][PN1.1] as "VTP VT Name"
+	VTPRestriction->[F2:VTP->Name][PN1.2] as "VTP Name"

@@ -15,13 +15,14 @@ module ActiveFacts
   module Generators
     module ETL
       class Unidex
-        include Traits::SQL
-        extend Traits::SQL
 
         MM = ActiveFacts::Metamodel unless const_defined?(:MM)
         def self.options
           # REVISIT: There's no way to support SQL dialect options here
-          super.merge(
+          sql_trait = ActiveFacts::Generators::Traits::SQL
+          Class.new.extend(sql_trait).  # Anonymous class to enable access to traits module instance methods
+          options.
+          merge(
             {
               dialect: [String, "SQL Dialect to use"],
               value_width: [Integer, "Number of characters to index from long values"],
@@ -33,29 +34,39 @@ module ActiveFacts
         def initialize composition, options = {}
           @composition = composition
           @options = options
-          @value_width = (options.delete('value_width') || 32).to_i
-          @phonetic_confidence = (options.delete('phonetic_confidence') || 70).to_i
 
           @trait = ActiveFacts::Generators::Traits::SQL
           if @dialect = options.delete("dialect")
             require 'activefacts/generator/traits/sql/'+@dialect
             trait_name = ActiveFacts::Generators::Traits::SQL.constants.detect{|c| c.to_s =~ %r{#{@dialect}}i}
             @trait = @trait.const_get(trait_name)
-            self.class.include @trait
-            self.class.extend @trait
-            extend @trait
           end
+          self.class.include @trait
+          self.class.extend @trait
+          extend @trait
+
           process_options options
+        end
+
+        def process_options options
+          @value_width = (options.delete('value_width') || 32).to_i
+          @phonetic_confidence = (options.delete('phonetic_confidence') || 70).to_i
+
+          super
         end
 
         def generate
           header +
-          @composition.all_composite.map{|c| generate_composite c}.compact*"\n"+
+          @composition.
+            all_composite.
+            sort_by{|c| c.mapping.name}.
+            map{|c| generate_composite c}.
+            compact*"\n" +
           trailer
         end
 
         def header
-          ''
+          schema_prefix
         end
 
         def generate_composite composite
@@ -86,7 +97,7 @@ module ActiveFacts
                 raise "Unexpected non-Absorption" unless MM::Absorption === member
                 if member.foreign_key
                   # Index this record by the natural key of the FK target record, if possible
-                  generate_joined_value member.foreign_key
+                  generate_joined_value member
                 # elsif member.full_absorption  # REVISIT: Anything special to do here?
                 else
                   (member.all_member.size > 0 ? member.all_leaf : [member]).flat_map do |leaf|
@@ -94,13 +105,13 @@ module ActiveFacts
                   end
                 end
               end
-            end.compact * "\nUNION"
+            end.compact * "\nUNION ALL"
 
             if union.size > 0
               "/*\n"+
               " * View to extract unified index values for #{table_name(composite)}\n"+
               " */\n"+
-              "CREATE VIEW #{table_name(composite)}_unidex ON" +
+              create_or_replace("#{table_name(composite)}_unidex", 'VIEW') + " AS" +
               union +
               ";\n"
             else
@@ -119,7 +130,9 @@ module ActiveFacts
         end
 
         # This foreign key connects two composites (tables)
-        def generate_joined_value foreign_key
+        def generate_joined_value member
+          foreign_key = member.foreign_key
+          # REVISIT: Is this restriction even necessary?
           return nil unless foreign_key.composite.mapping.object_type.is_static
 
           # Index the source table by the natural key of the target, if we can find one
@@ -129,13 +142,15 @@ module ActiveFacts
           search_index_by = {}
           searchable_indices =
             indices.select do |ix|
-              next false if !ix.is_unique || ix.all_index_field.size > 1
-              component = ix.all_index_field.single.component
-              next unless MM::Absorption === component &&
-                (value_type = component.object_type) &&
-                MM::ValueType === value_type
+              next false if !ix.is_unique
+              non_fk_components = ix.all_index_field.map(&:component) - foreign_key.all_index_field.map(&:component)
+              next unless non_fk_components.size == 1
+              component = non_fk_components[0]
+              next unless MM::Absorption === component
+              value_type = component.object_type
               search_methods = value_type.applicable_parameter_restrictions('Search')
               search_methods.reject!{|vtpr| m = vtpr.value_range.minimum_bound and m.value == 'none'}
+              search_methods.map!{|sm| sm.value_range.minimum_bound.value.effective_value}
               if search_methods.empty?
                 false
               else
@@ -143,12 +158,33 @@ module ActiveFacts
               end
             end
           return nil if search_index_by.empty?
-          search_index_by.map do |si, settings|
-            trace :unidex, "Search #{table_name foreign_key.source_composite} via #{table_name si.composite}.#{column_name si.all_index_field.single.component} using #{settings.map(&:inspect)*', '}"
 
-            # REVISIT: Generate search join expression
+          search_index_by.flat_map do |search_index, search_methods|
+            trace :unidex, "Search #{table_name foreign_key.source_composite} via #{table_name search_index.composite}.#{column_name search_index.all_index_field.to_a[0].component} using #{search_methods.map(&:inspect)*', '}"
 
-            nil
+            fk_pairs =
+                  foreign_key.all_foreign_key_field.to_a.
+              zip foreign_key.all_index_field.to_a
+            leaf = search_index.all_index_field.to_a[0].component         # Returning this natural index value
+            source_table = table_name(foreign_key.composite)
+            source = (member.column_name+leaf.column_name).elide_repeated_subsequences*' '
+            type_name, options = leaf.data_type(data_type_context)        # Which has this type_name
+            intrinsic_type = MM::DataType.intrinsic_type(type_name)       # Which corresponds to this intrinsic type
+
+            col_expr = Expression.new(
+              %Q{
+                (SELECT  #{safe_column_name(leaf)}
+                 FROM    #{source_table} AS f
+                 WHERE   #{
+                  fk_pairs.map do |fkf, ixf|
+                    "#{table_name foreign_key.source_composite}.#{safe_column_name(fkf.component)} = f.#{safe_column_name(ixf.component)}"
+                  end*' AND '
+                 })}.
+              gsub(/\s+/,' '),
+              intrinsic_type,
+              foreign_key.all_foreign_key_field.to_a.all?{|fkf| fkf.component.path_mandatory}
+            )
+            search_expr foreign_key.source_composite, intrinsic_type, col_expr, search_methods, source
           end
         end
 
@@ -156,7 +192,7 @@ module ActiveFacts
           return nil unless leaf.is_a?(MM::Absorption)
 
           value_type = leaf.object_type
-          type_name, options = leaf.data_type(MM::DataType::DefaultContext)
+          type_name, options = leaf.data_type(data_type_context)
           length = options[:length]
           value_constraint = options[:value_constraint]
 
@@ -172,7 +208,12 @@ module ActiveFacts
           trace :unidex, "Search #{table_name leaf.root}.#{column_name(leaf)} as #{data_type_name} using #{search_methods.map(&:inspect)*', '}"
 
           col_expr = Expression.new(safe_column_name(leaf), intrinsic_type, leaf.is_mandatory)
-          source = column_name(leaf)
+          source = leaf.column_name*' '
+
+          search_expr leaf.root, intrinsic_type, col_expr, search_methods, source
+        end
+
+        def search_expr composite, intrinsic_type, col_expr, search_methods, source
           case intrinsic_type
           when MM::DataType::TYPE_Char,
                MM::DataType::TYPE_String,
@@ -183,21 +224,22 @@ module ActiveFacts
               when 'none'         # Do not index this value
                 nil
               when 'simple'       # Disregard white-space only
-                select(leaf.root, truncate(col_expr, @value_width), 'simple', source, 1.0)
+                select(composite, truncate(col_expr, @value_width), 'simple', source, 1.0)
 
               when 'alpha'        # Strip white space and punctuation, just use alphabetic characters
-                select(leaf.root, truncate(as_alpha(col_expr), @value_width), 'alpha', source, 0.9)
+                select(composite, truncate(as_alpha(col_expr), @value_width), 'alpha', source, 0.9)
 
               when 'words'        # Break the text into words and match each word like alpha
                 nil # REVISIT: Implement this type
 
               # when 'phrases'    # Words, but where adjacent sequences of words matter
               when 'typo'         # Use trigram similarity to detect typographic errors
-                nil # REVISIT: Implement this type
+                # REVISIT: Implement this type properly
+                select(composite, truncate(as_alpha(col_expr), @value_width), 'typo', source, 0.9)
 
               when 'phonetic'     # Use phonetic matching as well as trigrams
                 phonetics(col_expr).map do |p|
-                  select(leaf.root, p, 'phonetic', source, @phonetic_confidence/100.0)
+                  select(composite, p, 'phonetic', source, @phonetic_confidence/100.0)
                 end
 
               when 'names'        # Break the text into words and match each word like phonetic
@@ -218,22 +260,22 @@ module ActiveFacts
                MM::DataType::TYPE_Decimal,
                MM::DataType::TYPE_Money
             # Produce a right-justified value
-            select(leaf.root, lexical_decimal(col_expr, @value_width, value_type.scale), 'simple', source, 1)
+            select(composite, lexical_decimal(col_expr, @value_width, value_type.scale), 'simple', source, 1)
 
           when MM::DataType::TYPE_Date
             # Produce an ISO representation that sorts lexically (YYYY-MM-DD)
             # REVISIT: Support search methods here
-            select(leaf.root, lexical_date(col_expr), 'simple', source, 1)
+            select(composite, lexical_date(col_expr), 'simple', source, 1)
 
           when MM::DataType::TYPE_DateTime,
                MM::DataType::TYPE_Timestamp
             # Produce an ISO representation that sorts lexically (YYYY-MM-DD HH:mm:ss)
             # REVISIT: Support search methods here
-            select(leaf.root, lexical_datetime(col_expr), 'simple', source, 1)
+            select(composite, lexical_datetime(col_expr), 'simple', source, 1)
 
           when MM::DataType::TYPE_Time
             # Produce an ISO representation that sorts lexically (YYYY-MM-DD HH:mm:ss)
-            select(leaf.root, lexical_time(col_expr), 'simple', source, 1)
+            select(composite, lexical_time(col_expr), 'simple', source, 1)
 
           when MM::DataType::TYPE_Binary
             nil   # No indexing applied
@@ -242,18 +284,37 @@ module ActiveFacts
           end
         end
 
-        def select composite, expression, processing, source, confidence = 1
+        def stylise_column_name name
+          name.words.send(@column_case)*@column_joiner
+        end
+
+        def select composite, expression, processing, source, confidence = 1, where = []
           # These fields are in order of index precedence, to co-locate
           # comparable values regardless of source record type or column
-          %Q{
-          SELECT  '#{processing}' AS Processing,
-                  #{expression} AS Value,
-                  LoadBatchID,
-                  #{"%.2f" % confidence} AS Confidence,
-                  RecordUUID,
-                  '#{source}' AS Source
-          FROM    #{table_name(composite)}}.
-          unindent
+          where << 'Value IS NOT NULL' if expression.to_s =~ /\bNULL\b/
+          processing_name = stylise_column_name("Processing")
+          value_name = stylise_column_name("Value")
+          load_batch_id_name = stylise_column_name("LoadBatchID")
+          record_guid_name = stylise_column_name("RecordGUID")
+          confidence_name = stylise_column_name("Confidence")
+          source_name = stylise_column_name("Source")
+          select = %Q{
+            SELECT  '#{processing}' AS #{processing_name},
+                    #{expression} AS #{value_name},
+                    #{load_batch_id_name},
+                    #{"%.2f" % confidence} AS #{confidence_name},
+                    #{record_guid_name},
+                    '#{source}' AS #{source_name}
+            FROM    #{table_name(composite)}
+            WHERE   COALESCE(#{expression},'') <> ''}.
+            unindent
+
+          if where.empty?
+            select
+          else
+            "\nSELECT * FROM (#{select}\n) AS s WHERE #{where*' AND '}"
+          end
+
         end
 
       end

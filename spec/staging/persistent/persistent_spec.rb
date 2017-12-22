@@ -5,8 +5,8 @@
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../../Gemfile', __FILE__)
 require 'bundler/setup' # Set up gems listed in the Gemfile.
 
-require 'spec_helper'
-require 'activefacts/compositions/staging/persistent'
+require_relative '../../spec_helper'
+require 'activefacts/compositions/staging'
 require 'activefacts/compositions/names'
 require 'activefacts/generator/summary'
 require 'activefacts/input/cql'
@@ -37,18 +37,19 @@ describe "Persistent Staging schema from CQL" do
     files = `git ls-files "#{dir}/*.cql"`.split(/\n/)
   end
   files.each do |cql_file|
-    it "produces the expected Persistent Staging summary for #{cql_file}" do
-      basename = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, '\2')
-      expected = expected_dir+'/'+basename+'.trc'
-      actual = actual_dir+'/'+basename+'.trc'
-      begin
-        expected_text = File.read(expected)
-      rescue Errno::ENOENT => exception
-      end
+    basename = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, '\2')
+    expected = expected_dir+'/'+basename+'.trc'
+    actual = actual_dir+'/'+basename+'.trc'
+    begin
+      expected_text = File.read(expected)
+    rescue Errno::ENOENT => exception
+    end
+    next unless expected_text || ENV['TEST_FILES']
 
+    it "produces the expected Persistent Staging summary for #{cql_file}" do
       vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
       vocabulary.finalise
-      compositor = ActiveFacts::Compositions::Staging::Persistent.new(vocabulary.constellation, basename)
+      compositor = ActiveFacts::Compositions::Staging.new(vocabulary.constellation, basename, 'persistent'=>'true', 'fk'=>'natural')
       compositor.generate
 
       output = ActiveFacts::Generators::Summary.new(compositor.composition).generate

@@ -1,49 +1,35 @@
 Summary of CompanyDirectorEmployee
 Attendance STG
-	Attendance STG->[Attendee]->Given Name[PN1.0] as "Attendee Given Name"
-	Attendance STG->[Attendee]->Family Name?[PN1.1] as "Attendee Family Name"
-	Attendance STG->[Meeting]->Company->Company Name[PN1.2] as "Meeting Company Name"
-	Attendance STG->[Meeting]->Date[PN1.3] as "Meeting Date"
-	Attendance STG->[Meeting]->Is Board Meeting?[PN1.4] as "Meeting Is Board Meeting"
-	Attendance STG->LoadTime as "Load Time"
-	Attendance STG->RecordSource as "Record Source"
+	Attendance STG->[F1:Attendee->Given Name][PN1.0] as "Attendee Given Name"
+	Attendance STG->[F1:Attendee->Family Name]?[PN1.1] as "Attendee Family Name"
+	Attendance STG->[F2:Meeting->Company->Company Name][PN1.2] as "Meeting Company Name"
+	Attendance STG->[F2:Meeting->Date][PN1.3] as "Meeting Date"
+	Attendance STG->[F2:Meeting->Is Board Meeting]?[PN1.4] as "Meeting Is Board Meeting"
 Company STG
 	Company STG->Company Name[PN1] as "Company Name"
-	Company STG->LoadTime as "Load Time"
-	Company STG->RecordSource as "Record Source"
 	Company STG->Is Listed? as "Is Listed"
 Directorship STG
-	Directorship STG->[Director]->Given Name[PN1.0] as "Director Given Name"
-	Directorship STG->[Director]->Family Name?[PN1.1] as "Director Family Name"
-	Directorship STG->[Company]->Company Name[PN1.2] as "Company Name"
-	Directorship STG->LoadTime as "Load Time"
-	Directorship STG->RecordSource as "Record Source"
+	Directorship STG->[F1:Director->Given Name][PN1.0] as "Director Given Name"
+	Directorship STG->[F1:Director->Family Name]?[PN1.1] as "Director Family Name"
+	Directorship STG->[F2:Company->Company Name][PN1.2] as "Company Name"
 	Directorship STG->Appointment Date as "Appointment Date"
 Employee STG
 	Employee STG->Employee Nr[PN1] as "Employee Nr"
-	Employee STG->LoadTime as "Load Time"
-	Employee STG->RecordSource as "Record Source"
-	Employee STG->[Company]->Company Name as "Company Name"
-	Employee STG->[Manager]?->Employee->Employee Nr as "Manager Nr"
+	Employee STG->[F1:Company->Company Name] as "Company Name"
+	Employee STG->[F2:Manager?->Employee->Employee Nr] as "Manager Nr"
 		### RingConstraint(Acyclic: Employee, Manager in Employee is supervised by Manager)
 		### exactly one of (Employee in "Employee is supervised by Manager") or (Employee in "Manager is a kind of Employee")
 	Employee STG->Manager?->Is Ceo? as "Manager Is Ceo"
 Employment STG
-	Employment STG->[Person]->Given Name[PN1.0] as "Person Given Name"
-	Employment STG->[Person]->Family Name?[PN1.1] as "Person Family Name"
-	Employment STG->[Employee]->Employee Nr[PN1.2] as "Employee Nr"
-	Employment STG->LoadTime as "Load Time"
-	Employment STG->RecordSource as "Record Source"
+	Employment STG->[F1:Person->Given Name][PN1.0] as "Person Given Name"
+	Employment STG->[F1:Person->Family Name]?[PN1.1] as "Person Family Name"
+	Employment STG->[F2:Employee->Employee Nr][PN1.2] as "Employee Nr"
 Meeting STG
-	Meeting STG->[Company]->Company Name[PN1.0] as "Company Name"
+	Meeting STG->[F1:Company->Company Name][PN1.0] as "Company Name"
 	Meeting STG->Date[PN1.1] as "Date"
 	Meeting STG->Is Board Meeting?[PN1.2] as "Is Board Meeting"
-	Meeting STG->LoadTime as "Load Time"
-	Meeting STG->RecordSource as "Record Source"
 Person STG
 	Person STG->Given Name[PN1.0] as "Given Name"
 	Person STG->Family Name?[PN1.1] as "Family Name"
-	Person STG->LoadTime as "Load Time"
-	Person STG->RecordSource as "Record Source"
 	Person STG->Birth Date? as "Birth Date"
 		### restricted to {'1900/01/01'..}
