@@ -501,17 +501,17 @@ module ActiveFacts
           # Add a primary (which is also natural) key:
           natural_index =
             @constellation.Index(:new, composite: satellite, is_unique: true,
-              # composite_as_natural_index: satellite,
+              # composite_as_natural_index: satellite,  # Must not be natural for the absorption to work correctly
               composite_as_primary_index: satellite)
 
-          # Do a full absorb_nested, not just a fork of the surrogate
+          # Absorb and index a foreign key to the hub or link. We'll add the version_field to the index.
           # REVISIT: The name here should be the renamed version of the parent's name AFTER it's been adjusted
-          member = @constellation.Mapping(guid: :new, parent: satellite.mapping, name: composite.mapping.name, object_type: composite.mapping.object_type)
           object_type = composite.mapping.object_type
-          pc = object_type.preferred_identifier
-          paths = {pc => natural_index}
+          member = @constellation.Mapping(guid: :new, parent: satellite.mapping, name: composite.mapping.name, object_type: object_type)
+          paths = {object_type.preferred_identifier => natural_index}
           absorb_nested satellite.mapping, member, paths
-          satellite.natural_index = natural_index
+          # Satellites don't really have a natural key, but never mind...
+          satellite.natural_index = satellite.primary_index
 
           # Add the audit and time-versioning fields
           version_field =
@@ -521,8 +521,6 @@ module ActiveFacts
               inject_audit_fields satellite
             end
           @constellation.IndexField(access_path: natural_index, ordinal: natural_index.all_index_field.size, component: version_field)
-
-          # REVISIT: re-ranking members without a preferred_identifier does not rank the PK fields in order.
           satellite.mapping.re_rank
 
           if satellite.composite_group == 'bdv'

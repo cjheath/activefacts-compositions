@@ -589,8 +589,9 @@ module ActiveFacts
           if rank == MM::Component::RANK_SURROGATE && fk_type == :natural
             next
           end
+          is_primary = member.is_in_primary && mapping.depth == 1
           member = member.fork_to_new_parent mapping
-          augment_paths paths, member
+          augment_paths is_primary, paths, member
           if rank == MM::Component::RANK_SURROGATE && fk_type == :primary
             break   # Will always be first (higher rank), and usurps others
           elsif member.is_a?(MM::Mapping) && !member.is_a?(MM::ValueField)
@@ -601,8 +602,8 @@ module ActiveFacts
               # We can't recurse here, because we must descend supertype absorptions
               while full_absorption && MM::Absorption === full_absorption.mapping
                 trace :relational_columns?, "Absorbing key of fully absorbed #{object_type.name}" do
-                  member = mirror full_absorption.mapping, member
-                  augment_paths paths, member
+                  member = mirror(cloned = full_absorption.mapping, member)
+                  augment_paths cloned.is_in_primary, paths, member
                   # Descend so the key fields get fully populated
                   absorb_key member, full_absorption.mapping.parent, paths
                   full_absorption = @composition.all_full_absorption[member.object_type]
@@ -636,11 +637,12 @@ module ActiveFacts
         ordered = from.all_member.sort_by(&:ordinal)
         ordered.each do |member|
           trace :relational_columns, proc {"#{top_level ? 'Existing' : 'Absorbing'} #{member.inspect}"} do
+            is_primary = member.is_in_primary
             unless top_level    # Top-level members are already instantiated
               member = member.fork_to_new_parent mapping
             end
             rel = paths.merge(relevant_paths(newpaths, member))
-            augment_paths rel, member
+            augment_paths is_primary, rel, member
 
             if member.is_a?(MM::Mapping) && !member.forward_mapping
               # Process forward absorptions recursively
@@ -764,7 +766,7 @@ module ActiveFacts
         rel
       end
 
-      def augment_paths paths, mapping
+      def augment_paths is_primary, paths, mapping
         return unless !(MM::Mapping === mapping) || MM::ValueType === mapping.object_type
 
         if MM::ValueField === mapping && mapping.parent.composite   # ValueType that's a composite (table) by itself
@@ -780,12 +782,12 @@ module ActiveFacts
             case path
             when MM::Index
               # If we're using hash surrogates, refuse to include a surrogate in the natural index:
-              next if @option_fk == :hash && MM::SurrogateKey === mapping && mapping.root.primary_index == path
+              next if @option_fk == :hash && (!!is_primary == (mapping.root.natural_index == path))
               @constellation.IndexField(access_path: path, ordinal: path.all_index_field.size, component: mapping)
             when MM::ForeignKey
               # If we're using hash surrogates, foreign keys only contain surrogates.
               # REVISIT: What if not all FK target tables have a surrogate? Answer: they do because they must.
-              next if @option_fk == :hash && !(MM::SurrogateKey === mapping)
+              next if @option_fk == :hash && !is_primary
               @constellation.ForeignKeyField(foreign_key: path, ordinal: path.all_foreign_key_field.size, component: mapping)
             end
           end
