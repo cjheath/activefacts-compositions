@@ -4,7 +4,7 @@ AAC_ET STG
 	AAC_ET STG->LoadTime as "Load Time"
 	AAC_ET STG->RecordSource as "Record Source"
 AAC_Sub STG
-	AAC_Sub STG->[AAC_ET]->Alternate Auto Counter[PN1] as "AAC ET Alternate Auto Counter"
+	AAC_Sub STG->[F1:AAC_ET->Alternate Auto Counter][PN1] as "AAC ET Alternate Auto Counter"
 	AAC_Sub STG->LoadTime as "Load Time"
 	AAC_Sub STG->RecordSource as "Record Source"
 AG_ET STG
@@ -12,7 +12,7 @@ AG_ET STG
 	AG_ET STG->LoadTime as "Load Time"
 	AG_ET STG->RecordSource as "Record Source"
 AG_Sub STG
-	AG_Sub STG->[AG_ET]->Alternate Guid[PN1] as "AG ET Alternate Guid"
+	AG_Sub STG->[F1:AG_ET->Alternate Guid][PN1] as "AG ET Alternate Guid"
 	AG_Sub STG->LoadTime as "Load Time"
 	AG_Sub STG->RecordSource as "Record Source"
 Container STG

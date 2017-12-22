@@ -2,11 +2,11 @@ Summary of DataTypes
 AAC_ET STG
 	AAC_ET STG->Alternate Auto Counter[PN1] as "Alternate Auto Counter"
 AAC_Sub STG
-	AAC_Sub STG->[AAC_ET]->Alternate Auto Counter[PN1] as "AAC ET Alternate Auto Counter"
+	AAC_Sub STG->[F1:AAC_ET->Alternate Auto Counter][PN1] as "AAC ET Alternate Auto Counter"
 AG_ET STG
 	AG_ET STG->Alternate Guid[PN1] as "Alternate Guid"
 AG_Sub STG
-	AG_Sub STG->[AG_ET]->Alternate Guid[PN1] as "AG ET Alternate Guid"
+	AG_Sub STG->[F1:AG_ET->Alternate Guid][PN1] as "AG ET Alternate Guid"
 Container STG
 	Container STG->Container Name[PN1] as "Container Name"
 	Container STG->Alternate Auto Counter as "Alternate Auto Counter"

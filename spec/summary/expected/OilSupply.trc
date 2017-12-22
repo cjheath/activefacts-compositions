@@ -1,7 +1,7 @@
 Summary of test
 Acceptable Substitution
-	Acceptable Substitution->[Product]->Product Name[PN1.0] as "Product Name"
-	Acceptable Substitution->[Alternate Product]->Product Name[PN1.1] as "Alternate Product Name"
+	Acceptable Substitution->[F1:Product->Product Name][PN1.0] as "Product Name"
+	Acceptable Substitution->[F2:Alternate Product->Product Name][PN1.1] as "Alternate Product Name"
 	Acceptable Substitution->Season[PN1.2] as "Season"
 	### RingConstraint(AcyclicIntransitive: Product, Product in Product may be substituted by alternate-Product in Season)
 Month
@@ -11,10 +11,10 @@ Month
 Product
 	Product->Product Name[PN1] as "Product Name"
 Production Forecast
-	Production Forecast->[Refinery]->Refinery Name[PN1.0] as "Refinery Name"
-	Production Forecast->[Supply Period]->Year->Year Nr[PN1.1] as "Supply Period Year Nr"
-	Production Forecast->[Supply Period]->Month->Month Nr[PN1.2] as "Supply Period Month Nr"
-	Production Forecast->[Product]->Product Name[PN1.3] as "Product Name"
+	Production Forecast->[F1:Refinery->Refinery Name][PN1.0] as "Refinery Name"
+	Production Forecast->[F2:Supply Period->Year->Year Nr][PN1.1] as "Supply Period Year Nr"
+	Production Forecast->[F2:Supply Period->Month->Month Nr][PN1.2] as "Supply Period Month Nr"
+	Production Forecast->[F3:Product->Product Name][PN1.3] as "Product Name"
 	Production Forecast->Quantity as "Quantity"
 	Production Forecast->Cost? as "Cost"
 Refinery
@@ -22,16 +22,16 @@ Refinery
 Region
 	Region->Region Name[PN1] as "Region Name"
 Regional Demand
-	Regional Demand->[Region]->Region Name[PN1.0] as "Region Name"
-	Regional Demand->[Supply Period]->Year->Year Nr[PN1.1] as "Supply Period Year Nr"
-	Regional Demand->[Supply Period]->Month->Month Nr[PN1.2] as "Supply Period Month Nr"
-	Regional Demand->[Product]->Product Name[PN1.3] as "Product Name"
+	Regional Demand->[F1:Region->Region Name][PN1.0] as "Region Name"
+	Regional Demand->[F2:Supply Period->Year->Year Nr][PN1.1] as "Supply Period Year Nr"
+	Regional Demand->[F2:Supply Period->Month->Month Nr][PN1.2] as "Supply Period Month Nr"
+	Regional Demand->[F3:Product->Product Name][PN1.3] as "Product Name"
 	Regional Demand->Quantity as "Quantity"
 Supply Period
 	Supply Period->Year->Year Nr[PN1.0] as "Year Nr"
-	Supply Period->[Month]->Month Nr[PN1.1] as "Month Nr"
+	Supply Period->[F1:Month->Month Nr][PN1.1] as "Month Nr"
 Transport Route
 	Transport Route->Transport Mode[PN1.0] as "Transport Mode"
-	Transport Route->[Refinery]->Refinery Name[PN1.1] as "Refinery Name"
-	Transport Route->[Region]->Region Name[PN1.2] as "Region Name"
+	Transport Route->[F1:Refinery->Refinery Name][PN1.1] as "Refinery Name"
+	Transport Route->[F2:Region->Region Name][PN1.2] as "Region Name"
 	Transport Route->Cost? as "Cost"

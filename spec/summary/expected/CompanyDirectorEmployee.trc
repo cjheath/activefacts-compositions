@@ -1,31 +1,31 @@
 Summary of test
 Attendance
-	Attendance->[Attendee]->Given Name[PN1.0] as "Attendee Given Name"
-	Attendance->[Attendee]->Family Name?[PN1.1] as "Attendee Family Name"
-	Attendance->[Meeting]->Company->Company Name[PN1.2] as "Meeting Company Name"
-	Attendance->[Meeting]->Date[PN1.3] as "Meeting Date"
-	Attendance->[Meeting]->Is Board Meeting?[PN1.4] as "Meeting Is Board Meeting"
+	Attendance->[F1:Attendee->Given Name][PN1.0] as "Attendee Given Name"
+	Attendance->[F1:Attendee->Family Name]?[PN1.1] as "Attendee Family Name"
+	Attendance->[F2:Meeting->Company->Company Name][PN1.2] as "Meeting Company Name"
+	Attendance->[F2:Meeting->Date][PN1.3] as "Meeting Date"
+	Attendance->[F2:Meeting->Is Board Meeting]?[PN1.4] as "Meeting Is Board Meeting"
 Company
 	Company->Company Name[PN1] as "Company Name"
 	Company->Is Listed? as "Is Listed"
 Directorship
-	Directorship->[Director]->Given Name[PN1.0] as "Director Given Name"
-	Directorship->[Director]->Family Name?[PN1.1] as "Director Family Name"
-	Directorship->[Company]->Company Name[PN1.2] as "Company Name"
+	Directorship->[F1:Director->Given Name][PN1.0] as "Director Given Name"
+	Directorship->[F1:Director->Family Name]?[PN1.1] as "Director Family Name"
+	Directorship->[F2:Company->Company Name][PN1.2] as "Company Name"
 	Directorship->Appointment Date as "Appointment Date"
 Employee
 	Employee->Employee Nr[PN1] as "Employee Nr"
-	Employee->[Company]->Company Name as "Company Name"
-	Employee->[Manager]?->Employee->Employee Nr as "Manager Nr"
+	Employee->[F1:Company->Company Name] as "Company Name"
+	Employee->[F2:Manager?->Employee->Employee Nr] as "Manager Nr"
 		### RingConstraint(Acyclic: Employee, Manager in Employee is supervised by Manager)
 		### exactly one of (Employee in "Employee is supervised by Manager") or (Employee in "Manager is a kind of Employee")
 	Employee->Manager?->Is Ceo? as "Manager Is Ceo"
 Employment
-	Employment->[Person]->Given Name[PN1.0] as "Person Given Name"
-	Employment->[Person]->Family Name?[PN1.1] as "Person Family Name"
-	Employment->[Employee]->Employee Nr[PN1.2] as "Employee Nr"
+	Employment->[F1:Person->Given Name][PN1.0] as "Person Given Name"
+	Employment->[F1:Person->Family Name]?[PN1.1] as "Person Family Name"
+	Employment->[F2:Employee->Employee Nr][PN1.2] as "Employee Nr"
 Meeting
-	Meeting->[Company]->Company Name[PN1.0] as "Company Name"
+	Meeting->[F1:Company->Company Name][PN1.0] as "Company Name"
 	Meeting->Date[PN1.1] as "Date"
 	Meeting->Is Board Meeting?[PN1.2] as "Is Board Meeting"
 Person

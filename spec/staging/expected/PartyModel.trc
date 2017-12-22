@@ -1,6 +1,6 @@
 Summary of PartyModel
 Company STG
-	Company STG->[Party]->Party ID[PN1] as "Party ID"
+	Company STG->[F1:Party->Party ID][PN1] as "Party ID"
 	Company STG->Superannuation Company? as "Superannuation Company"
 	Company STG->Teaching Institution?->RTO? as "RTO"
 ### (Party in "Company is a kind of Party") if and only if (Party in "Party is of Party Type")
@@ -11,7 +11,7 @@ Party STG
 ### (Party in "Company is a kind of Party") if and only if (Party in "Party is of Party Type")
 ### (Party in "Person is a kind of Party") if and only if (Party in "Party is of Party Type")
 Person STG
-	Person STG->[Party]->Party ID[PN1] as "Party ID"
+	Person STG->[F1:Party->Party ID][PN1] as "Party ID"
 	Person STG->User? as "User"
 ### (Party in "Person is a kind of Party") if and only if (Party in "Party is of Party Type")
 ### exactly one of (Party in "Person is a kind of Party") or (Party in "Company is a kind of Party")

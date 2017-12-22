@@ -29,6 +29,8 @@ module ActiveFacts
     class Composite
       def summary
         indices = self.all_indices_by_rank
+        fks = {}
+        fk_count = 0
 
         (
           [mapping.name+"\n"] +
@@ -50,9 +52,11 @@ module ActiveFacts
                 end
 
                 # if all_foreign_key.detect{|fk| fk.all_foreign_key_field.detect{|fkf| fkf.component == leaf}}
-                if component.is_a?(Absorption) && component.foreign_key
-                  # Unfortunately there are cases where a FK is over a component that's not an absorption, and we can't show that
-                  "[#{component.name}]"
+                if component.is_a?(Mapping) && component.foreign_key && leaf.all_foreign_key_field.size > 0
+                  fk_number = (fks[component.foreign_key] ||= (fk_count += 1))
+                  "[F#{fk_number}:#{component.name}"
+                elsif component == leaf && leaf.all_foreign_key_field.size > 0
+                  "#{component.name}]"
                 else
                   component.name
                 end +

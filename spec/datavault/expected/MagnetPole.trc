@@ -8,8 +8,8 @@ Magnet Pole Belongs To Magnet LINK
 	Magnet Pole Belongs To Magnet LINK->Magnet Pole Belongs To Magnet HID[P1] as "Magnet Pole Belongs To Magnet HID"
 	Magnet Pole Belongs To Magnet LINK->LoadTime as "Load Time"
 	Magnet Pole Belongs To Magnet LINK->RecordSource as "Record Source"
-	Magnet Pole Belongs To Magnet LINK->Magnet HID[N2.1] as "Magnet HID"
-	Magnet Pole Belongs To Magnet LINK->MagnetPole HID[N2.0] as "Magnet Pole HID"
+	Magnet Pole Belongs To Magnet LINK->Magnet HID][N2.1] as "Magnet HID"
+	Magnet Pole Belongs To Magnet LINK->MagnetPole HID][N2.0] as "Magnet Pole HID"
 MagnetPole HUB
 	MagnetPole HUB->MagnetPole HID[P1] as "Magnet Pole HID"
 	MagnetPole HUB->Magnet->Magnet AutoCounter[N2.0] as "Magnet Auto Counter"

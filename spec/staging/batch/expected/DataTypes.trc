@@ -1,23 +1,23 @@
 Summary of DataTypes
 AAC_ET STG
 	AAC_ET STG->Alternate Auto Counter[PN1] as "Alternate Auto Counter"
-	AAC_ET STG->[Batch]->Batch ID as "Batch ID"
+	AAC_ET STG->[F1:Batch->Batch ID] as "Batch ID"
 AAC_Sub STG
-	AAC_Sub STG->[AAC_ET]->Alternate Auto Counter[PN1] as "AAC ET Alternate Auto Counter"
-	AAC_Sub STG->[Batch]->Batch ID as "Batch ID"
+	AAC_Sub STG->[F1:AAC_ET->Alternate Auto Counter][PN1] as "AAC ET Alternate Auto Counter"
+	AAC_Sub STG->[F2:Batch->Batch ID] as "Batch ID"
 AG_ET STG
 	AG_ET STG->Alternate Guid[PN1] as "Alternate Guid"
-	AG_ET STG->[Batch]->Batch ID as "Batch ID"
+	AG_ET STG->[F1:Batch->Batch ID] as "Batch ID"
 AG_Sub STG
-	AG_Sub STG->[AG_ET]->Alternate Guid[PN1] as "AG ET Alternate Guid"
-	AG_Sub STG->[Batch]->Batch ID as "Batch ID"
+	AG_Sub STG->[F1:AG_ET->Alternate Guid][PN1] as "AG ET Alternate Guid"
+	AG_Sub STG->[F2:Batch->Batch ID] as "Batch ID"
 Batch
 	Batch->Batch ID[PN1] as "Batch ID"
 	Batch->LoadTime as "Load Time"
 	Batch->RecordSource as "Record Source"
 Container STG
 	Container STG->Container Name[PN1] as "Container Name"
-	Container STG->[Batch]->Batch ID as "Batch ID"
+	Container STG->[F1:Batch->Batch ID] as "Batch ID"
 	Container STG->Alternate Auto Counter as "Alternate Auto Counter"
 	Container STG->Alternate Auto Time Stamp as "Alternate Auto Time Stamp"
 	Container STG->Alternate Big Int as "Alternate Big Int"

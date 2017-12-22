@@ -2,5 +2,5 @@ Summary of MagnetPole
 Magnet STG
 	Magnet STG->Magnet AutoCounter[PN1] as "Magnet Auto Counter"
 MagnetPole STG
-	MagnetPole STG->[Magnet]->Magnet AutoCounter[PN1.0] as "Magnet Auto Counter"
+	MagnetPole STG->[F1:Magnet->Magnet AutoCounter][PN1.0] as "Magnet Auto Counter"
 	MagnetPole STG->Is North?[PN1.1] as "Is North"

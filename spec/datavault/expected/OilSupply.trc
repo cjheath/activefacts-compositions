@@ -1,8 +1,8 @@
 Summary of OilSupply
 Acceptable Substitution LINK
 	Acceptable Substitution LINK->Acceptable Substitution HID[P1] as "Acceptable Substitution HID"
-	Acceptable Substitution LINK->[Product]->Product HID[N2.0] as "Product HID"
-	Acceptable Substitution LINK->[Alternate Product]->Product HID[N2.1] as "Alternate Product HID"
+	Acceptable Substitution LINK->[F1:Product->Product HID][N2.0] as "Product HID"
+	Acceptable Substitution LINK->[F2:Alternate Product->Product HID][N2.1] as "Alternate Product HID"
 	Acceptable Substitution LINK->Season[N2.2] as "Season"
 	Acceptable Substitution LINK->LoadTime as "Load Time"
 	Acceptable Substitution LINK->RecordSource as "Record Source"
@@ -14,15 +14,15 @@ Product HUB
 	Product HUB->RecordSource as "Record Source"
 Production Forecast LINK
 	Production Forecast LINK->Production Forecast HID[P1] as "Production Forecast HID"
-	Production Forecast LINK->[Refinery]->Refinery HID[N2.0] as "Refinery HID"
+	Production Forecast LINK->[F1:Refinery->Refinery HID][N2.0] as "Refinery HID"
 	Production Forecast LINK->Supply Period->Year->Year Nr[N2.1] as "Supply Period Year Nr"
 	Production Forecast LINK->Supply Period->Month->Month Nr[N2.2] as "Supply Period Month Nr"
 		### restricted to {1..12}
-	Production Forecast LINK->[Product]->Product HID[N2.3] as "Product HID"
+	Production Forecast LINK->[F2:Product->Product HID][N2.3] as "Product HID"
 	Production Forecast LINK->LoadTime as "Load Time"
 	Production Forecast LINK->RecordSource as "Record Source"
 Production Forecast SAT
-	Production Forecast SAT->Production Forecast->Production Forecast HID[PN1.0] as "Production Forecast HID"
+	Production Forecast SAT->[F1:Production Forecast->Production Forecast HID][PN1.0] as "Production Forecast HID"
 	Production Forecast SAT->LoadTime[PN1.1] as "Load Time"
 	Production Forecast SAT->RecordSource as "Record Source"
 	Production Forecast SAT->Quantity as "Quantity"
@@ -39,27 +39,27 @@ Region HUB
 	Region HUB->RecordSource as "Record Source"
 Regional Demand LINK
 	Regional Demand LINK->Regional Demand HID[P1] as "Regional Demand HID"
-	Regional Demand LINK->[Region]->Region HID[N2.0] as "Region HID"
+	Regional Demand LINK->[F1:Region->Region HID][N2.0] as "Region HID"
 	Regional Demand LINK->Supply Period->Year->Year Nr[N2.1] as "Supply Period Year Nr"
 	Regional Demand LINK->Supply Period->Month->Month Nr[N2.2] as "Supply Period Month Nr"
 		### restricted to {1..12}
-	Regional Demand LINK->[Product]->Product HID[N2.3] as "Product HID"
+	Regional Demand LINK->[F2:Product->Product HID][N2.3] as "Product HID"
 	Regional Demand LINK->LoadTime as "Load Time"
 	Regional Demand LINK->RecordSource as "Record Source"
 Regional Demand SAT
-	Regional Demand SAT->Regional Demand->Regional Demand HID[PN1.0] as "Regional Demand HID"
+	Regional Demand SAT->[F1:Regional Demand->Regional Demand HID][PN1.0] as "Regional Demand HID"
 	Regional Demand SAT->LoadTime[PN1.1] as "Load Time"
 	Regional Demand SAT->RecordSource as "Record Source"
 	Regional Demand SAT->Quantity as "Quantity"
 Transport Route LINK
 	Transport Route LINK->Transport Route HID[P1] as "Transport Route HID"
 	Transport Route LINK->Transport Mode[N2.0] as "Transport Mode"
-	Transport Route LINK->[Refinery]->Refinery HID[N2.1] as "Refinery HID"
-	Transport Route LINK->[Region]->Region HID[N2.2] as "Region HID"
+	Transport Route LINK->[F1:Refinery->Refinery HID][N2.1] as "Refinery HID"
+	Transport Route LINK->[F2:Region->Region HID][N2.2] as "Region HID"
 	Transport Route LINK->LoadTime as "Load Time"
 	Transport Route LINK->RecordSource as "Record Source"
 Transport Route SAT
-	Transport Route SAT->Transport Route->Transport Route HID[PN1.0] as "Transport Route HID"
+	Transport Route SAT->[F1:Transport Route->Transport Route HID][PN1.0] as "Transport Route HID"
 	Transport Route SAT->LoadTime[PN1.1] as "Load Time"
 	Transport Route SAT->RecordSource as "Record Source"
 	Transport Route SAT->Cost? as "Cost"

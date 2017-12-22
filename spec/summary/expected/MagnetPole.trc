@@ -2,5 +2,5 @@ Summary of test
 Magnet
 	Magnet->Magnet AutoCounter[PN1] as "Magnet Auto Counter"
 MagnetPole
-	MagnetPole->[Magnet]->Magnet AutoCounter[PN1.0] as "Magnet Auto Counter"
+	MagnetPole->[F1:Magnet->Magnet AutoCounter][PN1.0] as "Magnet Auto Counter"
 	MagnetPole->Is North?[PN1.1] as "Is North"

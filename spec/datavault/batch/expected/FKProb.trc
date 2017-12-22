@@ -16,18 +16,18 @@ VTP HUB
 VTP Involves VT LINK
 	VTP Involves VT LINK->VTP Involves VT HID[P1] as "VTP Involves VT HID"
 	VTP Involves VT LINK->LoadBatch->LoadBatch ID as "Load Batch ID"
-	VTP Involves VT LINK->OT HID[N2.1] as "OT HID"
-	VTP Involves VT LINK->VTP HID[N2.0] as "VTP HID"
+	VTP Involves VT LINK->OT HID][N2.1] as "OT HID"
+	VTP Involves VT LINK->VTP HID][N2.0] as "VTP HID"
 VTP Restriction Involves VT LINK
 	VTP Restriction Involves VT LINK->VTP Restriction Involves VT HID[P1] as "VTP Restriction Involves VT HID"
 	VTP Restriction Involves VT LINK->LoadBatch->LoadBatch ID as "Load Batch ID"
-	VTP Restriction Involves VT LINK->OT HID[N2.1] as "OT HID"
-	VTP Restriction Involves VT LINK->VTPRestriction HID[N2.0] as "VTP Restriction HID"
+	VTP Restriction Involves VT LINK->OT HID][N2.1] as "OT HID"
+	VTP Restriction Involves VT LINK->VTPRestriction HID][N2.0] as "VTP Restriction HID"
 VTP Restriction Involves VTP LINK
 	VTP Restriction Involves VTP LINK->VTP Restriction Involves VTP HID[P1] as "VTP Restriction Involves VTP HID"
 	VTP Restriction Involves VTP LINK->LoadBatch->LoadBatch ID as "Load Batch ID"
-	VTP Restriction Involves VTP LINK->VTP HID[N2.1] as "VTP HID"
-	VTP Restriction Involves VTP LINK->VTPRestriction HID[N2.0] as "VTP Restriction HID"
+	VTP Restriction Involves VTP LINK->VTP HID][N2.1] as "VTP HID"
+	VTP Restriction Involves VTP LINK->VTPRestriction HID][N2.0] as "VTP Restriction HID"
 VTPRestriction HUB
 	VTPRestriction HUB->VTPRestriction HID[P1] as "VTP Restriction HID"
 	VTPRestriction HUB->VT->DOT->OT->Name[N2.0] as "VT Name"

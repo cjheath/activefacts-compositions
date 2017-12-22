@@ -12,5 +12,5 @@ PartitionInd
 	PartitionInd->PartitionInd Key[PN2] as "Partition Ind Key"
 	PartitionInd->AbsorbedPart?->Abs Part Val as "Absorbed Part Abs Part Val"
 Separate
-	Separate->[Base]->Base GUID[PN1] as "Base GUID"
+	Separate->[F1:Base->Base GUID][PN1] as "Base GUID"
 	Separate->Sep Val as "Sep Val"

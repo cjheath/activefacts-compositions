@@ -1,5 +1,5 @@
 Summary of test
 Country
-	Country->[Country Code]->Country Code[PN1.1] as "Country Code"
+	Country->[F1:Country Code->Country Code][PN1.1] as "Country Code"
 Country Code
 	Country Code->Country Code Value[PN1] as "Country Code Value"
