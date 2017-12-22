@@ -1,0 +1,28 @@
+Summary of MinDV
+HubLink LINK
+	HubLink LINK->HubLink HID[P1] as "Hub Link HID"
+	HubLink LINK->[F1:Hubris->Hubris HID][N2.0] as "Hubris HID"
+	HubLink LINK->[F2:Linkage->Linkage HID][N2.1] as "Linkage HID"
+	HubLink LINK->LoadTime as "Load Time"
+	HubLink LINK->RecordSource as "Record Source"
+HubLink SAT
+	HubLink SAT->[F1:HubLink->HubLink HID][PN1.0] as "Hub Link HID"
+	HubLink SAT->LoadTime[PN1.1] as "Load Time"
+	HubLink SAT->RecordSource as "Record Source"
+	HubLink SAT->Sequence Number as "Sequence Number"
+Hubris HUB
+	Hubris HUB->Hubris HID[P1] as "Hubris HID"
+	Hubris HUB->Hubris Name[N2] as "Hubris Name"
+	Hubris HUB->LoadTime as "Load Time"
+	Hubris HUB->RecordSource as "Record Source"
+Hubris SAT
+	Hubris SAT->[F1:Hubris->Hubris HID][PN1.0] as "Hubris HID"
+	Hubris SAT->LoadTime[PN1.1] as "Load Time"
+	Hubris SAT->RecordSource as "Record Source"
+	Hubris SAT->Mandatory Number as "Mandatory Number"
+	Hubris SAT->Optional Number? as "Optional Number"
+Linkage HUB
+	Linkage HUB->Linkage HID[P1] as "Linkage HID"
+	Linkage HUB->Linkage Name[N2] as "Linkage Name"
+	Linkage HUB->LoadTime as "Load Time"
+	Linkage HUB->RecordSource as "Record Source"

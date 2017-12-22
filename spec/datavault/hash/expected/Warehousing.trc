@@ -1,0 +1,200 @@
+Summary of Warehousing
+Back Order Allocation LINK
+	Back Order Allocation LINK->Back Order Allocation HID[P1] as "Back Order Allocation HID"
+	Back Order Allocation LINK->[F1:Purchase Order Item->Purchase Order Item HID][N2.0] as "Purchase Order Item HID"
+	Back Order Allocation LINK->[F2:Sales Order Item->Sales Order Item HID][N2.1] as "Sales Order Item HID"
+	Back Order Allocation LINK->LoadTime as "Load Time"
+	Back Order Allocation LINK->RecordSource as "Record Source"
+### SubsetConstraint((Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item") only if (Purchase Order Item, Sales Order Item in "Purchase Order Item is for Product", "Sales Order Item is for Product"))
+Back Order Allocation SAT
+	Back Order Allocation SAT->[F1:Back Order Allocation->Back Order Allocation HID][PN1.0] as "Back Order Allocation HID"
+	Back Order Allocation SAT->LoadTime[PN1.1] as "Load Time"
+	Back Order Allocation SAT->RecordSource as "Record Source"
+	Back Order Allocation SAT->Quantity as "Quantity"
+Bin Contains Product LINK
+	Bin Contains Product LINK->Bin Contains Product HID[P1] as "Bin Contains Product HID"
+	Bin Contains Product LINK->LoadTime as "Load Time"
+	Bin Contains Product LINK->RecordSource as "Record Source"
+	Bin Contains Product LINK->Bin HID][N2.0] as "Bin HID"
+	Bin Contains Product LINK->[F1:Product?->Product HID][N2.1] as "Product HID"
+Bin HUB
+	Bin HUB->Bin HID[P1] as "Bin HID"
+	Bin HUB->Bin ID[N2] as "Bin ID"
+	Bin HUB->LoadTime as "Load Time"
+	Bin HUB->RecordSource as "Record Source"
+Bin SAT
+	Bin SAT->[F1:Bin->Bin HID][PN1.0] as "Bin HID"
+	Bin SAT->LoadTime[PN1.1] as "Load Time"
+	Bin SAT->RecordSource as "Record Source"
+	Bin SAT->Quantity as "Quantity"
+Dispatch Item HUB
+	Dispatch Item HUB->Dispatch Item HID[P1] as "Dispatch Item HID"
+	Dispatch Item HUB->Dispatch Item ID[N2] as "Dispatch Item ID"
+	Dispatch Item HUB->LoadTime as "Load Time"
+	Dispatch Item HUB->RecordSource as "Record Source"
+Dispatch Item Is For Sales Order Item LINK
+	Dispatch Item Is For Sales Order Item LINK->Dispatch Item Is For Sales Order Item HID[P1] as "Dispatch Item Is For Sales Order Item HID"
+	Dispatch Item Is For Sales Order Item LINK->LoadTime as "Load Time"
+	Dispatch Item Is For Sales Order Item LINK->RecordSource as "Record Source"
+	Dispatch Item Is For Sales Order Item LINK->Dispatch Item HID][N2.0] as "Dispatch Item HID"
+	Dispatch Item Is For Sales Order Item LINK->[F1:Sales Order Item?->Sales Order Item HID][N2.1] as "Sales Order Item HID"
+### exactly one of (Dispatch Item in "Dispatch Item is for Transfer Request") or (Dispatch Item in "Dispatch Item is for Sales Order Item")
+Dispatch Item Is For Transfer Request LINK
+	Dispatch Item Is For Transfer Request LINK->Dispatch Item Is For Transfer Request HID[P1] as "Dispatch Item Is For Transfer Request HID"
+	Dispatch Item Is For Transfer Request LINK->LoadTime as "Load Time"
+	Dispatch Item Is For Transfer Request LINK->RecordSource as "Record Source"
+	Dispatch Item Is For Transfer Request LINK->Dispatch Item HID][N2.0] as "Dispatch Item HID"
+	Dispatch Item Is For Transfer Request LINK->[F1:Transfer Request?->Transfer Request HID][N2.1] as "Transfer Request HID"
+### exactly one of (Dispatch Item in "Dispatch Item is for Transfer Request") or (Dispatch Item in "Dispatch Item is for Sales Order Item")
+Dispatch Item Is Product LINK
+	Dispatch Item Is Product LINK->Dispatch Item Is Product HID[P1] as "Dispatch Item Is Product HID"
+	Dispatch Item Is Product LINK->LoadTime as "Load Time"
+	Dispatch Item Is Product LINK->RecordSource as "Record Source"
+	Dispatch Item Is Product LINK->Dispatch Item HID][N2.0] as "Dispatch Item HID"
+	Dispatch Item Is Product LINK->[F1:Product->Product HID][N2.1] as "Product HID"
+Dispatch Item SAT
+	Dispatch Item SAT->[F1:Dispatch Item->Dispatch Item HID][PN1.0] as "Dispatch Item HID"
+	Dispatch Item SAT->LoadTime[PN1.1] as "Load Time"
+	Dispatch Item SAT->RecordSource as "Record Source"
+	Dispatch Item SAT->Dispatch->Dispatch ID as "Dispatch ID"
+	Dispatch Item SAT->Quantity as "Quantity"
+Party HUB
+	Party HUB->Party HID[P1] as "Party HID"
+	Party HUB->Party ID[N2] as "Party ID"
+	Party HUB->LoadTime as "Load Time"
+	Party HUB->RecordSource as "Record Source"
+	Party HUB->Customer? as "Customer"
+	Party HUB->Supplier? as "Supplier"
+Product HUB
+	Product HUB->Product HID[P1] as "Product HID"
+	Product HUB->Product ID[N2] as "Product ID"
+	Product HUB->LoadTime as "Load Time"
+	Product HUB->RecordSource as "Record Source"
+Purchase Order HUB
+	Purchase Order HUB->Purchase Order HID[P1] as "Purchase Order HID"
+	Purchase Order HUB->Purchase Order ID[N2] as "Purchase Order ID"
+	Purchase Order HUB->LoadTime as "Load Time"
+	Purchase Order HUB->RecordSource as "Record Source"
+Purchase Order Is To Supplier LINK
+	Purchase Order Is To Supplier LINK->Purchase Order Is To Supplier HID[P1] as "Purchase Order Is To Supplier HID"
+	Purchase Order Is To Supplier LINK->LoadTime as "Load Time"
+	Purchase Order Is To Supplier LINK->RecordSource as "Record Source"
+	Purchase Order Is To Supplier LINK->Purchase Order HID][N2.0] as "Purchase Order HID"
+	Purchase Order Is To Supplier LINK->[F1:Supplier->Party->Party HID][N2.1] as "Supplier Party HID"
+Purchase Order Is To Warehouse LINK
+	Purchase Order Is To Warehouse LINK->Purchase Order Is To Warehouse HID[P1] as "Purchase Order Is To Warehouse HID"
+	Purchase Order Is To Warehouse LINK->LoadTime as "Load Time"
+	Purchase Order Is To Warehouse LINK->RecordSource as "Record Source"
+	Purchase Order Is To Warehouse LINK->Purchase Order HID][N2.0] as "Purchase Order HID"
+	Purchase Order Is To Warehouse LINK->[F1:Warehouse->Warehouse HID][N2.1] as "Warehouse HID"
+Purchase Order Item HUB
+	Purchase Order Item HUB->Purchase Order Item HID[P1] as "Purchase Order Item HID"
+	Purchase Order Item HUB->Purchase Order->Purchase Order ID[N2.0] as "Purchase Order ID"
+	Purchase Order Item HUB->Product->Product ID[N2.1] as "Product ID"
+	Purchase Order Item HUB->LoadTime as "Load Time"
+	Purchase Order Item HUB->RecordSource as "Record Source"
+### SubsetConstraint((Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item") only if (Purchase Order Item, Sales Order Item in "Purchase Order Item is for Product", "Sales Order Item is for Product"))
+Purchase Order Item SAT
+	Purchase Order Item SAT->[F1:Purchase Order Item->Purchase Order Item HID][PN1.0] as "Purchase Order Item HID"
+	Purchase Order Item SAT->LoadTime[PN1.1] as "Load Time"
+	Purchase Order Item SAT->RecordSource as "Record Source"
+	Purchase Order Item SAT->Quantity as "Quantity"
+Received Item HUB
+	Received Item HUB->Received Item HID[P1] as "Received Item HID"
+	Received Item HUB->Received Item ID[N2] as "Received Item ID"
+	Received Item HUB->LoadTime as "Load Time"
+	Received Item HUB->RecordSource as "Record Source"
+Received Item Is For Purchase Order Item LINK
+	Received Item Is For Purchase Order Item LINK->Received Item Is For Purchase Order Item HID[P1] as "Received Item Is For Purchase Order Item HID"
+	Received Item Is For Purchase Order Item LINK->LoadTime as "Load Time"
+	Received Item Is For Purchase Order Item LINK->RecordSource as "Record Source"
+	Received Item Is For Purchase Order Item LINK->Received Item HID][N2.0] as "Received Item HID"
+	Received Item Is For Purchase Order Item LINK->[F1:Purchase Order Item?->Purchase Order Item HID][N2.1] as "Purchase Order Item HID"
+### exactly one of (Received Item in "Received Item is for Purchase Order Item") or (Received Item in "Received Item is for Transfer Request")
+Received Item Is For Transfer Request LINK
+	Received Item Is For Transfer Request LINK->Received Item Is For Transfer Request HID[P1] as "Received Item Is For Transfer Request HID"
+	Received Item Is For Transfer Request LINK->LoadTime as "Load Time"
+	Received Item Is For Transfer Request LINK->RecordSource as "Record Source"
+	Received Item Is For Transfer Request LINK->Received Item HID][N2.0] as "Received Item HID"
+	Received Item Is For Transfer Request LINK->[F1:Transfer Request?->Transfer Request HID][N2.1] as "Transfer Request HID"
+### exactly one of (Received Item in "Received Item is for Purchase Order Item") or (Received Item in "Received Item is for Transfer Request")
+Received Item Is Product LINK
+	Received Item Is Product LINK->Received Item Is Product HID[P1] as "Received Item Is Product HID"
+	Received Item Is Product LINK->LoadTime as "Load Time"
+	Received Item Is Product LINK->RecordSource as "Record Source"
+	Received Item Is Product LINK->Received Item HID][N2.0] as "Received Item HID"
+	Received Item Is Product LINK->[F1:Product->Product HID][N2.1] as "Product HID"
+Received Item SAT
+	Received Item SAT->[F1:Received Item->Received Item HID][PN1.0] as "Received Item HID"
+	Received Item SAT->LoadTime[PN1.1] as "Load Time"
+	Received Item SAT->RecordSource as "Record Source"
+	Received Item SAT->Quantity as "Quantity"
+	Received Item SAT->Receipt->Receipt ID as "Receipt ID"
+Sales Order HUB
+	Sales Order HUB->Sales Order HID[P1] as "Sales Order HID"
+	Sales Order HUB->Sales Order ID[N2] as "Sales Order ID"
+	Sales Order HUB->LoadTime as "Load Time"
+	Sales Order HUB->RecordSource as "Record Source"
+Sales Order Is From Warehouse LINK
+	Sales Order Is From Warehouse LINK->Sales Order Is From Warehouse HID[P1] as "Sales Order Is From Warehouse HID"
+	Sales Order Is From Warehouse LINK->LoadTime as "Load Time"
+	Sales Order Is From Warehouse LINK->RecordSource as "Record Source"
+	Sales Order Is From Warehouse LINK->Sales Order HID][N2.0] as "Sales Order HID"
+	Sales Order Is From Warehouse LINK->[F1:Warehouse->Warehouse HID][N2.1] as "Warehouse HID"
+Sales Order Item HUB
+	Sales Order Item HUB->Sales Order Item HID[P1] as "Sales Order Item HID"
+	Sales Order Item HUB->Sales Order->Sales Order ID[N2.0] as "Sales Order ID"
+	Sales Order Item HUB->Product->Product ID[N2.1] as "Product ID"
+	Sales Order Item HUB->LoadTime as "Load Time"
+	Sales Order Item HUB->RecordSource as "Record Source"
+### SubsetConstraint((Purchase Order Item, Sales Order Item in "Purchase Order Item is allocated to Sales Order Item") only if (Purchase Order Item, Sales Order Item in "Purchase Order Item is for Product", "Sales Order Item is for Product"))
+Sales Order Item SAT
+	Sales Order Item SAT->[F1:Sales Order Item->Sales Order Item HID][PN1.0] as "Sales Order Item HID"
+	Sales Order Item SAT->LoadTime[PN1.1] as "Load Time"
+	Sales Order Item SAT->RecordSource as "Record Source"
+	Sales Order Item SAT->Quantity as "Quantity"
+Sales Order Was Made By Customer LINK
+	Sales Order Was Made By Customer LINK->Sales Order Was Made By Customer HID[P1] as "Sales Order Was Made By Customer HID"
+	Sales Order Was Made By Customer LINK->LoadTime as "Load Time"
+	Sales Order Was Made By Customer LINK->RecordSource as "Record Source"
+	Sales Order Was Made By Customer LINK->Sales Order HID][N2.0] as "Sales Order HID"
+	Sales Order Was Made By Customer LINK->[F1:Customer->Party->Party HID][N2.1] as "Customer Party HID"
+Transfer Request HUB
+	Transfer Request HUB->Transfer Request HID[P1] as "Transfer Request HID"
+	Transfer Request HUB->Transfer Request ID[N2] as "Transfer Request ID"
+	Transfer Request HUB->LoadTime as "Load Time"
+	Transfer Request HUB->RecordSource as "Record Source"
+Transfer Request Is For Product LINK
+	Transfer Request Is For Product LINK->Transfer Request Is For Product HID[P1] as "Transfer Request Is For Product HID"
+	Transfer Request Is For Product LINK->LoadTime as "Load Time"
+	Transfer Request Is For Product LINK->RecordSource as "Record Source"
+	Transfer Request Is For Product LINK->Transfer Request HID][N2.0] as "Transfer Request HID"
+	Transfer Request Is For Product LINK->[F1:Product->Product HID][N2.1] as "Product HID"
+Transfer Request Is From From Warehouse LINK
+	Transfer Request Is From From Warehouse LINK->Transfer Request Is From From Warehouse HID[P1] as "Transfer Request Is From Warehouse HID"
+	Transfer Request Is From From Warehouse LINK->LoadTime as "Load Time"
+	Transfer Request Is From From Warehouse LINK->RecordSource as "Record Source"
+	Transfer Request Is From From Warehouse LINK->Transfer Request HID][N2.0] as "Transfer Request HID"
+	Transfer Request Is From From Warehouse LINK->[F1:From Warehouse->Warehouse HID][N2.1] as "From Warehouse HID"
+Transfer Request Is To To Warehouse LINK
+	Transfer Request Is To To Warehouse LINK->Transfer Request Is To To Warehouse HID[P1] as "Transfer Request Is To Warehouse HID"
+	Transfer Request Is To To Warehouse LINK->LoadTime as "Load Time"
+	Transfer Request Is To To Warehouse LINK->RecordSource as "Record Source"
+	Transfer Request Is To To Warehouse LINK->Transfer Request HID][N2.0] as "Transfer Request HID"
+	Transfer Request Is To To Warehouse LINK->[F1:To Warehouse->Warehouse HID][N2.1] as "To Warehouse HID"
+Transfer Request SAT
+	Transfer Request SAT->[F1:Transfer Request->Transfer Request HID][PN1.0] as "Transfer Request HID"
+	Transfer Request SAT->LoadTime[PN1.1] as "Load Time"
+	Transfer Request SAT->RecordSource as "Record Source"
+	Transfer Request SAT->Quantity as "Quantity"
+Warehouse Contains Bin LINK
+	Warehouse Contains Bin LINK->Warehouse Contains Bin HID[P1] as "Warehouse Contains Bin HID"
+	Warehouse Contains Bin LINK->LoadTime as "Load Time"
+	Warehouse Contains Bin LINK->RecordSource as "Record Source"
+	Warehouse Contains Bin LINK->Bin HID][N2.0] as "Bin HID"
+	Warehouse Contains Bin LINK->[F1:Warehouse?->Warehouse HID][N2.1] as "Warehouse HID"
+Warehouse HUB
+	Warehouse HUB->Warehouse HID[P1] as "Warehouse HID"
+	Warehouse HUB->Warehouse ID[N2] as "Warehouse ID"
+	Warehouse HUB->LoadTime as "Load Time"
+	Warehouse HUB->RecordSource as "Record Source"
