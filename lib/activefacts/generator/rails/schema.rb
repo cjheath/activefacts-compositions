@@ -147,7 +147,7 @@ module ActiveFacts
                       ixf.ordinal == 0                              # It's first in this index
                     end
                   already_indexed = from_index_needed.any?{|ixf| @indexes_generated[ixf.access_path]}
-                  is_one_to_one = fk.absorption && fk.absorption.child_role.is_unique
+                  is_one_to_one = fk.mapping && fk.mapping.child_role.is_unique
 
                   index_name = ACTR::name_trunc("index_#{ar_table_name}_on_#{from_column_names[0]}")
                   [
