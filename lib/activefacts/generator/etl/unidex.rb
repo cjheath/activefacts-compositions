@@ -56,13 +56,23 @@ module ActiveFacts
         end
 
         def generate
+          @all_table_unions = []
           header +
           @composition.
             all_composite.
             sort_by{|c| c.mapping.name}.
             map{|c| generate_composite c}.
+            concat([all_union(@all_table_unions)]).
             compact*"\n" +
           trailer
+        end
+
+        def all_union unions
+          return '' if unions.empty?
+          create_or_replace("#{schema_name}_unidex", 'VIEW') + " AS\n" +
+          unions.compact.map{|s| "SELECT * FROM "+s } *
+          "\nUNION ALL " +
+          ";\n"
         end
 
         def header
@@ -75,7 +85,7 @@ module ActiveFacts
 
           trace :unidex, "Generating view for #{table_name(composite)}" do
             union =
-            composite.mapping.all_member.to_a.flat_map do |member|
+            composite.mapping.all_member.to_a.sort_by{|m| m.name}.flat_map do |member|
               next nil if member.injection_annotation
               rank_key = member.rank_key
 
@@ -108,10 +118,13 @@ module ActiveFacts
             end.compact * "\nUNION ALL"
 
             if union.size > 0
+              union_name = "#{table_name(composite)}_unidex"
+              @all_table_unions << union_name
+
               "/*\n"+
               " * View to extract unified index values for #{table_name(composite)}\n"+
               " */\n"+
-              create_or_replace("#{table_name(composite)}_unidex", 'VIEW') + " AS" +
+              create_or_replace("#{union_name}", 'VIEW') + " AS" +
               union +
               ";\n"
             else

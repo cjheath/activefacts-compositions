@@ -1,17 +1,18 @@
 #
-# Test the relational composition from CQL files by comparing generated SQL output
+# Test the Unidex index generation views from CQL files
 #
 
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../../../Gemfile', __FILE__)
 require 'bundler/setup' # Set up gems listed in the Gemfile.
 
 require 'spec_helper'
-require 'activefacts/compositions/relational'
-require 'activefacts/compositions/names'
-require 'activefacts/generator/sql'
+require 'activefacts/compositions/staging'
+require 'activefacts/generator/etl/unidex'
+require 'activefacts/generator/validate'
 require 'activefacts/input/cql'
 
-SQL_CQL_DIR ||= Pathname.new(__FILE__+'/../../cql').relative_path_from(Pathname(Dir.pwd)).to_s
-SQL_TEST_DIR = Pathname.new(__FILE__+'/..').relative_path_from(Pathname(Dir.pwd)).to_s
+UNIDEX_TEST_DIR = Pathname.new(__FILE__+'/..').relative_path_from(Pathname(Dir.pwd)).to_s
+UNIDEX_CQL_DIR = UNIDEX_TEST_DIR+'/../cql'
 
 RSpec::Matchers.define :be_like do |expected|
   match do |actual|
@@ -25,10 +26,10 @@ RSpec::Matchers.define :be_like do |expected|
   diffable
 end
 
-describe "SQL schema from CQL" do
-  dir = ENV['CQL_DIR'] || SQL_CQL_DIR
-  actual_dir = (ENV['CQL_DIR'] ? '' : SQL_TEST_DIR+'/') + 'actual'
-  expected_dir = (ENV['CQL_DIR'] ? '' : SQL_TEST_DIR+'/') + 'expected'
+describe "Unidex views from CQL" do
+  dir = ENV['CQL_DIR'] || UNIDEX_CQL_DIR
+  actual_dir = (ENV['TEST_DIR'] ? '' : UNIDEX_TEST_DIR+'/') + 'actual'
+  expected_dir = (ENV['TEST_DIR'] ? '' : UNIDEX_TEST_DIR+'/') + 'expected'
   Dir.mkdir actual_dir unless Dir.exist? actual_dir
   if f = ENV['TEST_FILES']
     files = Dir[dir+"/#{f}*.cql"]
@@ -45,13 +46,13 @@ describe "SQL schema from CQL" do
     end
     next unless expected_text || ENV['TEST_FILES']
 
-    it "produces the expected Standard SQL for #{basename}" do
+    it "produces the expected Unidex views for #{basename}" do
       vocabulary = ActiveFacts::Input::CQL.readfile(cql_file)
       vocabulary.finalise
-      compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, basename)
+      compositor = ActiveFacts::Compositions::Staging.new(vocabulary.constellation, basename, "persistent"=>true, "stgname"=>"+")
       compositor.generate
 
-      output = ActiveFacts::Generators::SQL.new(compositor.composition).generate
+      output = ActiveFacts::Generators::ETL::Unidex.new(compositor.composition, "dialect"=>"postgres").generate
 
       # Save or delete the actual output file:
       if expected_text != output
