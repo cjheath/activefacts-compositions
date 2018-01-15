@@ -12,7 +12,8 @@ SELECT  'phonetic' AS processing,
         load_batch_id,
         0.70 AS confidence,
         record_guid,
-        'Building Name' AS source
+        'address_detail' AS source_table,
+        'building_name' AS source_field
 FROM    address_detail
 WHERE   COALESCE(dmetaphone(building_name),'') <> ''
 UNION ALL
@@ -22,7 +23,8 @@ SELECT  'phonetic' AS processing,
         load_batch_id,
         0.70 AS confidence,
         record_guid,
-        'Building Name' AS source
+        'address_detail' AS source_table,
+        'building_name' AS source_field
 FROM    address_detail
 WHERE   COALESCE(CASE WHEN dmetaphone(building_name) <> dmetaphone_alt(building_name) THEN dmetaphone_alt(building_name) ELSE NULL END,'') <> ''
 ) AS s WHERE Value IS NOT NULL
@@ -32,7 +34,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Flat Number' AS source
+        'address_detail' AS source_table,
+        'flat_number' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(flat_number, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -41,7 +44,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Flat Number Prefix' AS source
+        'address_detail' AS source_table,
+        'flat_number_prefix' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(flat_number_prefix, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -50,7 +54,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Flat Number Suffix' AS source
+        'address_detail' AS source_table,
+        'flat_number_suffix' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(flat_number_suffix, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -59,7 +64,8 @@ SELECT  'typo' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Flat Type Name' AS source
+        'address_detail' AS source_table,
+        'flat_type' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace( (SELECT name FROM flat_type AS f WHERE address_detail.flat_type_code = f.code AND address_detail.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -68,7 +74,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Legal Parcel Id' AS source
+        'address_detail' AS source_table,
+        'legal_parcel_id' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(legal_parcel_id, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -77,7 +84,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Level Number' AS source
+        'address_detail' AS source_table,
+        'level_number' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(level_number, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -86,7 +94,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Level Number Prefix' AS source
+        'address_detail' AS source_table,
+        'level_number_prefix' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(level_number_prefix, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -95,7 +104,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Level Number Suffix' AS source
+        'address_detail' AS source_table,
+        'level_number_suffix' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(level_number_suffix, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -104,7 +114,8 @@ SELECT  'typo' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Level Type Name' AS source
+        'address_detail' AS source_table,
+        'level_type' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace( (SELECT name FROM level_type AS f WHERE address_detail.level_type_code = f.code AND address_detail.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -113,7 +124,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Lot Number' AS source
+        'address_detail' AS source_table,
+        'lot_number' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(lot_number, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -122,7 +134,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Lot Number Prefix' AS source
+        'address_detail' AS source_table,
+        'lot_number_prefix' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(lot_number_prefix, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -131,7 +144,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Lot Number Suffix' AS source
+        'address_detail' AS source_table,
+        'lot_number_suffix' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(lot_number_suffix, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -140,7 +154,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Number First' AS source
+        'address_detail' AS source_table,
+        'number_first' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(number_first, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -149,7 +164,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Number First Prefix' AS source
+        'address_detail' AS source_table,
+        'number_first_prefix' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(number_first_prefix, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -158,7 +174,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Number First Suffix' AS source
+        'address_detail' AS source_table,
+        'number_first_suffix' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(number_first_suffix, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -167,7 +184,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Number Last' AS source
+        'address_detail' AS source_table,
+        'number_last' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(number_last, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -176,7 +194,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Number Last Prefix' AS source
+        'address_detail' AS source_table,
+        'number_last_prefix' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(number_last_prefix, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -185,7 +204,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Number Last Suffix' AS source
+        'address_detail' AS source_table,
+        'number_last_suffix' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(number_last_suffix, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -194,7 +214,8 @@ SELECT  'simple' AS processing,
         load_batch_id,
         1.00 AS confidence,
         record_guid,
-        'Postcode' AS source
+        'address_detail' AS source_table,
+        'postcode' AS source_field
 FROM    address_detail
 WHERE   COALESCE(substring(postcode for 32),'') <> '';
 
@@ -209,7 +230,8 @@ SELECT  'phonetic' AS processing,
         load_batch_id,
         0.70 AS confidence,
         record_guid,
-        'Locality Name' AS source
+        'locality' AS source_table,
+        'locality_name' AS source_field
 FROM    locality
 WHERE   COALESCE(dmetaphone(locality_name),'') <> ''
 UNION ALL
@@ -219,7 +241,8 @@ SELECT  'phonetic' AS processing,
         load_batch_id,
         0.70 AS confidence,
         record_guid,
-        'Locality Name' AS source
+        'locality' AS source_table,
+        'locality_name' AS source_field
 FROM    locality
 WHERE   COALESCE(CASE WHEN dmetaphone(locality_name) <> dmetaphone_alt(locality_name) THEN dmetaphone_alt(locality_name) ELSE NULL END,'') <> ''
 ) AS s WHERE Value IS NOT NULL
@@ -229,7 +252,8 @@ SELECT  'simple' AS processing,
         load_batch_id,
         1.00 AS confidence,
         record_guid,
-        'Primary Postcode' AS source
+        'locality' AS source_table,
+        'primary_postcode' AS source_field
 FROM    locality
 WHERE   COALESCE(substring(primary_postcode for 32),'') <> ''
 UNION ALL
@@ -238,7 +262,8 @@ SELECT  'typo' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'State Name' AS source
+        'locality' AS source_table,
+        'state' AS source_field
 FROM    locality
 WHERE   COALESCE(substring(btrim(lower(regexp_replace( (SELECT state_name FROM state AS f WHERE locality.state_pid = f.state_pid AND locality.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> '';
 
@@ -251,7 +276,8 @@ SELECT  'phonetic' AS processing,
         load_batch_id,
         0.70 AS confidence,
         record_guid,
-        'Name' AS source
+        'locality_alias' AS source_table,
+        'name' AS source_field
 FROM    locality_alias
 WHERE   COALESCE(dmetaphone(name),'') <> ''
 UNION ALL
@@ -261,7 +287,8 @@ SELECT  'phonetic' AS processing,
         load_batch_id,
         0.70 AS confidence,
         record_guid,
-        'Name' AS source
+        'locality_alias' AS source_table,
+        'name' AS source_field
 FROM    locality_alias
 WHERE   COALESCE(CASE WHEN dmetaphone(name) <> dmetaphone_alt(name) THEN dmetaphone_alt(name) ELSE NULL END,'') <> ''
 ) AS s WHERE Value IS NOT NULL
@@ -271,7 +298,8 @@ SELECT  'simple' AS processing,
         load_batch_id,
         1.00 AS confidence,
         record_guid,
-        'Postcode' AS source
+        'locality_alias' AS source_table,
+        'postcode' AS source_field
 FROM    locality_alias
 WHERE   COALESCE(substring(postcode for 32),'') <> ''
 UNION ALL
@@ -280,7 +308,8 @@ SELECT  'typo' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'State Name' AS source
+        'locality_alias' AS source_table,
+        'state' AS source_field
 FROM    locality_alias
 WHERE   COALESCE(substring(btrim(lower(regexp_replace( (SELECT state_name FROM state AS f WHERE locality_alias.state_pid = f.state_pid AND locality_alias.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> '';
 
@@ -295,7 +324,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Street Name' AS source
+        'street_locality' AS source_table,
+        'street_name' AS source_field
 FROM    street_locality
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(street_name, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -304,7 +334,8 @@ SELECT  'phonetic' AS processing,
         load_batch_id,
         0.70 AS confidence,
         record_guid,
-        'Street Name' AS source
+        'street_locality' AS source_table,
+        'street_name' AS source_field
 FROM    street_locality
 WHERE   COALESCE(dmetaphone(street_name),'') <> ''
 UNION ALL
@@ -314,7 +345,8 @@ SELECT  'phonetic' AS processing,
         load_batch_id,
         0.70 AS confidence,
         record_guid,
-        'Street Name' AS source
+        'street_locality' AS source_table,
+        'street_name' AS source_field
 FROM    street_locality
 WHERE   COALESCE(CASE WHEN dmetaphone(street_name) <> dmetaphone_alt(street_name) THEN dmetaphone_alt(street_name) ELSE NULL END,'') <> ''
 ) AS s WHERE Value IS NOT NULL
@@ -324,7 +356,8 @@ SELECT  'typo' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Street Suffix Name' AS source
+        'street_locality' AS source_table,
+        'street_suffix' AS source_field
 FROM    street_locality
 WHERE   COALESCE(substring(btrim(lower(regexp_replace( (SELECT name FROM street_suffix AS f WHERE street_locality.street_suffix_code = f.code AND street_locality.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -333,7 +366,8 @@ SELECT  'typo' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Street Type Name' AS source
+        'street_locality' AS source_table,
+        'street_type' AS source_field
 FROM    street_locality
 WHERE   COALESCE(substring(btrim(lower(regexp_replace( (SELECT name FROM street_type AS f WHERE street_locality.street_type_code = f.code AND street_locality.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> '';
 
@@ -346,7 +380,8 @@ SELECT  'alpha' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Street Name' AS source
+        'street_locality_alias' AS source_table,
+        'street_name' AS source_field
 FROM    street_locality_alias
 WHERE   COALESCE(substring(btrim(lower(regexp_replace(street_name, '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -355,7 +390,8 @@ SELECT  'phonetic' AS processing,
         load_batch_id,
         0.70 AS confidence,
         record_guid,
-        'Street Name' AS source
+        'street_locality_alias' AS source_table,
+        'street_name' AS source_field
 FROM    street_locality_alias
 WHERE   COALESCE(dmetaphone(street_name),'') <> ''
 UNION ALL
@@ -365,7 +401,8 @@ SELECT  'phonetic' AS processing,
         load_batch_id,
         0.70 AS confidence,
         record_guid,
-        'Street Name' AS source
+        'street_locality_alias' AS source_table,
+        'street_name' AS source_field
 FROM    street_locality_alias
 WHERE   COALESCE(CASE WHEN dmetaphone(street_name) <> dmetaphone_alt(street_name) THEN dmetaphone_alt(street_name) ELSE NULL END,'') <> ''
 ) AS s WHERE Value IS NOT NULL
@@ -375,7 +412,8 @@ SELECT  'typo' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Street Suffix Name' AS source
+        'street_locality_alias' AS source_table,
+        'street_suffix' AS source_field
 FROM    street_locality_alias
 WHERE   COALESCE(substring(btrim(lower(regexp_replace( (SELECT name FROM street_suffix AS f WHERE street_locality_alias.street_suffix_code = f.code AND street_locality_alias.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> ''
 UNION ALL
@@ -384,7 +422,8 @@ SELECT  'typo' AS processing,
         load_batch_id,
         0.90 AS confidence,
         record_guid,
-        'Street Type Name' AS source
+        'street_locality_alias' AS source_table,
+        'street_type' AS source_field
 FROM    street_locality_alias
 WHERE   COALESCE(substring(btrim(lower(regexp_replace( (SELECT name FROM street_type AS f WHERE street_locality_alias.street_type_code = f.code AND street_locality_alias.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))) for 32),'') <> '';
 
