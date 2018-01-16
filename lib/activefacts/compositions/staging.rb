@@ -51,6 +51,16 @@ module ActiveFacts
         @option_surrogates && composite.mapping.object_type != @loadbatch_entity_type
       end
 
+      def inject_surrogates
+        assign_groups
+        super
+      end
+
+      def assign_groups
+        @composites.values.each{|composite| composite.composite_group = 'base' }
+        loadbatch_composite.composite_group = 'batch' if @option_audit == 'batch'
+      end
+
       def generate
         create_loadbatch if @option_audit == 'batch'
         super
