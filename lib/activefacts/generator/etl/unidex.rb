@@ -56,13 +56,23 @@ module ActiveFacts
         end
 
         def generate
+          @all_table_unions = []
           header +
           @composition.
             all_composite.
             sort_by{|c| c.mapping.name}.
             map{|c| generate_composite c}.
+            concat([all_union(@all_table_unions)]).
             compact*"\n" +
           trailer
+        end
+
+        def all_union unions
+          return '' if unions.empty?
+          create_or_replace("#{schema_name}_unidex", 'VIEW') + " AS\n" +
+          unions.compact.map{|s| "SELECT * FROM "+s } *
+          "\nUNION ALL " +
+          ";\n"
         end
 
         def header
@@ -75,7 +85,7 @@ module ActiveFacts
 
           trace :unidex, "Generating view for #{table_name(composite)}" do
             union =
-            composite.mapping.all_member.to_a.flat_map do |member|
+            composite.mapping.all_member.to_a.sort_by{|m| m.name}.flat_map do |member|
               next nil if member.injection_annotation
               rank_key = member.rank_key
 
@@ -108,10 +118,13 @@ module ActiveFacts
             end.compact * "\nUNION ALL"
 
             if union.size > 0
+              union_name = "#{table_name(composite)}_unidex"
+              @all_table_unions << union_name
+
               "/*\n"+
               " * View to extract unified index values for #{table_name(composite)}\n"+
               " */\n"+
-              create_or_replace("#{table_name(composite)}_unidex", 'VIEW') + " AS" +
+              create_or_replace("#{union_name}", 'VIEW') + " AS" +
               union +
               ";\n"
             else
@@ -167,7 +180,7 @@ module ActiveFacts
               zip foreign_key.all_index_field.to_a
             leaf = search_index.all_index_field.to_a[0].component         # Returning this natural index value
             source_table = table_name(foreign_key.composite)
-            source = (member.column_name+leaf.column_name).elide_repeated_subsequences*' '
+            source_field = safe_column_name(member)
             type_name, options = leaf.data_type(data_type_context)        # Which has this type_name
             intrinsic_type = MM::DataType.intrinsic_type(type_name)       # Which corresponds to this intrinsic type
 
@@ -184,7 +197,7 @@ module ActiveFacts
               intrinsic_type,
               foreign_key.all_foreign_key_field.to_a.all?{|fkf| fkf.component.path_mandatory}
             )
-            search_expr foreign_key.source_composite, intrinsic_type, col_expr, search_methods, source
+            search_expr foreign_key.source_composite, intrinsic_type, col_expr, search_methods, source_field
           end
         end
 
@@ -208,12 +221,12 @@ module ActiveFacts
           trace :unidex, "Search #{table_name leaf.root}.#{column_name(leaf)} as #{data_type_name} using #{search_methods.map(&:inspect)*', '}"
 
           col_expr = Expression.new(safe_column_name(leaf), intrinsic_type, leaf.is_mandatory)
-          source = leaf.column_name*' '
+          source_field = safe_column_name(leaf)
 
-          search_expr leaf.root, intrinsic_type, col_expr, search_methods, source
+          search_expr leaf.root, intrinsic_type, col_expr, search_methods, source_field
         end
 
-        def search_expr composite, intrinsic_type, col_expr, search_methods, source
+        def search_expr composite, intrinsic_type, col_expr, search_methods, source_field
           case intrinsic_type
           when MM::DataType::TYPE_Char,
                MM::DataType::TYPE_String,
@@ -224,10 +237,10 @@ module ActiveFacts
               when 'none'         # Do not index this value
                 nil
               when 'simple'       # Disregard white-space only
-                select(composite, truncate(col_expr, @value_width), 'simple', source, 1.0)
+                select(composite, truncate(col_expr, @value_width), 'simple', source_field, 1.0)
 
               when 'alpha'        # Strip white space and punctuation, just use alphabetic characters
-                select(composite, truncate(as_alpha(col_expr), @value_width), 'alpha', source, 0.9)
+                select(composite, truncate(as_alpha(col_expr), @value_width), 'alpha', source_field, 0.9)
 
               when 'words'        # Break the text into words and match each word like alpha
                 nil # REVISIT: Implement this type
@@ -235,11 +248,11 @@ module ActiveFacts
               # when 'phrases'    # Words, but where adjacent sequences of words matter
               when 'typo'         # Use trigram similarity to detect typographic errors
                 # REVISIT: Implement this type properly
-                select(composite, truncate(as_alpha(col_expr), @value_width), 'typo', source, 0.9)
+                select(composite, truncate(as_alpha(col_expr), @value_width), 'typo', source_field, 0.9)
 
               when 'phonetic'     # Use phonetic matching as well as trigrams
                 phonetics(col_expr).map do |p|
-                  select(composite, p, 'phonetic', source, @phonetic_confidence/100.0)
+                  select(composite, p, 'phonetic', source_field, @phonetic_confidence/100.0)
                 end
 
               when 'names'        # Break the text into words and match each word like phonetic
@@ -260,22 +273,22 @@ module ActiveFacts
                MM::DataType::TYPE_Decimal,
                MM::DataType::TYPE_Money
             # Produce a right-justified value
-            select(composite, lexical_decimal(col_expr, @value_width, value_type.scale), 'simple', source, 1)
+            select(composite, lexical_decimal(col_expr, @value_width, value_type.scale), 'simple', source_field, 1)
 
           when MM::DataType::TYPE_Date
             # Produce an ISO representation that sorts lexically (YYYY-MM-DD)
             # REVISIT: Support search methods here
-            select(composite, lexical_date(col_expr), 'simple', source, 1)
+            select(composite, lexical_date(col_expr), 'simple', source_field, 1)
 
           when MM::DataType::TYPE_DateTime,
                MM::DataType::TYPE_Timestamp
             # Produce an ISO representation that sorts lexically (YYYY-MM-DD HH:mm:ss)
             # REVISIT: Support search methods here
-            select(composite, lexical_datetime(col_expr), 'simple', source, 1)
+            select(composite, lexical_datetime(col_expr), 'simple', source_field, 1)
 
           when MM::DataType::TYPE_Time
             # Produce an ISO representation that sorts lexically (YYYY-MM-DD HH:mm:ss)
-            select(composite, lexical_time(col_expr), 'simple', source, 1)
+            select(composite, lexical_time(col_expr), 'simple', source_field, 1)
 
           when MM::DataType::TYPE_Binary
             nil   # No indexing applied
@@ -288,7 +301,7 @@ module ActiveFacts
           name.words.send(@column_case)*@column_joiner
         end
 
-        def select composite, expression, processing, source, confidence = 1, where = []
+        def select composite, expression, processing, source_field, confidence = 1, where = []
           # These fields are in order of index precedence, to co-locate
           # comparable values regardless of source record type or column
           where << 'Value IS NOT NULL' if expression.to_s =~ /\bNULL\b/
@@ -297,15 +310,17 @@ module ActiveFacts
           load_batch_id_name = stylise_column_name("LoadBatchID")
           record_guid_name = stylise_column_name("RecordGUID")
           confidence_name = stylise_column_name("Confidence")
-          source_name = stylise_column_name("Source")
+          source_table_name = stylise_column_name("SourceTable")
+          source_field_name = stylise_column_name("SourceField")
           select = %Q{
             SELECT  '#{processing}' AS #{processing_name},
                     #{expression} AS #{value_name},
                     #{load_batch_id_name},
                     #{"%.2f" % confidence} AS #{confidence_name},
                     #{record_guid_name},
-                    '#{source}' AS #{source_name}
-            FROM    #{table_name(composite)}
+                    '#{safe_table_name(composite)}' AS #{source_table_name},
+                    '#{source_field}' AS #{source_field_name}
+            FROM    #{safe_table_name(composite)}
             WHERE   COALESCE(#{expression},'') <> ''}.
             unindent
 

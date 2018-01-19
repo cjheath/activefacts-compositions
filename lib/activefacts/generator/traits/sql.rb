@@ -410,6 +410,10 @@ module ActiveFacts
           escape(column_name(component), column_name_max)
         end
 
+        def schema_name composition = @composition
+          composition.name.words.send(@table_case)*@table_joiner
+        end
+
         def table_name composite
           composite.mapping.name.words.send(@table_case)*@table_joiner
         end
