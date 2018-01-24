@@ -8,7 +8,6 @@
 require 'activefacts/metamodel'
 require 'activefacts/compositions'
 require 'activefacts/generator'
-require 'byebug'
 
 module ActiveFacts
   module Generators #:nodoc:
