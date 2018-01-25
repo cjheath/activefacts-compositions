@@ -19,6 +19,7 @@ module ActiveFacts
       attr_reader :type_num       # ActiveFacts::Metamodel::DataType number
       attr_reader :value          # String representation of the expression
       attr_reader :is_mandatory   # false if nullable
+                  # This doesn't handle Postgres expressions, which can include a sub-table (e.g. via unnest)
       attr_reader :is_array       # the expression returns an array of the specified type
 
       # Construct an expression that addresses a field from a Metamodel::Component
