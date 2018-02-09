@@ -50,7 +50,7 @@ module ActiveFacts
 
         def process_options options
           @value_width = (options.delete('value_width') || 32).to_i
-          @phonetic_confidence = (options.delete('phonetic_confidence') || 70).to_i
+          @phonetic_confidence = (options.delete('phonetic_confidence') || 40).to_i
 
           super
         end

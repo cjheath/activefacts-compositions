@@ -21,7 +21,7 @@ SELECT DISTINCT
         'phonetic' AS processing,
         unnest(ARRAY[dmetaphone(building_name), dmetaphone_alt(building_name)]) AS value,
         load_batch_id,
-        0.7 AS confidence,
+        0.4 AS confidence,
         record_guid,
         'address_detail' AS source_table,
         'building_name' AS source_field
@@ -270,7 +270,7 @@ SELECT DISTINCT
         'phonetic' AS processing,
         unnest(ARRAY[dmetaphone(locality_name), dmetaphone_alt(locality_name)]) AS value,
         load_batch_id,
-        0.7 AS confidence,
+        0.4 AS confidence,
         record_guid,
         'locality' AS source_table,
         'locality_name' AS source_field
@@ -314,7 +314,7 @@ SELECT DISTINCT
         'phonetic' AS processing,
         unnest(ARRAY[dmetaphone(name), dmetaphone_alt(name)]) AS value,
         load_batch_id,
-        0.7 AS confidence,
+        0.4 AS confidence,
         record_guid,
         'locality_alias' AS source_table,
         'name' AS source_field
@@ -370,7 +370,7 @@ SELECT DISTINCT
         'phonetic' AS processing,
         unnest(ARRAY[dmetaphone(street_name), dmetaphone_alt(street_name)]) AS value,
         load_batch_id,
-        0.7 AS confidence,
+        0.4 AS confidence,
         record_guid,
         'street_locality' AS source_table,
         'street_name' AS source_field
@@ -424,7 +424,7 @@ SELECT DISTINCT
         'phonetic' AS processing,
         unnest(ARRAY[dmetaphone(street_name), dmetaphone_alt(street_name)]) AS value,
         load_batch_id,
-        0.7 AS confidence,
+        0.4 AS confidence,
         record_guid,
         'street_locality_alias' AS source_table,
         'street_name' AS source_field

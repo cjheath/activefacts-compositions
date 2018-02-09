@@ -33,7 +33,7 @@ SELECT DISTINCT
         'names' AS processing,
         dmetaphone(left(unnest(regexp_split_to_array(lower(alias_name), E'[^[:alnum:]''-]+')), 32)) AS value,
         load_batch_id,
-        0.7 AS confidence,
+        0.4 AS confidence,
         record_guid,
         'person' AS source_table,
         'alias_name' AS source_field
@@ -43,7 +43,7 @@ SELECT DISTINCT
         'names' AS processing,
         dmetaphone_alt(left(unnest(regexp_split_to_array(lower(alias_name), E'[^[:alnum:]''-]+')), 32)) AS value,
         load_batch_id,
-        0.7 AS confidence,
+        0.4 AS confidence,
         record_guid,
         'person' AS source_table,
         'alias_name' AS source_field
@@ -73,7 +73,7 @@ SELECT DISTINCT
         'phonetic' AS processing,
         unnest(ARRAY[dmetaphone(family_name), dmetaphone_alt(family_name)]) AS value,
         load_batch_id,
-        0.7 AS confidence,
+        0.4 AS confidence,
         record_guid,
         'person' AS source_table,
         'family_name' AS source_field
@@ -93,7 +93,7 @@ SELECT DISTINCT
         'names' AS processing,
         dmetaphone(left(unnest(regexp_split_to_array(lower(given_name), E'[^[:alnum:]''-]+')), 32)) AS value,
         load_batch_id,
-        0.7 AS confidence,
+        0.4 AS confidence,
         record_guid,
         'person' AS source_table,
         'given_name' AS source_field
@@ -103,7 +103,7 @@ SELECT DISTINCT
         'names' AS processing,
         dmetaphone_alt(left(unnest(regexp_split_to_array(lower(given_name), E'[^[:alnum:]''-]+')), 32)) AS value,
         load_batch_id,
-        0.7 AS confidence,
+        0.4 AS confidence,
         record_guid,
         'person' AS source_table,
         'given_name' AS source_field
@@ -133,7 +133,7 @@ SELECT DISTINCT
         'phonetic' AS processing,
         unnest(ARRAY[dmetaphone(preferred_name), dmetaphone_alt(preferred_name)]) AS value,
         load_batch_id,
-        0.7 AS confidence,
+        0.4 AS confidence,
         record_guid,
         'person' AS source_table,
         'preferred_name' AS source_field
