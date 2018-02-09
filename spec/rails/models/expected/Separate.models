@@ -39,7 +39,6 @@ module Separate
     # Separate is a kind of Base
     belongs_to :base, :foreign_key => :base_guid
 
-    validates :base_guid, :presence => true
     validates :sep_val, :presence => true
   end
 end

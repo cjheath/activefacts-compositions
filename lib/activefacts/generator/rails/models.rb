@@ -174,9 +174,14 @@ module ActiveFacts
               foreign_key = ''
             end
 
+            single_fk_field = fk.all_foreign_key_field.single.component
+            if !single_fk_field.path_mandatory
+              optional = ", :optional => true"
+            end
+
             [
             fk.mapping ? "    \# #{fk.mapping.comment}" : nil,
-            "    belongs_to :#{association_name}#{class_name}#{foreign_key}",
+            "    belongs_to :#{association_name}#{class_name}#{foreign_key}#{optional}",
             fk.mapping ? '' : nil,
             ]
           end.compact
@@ -234,7 +239,9 @@ module ActiveFacts
               next unless component.path_mandatory && !component.is_a?(Metamodel::Indicator)
               next if composite.primary_index != composite.natural_index && composite.primary_index.all_index_field.detect{|ixf| ixf.component == component}
               next if component.is_a?(Metamodel::Mapping) && component.object_type.is_a?(Metamodel::ValueType) && component.is_auto_assigned
-              [ "    validates :#{component.column_name.snakecase}, :presence => true" ]
+              if component.all_foreign_key_field.size == 0
+                [ "    validates :#{component.column_name.snakecase}, :presence => true" ]
+              end
             end.compact
           ccs.unshift("") unless ccs.empty?
           ccs

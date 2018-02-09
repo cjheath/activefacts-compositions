@@ -23,10 +23,10 @@ module Claim
     belongs_to :policy, :foreign_key => :policy_id
 
     # maybe Claim concerns Incident that relates to loss at Address that maybe is in State
-    belongs_to :incident_address_state, :class_name => 'State', :foreign_key => :incident_address_state_id
+    belongs_to :incident_address_state, :class_name => 'State', :foreign_key => :incident_address_state_id, :optional => true
 
     # maybe Lodgement involves Claim and Lodgement involves Person
-    belongs_to :lodgement_person, :class_name => 'Party', :foreign_key => :lodgement_person_id
+    belongs_to :lodgement_person, :class_name => 'Party', :foreign_key => :lodgement_person_id, :optional => true
 
     # Vehicle Incident is a kind of Incident
     has_one :vehicle_incident, :class_name => 'VehicleIncident', :foreign_key => :incident_claim_id, :dependent => :destroy
@@ -35,17 +35,16 @@ module Claim
     has_many :contractor_appointments, :class_name => 'ContractorAppointment', :foreign_key => :claim_id, :dependent => :destroy
     has_many :parties, :through => :contractor_appointments
 
-    # maybe Property Damage was damaged in Incident
-    has_many :property_damages, :class_name => 'PropertyDamage', :foreign_key => :incident_claim_id, :dependent => :destroy
-
     # Lost Item was lost in Incident
     has_many :lost_items, :class_name => 'LostItem', :foreign_key => :incident_claim_id, :dependent => :destroy
+
+    # maybe Property Damage was damaged in Incident
+    has_many :property_damages, :class_name => 'PropertyDamage', :foreign_key => :incident_claim_id, :dependent => :destroy
 
     # Witness saw Incident
     has_many :witnesses, :class_name => 'Witness', :foreign_key => :incident_claim_id, :dependent => :destroy
 
     validates :p_sequence, :presence => true
-    validates :policy_id, :presence => true
   end
 end
 
@@ -58,8 +57,6 @@ module ContractorAppointment
     # Contractor Appointment involves Contractor
     belongs_to :contractor, :class_name => 'Party', :foreign_key => :contractor_id
 
-    validates :claim_id, :presence => true
-    validates :contractor_id, :presence => true
   end
 end
 
@@ -75,9 +72,6 @@ module Cover
     # Cover involves Asset
     belongs_to :asset, :foreign_key => :asset_id
 
-    validates :policy_id, :presence => true
-    validates :cover_type_id, :presence => true
-    validates :asset_id, :presence => true
   end
 end
 
@@ -107,7 +101,6 @@ module CoverWording
     # Cover Wording involves Cover Type
     belongs_to :cover_type, :foreign_key => :cover_type_id
 
-    validates :cover_type_id, :presence => true
     validates :policy_wording_text, :presence => true
     validates :start_date, :presence => true
   end
@@ -133,7 +126,6 @@ module LostItem
     # Lost Item was lost in Incident
     belongs_to :incident, :class_name => 'Claim', :foreign_key => :incident_claim_id
 
-    validates :incident_claim_id, :presence => true
     validates :lost_item_nr, :presence => true
     validates :description, :presence => true
   end
@@ -145,20 +137,20 @@ module Party
     self.primary_key = 'party_id'
 
     # maybe Party has postal-Address and maybe Address is in State
-    belongs_to :postal_address_state, :class_name => 'State', :foreign_key => :postal_address_state_id
+    belongs_to :postal_address_state, :class_name => 'State', :foreign_key => :postal_address_state_id, :optional => true
 
     # maybe Party is a Company that has contact-Person
-    belongs_to :company_contact_person, :class_name => 'Party', :foreign_key => :company_contact_person_id
+    belongs_to :company_contact_person, :class_name => 'Party', :foreign_key => :company_contact_person_id, :optional => true
 
     # maybe Party is a Person that maybe lives at Address that maybe is in State
-    belongs_to :person_address_state, :class_name => 'State', :foreign_key => :person_address_state_id
+    belongs_to :person_address_state, :class_name => 'State', :foreign_key => :person_address_state_id, :optional => true
 
     # Third Party involves Person
     has_many :third_parties, :class_name => 'ThirdParty', :foreign_key => :person_id, :dependent => :destroy
 
     # Contractor Appointment involves Contractor
     has_many :contractor_appointments, :class_name => 'ContractorAppointment', :foreign_key => :contractor_id, :dependent => :destroy
-    has_many :claims, :through => :contractor_appointments
+    has_many :claims, :through => :contractor_appointments, :source => :contractor
 
     # Policy belongs to Insured
     has_many :policies, :class_name => 'Policy', :foreign_key => :insured_id, :dependent => :destroy
@@ -202,7 +194,7 @@ module Policy
     belongs_to :insured, :class_name => 'Party', :foreign_key => :insured_id
 
     # maybe Policy was sold by Authorised Rep
-    belongs_to :authorised_rep, :class_name => 'Party', :foreign_key => :authorised_rep_id
+    belongs_to :authorised_rep, :class_name => 'Party', :foreign_key => :authorised_rep_id, :optional => true
 
     # Cover involves Policy
     has_many :covers, :class_name => 'Cover', :foreign_key => :policy_id, :dependent => :destroy
@@ -213,11 +205,8 @@ module Policy
     has_many :claims, :class_name => 'Claim', :foreign_key => :policy_id, :dependent => :destroy
 
     validates :p_year_nr, :presence => true
-    validates :p_product_id, :presence => true
-    validates :p_state_id, :presence => true
     validates :p_serial, :presence => true
     validates :application_nr, :presence => true
-    validates :insured_id, :presence => true
   end
 end
 
@@ -239,10 +228,10 @@ module PropertyDamage
     self.primary_key = 'property_damage_id'
 
     # maybe Property Damage was damaged in Incident
-    belongs_to :incident, :class_name => 'Claim', :foreign_key => :incident_claim_id
+    belongs_to :incident, :class_name => 'Claim', :foreign_key => :incident_claim_id, :optional => true
 
     # Property Damage is at Address that maybe is in State
-    belongs_to :address_state, :class_name => 'State', :foreign_key => :address_state_id
+    belongs_to :address_state, :class_name => 'State', :foreign_key => :address_state_id, :optional => true
 
     validates :address_street, :presence => true
     validates :address_city, :presence => true
@@ -288,10 +277,8 @@ module ThirdParty
     belongs_to :vehicle_incident, :foreign_key => :vehicle_incident_claim_id
 
     # maybe Third Party is insured by Insurer
-    belongs_to :insurer, :class_name => 'Party', :foreign_key => :insurer_id
+    belongs_to :insurer, :class_name => 'Party', :foreign_key => :insurer_id, :optional => true
 
-    validates :person_id, :presence => true
-    validates :vehicle_incident_claim_id, :presence => true
   end
 end
 
@@ -306,8 +293,6 @@ module UnderwritingDemerit
     # Underwriting Demerit has Underwriting Question
     belongs_to :underwriting_question, :foreign_key => :underwriting_question_id
 
-    validates :vehicle_incident_claim_id, :presence => true
-    validates :underwriting_question_id, :presence => true
   end
 end
 
@@ -332,12 +317,11 @@ module Vehicle
     belongs_to :asset, :foreign_key => :asset_id
 
     # maybe Vehicle was sold by Dealer
-    belongs_to :dealer, :class_name => 'Party', :foreign_key => :dealer_id
+    belongs_to :dealer, :class_name => 'Party', :foreign_key => :dealer_id, :optional => true
 
     # maybe Vehicle is subject to finance with Finance Institution
-    belongs_to :finance_institution, :class_name => 'Party', :foreign_key => :finance_institution_id
+    belongs_to :finance_institution, :class_name => 'Party', :foreign_key => :finance_institution_id, :optional => true
 
-    validates :asset_id, :presence => true
     validates :vin, :presence => true
     validates :model_year_nr, :presence => true
     validates :registration_nr, :presence => true
@@ -355,10 +339,10 @@ module VehicleIncident
     belongs_to :incident, :class_name => 'Claim', :foreign_key => :incident_claim_id
 
     # maybe Driving involves Vehicle Incident and Driving was by Person
-    belongs_to :driving_person, :class_name => 'Party', :foreign_key => :driving_person_id
+    belongs_to :driving_person, :class_name => 'Party', :foreign_key => :driving_person_id, :optional => true
 
     # maybe Vehicle Incident resulted from Loss Type
-    belongs_to :loss_type, :foreign_key => :loss_type_id
+    belongs_to :loss_type, :foreign_key => :loss_type_id, :optional => true
 
     # Underwriting Demerit preceded Vehicle Incident
     has_many :underwriting_demerits, :class_name => 'UnderwritingDemerit', :foreign_key => :vehicle_incident_claim_id, :dependent => :destroy
@@ -366,7 +350,6 @@ module VehicleIncident
     # Third Party involves Vehicle Incident
     has_many :third_parties, :class_name => 'ThirdParty', :foreign_key => :vehicle_incident_claim_id, :dependent => :destroy
 
-    validates :incident_claim_id, :presence => true
   end
 end
 
@@ -379,9 +362,8 @@ module Witness
     belongs_to :incident, :class_name => 'Claim', :foreign_key => :incident_claim_id
 
     # maybe Witness lives at Address that maybe is in State
-    belongs_to :address_state, :class_name => 'State', :foreign_key => :address_state_id
+    belongs_to :address_state, :class_name => 'State', :foreign_key => :address_state_id, :optional => true
 
-    validates :incident_claim_id, :presence => true
     validates :name, :presence => true
   end
 end

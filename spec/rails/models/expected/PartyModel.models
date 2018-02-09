@@ -6,7 +6,6 @@ module Company
     # Company is a kind of Party
     belongs_to :party, :foreign_key => :party_id
 
-    validates :party_id, :presence => true
   end
 end
 
@@ -33,6 +32,5 @@ module Person
     # Person is a kind of Party
     belongs_to :party, :foreign_key => :party_id
 
-    validates :party_id, :presence => true
   end
 end

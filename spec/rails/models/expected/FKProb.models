@@ -8,7 +8,7 @@ module OT
 
     # VTPRestriction involves VT
     has_many :vtp_restrictions, :class_name => 'VTPRestriction', :foreign_key => :vt_ot_id, :dependent => :destroy
-    has_many :vtps, :through => :vtp_restrictions
+    has_many :vtps, :through => :vtp_restrictions, :source => :vt
 
     validates :name, :presence => true
   end
@@ -26,7 +26,6 @@ module VTP
     has_many :vtp_restrictions, :class_name => 'VTPRestriction', :foreign_key => :vtp_id, :dependent => :destroy
     has_many :ots, :through => :vtp_restrictions
 
-    validates :vt_ot_id, :presence => true
     validates :name, :presence => true
   end
 end
@@ -40,7 +39,5 @@ module VTPRestriction
     # VTPRestriction involves VTP
     belongs_to :vtp, :foreign_key => :vtp_id
 
-    validates :vt_ot_id, :presence => true
-    validates :vtp_id, :presence => true
   end
 end
