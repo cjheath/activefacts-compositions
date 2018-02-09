@@ -16,6 +16,7 @@ module ActiveFacts
         HEADER = "# Auto-generated from CQL, edits will be lost"
         def self.options
           ({
+            keep:       ['Boolean', "Keep stale model files"],
             output:     [String,    "Overwrite model files into this output directory"],
             concern:    [String,    "Namespace for the concerns"],
             validation: ['Boolean', "Disable generation of validations"],
@@ -25,6 +26,7 @@ module ActiveFacts
         def initialize composition, options = {}
           @composition = composition
           @options = options
+          @option_keep = options.delete("keep")
           @option_output = options.delete("output")
           @option_concern = options.delete("concern")
           @option_validations = options.include?('validations') ? options.delete("validations") : true
@@ -35,7 +37,7 @@ module ActiveFacts
         end
 
         def generate
-          list_extant_files if @option_output
+          list_extant_files if @option_output && !@option_keep
 
           @ok = true
           models =
@@ -46,7 +48,7 @@ module ActiveFacts
             compact*"\n"
 
           warn "\# #{@composition.name} generated with errors" unless @ok
-          delete_old_generated_files if @option_output
+          delete_old_generated_files if @option_output && !@option_keep
 
           models
         end
@@ -158,6 +160,7 @@ module ActiveFacts
           composite.all_foreign_key_as_source_composite.
           sort_by{ |fk| fk.all_foreign_key_field.map(&:component).flat_map(&:path).map(&:rank_key) }.
           flat_map do |fk|
+            next nil if fk.all_foreign_key_field.size > 1
             association_name = fk.rails.from_association_name
 
             if association_name != fk.composite.rails.singular_name
@@ -184,9 +187,10 @@ module ActiveFacts
           composite.all_foreign_key_as_target_composite.
           sort_by{ |fk| fk.all_foreign_key_field.map(&:component).flat_map(&:path).map(&:rank_key) }.
           flat_map do |fk|
+            next nil if fk.all_foreign_key_field.size > 1
 
             if fk.all_foreign_key_field.size > 1
-              raise "Can't emit Rails associations for multi-part foreign key with #{fk.references.inspect}. Did you mean to use --surrogate?"
+              raise "Can't emit Rails associations for multi-part foreign key with #{fk.all_foreign_key_field.inspect}. Did you mean to use --surrogate?"
             end
 
             association_type, association_name = *fk.rails.to_association
@@ -213,7 +217,7 @@ module ActiveFacts
               []
             end +
             [fk.mapping ? '' : nil]
-          end
+          end.compact
         end
 
         def column_constraints composite
