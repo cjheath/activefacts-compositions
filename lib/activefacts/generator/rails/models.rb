@@ -209,9 +209,16 @@ module ActiveFacts
               fk.source_composite.primary_index.all_index_field.map(&:component).flat_map do |ic|
                 next nil if ic.is_a?(MM::Indicator)      # or use rails.plural_name(ic.references[0].to_names) ?
                 onward_fks = ic.all_foreign_key_field.map(&:foreign_key)
-                next nil if onward_fks.size == 0 or onward_fks.detect{|fk| fk.composite == composite} # Skip the back-reference
-                # REVISIT: This far association name needs to be augmented for its role name
-                "    has_many :#{onward_fks[0].composite.rails.plural_name}, :through => :#{association_name}"
+                next nil if onward_fks.size == 0 or onward_fks.detect{|ofk| ofk.composite == composite} # Skip the back-reference
+                # This far association name needs to be augmented for its role name
+                # so the reverse associations still work for customised association names
+                source =
+                  if composite.rails.singular_name != fk.rails.from_association_name
+                    ", :source => :#{fk.rails.from_association_name}"
+                  else
+                    ''
+                  end
+                "    has_many :#{onward_fks[0].composite.rails.plural_name}, :through => :#{association_name}#{source}"
               end.compact
             else
               []
