@@ -16,6 +16,7 @@ module ActiveFacts
         HEADER = "# Auto-generated from CQL, edits will be lost"
         def self.options
           ({
+            keep:       ['Boolean', "Keep stale model files"],
             output:     [String,    "Overwrite model files into this output directory"],
             concern:    [String,    "Namespace for the concerns"],
             validation: ['Boolean', "Disable generation of validations"],
@@ -25,6 +26,7 @@ module ActiveFacts
         def initialize composition, options = {}
           @composition = composition
           @options = options
+          @option_keep = options.delete("keep")
           @option_output = options.delete("output")
           @option_concern = options.delete("concern")
           @option_validations = options.include?('validations') ? options.delete("validations") : true
@@ -35,7 +37,7 @@ module ActiveFacts
         end
 
         def generate
-          list_extant_files if @option_output
+          list_extant_files if @option_output && !@option_keep
 
           @ok = true
           models =
@@ -46,7 +48,7 @@ module ActiveFacts
             compact*"\n"
 
           warn "\# #{@composition.name} generated with errors" unless @ok
-          delete_old_generated_files if @option_output
+          delete_old_generated_files if @option_output && !@option_keep
 
           models
         end
@@ -158,6 +160,7 @@ module ActiveFacts
           composite.all_foreign_key_as_source_composite.
           sort_by{ |fk| fk.all_foreign_key_field.map(&:component).flat_map(&:path).map(&:rank_key) }.
           flat_map do |fk|
+            next nil if fk.all_foreign_key_field.size > 1
             association_name = fk.rails.from_association_name
 
             if association_name != fk.composite.rails.singular_name
@@ -171,9 +174,14 @@ module ActiveFacts
               foreign_key = ''
             end
 
+            single_fk_field = fk.all_foreign_key_field.single.component
+            if !single_fk_field.path_mandatory
+              optional = ", :optional => true"
+            end
+
             [
             fk.mapping ? "    \# #{fk.mapping.comment}" : nil,
-            "    belongs_to :#{association_name}#{class_name}#{foreign_key}",
+            "    belongs_to :#{association_name}#{class_name}#{foreign_key}#{optional}",
             fk.mapping ? '' : nil,
             ]
           end.compact
@@ -184,9 +192,10 @@ module ActiveFacts
           composite.all_foreign_key_as_target_composite.
           sort_by{ |fk| fk.all_foreign_key_field.map(&:component).flat_map(&:path).map(&:rank_key) }.
           flat_map do |fk|
+            next nil if fk.all_foreign_key_field.size > 1
 
             if fk.all_foreign_key_field.size > 1
-              raise "Can't emit Rails associations for multi-part foreign key with #{fk.references.inspect}. Did you mean to use --surrogate?"
+              raise "Can't emit Rails associations for multi-part foreign key with #{fk.all_foreign_key_field.inspect}. Did you mean to use --surrogate?"
             end
 
             association_type, association_name = *fk.rails.to_association
@@ -205,15 +214,22 @@ module ActiveFacts
               fk.source_composite.primary_index.all_index_field.map(&:component).flat_map do |ic|
                 next nil if ic.is_a?(MM::Indicator)      # or use rails.plural_name(ic.references[0].to_names) ?
                 onward_fks = ic.all_foreign_key_field.map(&:foreign_key)
-                next nil if onward_fks.size == 0 or onward_fks.detect{|fk| fk.composite == composite} # Skip the back-reference
-                # REVISIT: This far association name needs to be augmented for its role name
-                "    has_many :#{onward_fks[0].composite.rails.plural_name}, :through => :#{association_name}"
+                next nil if onward_fks.size == 0 or onward_fks.detect{|ofk| ofk.composite == composite} # Skip the back-reference
+                # This far association name needs to be augmented for its role name
+                # so the reverse associations still work for customised association names
+                source =
+                  if composite.rails.singular_name != fk.rails.from_association_name
+                    ", :source => :#{fk.rails.from_association_name}"
+                  else
+                    ''
+                  end
+                "    has_many :#{onward_fks[0].composite.rails.plural_name}, :through => :#{association_name}#{source}"
               end.compact
             else
               []
             end +
             [fk.mapping ? '' : nil]
-          end
+          end.compact
         end
 
         def column_constraints composite
@@ -223,7 +239,9 @@ module ActiveFacts
               next unless component.path_mandatory && !component.is_a?(Metamodel::Indicator)
               next if composite.primary_index != composite.natural_index && composite.primary_index.all_index_field.detect{|ixf| ixf.component == component}
               next if component.is_a?(Metamodel::Mapping) && component.object_type.is_a?(Metamodel::ValueType) && component.is_auto_assigned
-              [ "    validates :#{component.column_name.snakecase}, :presence => true" ]
+              if component.all_foreign_key_field.size == 0
+                [ "    validates :#{component.column_name.snakecase}, :presence => true" ]
+              end
             end.compact
           ccs.unshift("") unless ccs.empty?
           ccs

@@ -17,6 +17,5 @@ module MagnetPole
     # MagnetPole belongs to Magnet
     belongs_to :magnet, :foreign_key => :magnet_auto_counter
 
-    validates :magnet_auto_counter, :presence => true
   end
 end

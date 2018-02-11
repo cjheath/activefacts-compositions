@@ -146,18 +146,24 @@ module ActiveFacts
               "'|'::text || " +
               expressions.map(&:to_s) * " || '|'::text || " +
               " || '|'::text",
-              MM::DataType::TYPE_String,
-              true
+              MM::DataType::TYPE_String
             )
           end
 
           # Return an expression that yields a hash of the given expression
           def hash expr, algo = 'sha1'
-            Expression.new("digest(#{expr}, '#{algo}')", MM::DataType::TYPE_Binary, expr.is_mandatory)
+            Expression.new("digest(#{expr}, '#{algo}')", MM::DataType::TYPE_Binary, expr.is_mandatory, expr.is_array)
           end
 
           def truncate expr, length
-            Expression.new("substring(#{expr} for #{length})", MM::DataType::TYPE_String, expr.is_mandatory)
+            Expression.new("left(#{expr}, #{length})", MM::DataType::TYPE_String, expr.is_mandatory, expr.is_array)
+          end
+
+          def trigram expr
+            # This is not a useful way to handle trigrams. Instead, create a trigram index
+            # over an ordinary text index value, and use a similarity search over that.
+            # Expression.new("show_trgm(#{expr})", MM::DataType::TYPE_String, expr.is_mandatory, true)
+            expr
           end
 
           # Produce a lexically-sortable decimal representation of the given numeric expression, to the overall specified length and scale
@@ -167,6 +173,39 @@ module ActiveFacts
               "to_char(#{expr}, 'MI#{'0'*(length-fraction_pattern.length-1)+fraction_pattern})",
               MM::DataType::TYPE_String,
               expr.is_mandatory
+            )
+          end
+
+          def number_or_null expr
+            Expression.new(
+              %Q{CASE WHEN #{expr} ~ '^ *[-+]?([0-9]+[.]?[0-9]*|[.][0-9]+) *$' THEN #{expr}::numeric ELSE NULL END},
+              MM::DataType::TYPE_Real,
+              false
+            )
+          end
+
+          def split_on_separators expr, seps = ',\\\\|'
+            Expression.new(
+              %Q{regexp_split_to_table(#{expr}, E'#{seps}')},
+              MM::DataType::TYPE_String, true, true
+            )
+          end
+
+          # Extract separated numbers, remove non-digits, take the last 8 (removing area codes etc)
+          def phone_numbers expr
+            Expression.new(
+              %Q{right(#{split_on_separators(%Q{regexp_replace(#{expr}, '[^0-9]+', '', 'g')})}, 8)},
+              MM::DataType::TYPE_String,
+              true
+            )
+          end
+
+          # Extract separated numbers, remove non-digits, take the last 8 (removing area codes etc)
+          def email_addresses expr
+            Expression.new(
+              %Q{unnest(regexp_matches(#{expr}, E'[-_.[:alnum:]]+@[-_.[:alnum:]]+'))},
+              MM::DataType::TYPE_String,
+              true
             )
           end
 
@@ -186,13 +225,38 @@ module ActiveFacts
             Expression.new("btrim(lower(regexp_replace(#{expr}, '[^[:alnum:]]+', ' ', 'g')))", MM::DataType::TYPE_String, expr.is_mandatory)
           end
 
+          def as_words expr, extra_word_chars = ''
+            Expression.new(
+              "regexp_split_to_array(lower(#{expr}), E'[^[:alnum:]#{extra_word_chars}]+')",
+              MM::DataType::TYPE_String, expr.is_mandatory, true
+            )
+          end
+
+          def unnest expr
+            Expression.new("unnest(#{expr})", MM::DataType::TYPE_String, expr.is_mandatory, true)
+          end
+
           def phonetics expr
-            dmetaphone = "dmetaphone(#{expr})"
-            dmetaphone_alt = "dmetaphone_alt(#{expr})"
-            [
-              Expression.new(dmetaphone, MM::DataType::TYPE_String, expr.is_mandatory),
-              Expression.new("CASE WHEN #{dmetaphone} <> #{dmetaphone_alt} THEN #{dmetaphone_alt} ELSE NULL END", MM::DataType::TYPE_String, expr.is_mandatory)
-            ]
+            if expr.is_array
+              [
+                Expression.new(
+                  %Q{dmetaphone(#{expr})},
+                  MM::DataType::TYPE_String,
+                  expr.is_mandatory
+                ),
+                Expression.new(
+                  %Q{dmetaphone_alt(#{expr})},
+                  MM::DataType::TYPE_String,
+                  expr.is_mandatory
+                )
+              ]
+            else
+              Expression.new(
+                %Q{unnest(ARRAY[dmetaphone(#{expr}), dmetaphone_alt(#{expr})])},
+                MM::DataType::TYPE_String,
+                expr.is_mandatory
+              )
+            end
           end
 
           # Reserved words cannot be used anywhere without quoting.

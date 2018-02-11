@@ -9,8 +9,6 @@ module AcceptableSubstitution
     # Acceptable Substitution involves alternate-Product
     belongs_to :alternate_product, :class_name => 'Product', :foreign_key => :alternate_product_id
 
-    validates :product_id, :presence => true
-    validates :alternate_product_id, :presence => true
     validates :season, :presence => true
   end
 end
@@ -63,9 +61,6 @@ module ProductionForecast
     # Production Forecast involves Product
     belongs_to :product, :foreign_key => :product_id
 
-    validates :refinery_id, :presence => true
-    validates :supply_period_id, :presence => true
-    validates :product_id, :presence => true
     validates :quantity, :presence => true
   end
 end
@@ -114,9 +109,6 @@ module RegionalDemand
     # Regional Demand involves Product
     belongs_to :product, :foreign_key => :product_id
 
-    validates :region_id, :presence => true
-    validates :supply_period_id, :presence => true
-    validates :product_id, :presence => true
     validates :quantity, :presence => true
   end
 end
@@ -136,7 +128,6 @@ module SupplyPeriod
     has_many :regional_demands, :class_name => 'RegionalDemand', :foreign_key => :supply_period_id, :dependent => :destroy
 
     validates :year_nr, :presence => true
-    validates :month_id, :presence => true
   end
 end
 
@@ -152,7 +143,5 @@ module TransportRoute
     belongs_to :region, :foreign_key => :region_id
 
     validates :transport_mode, :presence => true
-    validates :refinery_id, :presence => true
-    validates :region_id, :presence => true
   end
 end

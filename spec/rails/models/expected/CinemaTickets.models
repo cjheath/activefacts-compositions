@@ -6,7 +6,6 @@ module AllocatableCinemaSection
     # AllocatableCinemaSection involves Cinema
     belongs_to :cinema, :foreign_key => :cinema_id
 
-    validates :cinema_id, :presence => true
     validates :section_name, :presence => true
   end
 end
@@ -31,8 +30,6 @@ module Booking
 
     validates :booking_nr, :presence => true
     validates :number, :presence => true
-    validates :person_id, :presence => true
-    validates :session_id, :presence => true
   end
 end
 
@@ -88,7 +85,6 @@ module PlacesPaid
     # Places Paid involves Booking
     belongs_to :booking, :foreign_key => :booking_id
 
-    validates :booking_id, :presence => true
     validates :payment_method_code, :presence => true
     validates :number, :presence => true
   end
@@ -104,9 +100,8 @@ module Seat
 
     # Seat Allocation involves allocated-Seat
     has_many :seat_allocations, :class_name => 'SeatAllocation', :foreign_key => :allocated_seat_id, :dependent => :destroy
-    has_many :bookings, :through => :seat_allocations
+    has_many :bookings, :through => :seat_allocations, :source => :allocated_seat
 
-    validates :row_cinema_id, :presence => true
     validates :row_nr, :presence => true
     validates :seat_number, :presence => true
   end
@@ -121,8 +116,6 @@ module SeatAllocation
     # Seat Allocation involves allocated-Seat
     belongs_to :allocated_seat, :class_name => 'Seat', :foreign_key => :allocated_seat_id
 
-    validates :booking_id, :presence => true
-    validates :allocated_seat_id, :presence => true
   end
 end
 
@@ -140,13 +133,11 @@ module Session
     # Booking involves Session
     has_many :bookings, :class_name => 'Booking', :foreign_key => :session_id, :dependent => :destroy
 
-    validates :cinema_id, :presence => true
     validates :session_time_year_nr, :presence => true
     validates :session_time_month_nr, :presence => true
     validates :session_time_day, :presence => true
     validates :session_time_hour, :presence => true
     validates :session_time_minute, :presence => true
-    validates :film_id, :presence => true
   end
 end
 
@@ -163,7 +154,6 @@ module TicketPricing
     validates :session_time_day, :presence => true
     validates :session_time_hour, :presence => true
     validates :session_time_minute, :presence => true
-    validates :cinema_id, :presence => true
     validates :section_name, :presence => true
     validates :high_demand, :presence => true
     validates :price, :presence => true

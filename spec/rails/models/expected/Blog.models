@@ -24,9 +24,7 @@ module Comment
     # Comment is on Paragraph
     belongs_to :paragraph, :foreign_key => :paragraph_id
 
-    validates :author_id, :presence => true
     validates :content_text, :presence => true
-    validates :paragraph_id, :presence => true
   end
 end
 
@@ -41,7 +39,6 @@ module Paragraph
     # Comment is on Paragraph
     has_many :comments, :class_name => 'Comment', :foreign_key => :paragraph_id, :dependent => :destroy
 
-    validates :post_id, :presence => true
     validates :ordinal, :presence => true
     validates :content_text, :presence => true
   end
@@ -61,8 +58,6 @@ module Post
     # Paragraph involves Post
     has_many :paragraphs, :class_name => 'Paragraph', :foreign_key => :post_id, :dependent => :destroy
 
-    validates :author_id, :presence => true
-    validates :topic_id, :presence => true
   end
 end
 
@@ -72,7 +67,7 @@ module Topic
     self.primary_key = 'topic_id'
 
     # maybe Topic belongs to parent-Topic
-    belongs_to :parent_topic, :class_name => 'Topic', :foreign_key => :parent_topic_id
+    belongs_to :parent_topic, :class_name => 'Topic', :foreign_key => :parent_topic_id, :optional => true
 
     # Post belongs to Topic
     has_many :posts, :class_name => 'Post', :foreign_key => :topic_id, :dependent => :destroy

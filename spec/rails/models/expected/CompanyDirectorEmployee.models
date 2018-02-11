@@ -7,8 +7,6 @@ module Attendance
     # Attendance involves Meeting
     belongs_to :meeting, :foreign_key => :meeting_id
 
-    validates :attendee_person_id, :presence => true
-    validates :meeting_id, :presence => true
   end
 end
 
@@ -41,8 +39,6 @@ module Directorship
     # Directorship involves Company
     belongs_to :company, :foreign_key => :company_id
 
-    validates :director_person_id, :presence => true
-    validates :company_id, :presence => true
     validates :appointment_date, :presence => true
   end
 end
@@ -56,7 +52,7 @@ module Employee
     belongs_to :company, :foreign_key => :company_id
 
     # maybe Employee is supervised by Manager
-    belongs_to :manager, :class_name => 'Employee', :foreign_key => :manager_employee_id
+    belongs_to :manager, :class_name => 'Employee', :foreign_key => :manager_employee_id, :optional => true
 
     # Employment involves Employee
     has_many :employments, :class_name => 'Employment', :foreign_key => :employee_id, :dependent => :destroy
@@ -66,7 +62,6 @@ module Employee
     has_many :employees, :class_name => 'Employee', :foreign_key => :manager_employee_id, :dependent => :destroy
 
     validates :employee_nr, :presence => true
-    validates :company_id, :presence => true
   end
 end
 
@@ -79,8 +74,6 @@ module Employment
     # Employment involves Employee
     belongs_to :employee, :foreign_key => :employee_id
 
-    validates :person_id, :presence => true
-    validates :employee_id, :presence => true
   end
 end
 
@@ -96,7 +89,6 @@ module Meeting
     has_many :attendances, :class_name => 'Attendance', :foreign_key => :meeting_id, :dependent => :destroy
     has_many :people, :through => :attendances
 
-    validates :company_id, :presence => true
     validates :date, :presence => true
   end
 end
@@ -108,7 +100,7 @@ module Person
 
     # Attendance involves Attendee
     has_many :attendances, :class_name => 'Attendance', :foreign_key => :attendee_person_id, :dependent => :destroy
-    has_many :meetings, :through => :attendances
+    has_many :meetings, :through => :attendances, :source => :attendee
 
     # Employment involves Person
     has_many :employments, :class_name => 'Employment', :foreign_key => :person_id, :dependent => :destroy

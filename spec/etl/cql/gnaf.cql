@@ -1,22 +1,9 @@
 schema GNAF;
 
+import topic BasicTypes version 1.0;        // Basic types that are widely used
+
 // Data types:
 each Date Range is written as a DateRange;
-each Date is written as a Date;
-each String is written as a String(
-    accepts Search as String restricted to {
-	'none',		// Do not index this value
-	'simple',	// Disregard white-space only
-	'alpha',	// Strip white space and punctuation, just use alphabetic characters
-	'number',	// Strip thousands separators and justify
-	'phone',	// Prefix match on reverse digits excluding all non-numerics
-	'words',	// Break the text into words and match each word like alpha
-	// 'phrases',	// Words, but where adjacent sequences of words matter
-	'typo',		// Use trigram similarity to detect typographic errors
-	'phonetic',	// Use phonetic matching as well as trigrams
-	'names',	// Break the text into words and match each word like phonetic
-	'text'		// Index a large text field using significant words and phrases
-    });
 
 each Numeric Fragment is written as a Char(
     accepts Search as String restricted to {
@@ -532,8 +519,8 @@ each Lot Number is written as a Address Number(6);
 each Lot Number Suffix is written as a Address Number(2);
 
 each Building Name is written as a String(45, Search: 'phonetic');
-each Location Description is written as a String(45, Search: 'text');
-each Private Street is written as a String(75, Search: 'text');
+each Location Description is written as a String(45, Search: 'words');
+each Private Street is written as a String(75, Search: 'words');
 each Legal Parcel Id is written as a String(20, Search: 'alpha');
 each GNAF Property PID is written as a PID;
 
