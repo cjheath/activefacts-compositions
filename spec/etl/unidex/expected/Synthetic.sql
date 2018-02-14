@@ -20,16 +20,6 @@ FROM    location;
  */
 CREATE OR REPLACE VIEW person_unidex AS
 SELECT DISTINCT
-        'words' AS processing,
-        left(unnest(regexp_split_to_array(lower(alias_name), E'[^[:alnum:]]+')), 32) AS value,
-        load_batch_id,
-        0.9 AS confidence,
-        record_guid,
-        'person' AS source_table,
-        'alias_name' AS source_field
-FROM    person
-UNION ALL
-SELECT DISTINCT
         'names' AS processing,
         dmetaphone(left(unnest(regexp_split_to_array(lower(alias_name), E'[^[:alnum:]''-]+')), 32)) AS value,
         load_batch_id,
@@ -59,16 +49,6 @@ SELECT
         'email_address' AS source_field
 FROM    person
 UNION ALL
-SELECT
-        'typo' AS processing,
-        left(btrim(lower(regexp_replace(family_name, '[^[:alnum:]]+', ' ', 'g'))), 32) AS value,
-        load_batch_id,
-        CASE WHEN left(btrim(lower(regexp_replace(family_name, '[^[:alnum:]]+', ' ', 'g'))), 32) = family_name THEN 1.0 ELSE 0.95 END AS confidence,
-        record_guid,
-        'person' AS source_table,
-        'family_name' AS source_field
-FROM    person
-UNION ALL
 SELECT DISTINCT
         'phonetic' AS processing,
         unnest(ARRAY[dmetaphone(family_name), dmetaphone_alt(family_name)]) AS value,
@@ -77,16 +57,6 @@ SELECT DISTINCT
         record_guid,
         'person' AS source_table,
         'family_name' AS source_field
-FROM    person
-UNION ALL
-SELECT DISTINCT
-        'words' AS processing,
-        left(unnest(regexp_split_to_array(lower(given_name), E'[^[:alnum:]]+')), 32) AS value,
-        load_batch_id,
-        0.9 AS confidence,
-        record_guid,
-        'person' AS source_table,
-        'given_name' AS source_field
 FROM    person
 UNION ALL
 SELECT DISTINCT
@@ -117,16 +87,6 @@ SELECT
         record_guid,
         'person' AS source_table,
         'phone_number' AS source_field
-FROM    person
-UNION ALL
-SELECT
-        'typo' AS processing,
-        left(btrim(lower(regexp_replace(preferred_name, '[^[:alnum:]]+', ' ', 'g'))), 32) AS value,
-        load_batch_id,
-        CASE WHEN left(btrim(lower(regexp_replace(preferred_name, '[^[:alnum:]]+', ' ', 'g'))), 32) = preferred_name THEN 1.0 ELSE 0.95 END AS confidence,
-        record_guid,
-        'person' AS source_table,
-        'preferred_name' AS source_field
 FROM    person
 UNION ALL
 SELECT DISTINCT

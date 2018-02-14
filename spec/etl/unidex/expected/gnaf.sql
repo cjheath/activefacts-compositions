@@ -7,16 +7,6 @@ CREATE EXTENSION IF NOT EXISTS fuzzystrmatch WITH SCHEMA public;
  * View to extract unified index values for address_detail
  */
 CREATE OR REPLACE VIEW address_detail_unidex AS
-SELECT
-        'typo' AS processing,
-        left(btrim(lower(regexp_replace(building_name, '[^[:alnum:]]+', ' ', 'g'))), 32) AS value,
-        load_batch_id,
-        CASE WHEN left(btrim(lower(regexp_replace(building_name, '[^[:alnum:]]+', ' ', 'g'))), 32) = building_name THEN 1.0 ELSE 0.95 END AS confidence,
-        record_guid,
-        'address_detail' AS source_table,
-        'building_name' AS source_field
-FROM    address_detail
-UNION ALL
 SELECT DISTINCT
         'phonetic' AS processing,
         unnest(ARRAY[dmetaphone(building_name), dmetaphone_alt(building_name)]) AS value,
@@ -58,7 +48,7 @@ SELECT
 FROM    address_detail
 UNION ALL
 SELECT
-        'typo' AS processing,
+        'alpha' AS processing,
         left(btrim(lower(regexp_replace( (SELECT name FROM flat_type AS f WHERE address_detail.flat_type_code = f.code AND address_detail.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))), 32) AS value,
         load_batch_id,
         CASE WHEN left(btrim(lower(regexp_replace( (SELECT name FROM flat_type AS f WHERE address_detail.flat_type_code = f.code AND address_detail.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))), 32) =  (SELECT name FROM flat_type AS f WHERE address_detail.flat_type_code = f.code AND address_detail.load_batch_id = f.load_batch_id) THEN 1.0 ELSE 0.95 END AS confidence,
@@ -108,7 +98,7 @@ SELECT
 FROM    address_detail
 UNION ALL
 SELECT
-        'typo' AS processing,
+        'alpha' AS processing,
         left(btrim(lower(regexp_replace( (SELECT name FROM level_type AS f WHERE address_detail.level_type_code = f.code AND address_detail.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))), 32) AS value,
         load_batch_id,
         CASE WHEN left(btrim(lower(regexp_replace( (SELECT name FROM level_type AS f WHERE address_detail.level_type_code = f.code AND address_detail.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))), 32) =  (SELECT name FROM level_type AS f WHERE address_detail.level_type_code = f.code AND address_detail.load_batch_id = f.load_batch_id) THEN 1.0 ELSE 0.95 END AS confidence,
@@ -256,16 +246,6 @@ FROM    address_site;
  * View to extract unified index values for locality
  */
 CREATE OR REPLACE VIEW locality_unidex AS
-SELECT
-        'typo' AS processing,
-        left(btrim(lower(regexp_replace(locality_name, '[^[:alnum:]]+', ' ', 'g'))), 32) AS value,
-        load_batch_id,
-        CASE WHEN left(btrim(lower(regexp_replace(locality_name, '[^[:alnum:]]+', ' ', 'g'))), 32) = locality_name THEN 1.0 ELSE 0.95 END AS confidence,
-        record_guid,
-        'locality' AS source_table,
-        'locality_name' AS source_field
-FROM    locality
-UNION ALL
 SELECT DISTINCT
         'phonetic' AS processing,
         unnest(ARRAY[dmetaphone(locality_name), dmetaphone_alt(locality_name)]) AS value,
@@ -287,7 +267,7 @@ SELECT
 FROM    locality
 UNION ALL
 SELECT
-        'typo' AS processing,
+        'alpha' AS processing,
         left(btrim(lower(regexp_replace( (SELECT state_name FROM state AS f WHERE locality.state_pid = f.state_pid AND locality.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))), 32) AS value,
         load_batch_id,
         CASE WHEN left(btrim(lower(regexp_replace( (SELECT state_name FROM state AS f WHERE locality.state_pid = f.state_pid AND locality.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))), 32) =  (SELECT state_name FROM state AS f WHERE locality.state_pid = f.state_pid AND locality.load_batch_id = f.load_batch_id) THEN 1.0 ELSE 0.95 END AS confidence,
@@ -300,16 +280,6 @@ FROM    locality;
  * View to extract unified index values for locality_alias
  */
 CREATE OR REPLACE VIEW locality_alias_unidex AS
-SELECT
-        'typo' AS processing,
-        left(btrim(lower(regexp_replace(name, '[^[:alnum:]]+', ' ', 'g'))), 32) AS value,
-        load_batch_id,
-        CASE WHEN left(btrim(lower(regexp_replace(name, '[^[:alnum:]]+', ' ', 'g'))), 32) = name THEN 1.0 ELSE 0.95 END AS confidence,
-        record_guid,
-        'locality_alias' AS source_table,
-        'name' AS source_field
-FROM    locality_alias
-UNION ALL
 SELECT DISTINCT
         'phonetic' AS processing,
         unnest(ARRAY[dmetaphone(name), dmetaphone_alt(name)]) AS value,
@@ -331,7 +301,7 @@ SELECT
 FROM    locality_alias
 UNION ALL
 SELECT
-        'typo' AS processing,
+        'alpha' AS processing,
         left(btrim(lower(regexp_replace( (SELECT state_name FROM state AS f WHERE locality_alias.state_pid = f.state_pid AND locality_alias.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))), 32) AS value,
         load_batch_id,
         CASE WHEN left(btrim(lower(regexp_replace( (SELECT state_name FROM state AS f WHERE locality_alias.state_pid = f.state_pid AND locality_alias.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))), 32) =  (SELECT state_name FROM state AS f WHERE locality_alias.state_pid = f.state_pid AND locality_alias.load_batch_id = f.load_batch_id) THEN 1.0 ELSE 0.95 END AS confidence,
@@ -356,16 +326,6 @@ SELECT
         'street_name' AS source_field
 FROM    street_locality
 UNION ALL
-SELECT
-        'typo' AS processing,
-        left(btrim(lower(regexp_replace(street_name, '[^[:alnum:]]+', ' ', 'g'))), 32) AS value,
-        load_batch_id,
-        CASE WHEN left(btrim(lower(regexp_replace(street_name, '[^[:alnum:]]+', ' ', 'g'))), 32) = street_name THEN 1.0 ELSE 0.95 END AS confidence,
-        record_guid,
-        'street_locality' AS source_table,
-        'street_name' AS source_field
-FROM    street_locality
-UNION ALL
 SELECT DISTINCT
         'phonetic' AS processing,
         unnest(ARRAY[dmetaphone(street_name), dmetaphone_alt(street_name)]) AS value,
@@ -377,7 +337,7 @@ SELECT DISTINCT
 FROM    street_locality
 UNION ALL
 SELECT
-        'typo' AS processing,
+        'alpha' AS processing,
         left(btrim(lower(regexp_replace( (SELECT name FROM street_suffix AS f WHERE street_locality.street_suffix_code = f.code AND street_locality.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))), 32) AS value,
         load_batch_id,
         CASE WHEN left(btrim(lower(regexp_replace( (SELECT name FROM street_suffix AS f WHERE street_locality.street_suffix_code = f.code AND street_locality.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))), 32) =  (SELECT name FROM street_suffix AS f WHERE street_locality.street_suffix_code = f.code AND street_locality.load_batch_id = f.load_batch_id) THEN 1.0 ELSE 0.95 END AS confidence,
@@ -387,7 +347,7 @@ SELECT
 FROM    street_locality
 UNION ALL
 SELECT
-        'typo' AS processing,
+        'alpha' AS processing,
         left(btrim(lower(regexp_replace( (SELECT name FROM street_type AS f WHERE street_locality.street_type_code = f.code AND street_locality.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))), 32) AS value,
         load_batch_id,
         CASE WHEN left(btrim(lower(regexp_replace( (SELECT name FROM street_type AS f WHERE street_locality.street_type_code = f.code AND street_locality.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))), 32) =  (SELECT name FROM street_type AS f WHERE street_locality.street_type_code = f.code AND street_locality.load_batch_id = f.load_batch_id) THEN 1.0 ELSE 0.95 END AS confidence,
@@ -410,16 +370,6 @@ SELECT
         'street_name' AS source_field
 FROM    street_locality_alias
 UNION ALL
-SELECT
-        'typo' AS processing,
-        left(btrim(lower(regexp_replace(street_name, '[^[:alnum:]]+', ' ', 'g'))), 32) AS value,
-        load_batch_id,
-        CASE WHEN left(btrim(lower(regexp_replace(street_name, '[^[:alnum:]]+', ' ', 'g'))), 32) = street_name THEN 1.0 ELSE 0.95 END AS confidence,
-        record_guid,
-        'street_locality_alias' AS source_table,
-        'street_name' AS source_field
-FROM    street_locality_alias
-UNION ALL
 SELECT DISTINCT
         'phonetic' AS processing,
         unnest(ARRAY[dmetaphone(street_name), dmetaphone_alt(street_name)]) AS value,
@@ -431,7 +381,7 @@ SELECT DISTINCT
 FROM    street_locality_alias
 UNION ALL
 SELECT
-        'typo' AS processing,
+        'alpha' AS processing,
         left(btrim(lower(regexp_replace( (SELECT name FROM street_suffix AS f WHERE street_locality_alias.street_suffix_code = f.code AND street_locality_alias.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))), 32) AS value,
         load_batch_id,
         CASE WHEN left(btrim(lower(regexp_replace( (SELECT name FROM street_suffix AS f WHERE street_locality_alias.street_suffix_code = f.code AND street_locality_alias.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))), 32) =  (SELECT name FROM street_suffix AS f WHERE street_locality_alias.street_suffix_code = f.code AND street_locality_alias.load_batch_id = f.load_batch_id) THEN 1.0 ELSE 0.95 END AS confidence,
@@ -441,7 +391,7 @@ SELECT
 FROM    street_locality_alias
 UNION ALL
 SELECT
-        'typo' AS processing,
+        'alpha' AS processing,
         left(btrim(lower(regexp_replace( (SELECT name FROM street_type AS f WHERE street_locality_alias.street_type_code = f.code AND street_locality_alias.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))), 32) AS value,
         load_batch_id,
         CASE WHEN left(btrim(lower(regexp_replace( (SELECT name FROM street_type AS f WHERE street_locality_alias.street_type_code = f.code AND street_locality_alias.load_batch_id = f.load_batch_id), '[^[:alnum:]]+', ' ', 'g'))), 32) =  (SELECT name FROM street_type AS f WHERE street_locality_alias.street_type_code = f.code AND street_locality_alias.load_batch_id = f.load_batch_id) THEN 1.0 ELSE 0.95 END AS confidence,

@@ -240,8 +240,7 @@ module ActiveFacts
               when 'simple'       # Disregard white-space only
                 select(composite, truncate(col_expr, @value_width), 'simple', source_field, 1.0)
 
-              when 'alpha',        # Strip white space and punctuation, just use alphabetic characters
-                   'typo'          # Use trigram similarity to detect typographic errors, over the same values
+              when 'alpha'        # Strip white space and punctuation, just use alphabetic characters
                 truncated = truncate(as_alpha(col_expr), @value_width)
                 select(
                   composite, truncated, sm, source_field,
@@ -249,7 +248,6 @@ module ActiveFacts
                 )
 
               when 'phonetic'     # Use phonetic matching as well as trigrams
-                search_expr(composite, intrinsic_type, col_expr, ['typo'], source_field) <<
                 select(composite, phonetics(col_expr), 'phonetic', source_field, @phonetic_confidence/100.0, true)
 
               when 'words'        # Break the text into words and match each word like alpha
@@ -258,7 +256,6 @@ module ActiveFacts
 
               when 'names'        # Break the text into words and match each word like phonetic
                 truncated = truncate(unnest(as_words(col_expr, "''-")), @value_width)   # N.B. ' is doubled for SQL
-                search_expr(composite, intrinsic_type, col_expr, ['words'], source_field) <<
                 phonetics(truncated).map do |phonetic|
                   select(composite, phonetic, 'names', source_field, @phonetic_confidence/100.0, true)
                 end
