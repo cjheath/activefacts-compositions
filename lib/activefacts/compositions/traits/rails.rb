@@ -152,7 +152,11 @@ module ActiveFacts
             if mapping && mapping.child_role.is_unique
               [ "has_one", source_composite.rails.singular_name]
             else
-              [ "has_many", source_composite.rails.plural_name]
+              as = ''
+              if Metamodel::Absorption === (m = @base.mapping) and m.child_role.name != m.child_role.object_type.name
+                as = "_as_"+Rails.singular_name(m.child_role.name)
+              end
+              [ "has_many", source_composite.rails.plural_name+as]
             end
           end
         end

@@ -99,15 +99,15 @@ module Person
     self.primary_key = 'person_id'
 
     # Attendance involves Attendee
-    has_many :attendances, :class_name => 'Attendance', :foreign_key => :attendee_person_id, :dependent => :destroy
-    has_many :meetings, :through => :attendances, :source => :attendee
+    has_many :attendances_as_attendee, :class_name => 'Attendance', :foreign_key => :attendee_person_id, :dependent => :destroy
+    has_many :meetings, :through => :attendances_as_attendee, :source => :attendee
 
     # Employment involves Person
     has_many :employments, :class_name => 'Employment', :foreign_key => :person_id, :dependent => :destroy
     has_many :employees, :through => :employments
 
     # Directorship involves Director
-    has_many :directorships, :class_name => 'Directorship', :foreign_key => :director_person_id, :dependent => :destroy
+    has_many :directorships_as_director, :class_name => 'Directorship', :foreign_key => :director_person_id, :dependent => :destroy
 
     validates :given_name, :presence => true
   end

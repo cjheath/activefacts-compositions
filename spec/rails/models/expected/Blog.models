@@ -73,7 +73,7 @@ module Topic
     has_many :posts, :class_name => 'Post', :foreign_key => :topic_id, :dependent => :destroy
 
     # maybe Topic belongs to parent-Topic
-    has_many :topics, :class_name => 'Topic', :foreign_key => :parent_topic_id, :dependent => :destroy
+    has_many :topics_as_parent_topic, :class_name => 'Topic', :foreign_key => :parent_topic_id, :dependent => :destroy
 
     validates :topic_name, :presence => true
   end

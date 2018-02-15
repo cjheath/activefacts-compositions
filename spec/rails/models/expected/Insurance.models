@@ -174,7 +174,7 @@ module Party
     has_many :claims, :class_name => 'Claim', :foreign_key => :lodgement_person_id, :dependent => :destroy
 
     # maybe Party is a Company that has contact-Person
-    has_many :parties, :class_name => 'Party', :foreign_key => :company_contact_person_id, :dependent => :destroy
+    has_many :parties_as_contact_person, :class_name => 'Party', :foreign_key => :company_contact_person_id, :dependent => :destroy
 
   end
 end
@@ -216,7 +216,7 @@ module Product
     self.primary_key = 'product_id'
 
     # Policy is for product having p_product
-    has_many :policies, :class_name => 'Policy', :foreign_key => :p_product_id, :dependent => :destroy
+    has_many :policies_as_p_product, :class_name => 'Policy', :foreign_key => :p_product_id, :dependent => :destroy
 
     validates :product_code, :presence => true
   end
@@ -247,7 +247,7 @@ module State
     has_many :property_damages, :class_name => 'PropertyDamage', :foreign_key => :address_state_id, :dependent => :destroy
 
     # Policy issued in state having p_state
-    has_many :policies, :class_name => 'Policy', :foreign_key => :p_state_id, :dependent => :destroy
+    has_many :policies_as_p_state, :class_name => 'Policy', :foreign_key => :p_state_id, :dependent => :destroy
 
     # maybe Witness lives at Address that maybe is in State
     has_many :witnesses, :class_name => 'Witness', :foreign_key => :address_state_id, :dependent => :destroy

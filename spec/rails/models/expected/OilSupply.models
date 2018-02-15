@@ -35,7 +35,7 @@ module Product
     has_many :acceptable_substitutions, :class_name => 'AcceptableSubstitution', :foreign_key => :product_id, :dependent => :destroy
 
     # Acceptable Substitution involves alternate-Product
-    has_many :acceptable_substitutions, :class_name => 'AcceptableSubstitution', :foreign_key => :alternate_product_id, :dependent => :destroy
+    has_many :acceptable_substitutions_as_alternate_product, :class_name => 'AcceptableSubstitution', :foreign_key => :alternate_product_id, :dependent => :destroy
 
     # Production Forecast involves Product
     has_many :production_forecasts, :class_name => 'ProductionForecast', :foreign_key => :product_id, :dependent => :destroy

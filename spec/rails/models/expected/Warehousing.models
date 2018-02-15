@@ -212,10 +212,10 @@ module Warehouse
     self.primary_key = 'warehouse_id'
 
     # Transfer Request is from From Warehouse
-    has_many :transfer_requests, :class_name => 'TransferRequest', :foreign_key => :from_warehouse_id, :dependent => :destroy
+    has_many :transfer_requests_as_from_warehouse, :class_name => 'TransferRequest', :foreign_key => :from_warehouse_id, :dependent => :destroy
 
     # Transfer Request is to To Warehouse
-    has_many :transfer_requests, :class_name => 'TransferRequest', :foreign_key => :to_warehouse_id, :dependent => :destroy
+    has_many :transfer_requests_as_to_warehouse, :class_name => 'TransferRequest', :foreign_key => :to_warehouse_id, :dependent => :destroy
 
     # Purchase Order is to Warehouse
     has_many :purchase_orders, :class_name => 'PurchaseOrder', :foreign_key => :warehouse_id, :dependent => :destroy

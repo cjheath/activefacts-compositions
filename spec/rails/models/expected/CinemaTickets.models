@@ -99,8 +99,8 @@ module Seat
     belongs_to :row_cinema, :class_name => 'Cinema', :foreign_key => :row_cinema_id
 
     # Seat Allocation involves allocated-Seat
-    has_many :seat_allocations, :class_name => 'SeatAllocation', :foreign_key => :allocated_seat_id, :dependent => :destroy
-    has_many :bookings, :through => :seat_allocations, :source => :allocated_seat
+    has_many :seat_allocations_as_allocated_seat, :class_name => 'SeatAllocation', :foreign_key => :allocated_seat_id, :dependent => :destroy
+    has_many :bookings, :through => :seat_allocations_as_allocated_seat, :source => :allocated_seat
 
     validates :row_nr, :presence => true
     validates :seat_number, :presence => true
