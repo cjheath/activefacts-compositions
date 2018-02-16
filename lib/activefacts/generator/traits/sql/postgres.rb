@@ -166,20 +166,19 @@ module ActiveFacts
             expr
           end
 
-          # Produce a lexically-sortable decimal representation of the given numeric expression, to the overall specified length and scale
-          def lexical_decimal expr, length, scale = 0
-            fraction_pattern = scale > 0 ? '.'+'0'*scale : ''
-            Expression.new(
-              "to_char(#{expr}, 'MI#{'0'*(length-fraction_pattern.length-1)+fraction_pattern})",
-              MM::DataType::TYPE_String,
-              expr.is_mandatory
-            )
-          end
-
           def number_or_null expr
+            # This doesn't handle all valid Postgres numeric literals (e.g. 2.3e-4)
             Expression.new(
               %Q{CASE WHEN #{expr} ~ '^ *[-+]?([0-9]+[.]?[0-9]*|[.][0-9]+) *$' THEN #{expr}::numeric ELSE NULL END},
               MM::DataType::TYPE_Real,
+              false
+            )
+          end
+
+          def date_or_null expr
+            Expression.new(
+              %Q{CASE WHEN #{col_expr} ~ '^ *[0-9]+[-/]?[0-9]+[-/][0-9]+ *$' THEN (#{col_expr}::date):text ELSE NULL END},
+              MM::DataType::TYPE_Date,
               false
             )
           end
@@ -237,26 +236,11 @@ module ActiveFacts
           end
 
           def phonetics expr
-            if expr.is_array
-              [
-                Expression.new(
-                  %Q{dmetaphone(#{expr})},
-                  MM::DataType::TYPE_String,
-                  expr.is_mandatory
-                ),
-                Expression.new(
-                  %Q{dmetaphone_alt(#{expr})},
-                  MM::DataType::TYPE_String,
-                  expr.is_mandatory
-                )
-              ]
-            else
-              Expression.new(
-                %Q{unnest(ARRAY[dmetaphone(#{expr}), dmetaphone_alt(#{expr})])},
-                MM::DataType::TYPE_String,
-                expr.is_mandatory
-              )
-            end
+            Expression.new(
+              %Q{unnest(ARRAY[dmetaphone(#{expr}), dmetaphone_alt(#{expr})])},
+              MM::DataType::TYPE_String,
+              expr.is_mandatory
+            )
           end
 
           # Reserved words cannot be used anywhere without quoting.
