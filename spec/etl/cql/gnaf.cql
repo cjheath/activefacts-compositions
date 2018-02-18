@@ -131,7 +131,7 @@ Geocode Type 'LOC' has Geocode Type Description 'Point representing a locality';
 /*
  * State table [static]
  */
-each State Name is written as a String(50, Search: 'typo');
+each State Name is written as a String(50, Search: 'alpha');
 each State Abbreviation is written as a String(3, Search: 'alpha');
 each State [static] is independent identified by its PID;
 State is valid for at most one valid- Date Range;
@@ -222,7 +222,7 @@ Street Class 'U' is called Street Class Name 'Unconfirmed';
  * Street Type [static]
  */
 each Street Type Code is written as a Char(15);
-each Street Type Name is written as a String(50, Search: 'typo');
+each Street Type Name is written as a String(50, Search: 'alpha');
 each Street Type Description is written as a String(15);
 each Street Type [static] is independent identified by Code where
     Street Type has one Street Type Code (as Code),
@@ -237,7 +237,7 @@ Street Type has at most one Street Type Description (as Description);
  * Street Suffix [static]
  */
 each Street Suffix Code is written as a String(15, Search: 'none');
-each Street Suffix Name is written as a String(50, Search: 'typo');
+each Street Suffix Name is written as a String(50, Search: 'alpha');
 each Street Suffix Description is written as a Char(30);
 each Street Suffix [static] is independent identified by Code where
     Street Suffix has one Street Suffix Code (as Code),
@@ -316,7 +316,7 @@ Street Locality Alias has at most one Street Locality Alias Type;
  * Flat Type [static]
  */
 each Flat Type Code is written as a Char(7);
-each Flat Type Name is written as a String(50, Search: 'typo');
+each Flat Type Name is written as a String(50, Search: 'alpha');
 each Flat Type Description is written as a Char(30);
 each Flat Type [static] is independent identified by Code where
     Flat Type has one Flat Type Code (as Code),
@@ -382,7 +382,7 @@ Flat Type 'WKSH' is called Flat Type Name 'WORKSHOP';
  * Level Type [static]
  */
 each Level Type Code is written as a Char(4);
-each Level Type Name is written as a String(50, Search: 'typo');
+each Level Type Name is written as a String(50, Search: 'alpha');
 each Level Type Description is written as a Char(30);
 each Level Type [static] is independent identified by Code where
     Level Type has one Level Type Code (as Code),

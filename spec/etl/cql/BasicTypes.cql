@@ -37,7 +37,6 @@ each String is written as a String(
 	'none',		// Do not index this value
 	'simple',	// Disregard white-space only
 	'alpha',	// Strip white space and punctuation, just use alphabetic characters
-	'typo',		// Use trigrams as well as alpha
 	'phonetic',	// Use phonetic matching and trigrams as well as alpha
 	'words',	// Break the text into words and match each word like alpha
 	'names',	// Break the text into words and match each word like phonetic

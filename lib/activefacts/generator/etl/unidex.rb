@@ -24,9 +24,7 @@ module ActiveFacts
           options.
           merge(
             {
-              dialect: [String, "SQL Dialect to use"],
-              value_width: [Integer, "Number of characters to index from long values"],
-              phonetic_confidence: [Integer, "Percentage confidence for a phonetic match"],
+              dialect: [String, "SQL Dialect to use"]
             }
           )
         end
@@ -49,9 +47,6 @@ module ActiveFacts
         end
 
         def process_options options
-          @value_width = (options.delete('value_width') || 32).to_i
-          @phonetic_confidence = (options.delete('phonetic_confidence') || 40).to_i
-
           super
         end
 
@@ -139,7 +134,7 @@ module ActiveFacts
 
         def generate_indicator leaf
           nil # REVISIT: Do we need anything here?
-          # select leaf.root, safe_column_name(leaf), 1, column_name(leaf), 1
+          # select(leaf.root, safe_column_name(leaf), 1, column_name(leaf))
         end
 
         # This foreign key connects two composites (tables)
@@ -231,57 +226,46 @@ module ActiveFacts
           when MM::DataType::TYPE_Char,
                MM::DataType::TYPE_String,
                MM::DataType::TYPE_Text
-            # Produce a truncated value with the requested search
+            # Produce a select yielding values for the requested search type
             search_methods.flat_map do |sm|
               case sm
               when 'none'         # Do not index this value
                 nil
 
               when 'simple'       # Disregard white-space only
-                select(composite, truncate(col_expr, @value_width), 'simple', source_field, 1.0)
+                select(composite, col_expr, 'simple', source_field)
 
-              when 'alpha',        # Strip white space and punctuation, just use alphabetic characters
-                   'typo'          # Use trigram similarity to detect typographic errors, over the same values
-                truncated = truncate(as_alpha(col_expr), @value_width)
-                select(
-                  composite, truncated, sm, source_field,
-                  "CASE WHEN #{truncated} = #{col_expr} THEN 1.0 ELSE 0.95 END"	# Maybe exact match.
-                )
+              when 'alpha'        # Strip white space and punctuation, just use alphabetic characters
+                select(composite, as_alpha(col_expr), sm, source_field)
 
-              when 'phonetic'     # Use phonetic matching as well as trigrams
-                search_expr(composite, intrinsic_type, col_expr, ['typo'], source_field) <<
-                select(composite, phonetics(col_expr), 'phonetic', source_field, @phonetic_confidence/100.0, true)
+              when 'phonetic'     # Use phonetic matching as well as trigrams and alpha
+                select(composite, as_alpha(col_expr), 'phonetic', source_field, phonetics(col_expr))
 
               when 'words'        # Break the text into words and match each word like alpha
-                truncated = truncate(unnest(as_words(col_expr)), @value_width)
-                select(composite, truncated, sm, source_field, 0.90, true)
+                select(composite, unnest(as_words(col_expr)), sm, source_field)
 
               when 'names'        # Break the text into words and match each word like phonetic
-                truncated = truncate(unnest(as_words(col_expr, "''-")), @value_width)   # N.B. ' is doubled for SQL
-                search_expr(composite, intrinsic_type, col_expr, ['words'], source_field) <<
-                phonetics(truncated).map do |phonetic|
-                  select(composite, phonetic, 'names', source_field, @phonetic_confidence/100.0, true)
-                end
+                value = unnest(as_words(col_expr, "''-"))   # N.B. ' is doubled for SQL
+                phonetic_select(value, select(composite, value, 'names', source_field))
 
               when 'text'         # Index a large text field using significant words and phrases
                 nil # REVISIT: Implement this type
 
               when 'number'       # Cast to number and back to text to canonicalise the value;
-                # If the number doesn't match this regexp, we don't index it.
-                # This doesn't handle all valid Postgres numeric literals (e.g. 2.3e-4)
-                select(composite, col_expr, 'number', source_field, number_or_null(col_expr))
+                # If it doesn't look like a number, we don't index it.
+                value = number_or_null(col_expr)
+                select(composite, value, 'number', source_field, nil, ["#{value} IS NOT NULL"])
 
               when 'phone'        # Phone numbers; split, strip each to digits, take the last 8 of each
-                select(composite, phone_numbers(col_expr), 'phone', source_field, 1)
+                select(composite, phone_numbers(col_expr), 'phone', source_field)
 
               when 'email'        # Use a regexp to find email addresses in this field
-                select(composite, truncate(email_addresses(col_expr), @value_width), 'email', source_field, 1)
+                select(composite, email_addresses(col_expr), 'email', source_field)
 
-              when 'date'         # Convert string to standard date format if it looks like a date, NULL otherwise
-                select(
-                  composite, col_expr, 'date', source_field, 1,
-                  %Q{CASE WHEN #{col_expr} ~ '^ *[0-9]+[.]?[0-9]*|[.][0-9]+) *$' THEN (#{col_expr}::numeric):text ELSE NULL END}
-                )
+              when 'date'         # REVISIT: Convert string to standard date format
+                # If it doesn't look like a date, we don't index it.
+                value = date_or_null(col_expr)
+                select(composite, value, 'date', source_field, nil, ["#{value} IS NOT NULL"])
 
               else
                 $stderrs.puts "Unknown search method #{sm}"
@@ -295,24 +279,22 @@ module ActiveFacts
                MM::DataType::TYPE_Real,
                MM::DataType::TYPE_Decimal,
                MM::DataType::TYPE_Money
-            # Produce a right-justified value
-            # REVISIT: This is a dumb thing to do.
-            select(composite, lexical_decimal(col_expr, @value_width, value_type.scale), 'simple', source_field, 1)
+            select(composite, col_expr, 'simple', source_field)
 
           when MM::DataType::TYPE_Date
             # Produce an ISO representation that sorts lexically (YYYY-MM-DD)
             # REVISIT: Support search methods here
-            select(composite, lexical_date(col_expr), 'simple', source_field, 1)
+            select(composite, lexical_date(col_expr), 'simple', source_field)
 
           when MM::DataType::TYPE_DateTime,
                MM::DataType::TYPE_Timestamp
             # Produce an ISO representation that sorts lexically (YYYY-MM-DD HH:mm:ss)
             # REVISIT: Support search methods here
-            select(composite, lexical_datetime(col_expr), 'simple', source_field, 1)
+            select(composite, lexical_datetime(col_expr), 'simple', source_field)
 
           when MM::DataType::TYPE_Time
             # Produce an ISO representation that sorts lexically (YYYY-MM-DD HH:mm:ss)
-            select(composite, lexical_time(col_expr), 'simple', source_field, 1)
+            select(composite, lexical_time(col_expr), 'simple', source_field)
 
           when MM::DataType::TYPE_Binary
             nil   # No indexing applied
@@ -325,35 +307,63 @@ module ActiveFacts
           name.words.send(@column_case)*@column_joiner
         end
 
-        def select composite, expression, processing, source_field, confidence = 1, distinct = false, where = []
+        def field_names
+          @field_names ||=
+            %w{Value Phonetic Processing SourceTable SourceField LoadBatchID RecordGUID}.
+            map{|n| stylise_column_name(n)}
+        end
+
+        def phonetic_select expression, select
+          field_list =
+            field_names.
+            map do |n|
+              if n =~ /Phonetic/i
+                phonetics(Expression.new(stylise_column_name('Value'), MM::DataType::TYPE_String, true)).to_s + " AS #{n}"
+              else
+                n
+              end
+            end.
+            join(",\n\t")
+
+          %Q{
+            SELECT DISTINCT
+                    <FIELDS>
+            FROM (<SUB>
+            ) AS s}.
+          unindent.
+          sub(/<FIELDS>/, field_list).
+          sub(/<SUB>/, select.gsub(/\n/,"\n\t"))
+        end
+
+        def select composite, expression, processing, source_field, phonetic = nil, conditions = []
           # These fields are in order of index precedence, to co-locate
           # comparable values regardless of source record type or column
-          where << 'Value IS NOT NULL' if expression.to_s =~ /\bNULL\b/
-          processing_name = stylise_column_name("Processing")
-          value_name = stylise_column_name("Value")
-          load_batch_id_name = stylise_column_name("LoadBatchID")
-          record_guid_name = stylise_column_name("RecordGUID")
-          confidence_name = stylise_column_name("Confidence")
-          source_table_name = stylise_column_name("SourceTable")
-          source_field_name = stylise_column_name("SourceField")
-          expression_text = expression.to_s
-          select = %Q{
-            SELECT#{distinct ? ' DISTINCT' : ''}
-                    '#{processing}' AS #{processing_name},
-                    #{expression_text} AS #{value_name},
-                    #{load_batch_id_name},
-                    #{confidence} AS #{confidence_name},
-                    #{record_guid_name},
-                    '#{safe_table_name(composite)}' AS #{source_table_name},
-                    '#{source_field}' AS #{source_field_name}
-            FROM    #{safe_table_name(composite)}}.
-            unindent
 
-          if where.empty?
-            select
-          else
-            "\nSELECT * FROM (#{select}\n) AS s WHERE #{where*' AND '}"
-          end
+          select_list =
+            [ expression.to_s,
+              phonetic ? phonetic.to_s : 'NULL',
+              "'"+processing+"'::text",
+              "'"+safe_table_name(composite)+"'::text",
+              "'"+source_field+"'::text",
+              nil,
+              nil,
+            ].zip(field_names).
+            map(&:compact).
+            map{|a| a * ' AS '}.
+            join(%q{,
+                    })
+          where =
+            if conditions.empty?
+              ''
+            else
+              "\nWHERE\t#{conditions*"\n  AND\t"}"
+            end
+          select = %Q{
+            SELECT DISTINCT
+                    #{select_list}
+            FROM    #{safe_table_name(composite)}}.
+            unindent+
+            where
 
         end
 
