@@ -183,7 +183,7 @@ module ActiveFacts
             )
           end
 
-          def split_on_separators expr, seps = ',\\\\|'
+          def split_on_separators expr, seps = ',|'
             Expression.new(
               %Q{regexp_split_to_table(#{expr}, E'[#{seps}]')},
               MM::DataType::TYPE_String, true, true
@@ -193,7 +193,7 @@ module ActiveFacts
           # Extract separated numbers, remove non-digits, take the last 8 (removing area codes etc)
           def phone_numbers expr
             Expression.new(
-              %Q{right(regexp_replace(#{split_on_separators(expr)}, '[^0-9,\\|]+', '', 'g'), 8)},
+              %Q{right(regexp_replace(#{split_on_separators(expr)}, '[^0-9]+', '', 'g'), 8)},
               MM::DataType::TYPE_String,
               true
             )
