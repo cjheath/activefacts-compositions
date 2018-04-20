@@ -38,6 +38,6 @@ module ActiveFacts
         nil
       end
     end
-    publish_generator Validate
+    publish_generator Validate, "Perform a thorough validation to check that a compositor is working correctly"
   end
 end

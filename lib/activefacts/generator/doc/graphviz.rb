@@ -128,7 +128,7 @@ END
       end
 
     end
-    publish_generator Doc::Graphviz
+    publish_generator Doc::Graphviz, "Input file for graphvis automated diagram layout"
   end
 end
 

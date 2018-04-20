@@ -298,7 +298,7 @@ module ActiveFacts
 
       end
     end
-    publish_generator Rails::Schema
+    publish_generator Rails::Schema, "Generate schema.rb in Ruby for use with ActiveRecord and Rails. Use a relational compositor"
   end
 end
 

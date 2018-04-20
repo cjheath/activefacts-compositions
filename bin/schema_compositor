@@ -36,16 +36,19 @@ class SchemaCompositor
     trace :loading, "Enumerating under #{path.inspect}" do
       Loadable.new(path).
       enumerate.
-      select do |filename|
+      map do |filename|
         begin
           require(pathname = path+"/"+filename)
           trace :loading, "Loaded #{pathname}"
+	  filename
         rescue LoadError => e
           trace :loading, "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
+	  nil
         rescue Exception => e
           $stderr.puts "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
+	  nil
         end
-      end
+      end.compact
     end
   end
 
@@ -70,6 +73,8 @@ class SchemaCompositor
         options.delete(option)
         check_options(action, modes)
         @generators << [action, modes, option]
+      elsif option == 'help'
+      	# Finish, then help
       else
         $stderr.puts "Action --#{option} is not recognised"
         exit 1
@@ -184,12 +189,18 @@ end
 sc = SchemaCompositor.new(ARGV)
 sc.enumerate_available('activefacts/compositions')
 sc.enumerate_available('activefacts/generator')
-if sc.options['help']
-  puts "Available compositors:\n\t#{ActiveFacts::Compositions.compositors.keys.sort*"\n\t"}\n\n"
-  puts "Available generators:\n\t#{ActiveFacts::Generators.generators.keys.sort*"\n\t"}\n\n"
+inputs = sc.enumerate_available('activefacts/input')
+sc.arrange_actions
+if sc.options['help'] || (sc.generators.empty? && sc.compositors.empty?)
+  compositors = (c = ActiveFacts::Compositions.compositors).keys.sort.map{|k| "%-15s %s" % [k, c[k][1]]}
+  generators = (c = ActiveFacts::Generators.generators).keys.sort.map{|k| "%-15s %s" % [k, c[k][1]]}
+  puts "You need to use a compositor to create the right kind of schema, and at least one generator to get output."
+  puts "Use '#{$PROGRAM_NAME} --<compositorname> --<generatorname> inputfile.ext'"
+  puts "Available input formats (file extensions):\n\t#{inputs*"\n\t"}\n\n"
+  puts "Available compositors:\n\t#{compositors*"\n\t"}\n\n"
+  puts "Available generators:\n\t#{generators*"\n\t"}\n\n"
   puts "To get help for a particular action, follow it by =help, e.g. --relational:help"
   exit
 end
 
-sc.arrange_actions
 sc.process_files ARGV

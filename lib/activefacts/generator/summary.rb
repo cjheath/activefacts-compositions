@@ -115,6 +115,6 @@ module ActiveFacts
         @composition.summary
       end
     end
-    publish_generator Summary
+    publish_generator Summary, "Succinctly display the full structure of any composition"
   end
 end

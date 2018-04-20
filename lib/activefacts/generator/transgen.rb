@@ -139,6 +139,6 @@ module ActiveFacts
         # regenerate_compound_matching(composite.mapping, 0, '') + ";\n"
       end
     end
-    publish_generator TransGen
+    publish_generator TransGen, "Generate a transform between two related fact-based schemas"
   end
 end

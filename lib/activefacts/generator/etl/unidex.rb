@@ -369,6 +369,6 @@ module ActiveFacts
 
       end
     end
-    publish_generator ETL::Unidex
+    publish_generator ETL::Unidex, "Generate SQL views to populate a Unified Index, steered by Search parameters on the value types"
   end
 end
