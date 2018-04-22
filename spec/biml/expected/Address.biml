@@ -1,0 +1,47 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Databases>
+    <Database Name="Address"/>
+  </Databases>
+  <Tables>
+    <Table Name="Company" SchemaName="Address.[default]">
+      <Columns>
+        <Column Name="AddressCity IsNullable="true" DataType="VARCHAR" Length="64" />
+        <Column Name="AddressPostcode IsNullable="true" DataType="VARCHAR" />
+        <Column Name="AddressStreetFirstStreetLine IsNullable="true" DataType="VARCHAR" Length="64" />
+        <Column Name="AddressStreetNumber IsNullable="true" DataType="VARCHAR" Length="12" />
+        <Column Name="AddressStreetSecondStreetLine IsNullable="true" DataType="VARCHAR" Length="64" />
+        <Column Name="AddressStreetThirdStreetLine IsNullable="true" DataType="VARCHAR" Length="64" />
+        <Column Name="CompanyName IsNullable="false" DataType="VARCHAR" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Company">
+          <Columns>
+            <Column ColumnName="Company Name"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Person" SchemaName="Address.[default]">
+      <Columns>
+        <Column Name="AddressCity IsNullable="true" DataType="VARCHAR" Length="64" />
+        <Column Name="AddressPostcode IsNullable="true" DataType="VARCHAR" />
+        <Column Name="AddressStreetFirstStreetLine IsNullable="true" DataType="VARCHAR" Length="64" />
+        <Column Name="AddressStreetNumber IsNullable="true" DataType="VARCHAR" Length="12" />
+        <Column Name="AddressStreetSecondStreetLine IsNullable="true" DataType="VARCHAR" Length="64" />
+        <Column Name="AddressStreetThirdStreetLine IsNullable="true" DataType="VARCHAR" Length="64" />
+        <Column Name="FamilyName IsNullable="false" DataType="VARCHAR" Length="20" />
+        <Column Name="GivenNames IsNullable="false" DataType="VARCHAR" Length="20" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Person">
+          <Columns>
+            <Column ColumnName="Family Name"/>
+            <Column ColumnName="Given Names"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+  </Tables>
+</Biml>

@@ -1,0 +1,34 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Databases>
+    <Database Name="Countries"/>
+  </Databases>
+  <Tables>
+    <Table Name="Country" SchemaName="Countries.[default]">
+      <Columns>
+        <Column Name="CountryCode IsNullable="false" DataType="CHARACTER" Length="3" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Country">
+          <Columns>
+            <Column ColumnName="Country Code"/>
+            <Column ColumnName="Country Code"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="CountryCode" SchemaName="Countries.[default]">
+      <Columns>
+        <Column Name="CountryCodeValue IsNullable="false" DataType="CHARACTER" Length="3" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_CountryCode">
+          <Columns>
+            <Column ColumnName="Country Code Value"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+  </Tables>
+</Biml>

@@ -1,0 +1,38 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Databases>
+    <Database Name="Countries"/>
+  </Databases>
+  <Tables>
+    <Table Name="Country" SchemaName="Countries.[default]">
+      <Columns>
+        <Column Name="CountryName IsNullable="false" DataType="VARCHAR" Length="60" />
+        <Column Name="ISO3166Code2 IsNullable="false" DataType="VARCHAR" Length="2" />
+        <Column Name="ISO3166Code3 IsNullable="false" DataType="VARCHAR" Length="3" />
+        <Column Name="ISO3166Numeric3 IsNullable="false" DataType="INTEGER" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Country">
+          <Columns>
+            <Column ColumnName="ISO3166Code3"/>
+          </Columns>
+        </PrimaryKey>
+        <UniqueKey Name="UK_Country_Country Name">
+          <Columns>
+            <Column ColumnName="Country Name"/>
+          </Columns>
+        </UniqueKey>
+        <UniqueKey Name="UK_Country_ISO3166Code2">
+          <Columns>
+            <Column ColumnName="ISO3166Code2"/>
+          </Columns>
+        </UniqueKey>
+        <UniqueKey Name="UK_Country_ISO3166Numeric3">
+          <Columns>
+            <Column ColumnName="ISO3166Numeric3"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+  </Tables>
+</Biml>

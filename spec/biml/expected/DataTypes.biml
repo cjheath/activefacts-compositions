@@ -1,0 +1,138 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Databases>
+    <Database Name="DataTypes"/>
+  </Databases>
+  <Tables>
+    <Table Name="AACET" SchemaName="DataTypes.[default]">
+      <Columns>
+        <Column Name="AlternateAutoCounter IsNullable="false" DataType="BIGINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_AACET">
+          <Columns>
+            <Column ColumnName="Alternate Auto Counter"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="AACSub" SchemaName="DataTypes.[default]">
+      <Columns>
+        <Column Name="AACETAlternateAutoCounter IsNullable="false" DataType="BIGINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_AACSub">
+          <Columns>
+            <Column ColumnName="Alternate Auto Counter"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="AGET" SchemaName="DataTypes.[default]">
+      <Columns>
+        <Column Name="AlternateGuid IsNullable="false" DataType="BINARY" Length="16" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_AGET">
+          <Columns>
+            <Column ColumnName="Alternate Guid"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="AGSub" SchemaName="DataTypes.[default]">
+      <Columns>
+        <Column Name="AGETAlternateGuid IsNullable="false" DataType="BINARY" Length="16" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_AGSub">
+          <Columns>
+            <Column ColumnName="Alternate Guid"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Container" SchemaName="DataTypes.[default]">
+      <Columns>
+        <Column Name="AlternateAutoCounter IsNullable="false" DataType="BIGINT" />
+        <Column Name="AlternateAutoTimeStamp IsNullable="false" DataType="TIMESTAMP" />
+        <Column Name="AlternateBigInt IsNullable="false" DataType="BIGINT" />
+        <Column Name="AlternateBit IsNullable="false" DataType="BOOLEAN" />
+        <Column Name="AlternateCharacter IsNullable="false" DataType="CHARACTER" />
+        <Column Name="AlternateCurrency IsNullable="false" DataType="DECIMAL" />
+        <Column Name="AlternateDateTime IsNullable="false" DataType="TIMESTAMP" />
+        <Column Name="AlternateDouble IsNullable="false" DataType="FLOAT" />
+        <Column Name="AlternateFixedLengthText IsNullable="false" DataType="CHARACTER" />
+        <Column Name="AlternateFloat IsNullable="false" DataType="FLOAT" />
+        <Column Name="AlternateGuid IsNullable="false" DataType="BINARY" Length="16" />
+        <Column Name="AlternateInt IsNullable="false" DataType="INTEGER" />
+        <Column Name="AlternateLargeLengthText IsNullable="false" DataType="VARCHAR" Length="MAX" />
+        <Column Name="AlternateNationalCharacter IsNullable="false" DataType="CHARACTER" />
+        <Column Name="AlternateNationalCharacterVarying IsNullable="false" DataType="VARCHAR" />
+        <Column Name="AlternateNchar IsNullable="false" DataType="CHARACTER" />
+        <Column Name="AlternateNvarchar IsNullable="false" DataType="VARCHAR" />
+        <Column Name="AlternatePictureRawData IsNullable="false" DataType="VARBINARY" />
+        <Column Name="AlternateSignedInt IsNullable="false" DataType="INTEGER" />
+        <Column Name="AlternateSignedInteger IsNullable="false" DataType="INTEGER" />
+        <Column Name="AlternateSmallInt IsNullable="false" DataType="SMALLINT" />
+        <Column Name="AlternateTimeStamp IsNullable="false" DataType="TIMESTAMP" />
+        <Column Name="AlternateTinyInt IsNullable="false" DataType="SMALLINT" />
+        <Column Name="AlternateUnsigned IsNullable="false" DataType="INTEGER" />
+        <Column Name="AlternateUnsignedInt IsNullable="false" DataType="INTEGER" />
+        <Column Name="AlternateUnsignedInteger IsNullable="false" DataType="INTEGER" />
+        <Column Name="AlternateVarchar IsNullable="false" DataType="VARCHAR" />
+        <Column Name="AlternateVariableLengthRawData IsNullable="false" DataType="VARBINARY" />
+        <Column Name="AlternateVariableLengthText IsNullable="false" DataType="VARCHAR" />
+        <Column Name="Byte IsNullable="false" DataType="SMALLINT" />
+        <Column Name="Char8 IsNullable="false" DataType="CHARACTER" Length="8" />
+        <Column Name="ContainerName IsNullable="false" DataType="VARCHAR" />
+        <Column Name="Decimal14 IsNullable="false" DataType="DECIMAL" Length="14" />
+        <Column Name="Decimal14_6 IsNullable="false" DataType="DECIMAL" Length="14" Scale="6" />
+        <Column Name="Decimal8_3 IsNullable="false" DataType="DECIMAL" Length="8" Scale="3" />
+        <Column Name="FundamentalBinary IsNullable="false" DataType="VARBINARY" />
+        <Column Name="FundamentalBoolean IsNullable="false" DataType="BOOLEAN" />
+        <Column Name="FundamentalChar IsNullable="false" DataType="CHARACTER" />
+        <Column Name="FundamentalDate IsNullable="false" DataType="DATE" />
+        <Column Name="FundamentalDateTime IsNullable="false" DataType="TIMESTAMP" />
+        <Column Name="FundamentalDecimal IsNullable="false" DataType="DECIMAL" />
+        <Column Name="FundamentalInteger IsNullable="false" DataType="INTEGER" />
+        <Column Name="FundamentalMoney IsNullable="false" DataType="DECIMAL" />
+        <Column Name="FundamentalReal IsNullable="false" DataType="FLOAT" />
+        <Column Name="FundamentalString IsNullable="false" DataType="VARCHAR" />
+        <Column Name="FundamentalText IsNullable="false" DataType="VARCHAR" Length="MAX" />
+        <Column Name="FundamentalTime IsNullable="false" DataType="TIME" />
+        <Column Name="FundamentalTimestamp IsNullable="false" DataType="TIMESTAMP" />
+        <Column Name=""Int" IsNullable="false" DataType="INTEGER" />
+        <Column Name="Int16 IsNullable="false" DataType="SMALLINT" />
+        <Column Name="Int32 IsNullable="false" DataType="INTEGER" />
+        <Column Name="Int64 IsNullable="false" DataType="BIGINT" />
+        <Column Name="Int8 IsNullable="false" DataType="SMALLINT" />
+        <Column Name="Int80 IsNullable="false" DataType="Integer" Length="80" />
+        <Column Name=""Large" IsNullable="false" DataType="BIGINT" />
+        <Column Name="Quad IsNullable="false" DataType="BIGINT" />
+        <Column Name="Real32 IsNullable="false" DataType="FLOAT" Length="32" />
+        <Column Name="Real64 IsNullable="false" DataType="FLOAT" Length="64" />
+        <Column Name="Real80 IsNullable="false" DataType="FLOAT" Length="80" />
+        <Column Name="String255 IsNullable="false" DataType="VARCHAR" Length="255" />
+        <Column Name="Text65536 IsNullable="false" DataType="VARCHAR" Length="65536" />
+        <Column Name="UByte IsNullable="false" DataType="SMALLINT" />
+        <Column Name="UInt IsNullable="false" DataType="BIGINT" />
+        <Column Name="ULarge IsNullable="false" DataType="BIGINT" />
+        <Column Name="UQuad IsNullable="false" DataType="BIGINT" />
+        <Column Name="UWord IsNullable="false" DataType="INTEGER" />
+        <Column Name="Word IsNullable="false" DataType="SMALLINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Container">
+          <Columns>
+            <Column ColumnName="Container Name"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+  </Tables>
+</Biml>

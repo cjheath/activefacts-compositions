@@ -1,0 +1,126 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Databases>
+    <Database Name="CompanyDirectorEmployee"/>
+  </Databases>
+  <Tables>
+    <Table Name="Attendance" SchemaName="CompanyDirectorEmployee.[default]">
+      <Columns>
+        <Column Name="AttendeeFamilyName IsNullable="true" DataType="VARCHAR" Length="48" />
+        <Column Name="AttendeeGivenName IsNullable="false" DataType="VARCHAR" Length="48" />
+        <Column Name="MeetingCompanyName IsNullable="false" DataType="VARCHAR" Length="48" />
+        <Column Name="MeetingDate IsNullable="false" DataType="DATE" />
+        <Column Name="MeetingIsBoardMeeting IsNullable="false" DataType="BOOLEAN" />
+      </Columns>
+      <Keys>
+        <UniqueKey Name="UK_Attendance_Given Name_Family Name_Company Name_Date_Is Board Meeting">
+          <Columns>
+            <Column ColumnName="Given Name"/>
+            <Column ColumnName="Family Name"/>
+            <Column ColumnName="Company Name"/>
+            <Column ColumnName="Date"/>
+            <Column ColumnName="Is Board Meeting"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Company" SchemaName="CompanyDirectorEmployee.[default]">
+      <Columns>
+        <Column Name="CompanyName IsNullable="false" DataType="VARCHAR" Length="48" />
+        <Column Name="IsListed IsNullable="false" DataType="BOOLEAN" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Company">
+          <Columns>
+            <Column ColumnName="Company Name"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Directorship" SchemaName="CompanyDirectorEmployee.[default]">
+      <Columns>
+        <Column Name="AppointmentDate IsNullable="false" DataType="DATE" />
+        <Column Name="CompanyName IsNullable="false" DataType="VARCHAR" Length="48" />
+        <Column Name="DirectorFamilyName IsNullable="true" DataType="VARCHAR" Length="48" />
+        <Column Name="DirectorGivenName IsNullable="false" DataType="VARCHAR" Length="48" />
+      </Columns>
+      <Keys>
+        <UniqueKey Name="UK_Directorship_Given Name_Family Name_Company Name">
+          <Columns>
+            <Column ColumnName="Given Name"/>
+            <Column ColumnName="Family Name"/>
+            <Column ColumnName="Company Name"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Employee" SchemaName="CompanyDirectorEmployee.[default]">
+      <Columns>
+        <Column Name="CompanyName IsNullable="false" DataType="VARCHAR" Length="48" />
+        <Column Name="EmployeeNr IsNullable="false" DataType="INTEGER" />
+        <Column Name="ManagerIsCeo IsNullable="true" DataType="BOOLEAN" />
+        <Column Name="ManagerNr IsNullable="true" DataType="INTEGER" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Employee">
+          <Columns>
+            <Column ColumnName="Employee Nr"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Employment" SchemaName="CompanyDirectorEmployee.[default]">
+      <Columns>
+        <Column Name="EmployeeNr IsNullable="false" DataType="INTEGER" />
+        <Column Name="PersonFamilyName IsNullable="true" DataType="VARCHAR" Length="48" />
+        <Column Name="PersonGivenName IsNullable="false" DataType="VARCHAR" Length="48" />
+      </Columns>
+      <Keys>
+        <UniqueKey Name="UK_Employment_Given Name_Family Name_Employee Nr">
+          <Columns>
+            <Column ColumnName="Given Name"/>
+            <Column ColumnName="Family Name"/>
+            <Column ColumnName="Employee Nr"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Meeting" SchemaName="CompanyDirectorEmployee.[default]">
+      <Columns>
+        <Column Name="CompanyName IsNullable="false" DataType="VARCHAR" Length="48" />
+        <Column Name=""Date" IsNullable="false" DataType="DATE" />
+        <Column Name="IsBoardMeeting IsNullable="false" DataType="BOOLEAN" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Meeting">
+          <Columns>
+            <Column ColumnName="Company Name"/>
+            <Column ColumnName="Date"/>
+            <Column ColumnName="Is Board Meeting"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Person" SchemaName="CompanyDirectorEmployee.[default]">
+      <Columns>
+        <Column Name="BirthDate IsNullable="true" DataType="DATE" />
+        <Column Name="FamilyName IsNullable="true" DataType="VARCHAR" Length="48" />
+        <Column Name="GivenName IsNullable="false" DataType="VARCHAR" Length="48" />
+      </Columns>
+      <Keys>
+        <UniqueKey Name="UK_Person_Given Name_Family Name">
+          <Columns>
+            <Column ColumnName="Given Name"/>
+            <Column ColumnName="Family Name"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+  </Tables>
+</Biml>

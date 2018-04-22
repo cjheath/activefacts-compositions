@@ -1,0 +1,199 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Databases>
+    <Database Name="Warehousing"/>
+  </Databases>
+  <Tables>
+    <Table Name="BackOrderAllocation" SchemaName="Warehousing.[default]">
+      <Columns>
+        <Column Name="PurchaseOrderItemProductID IsNullable="false" DataType="BIGINT" />
+        <Column Name="PurchaseOrderItemPurchaseOrderID IsNullable="false" DataType="BIGINT" />
+        <Column Name="Quantity IsNullable="false" DataType="INTEGER" />
+        <Column Name="SalesOrderItemProductID IsNullable="false" DataType="BIGINT" />
+        <Column Name="SalesOrderItemSalesOrderID IsNullable="false" DataType="BIGINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_BackOrderAllocation">
+          <Columns>
+            <Column ColumnName="Purchase Order ID"/>
+            <Column ColumnName="Product ID"/>
+            <Column ColumnName="Sales Order ID"/>
+            <Column ColumnName="Product ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Bin" SchemaName="Warehousing.[default]">
+      <Columns>
+        <Column Name="BinID IsNullable="false" DataType="BIGINT" />
+        <Column Name="ProductID IsNullable="true" DataType="BIGINT" />
+        <Column Name="Quantity IsNullable="false" DataType="INTEGER" />
+        <Column Name="WarehouseID IsNullable="true" DataType="BIGINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Bin">
+          <Columns>
+            <Column ColumnName="Bin ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="DispatchItem" SchemaName="Warehousing.[default]">
+      <Columns>
+        <Column Name="DispatchID IsNullable="false" DataType="BIGINT" />
+        <Column Name="DispatchItemID IsNullable="false" DataType="BIGINT" />
+        <Column Name="ProductID IsNullable="false" DataType="BIGINT" />
+        <Column Name="Quantity IsNullable="false" DataType="INTEGER" />
+        <Column Name="SalesOrderItemProductID IsNullable="true" DataType="BIGINT" />
+        <Column Name="SalesOrderItemSalesOrderID IsNullable="true" DataType="BIGINT" />
+        <Column Name="TransferRequestID IsNullable="true" DataType="BIGINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_DispatchItem">
+          <Columns>
+            <Column ColumnName="Dispatch Item ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Party" SchemaName="Warehousing.[default]">
+      <Columns>
+        <Column Name="PartyID IsNullable="false" DataType="BIGINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Party">
+          <Columns>
+            <Column ColumnName="Party ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Product" SchemaName="Warehousing.[default]">
+      <Columns>
+        <Column Name="ProductID IsNullable="false" DataType="BIGINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Product">
+          <Columns>
+            <Column ColumnName="Product ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="PurchaseOrder" SchemaName="Warehousing.[default]">
+      <Columns>
+        <Column Name="PurchaseOrderID IsNullable="false" DataType="BIGINT" />
+        <Column Name="SupplierID IsNullable="false" DataType="BIGINT" />
+        <Column Name="WarehouseID IsNullable="false" DataType="BIGINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_PurchaseOrder">
+          <Columns>
+            <Column ColumnName="Purchase Order ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="PurchaseOrderItem" SchemaName="Warehousing.[default]">
+      <Columns>
+        <Column Name="ProductID IsNullable="false" DataType="BIGINT" />
+        <Column Name="PurchaseOrderID IsNullable="false" DataType="BIGINT" />
+        <Column Name="Quantity IsNullable="false" DataType="INTEGER" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_PurchaseOrderItem">
+          <Columns>
+            <Column ColumnName="Purchase Order ID"/>
+            <Column ColumnName="Product ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="ReceivedItem" SchemaName="Warehousing.[default]">
+      <Columns>
+        <Column Name="ProductID IsNullable="false" DataType="BIGINT" />
+        <Column Name="PurchaseOrderItemProductID IsNullable="true" DataType="BIGINT" />
+        <Column Name="PurchaseOrderItemPurchaseOrderID IsNullable="true" DataType="BIGINT" />
+        <Column Name="Quantity IsNullable="false" DataType="INTEGER" />
+        <Column Name="ReceiptID IsNullable="false" DataType="BIGINT" />
+        <Column Name="ReceivedItemID IsNullable="false" DataType="BIGINT" />
+        <Column Name="TransferRequestID IsNullable="true" DataType="BIGINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_ReceivedItem">
+          <Columns>
+            <Column ColumnName="Received Item ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="SalesOrder" SchemaName="Warehousing.[default]">
+      <Columns>
+        <Column Name="CustomerID IsNullable="false" DataType="BIGINT" />
+        <Column Name="SalesOrderID IsNullable="false" DataType="BIGINT" />
+        <Column Name="WarehouseID IsNullable="false" DataType="BIGINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_SalesOrder">
+          <Columns>
+            <Column ColumnName="Sales Order ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="SalesOrderItem" SchemaName="Warehousing.[default]">
+      <Columns>
+        <Column Name="ProductID IsNullable="false" DataType="BIGINT" />
+        <Column Name="Quantity IsNullable="false" DataType="INTEGER" />
+        <Column Name="SalesOrderID IsNullable="false" DataType="BIGINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_SalesOrderItem">
+          <Columns>
+            <Column ColumnName="Sales Order ID"/>
+            <Column ColumnName="Product ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="TransferRequest" SchemaName="Warehousing.[default]">
+      <Columns>
+        <Column Name="FromWarehouseID IsNullable="false" DataType="BIGINT" />
+        <Column Name="ProductID IsNullable="false" DataType="BIGINT" />
+        <Column Name="Quantity IsNullable="false" DataType="INTEGER" />
+        <Column Name="ToWarehouseID IsNullable="false" DataType="BIGINT" />
+        <Column Name="TransferRequestID IsNullable="false" DataType="BIGINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_TransferRequest">
+          <Columns>
+            <Column ColumnName="Transfer Request ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Warehouse" SchemaName="Warehousing.[default]">
+      <Columns>
+        <Column Name="WarehouseID IsNullable="false" DataType="BIGINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Warehouse">
+          <Columns>
+            <Column ColumnName="Warehouse ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+  </Tables>
+</Biml>

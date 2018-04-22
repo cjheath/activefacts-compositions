@@ -1,0 +1,425 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Databases>
+    <Database Name="Insurance"/>
+  </Databases>
+  <Tables>
+    <Table Name="Asset" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="AssetID IsNullable="false" DataType="BIGINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Asset">
+          <Columns>
+            <Column ColumnName="Asset ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Claim" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="ClaimID IsNullable="false" DataType="BIGINT" />
+        <Column Name="IncidentAddressCity IsNullable="true" DataType="VARCHAR" />
+        <Column Name="IncidentAddressPostcode IsNullable="true" DataType="VARCHAR" />
+        <Column Name="IncidentAddressStateCode IsNullable="true" DataType="SMALLINT" />
+        <Column Name="IncidentAddressStreet IsNullable="true" DataType="VARCHAR" Length="256" />
+        <Column Name="IncidentDateTime IsNullable="true" DataType="TIMESTAMP" />
+        <Column Name="IncidentOfficerName IsNullable="true" DataType="VARCHAR" Length="256" />
+        <Column Name="IncidentPoliceReportNr IsNullable="true" DataType="INTEGER" />
+        <Column Name="IncidentReportDateTime IsNullable="true" DataType="TIMESTAMP" />
+        <Column Name="IncidentReporterName IsNullable="true" DataType="VARCHAR" Length="256" />
+        <Column Name="IncidentStationName IsNullable="true" DataType="VARCHAR" Length="256" />
+        <Column Name="LodgementDateTime IsNullable="true" DataType="TIMESTAMP" />
+        <Column Name="LodgementPersonID IsNullable="true" DataType="BIGINT" />
+        <Column Name="PSequence IsNullable="false" DataType="SMALLINT" />
+        <Column Name="PolicyPProductCode IsNullable="false" DataType="SMALLINT" />
+        <Column Name="PolicyPSerial IsNullable="false" DataType="INTEGER" />
+        <Column Name="PolicyPStateCode IsNullable="false" DataType="SMALLINT" />
+        <Column Name="PolicyPYearNr IsNullable="false" DataType="INTEGER" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Claim">
+          <Columns>
+            <Column ColumnName="Claim ID"/>
+          </Columns>
+        </PrimaryKey>
+        <UniqueKey Name="UK_Claim_P_sequence_Year Nr_Product Code_State Code_P_serial">
+          <Columns>
+            <Column ColumnName="P_sequence"/>
+            <Column ColumnName="Year Nr"/>
+            <Column ColumnName="Product Code"/>
+            <Column ColumnName="State Code"/>
+            <Column ColumnName="P_serial"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="ContractorAppointment" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="ClaimID IsNullable="false" DataType="BIGINT" />
+        <Column Name="ContractorID IsNullable="false" DataType="BIGINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_ContractorAppointment">
+          <Columns>
+            <Column ColumnName="Claim ID"/>
+            <Column ColumnName="Party ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Cover" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="AssetID IsNullable="false" DataType="BIGINT" />
+        <Column Name="CoverTypeCode IsNullable="false" DataType="CHARACTER" />
+        <Column Name="PolicyPProductCode IsNullable="false" DataType="SMALLINT" />
+        <Column Name="PolicyPSerial IsNullable="false" DataType="INTEGER" />
+        <Column Name="PolicyPStateCode IsNullable="false" DataType="SMALLINT" />
+        <Column Name="PolicyPYearNr IsNullable="false" DataType="INTEGER" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Cover">
+          <Columns>
+            <Column ColumnName="Year Nr"/>
+            <Column ColumnName="Product Code"/>
+            <Column ColumnName="State Code"/>
+            <Column ColumnName="P_serial"/>
+            <Column ColumnName="Cover Type Code"/>
+            <Column ColumnName="Asset ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="CoverType" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="CoverTypeCode IsNullable="false" DataType="CHARACTER" />
+        <Column Name="CoverTypeName IsNullable="false" DataType="VARCHAR" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_CoverType">
+          <Columns>
+            <Column ColumnName="Cover Type Code"/>
+          </Columns>
+        </PrimaryKey>
+        <UniqueKey Name="UK_CoverType_Cover Type Name">
+          <Columns>
+            <Column ColumnName="Cover Type Name"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="CoverWording" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="CoverTypeCode IsNullable="false" DataType="CHARACTER" />
+        <Column Name="PolicyWordingText IsNullable="false" DataType="VARCHAR" />
+        <Column Name="StartDate IsNullable="false" DataType="DATE" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_CoverWording">
+          <Columns>
+            <Column ColumnName="Cover Type Code"/>
+            <Column ColumnName="Policy Wording Text"/>
+            <Column ColumnName="Start Date"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="LossType" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="InvolvesDriving IsNullable="false" DataType="BOOLEAN" />
+        <Column Name="IsSingleVehicleIncident IsNullable="false" DataType="BOOLEAN" />
+        <Column Name="LiabilityCode IsNullable="true" DataType="CHARACTER" Length="1" />
+        <Column Name="LossTypeCode IsNullable="false" DataType="CHARACTER" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_LossType">
+          <Columns>
+            <Column ColumnName="Loss Type Code"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="LostItem" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="Description IsNullable="false" DataType="VARCHAR" Length="1024" />
+        <Column Name="IncidentClaimID IsNullable="false" DataType="BIGINT" />
+        <Column Name="LostItemNr IsNullable="false" DataType="INTEGER" />
+        <Column Name="PurchaseDate IsNullable="true" DataType="DATE" />
+        <Column Name="PurchasePlace IsNullable="true" DataType="VARCHAR" />
+        <Column Name="PurchasePrice IsNullable="true" DataType="DECIMAL" Length="18" Scale="2" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_LostItem">
+          <Columns>
+            <Column ColumnName="Claim ID"/>
+            <Column ColumnName="Lost Item Nr"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Party" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="CompanyContactPersonID IsNullable="true" DataType="BIGINT" />
+        <Column Name="IsACompany IsNullable="false" DataType="BOOLEAN" />
+        <Column Name="PartyID IsNullable="false" DataType="BIGINT" />
+        <Column Name="PersonAddressCity IsNullable="true" DataType="VARCHAR" />
+        <Column Name="PersonAddressPostcode IsNullable="true" DataType="VARCHAR" />
+        <Column Name="PersonAddressStateCode IsNullable="true" DataType="SMALLINT" />
+        <Column Name="PersonAddressStreet IsNullable="true" DataType="VARCHAR" Length="256" />
+        <Column Name="PersonBirthDate IsNullable="true" DataType="DATE" />
+        <Column Name="PersonBusinessPhoneNr IsNullable="true" DataType="VARCHAR" />
+        <Column Name="PersonContactTime IsNullable="true" DataType="TIME" />
+        <Column Name="PersonEmail IsNullable="true" DataType="VARCHAR" />
+        <Column Name="PersonFamilyName IsNullable="true" DataType="VARCHAR" Length="256" />
+        <Column Name="PersonGivenName IsNullable="true" DataType="VARCHAR" Length="256" />
+        <Column Name="PersonHomePhoneNr IsNullable="true" DataType="VARCHAR" />
+        <Column Name="PersonIsInternational IsNullable="true" DataType="BOOLEAN" />
+        <Column Name="PersonLicenseNumber IsNullable="true" DataType="VARCHAR" />
+        <Column Name="PersonLicenseType IsNullable="true" DataType="VARCHAR" />
+        <Column Name="PersonMobilePhoneNr IsNullable="true" DataType="VARCHAR" />
+        <Column Name="PersonOccupation IsNullable="true" DataType="VARCHAR" />
+        <Column Name="PersonPreferredContactMethod IsNullable="true" DataType="CHARACTER" Length="1" />
+        <Column Name="PersonTitle IsNullable="true" DataType="VARCHAR" />
+        <Column Name="PersonYearNr IsNullable="true" DataType="INTEGER" />
+        <Column Name="PostalAddressCity IsNullable="true" DataType="VARCHAR" />
+        <Column Name="PostalAddressPostcode IsNullable="true" DataType="VARCHAR" />
+        <Column Name="PostalAddressStateCode IsNullable="true" DataType="SMALLINT" />
+        <Column Name="PostalAddressStreet IsNullable="true" DataType="VARCHAR" Length="256" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Party">
+          <Columns>
+            <Column ColumnName="Party ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Policy" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="ApplicationNr IsNullable="false" DataType="INTEGER" />
+        <Column Name="AuthorisedRepID IsNullable="true" DataType="BIGINT" />
+        <Column Name="ITCClaimed IsNullable="true" DataType="DECIMAL" Length="18" Scale="2" />
+        <Column Name="InsuredID IsNullable="false" DataType="BIGINT" />
+        <Column Name="PProductCode IsNullable="false" DataType="SMALLINT" />
+        <Column Name="PSerial IsNullable="false" DataType="INTEGER" />
+        <Column Name="PStateCode IsNullable="false" DataType="SMALLINT" />
+        <Column Name="PYearNr IsNullable="false" DataType="INTEGER" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Policy">
+          <Columns>
+            <Column ColumnName="Year Nr"/>
+            <Column ColumnName="Product Code"/>
+            <Column ColumnName="State Code"/>
+            <Column ColumnName="P_serial"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Product" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="Alias IsNullable="true" DataType="CHARACTER" Length="3" />
+        <Column Name="Description IsNullable="true" DataType="VARCHAR" Length="1024" />
+        <Column Name="ProductCode IsNullable="false" DataType="SMALLINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Product">
+          <Columns>
+            <Column ColumnName="Product Code"/>
+          </Columns>
+        </PrimaryKey>
+        <UniqueKey Name="UK_Product_Alias">
+          <Columns>
+            <Column ColumnName="Alias"/>
+          </Columns>
+        </UniqueKey>
+        <UniqueKey Name="UK_Product_Description">
+          <Columns>
+            <Column ColumnName="Description"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="PropertyDamage" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="AddressCity IsNullable="false" DataType="VARCHAR" />
+        <Column Name="AddressPostcode IsNullable="true" DataType="VARCHAR" />
+        <Column Name="AddressStateCode IsNullable="true" DataType="SMALLINT" />
+        <Column Name="AddressStreet IsNullable="false" DataType="VARCHAR" Length="256" />
+        <Column Name="IncidentClaimID IsNullable="true" DataType="BIGINT" />
+        <Column Name="OwnerName IsNullable="true" DataType="VARCHAR" Length="256" />
+        <Column Name="PhoneNr IsNullable="true" DataType="VARCHAR" />
+      </Columns>
+      <Keys>
+        <UniqueKey Name="UK_PropertyDamage_Claim ID_Street_City_Postcode_State Code">
+          <Columns>
+            <Column ColumnName="Claim ID"/>
+            <Column ColumnName="Street"/>
+            <Column ColumnName="City"/>
+            <Column ColumnName="Postcode"/>
+            <Column ColumnName="State Code"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="State" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="StateCode IsNullable="false" DataType="SMALLINT" />
+        <Column Name="StateName IsNullable="true" DataType="VARCHAR" Length="256" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_State">
+          <Columns>
+            <Column ColumnName="State Code"/>
+          </Columns>
+        </PrimaryKey>
+        <UniqueKey Name="UK_State_State Name">
+          <Columns>
+            <Column ColumnName="State Name"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="ThirdParty" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="InsurerID IsNullable="true" DataType="BIGINT" />
+        <Column Name="ModelYearNr IsNullable="true" DataType="INTEGER" />
+        <Column Name="PersonID IsNullable="false" DataType="BIGINT" />
+        <Column Name="VehicleIncidentClaimID IsNullable="false" DataType="BIGINT" />
+        <Column Name="VehicleRegistrationNr IsNullable="true" DataType="CHARACTER" Length="8" />
+        <Column Name="VehicleTypeBadge IsNullable="true" DataType="VARCHAR" />
+        <Column Name="VehicleTypeMake IsNullable="true" DataType="VARCHAR" />
+        <Column Name="VehicleTypeModel IsNullable="true" DataType="VARCHAR" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_ThirdParty">
+          <Columns>
+            <Column ColumnName="Party ID"/>
+            <Column ColumnName="Claim ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="UnderwritingDemerit" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="OccurrenceCount IsNullable="true" DataType="INTEGER" />
+        <Column Name="UnderwritingQuestionID IsNullable="false" DataType="BIGINT" />
+        <Column Name="VehicleIncidentClaimID IsNullable="false" DataType="BIGINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_UnderwritingDemerit">
+          <Columns>
+            <Column ColumnName="Claim ID"/>
+            <Column ColumnName="Underwriting Question ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="UnderwritingQuestion" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="Text IsNullable="false" DataType="VARCHAR" />
+        <Column Name="UnderwritingQuestionID IsNullable="false" DataType="BIGINT" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_UnderwritingQuestion">
+          <Columns>
+            <Column ColumnName="Underwriting Question ID"/>
+          </Columns>
+        </PrimaryKey>
+        <UniqueKey Name="UK_UnderwritingQuestion_Text">
+          <Columns>
+            <Column ColumnName="Text"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Vehicle" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="AssetID IsNullable="false" DataType="BIGINT" />
+        <Column Name="Colour IsNullable="true" DataType="VARCHAR" />
+        <Column Name="DealerID IsNullable="true" DataType="BIGINT" />
+        <Column Name="EngineNumber IsNullable="true" DataType="VARCHAR" />
+        <Column Name="FinanceInstitutionID IsNullable="true" DataType="BIGINT" />
+        <Column Name="HasCommercialRegistration IsNullable="false" DataType="BOOLEAN" />
+        <Column Name="ModelYearNr IsNullable="false" DataType="INTEGER" />
+        <Column Name="RegistrationNr IsNullable="false" DataType="CHARACTER" Length="8" />
+        <Column Name="VIN IsNullable="false" DataType="INTEGER" />
+        <Column Name="VehicleTypeBadge IsNullable="true" DataType="VARCHAR" />
+        <Column Name="VehicleTypeMake IsNullable="false" DataType="VARCHAR" />
+        <Column Name="VehicleTypeModel IsNullable="false" DataType="VARCHAR" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Vehicle">
+          <Columns>
+            <Column ColumnName="VIN"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="VehicleIncident" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="Description IsNullable="true" DataType="VARCHAR" Length="1024" />
+        <Column Name="DrivingBloodTestResult IsNullable="true" DataType="VARCHAR" />
+        <Column Name="DrivingBreathTestResult IsNullable="true" DataType="VARCHAR" />
+        <Column Name="DrivingCharge IsNullable="true" DataType="VARCHAR" />
+        <Column Name="DrivingHospitalName IsNullable="true" DataType="VARCHAR" />
+        <Column Name="DrivingIntoxication IsNullable="true" DataType="VARCHAR" />
+        <Column Name="DrivingIsAWarning IsNullable="true" DataType="BOOLEAN" />
+        <Column Name="DrivingNonconsentReason IsNullable="true" DataType="VARCHAR" />
+        <Column Name="DrivingPersonID IsNullable="true" DataType="BIGINT" />
+        <Column Name="DrivingUnlicensedReason IsNullable="true" DataType="VARCHAR" />
+        <Column Name="IncidentClaimID IsNullable="false" DataType="BIGINT" />
+        <Column Name="LossTypeCode IsNullable="true" DataType="CHARACTER" />
+        <Column Name="OccurredWhileBeingDriven IsNullable="false" DataType="BOOLEAN" />
+        <Column Name="PreviousDamageDescription IsNullable="true" DataType="VARCHAR" Length="1024" />
+        <Column Name="Reason IsNullable="true" DataType="VARCHAR" />
+        <Column Name="TowedLocation IsNullable="true" DataType="VARCHAR" />
+        <Column Name="WeatherDescription IsNullable="true" DataType="VARCHAR" Length="1024" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_VehicleIncident">
+          <Columns>
+            <Column ColumnName="Claim ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Witness" SchemaName="Insurance.[default]">
+      <Columns>
+        <Column Name="AddressCity IsNullable="true" DataType="VARCHAR" />
+        <Column Name="AddressPostcode IsNullable="true" DataType="VARCHAR" />
+        <Column Name="AddressStateCode IsNullable="true" DataType="SMALLINT" />
+        <Column Name="AddressStreet IsNullable="true" DataType="VARCHAR" Length="256" />
+        <Column Name="ContactPhoneNr IsNullable="true" DataType="VARCHAR" />
+        <Column Name="IncidentClaimID IsNullable="false" DataType="BIGINT" />
+        <Column Name="Name IsNullable="false" DataType="VARCHAR" Length="256" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Witness">
+          <Columns>
+            <Column ColumnName="Claim ID"/>
+            <Column ColumnName="Name"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+  </Tables>
+</Biml>
