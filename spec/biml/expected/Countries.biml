@@ -5,7 +5,7 @@
   <Tables>
     <Table Name="Country" SchemaName="Countries.[default]">
       <Columns>
-        <Column Name="CountryCode IsNullable="false" DataType="CHARACTER" Length="3" />
+        <TableReference Name="CountryCode" TableName="Countries.[default].Country" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Country">
@@ -19,7 +19,7 @@
 
     <Table Name="CountryCode" SchemaName="Countries.[default]">
       <Columns>
-        <Column Name="CountryCodeValue IsNullable="false" DataType="CHARACTER" Length="3" />
+        <Column Name="CountryCodeValue IsNullable="false" DataType="AnsiStringFixedLength" Length="3" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_CountryCode">

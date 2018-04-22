@@ -5,7 +5,7 @@
   <Tables>
     <Table Name="Base" SchemaName="Separate.[default]">
       <Columns>
-        <Column Name="BaseGUID IsNullable="false" DataType="BINARY" Length="16" />
+        <Column Name="BaseGUID IsNullable="false" DataType="Binary" Length="16" />
         <Column Name="BaseVal IsNullable="false" DataType="Val" />
       </Columns>
       <Keys>
@@ -19,7 +19,7 @@
 
     <Table Name="Partition" SchemaName="Separate.[default]">
       <Columns>
-        <Column Name="BaseGUID IsNullable="false" DataType="BINARY" Length="16" />
+        <Column Name="BaseGUID IsNullable="false" DataType="Binary" Length="16" />
         <Column Name="BaseVal IsNullable="false" DataType="Val" />
         <Column Name="PartVal IsNullable="false" DataType="Val" />
       </Columns>
@@ -35,9 +35,9 @@
     <Table Name="PartitionInd" SchemaName="Separate.[default]">
       <Columns>
         <Column Name="AbsorbedPartAbsPartVal IsNullable="true" DataType="Val" />
-        <Column Name="BaseGUID IsNullable="false" DataType="BINARY" Length="16" />
+        <Column Name="BaseGUID IsNullable="false" DataType="Binary" Length="16" />
         <Column Name="BaseVal IsNullable="false" DataType="Val" />
-        <Column Name="PartitionIndKey IsNullable="false" DataType="BINARY" Length="16" />
+        <Column Name="PartitionIndKey IsNullable="false" DataType="Binary" Length="16" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_PartitionInd">
@@ -55,8 +55,8 @@
 
     <Table Name="Separate" SchemaName="Separate.[default]">
       <Columns>
-        <Column Name="BaseGUID IsNullable="false" DataType="BINARY" Length="16" />
         <Column Name="SepVal IsNullable="false" DataType="Val" />
+        <TableReference Name="BaseGUID" TableName="Separate.[default].Separate" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Separate">

@@ -5,8 +5,8 @@
   <Tables>
     <Table Name="Person" SchemaName="Person.[default]">
       <Columns>
-        <Column Name="FamilyName IsNullable="false" DataType="VARCHAR" />
-        <Column Name="GivenName IsNullable="false" DataType="VARCHAR" />
+        <Column Name="FamilyName IsNullable="false" DataType="AnsiString" />
+        <Column Name="GivenName IsNullable="false" DataType="AnsiString" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Person">

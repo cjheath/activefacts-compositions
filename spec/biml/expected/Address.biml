@@ -5,13 +5,13 @@
   <Tables>
     <Table Name="Company" SchemaName="Address.[default]">
       <Columns>
-        <Column Name="AddressCity IsNullable="true" DataType="VARCHAR" Length="64" />
-        <Column Name="AddressPostcode IsNullable="true" DataType="VARCHAR" />
-        <Column Name="AddressStreetFirstStreetLine IsNullable="true" DataType="VARCHAR" Length="64" />
-        <Column Name="AddressStreetNumber IsNullable="true" DataType="VARCHAR" Length="12" />
-        <Column Name="AddressStreetSecondStreetLine IsNullable="true" DataType="VARCHAR" Length="64" />
-        <Column Name="AddressStreetThirdStreetLine IsNullable="true" DataType="VARCHAR" Length="64" />
-        <Column Name="CompanyName IsNullable="false" DataType="VARCHAR" />
+        <Column Name="AddressCity IsNullable="true" DataType="AnsiString" Length="64" />
+        <Column Name="AddressPostcode IsNullable="true" DataType="AnsiString" />
+        <Column Name="AddressStreetFirstStreetLine IsNullable="true" DataType="AnsiString" Length="64" />
+        <Column Name="AddressStreetNumber IsNullable="true" DataType="AnsiString" Length="12" />
+        <Column Name="AddressStreetSecondStreetLine IsNullable="true" DataType="AnsiString" Length="64" />
+        <Column Name="AddressStreetThirdStreetLine IsNullable="true" DataType="AnsiString" Length="64" />
+        <Column Name="CompanyName IsNullable="false" DataType="AnsiString" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Company">
@@ -24,14 +24,14 @@
 
     <Table Name="Person" SchemaName="Address.[default]">
       <Columns>
-        <Column Name="AddressCity IsNullable="true" DataType="VARCHAR" Length="64" />
-        <Column Name="AddressPostcode IsNullable="true" DataType="VARCHAR" />
-        <Column Name="AddressStreetFirstStreetLine IsNullable="true" DataType="VARCHAR" Length="64" />
-        <Column Name="AddressStreetNumber IsNullable="true" DataType="VARCHAR" Length="12" />
-        <Column Name="AddressStreetSecondStreetLine IsNullable="true" DataType="VARCHAR" Length="64" />
-        <Column Name="AddressStreetThirdStreetLine IsNullable="true" DataType="VARCHAR" Length="64" />
-        <Column Name="FamilyName IsNullable="false" DataType="VARCHAR" Length="20" />
-        <Column Name="GivenNames IsNullable="false" DataType="VARCHAR" Length="20" />
+        <Column Name="AddressCity IsNullable="true" DataType="AnsiString" Length="64" />
+        <Column Name="AddressPostcode IsNullable="true" DataType="AnsiString" />
+        <Column Name="AddressStreetFirstStreetLine IsNullable="true" DataType="AnsiString" Length="64" />
+        <Column Name="AddressStreetNumber IsNullable="true" DataType="AnsiString" Length="12" />
+        <Column Name="AddressStreetSecondStreetLine IsNullable="true" DataType="AnsiString" Length="64" />
+        <Column Name="AddressStreetThirdStreetLine IsNullable="true" DataType="AnsiString" Length="64" />
+        <Column Name="FamilyName IsNullable="false" DataType="AnsiString" Length="20" />
+        <Column Name="GivenNames IsNullable="false" DataType="AnsiString" Length="20" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Person">

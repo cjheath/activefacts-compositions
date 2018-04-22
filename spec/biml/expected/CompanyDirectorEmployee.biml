@@ -5,11 +5,11 @@
   <Tables>
     <Table Name="Attendance" SchemaName="CompanyDirectorEmployee.[default]">
       <Columns>
-        <Column Name="AttendeeFamilyName IsNullable="true" DataType="VARCHAR" Length="48" />
-        <Column Name="AttendeeGivenName IsNullable="false" DataType="VARCHAR" Length="48" />
-        <Column Name="MeetingCompanyName IsNullable="false" DataType="VARCHAR" Length="48" />
-        <Column Name="MeetingDate IsNullable="false" DataType="DATE" />
-        <Column Name="MeetingIsBoardMeeting IsNullable="false" DataType="BOOLEAN" />
+        <MultipleColumnTableReference Name="AttendeeGivenName" ForeignColumnName="GivenName" MultipleColumnTableReferenceGroupName="Attendance0" />
+        <MultipleColumnTableReference Name="AttendeeFamilyName" ForeignColumnName="FamilyName" MultipleColumnTableReferenceGroupName="Attendance0" />
+        <MultipleColumnTableReference Name="MeetingCompanyName" ForeignColumnName="CompanyName" MultipleColumnTableReferenceGroupName="Attendance1" />
+        <MultipleColumnTableReference Name="MeetingDate" ForeignColumnName="Date" MultipleColumnTableReferenceGroupName="Attendance1" />
+        <MultipleColumnTableReference Name="MeetingIsBoardMeeting" ForeignColumnName="IsBoardMeeting" MultipleColumnTableReferenceGroupName="Attendance1" />
       </Columns>
       <Keys>
         <UniqueKey Name="UK_Attendance_Given Name_Family Name_Company Name_Date_Is Board Meeting">
@@ -26,8 +26,8 @@
 
     <Table Name="Company" SchemaName="CompanyDirectorEmployee.[default]">
       <Columns>
-        <Column Name="CompanyName IsNullable="false" DataType="VARCHAR" Length="48" />
-        <Column Name="IsListed IsNullable="false" DataType="BOOLEAN" />
+        <Column Name="CompanyName IsNullable="false" DataType="AnsiString" Length="48" />
+        <Column Name="IsListed IsNullable="false" DataType="Boolean" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Company">
@@ -40,10 +40,10 @@
 
     <Table Name="Directorship" SchemaName="CompanyDirectorEmployee.[default]">
       <Columns>
-        <Column Name="AppointmentDate IsNullable="false" DataType="DATE" />
-        <Column Name="CompanyName IsNullable="false" DataType="VARCHAR" Length="48" />
-        <Column Name="DirectorFamilyName IsNullable="true" DataType="VARCHAR" Length="48" />
-        <Column Name="DirectorGivenName IsNullable="false" DataType="VARCHAR" Length="48" />
+        <Column Name="AppointmentDate IsNullable="false" DataType="Date" />
+        <TableReference Name="CompanyName" TableName="CompanyDirectorEmployee.[default].Directorship" />
+        <MultipleColumnTableReference Name="DirectorGivenName" ForeignColumnName="GivenName" MultipleColumnTableReferenceGroupName="Directorship1" />
+        <MultipleColumnTableReference Name="DirectorFamilyName" ForeignColumnName="FamilyName" MultipleColumnTableReferenceGroupName="Directorship1" />
       </Columns>
       <Keys>
         <UniqueKey Name="UK_Directorship_Given Name_Family Name_Company Name">
@@ -58,10 +58,10 @@
 
     <Table Name="Employee" SchemaName="CompanyDirectorEmployee.[default]">
       <Columns>
-        <Column Name="CompanyName IsNullable="false" DataType="VARCHAR" Length="48" />
-        <Column Name="EmployeeNr IsNullable="false" DataType="INTEGER" />
-        <Column Name="ManagerIsCeo IsNullable="true" DataType="BOOLEAN" />
-        <Column Name="ManagerNr IsNullable="true" DataType="INTEGER" />
+        <Column Name="EmployeeNr IsNullable="false" DataType="Int32" />
+        <Column Name="ManagerIsCeo IsNullable="true" DataType="Boolean" />
+        <TableReference Name="CompanyName" TableName="CompanyDirectorEmployee.[default].Employee" />
+        <TableReference Name="ManagerNr" TableName="CompanyDirectorEmployee.[default].Employee" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Employee">
@@ -74,9 +74,9 @@
 
     <Table Name="Employment" SchemaName="CompanyDirectorEmployee.[default]">
       <Columns>
-        <Column Name="EmployeeNr IsNullable="false" DataType="INTEGER" />
-        <Column Name="PersonFamilyName IsNullable="true" DataType="VARCHAR" Length="48" />
-        <Column Name="PersonGivenName IsNullable="false" DataType="VARCHAR" Length="48" />
+        <TableReference Name="EmployeeNr" TableName="CompanyDirectorEmployee.[default].Employment" />
+        <MultipleColumnTableReference Name="PersonGivenName" ForeignColumnName="GivenName" MultipleColumnTableReferenceGroupName="Employment1" />
+        <MultipleColumnTableReference Name="PersonFamilyName" ForeignColumnName="FamilyName" MultipleColumnTableReferenceGroupName="Employment1" />
       </Columns>
       <Keys>
         <UniqueKey Name="UK_Employment_Given Name_Family Name_Employee Nr">
@@ -91,9 +91,9 @@
 
     <Table Name="Meeting" SchemaName="CompanyDirectorEmployee.[default]">
       <Columns>
-        <Column Name="CompanyName IsNullable="false" DataType="VARCHAR" Length="48" />
-        <Column Name=""Date" IsNullable="false" DataType="DATE" />
-        <Column Name="IsBoardMeeting IsNullable="false" DataType="BOOLEAN" />
+        <Column Name="Date IsNullable="false" DataType="Date" />
+        <Column Name="IsBoardMeeting IsNullable="false" DataType="Boolean" />
+        <TableReference Name="CompanyName" TableName="CompanyDirectorEmployee.[default].Meeting" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Meeting">
@@ -108,9 +108,9 @@
 
     <Table Name="Person" SchemaName="CompanyDirectorEmployee.[default]">
       <Columns>
-        <Column Name="BirthDate IsNullable="true" DataType="DATE" />
-        <Column Name="FamilyName IsNullable="true" DataType="VARCHAR" Length="48" />
-        <Column Name="GivenName IsNullable="false" DataType="VARCHAR" Length="48" />
+        <Column Name="BirthDate IsNullable="true" DataType="Date" />
+        <Column Name="FamilyName IsNullable="true" DataType="AnsiString" Length="48" />
+        <Column Name="GivenName IsNullable="false" DataType="AnsiString" Length="48" />
       </Columns>
       <Keys>
         <UniqueKey Name="UK_Person_Given Name_Family Name">

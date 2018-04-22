@@ -5,9 +5,9 @@
   <Tables>
     <Table Name="AcceptableSubstitution" SchemaName="OilSupply.[default]">
       <Columns>
-        <Column Name="AlternateProductName IsNullable="false" DataType="VARCHAR" />
-        <Column Name="ProductName IsNullable="false" DataType="VARCHAR" />
-        <Column Name="Season IsNullable="false" DataType="VARCHAR" Length="6" />
+        <Column Name="Season IsNullable="false" DataType="AnsiString" Length="6" />
+        <TableReference Name="AlternateProductName" TableName="OilSupply.[default].AcceptableSubstitution" />
+        <TableReference Name="ProductName" TableName="OilSupply.[default].AcceptableSubstitution" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_AcceptableSubstitution">
@@ -22,8 +22,8 @@
 
     <Table Name="Month" SchemaName="OilSupply.[default]">
       <Columns>
-        <Column Name="MonthNr IsNullable="false" DataType="INTEGER" />
-        <Column Name="Season IsNullable="false" DataType="VARCHAR" Length="6" />
+        <Column Name="MonthNr IsNullable="false" DataType="Int32" />
+        <Column Name="Season IsNullable="false" DataType="AnsiString" Length="6" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Month">
@@ -36,7 +36,7 @@
 
     <Table Name="Product" SchemaName="OilSupply.[default]">
       <Columns>
-        <Column Name="ProductName IsNullable="false" DataType="VARCHAR" />
+        <Column Name="ProductName IsNullable="false" DataType="AnsiString" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Product">
@@ -49,12 +49,12 @@
 
     <Table Name="ProductionForecast" SchemaName="OilSupply.[default]">
       <Columns>
-        <Column Name="Cost IsNullable="true" DataType="DECIMAL" />
-        <Column Name="ProductName IsNullable="false" DataType="VARCHAR" />
-        <Column Name="Quantity IsNullable="false" DataType="INTEGER" />
-        <Column Name="RefineryName IsNullable="false" DataType="VARCHAR" Length="80" />
-        <Column Name="SupplyPeriodMonthNr IsNullable="false" DataType="INTEGER" />
-        <Column Name="SupplyPeriodYearNr IsNullable="false" DataType="INTEGER" />
+        <Column Name="Cost IsNullable="true" DataType="Currency" />
+        <Column Name="Quantity IsNullable="false" DataType="Int32" />
+        <TableReference Name="ProductName" TableName="OilSupply.[default].ProductionForecast" />
+        <TableReference Name="RefineryName" TableName="OilSupply.[default].ProductionForecast" />
+        <MultipleColumnTableReference Name="SupplyPeriodYearNr" ForeignColumnName="YearNr" MultipleColumnTableReferenceGroupName="ProductionForecast2" />
+        <MultipleColumnTableReference Name="SupplyPeriodMonthNr" ForeignColumnName="MonthNr" MultipleColumnTableReferenceGroupName="ProductionForecast2" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_ProductionForecast">
@@ -70,7 +70,7 @@
 
     <Table Name="Refinery" SchemaName="OilSupply.[default]">
       <Columns>
-        <Column Name="RefineryName IsNullable="false" DataType="VARCHAR" Length="80" />
+        <Column Name="RefineryName IsNullable="false" DataType="AnsiString" Length="80" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Refinery">
@@ -83,7 +83,7 @@
 
     <Table Name="Region" SchemaName="OilSupply.[default]">
       <Columns>
-        <Column Name="RegionName IsNullable="false" DataType="VARCHAR" />
+        <Column Name="RegionName IsNullable="false" DataType="AnsiString" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Region">
@@ -96,11 +96,11 @@
 
     <Table Name="RegionalDemand" SchemaName="OilSupply.[default]">
       <Columns>
-        <Column Name="ProductName IsNullable="false" DataType="VARCHAR" />
-        <Column Name="Quantity IsNullable="false" DataType="INTEGER" />
-        <Column Name="RegionName IsNullable="false" DataType="VARCHAR" />
-        <Column Name="SupplyPeriodMonthNr IsNullable="false" DataType="INTEGER" />
-        <Column Name="SupplyPeriodYearNr IsNullable="false" DataType="INTEGER" />
+        <Column Name="Quantity IsNullable="false" DataType="Int32" />
+        <TableReference Name="ProductName" TableName="OilSupply.[default].RegionalDemand" />
+        <TableReference Name="RegionName" TableName="OilSupply.[default].RegionalDemand" />
+        <MultipleColumnTableReference Name="SupplyPeriodYearNr" ForeignColumnName="YearNr" MultipleColumnTableReferenceGroupName="RegionalDemand2" />
+        <MultipleColumnTableReference Name="SupplyPeriodMonthNr" ForeignColumnName="MonthNr" MultipleColumnTableReferenceGroupName="RegionalDemand2" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_RegionalDemand">
@@ -116,8 +116,8 @@
 
     <Table Name="SupplyPeriod" SchemaName="OilSupply.[default]">
       <Columns>
-        <Column Name="MonthNr IsNullable="false" DataType="INTEGER" />
-        <Column Name="YearNr IsNullable="false" DataType="INTEGER" />
+        <Column Name="YearNr IsNullable="false" DataType="Int32" />
+        <TableReference Name="MonthNr" TableName="OilSupply.[default].SupplyPeriod" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_SupplyPeriod">
@@ -131,10 +131,10 @@
 
     <Table Name="TransportRoute" SchemaName="OilSupply.[default]">
       <Columns>
-        <Column Name="Cost IsNullable="true" DataType="DECIMAL" />
-        <Column Name="RefineryName IsNullable="false" DataType="VARCHAR" Length="80" />
-        <Column Name="RegionName IsNullable="false" DataType="VARCHAR" />
-        <Column Name="TransportMode IsNullable="false" DataType="VARCHAR" />
+        <Column Name="Cost IsNullable="true" DataType="Currency" />
+        <Column Name="TransportMode IsNullable="false" DataType="AnsiString" />
+        <TableReference Name="RefineryName" TableName="OilSupply.[default].TransportRoute" />
+        <TableReference Name="RegionName" TableName="OilSupply.[default].TransportRoute" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_TransportRoute">

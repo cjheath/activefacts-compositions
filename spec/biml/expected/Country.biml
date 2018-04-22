@@ -5,10 +5,10 @@
   <Tables>
     <Table Name="Country" SchemaName="Countries.[default]">
       <Columns>
-        <Column Name="CountryName IsNullable="false" DataType="VARCHAR" Length="60" />
-        <Column Name="ISO3166Code2 IsNullable="false" DataType="VARCHAR" Length="2" />
-        <Column Name="ISO3166Code3 IsNullable="false" DataType="VARCHAR" Length="3" />
-        <Column Name="ISO3166Numeric3 IsNullable="false" DataType="INTEGER" />
+        <Column Name="CountryName IsNullable="false" DataType="AnsiString" Length="60" />
+        <Column Name="ISO3166Code2 IsNullable="false" DataType="AnsiString" Length="2" />
+        <Column Name="ISO3166Code3 IsNullable="false" DataType="AnsiString" Length="3" />
+        <Column Name="ISO3166Numeric3 IsNullable="false" DataType="Int32" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Country">

@@ -5,7 +5,7 @@
   <Tables>
     <Table Name="Asset" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="AssetID IsNullable="false" DataType="BIGINT" />
+        <Column Name="AssetID IsNullable="false" DataType="Int64" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Asset">
@@ -18,24 +18,24 @@
 
     <Table Name="Claim" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="ClaimID IsNullable="false" DataType="BIGINT" />
-        <Column Name="IncidentAddressCity IsNullable="true" DataType="VARCHAR" />
-        <Column Name="IncidentAddressPostcode IsNullable="true" DataType="VARCHAR" />
-        <Column Name="IncidentAddressStateCode IsNullable="true" DataType="SMALLINT" />
-        <Column Name="IncidentAddressStreet IsNullable="true" DataType="VARCHAR" Length="256" />
-        <Column Name="IncidentDateTime IsNullable="true" DataType="TIMESTAMP" />
-        <Column Name="IncidentOfficerName IsNullable="true" DataType="VARCHAR" Length="256" />
-        <Column Name="IncidentPoliceReportNr IsNullable="true" DataType="INTEGER" />
-        <Column Name="IncidentReportDateTime IsNullable="true" DataType="TIMESTAMP" />
-        <Column Name="IncidentReporterName IsNullable="true" DataType="VARCHAR" Length="256" />
-        <Column Name="IncidentStationName IsNullable="true" DataType="VARCHAR" Length="256" />
-        <Column Name="LodgementDateTime IsNullable="true" DataType="TIMESTAMP" />
-        <Column Name="LodgementPersonID IsNullable="true" DataType="BIGINT" />
-        <Column Name="PSequence IsNullable="false" DataType="SMALLINT" />
-        <Column Name="PolicyPProductCode IsNullable="false" DataType="SMALLINT" />
-        <Column Name="PolicyPSerial IsNullable="false" DataType="INTEGER" />
-        <Column Name="PolicyPStateCode IsNullable="false" DataType="SMALLINT" />
-        <Column Name="PolicyPYearNr IsNullable="false" DataType="INTEGER" />
+        <Column Name="ClaimID IsNullable="false" DataType="Int64" />
+        <Column Name="IncidentAddressCity IsNullable="true" DataType="AnsiString" />
+        <Column Name="IncidentAddressPostcode IsNullable="true" DataType="AnsiString" />
+        <Column Name="IncidentAddressStreet IsNullable="true" DataType="AnsiString" Length="256" />
+        <Column Name="IncidentDateTime IsNullable="true" DataType="DateTime" />
+        <Column Name="IncidentOfficerName IsNullable="true" DataType="AnsiString" Length="256" />
+        <Column Name="IncidentPoliceReportNr IsNullable="true" DataType="Int32" />
+        <Column Name="IncidentReportDateTime IsNullable="true" DataType="DateTime" />
+        <Column Name="IncidentReporterName IsNullable="true" DataType="AnsiString" Length="256" />
+        <Column Name="IncidentStationName IsNullable="true" DataType="AnsiString" Length="256" />
+        <Column Name="LodgementDateTime IsNullable="true" DataType="DateTime" />
+        <Column Name="PSequence IsNullable="false" DataType="Int16" />
+        <TableReference Name="IncidentAddressStateCode" TableName="Insurance.[default].Claim" />
+        <MultipleColumnTableReference Name="PolicyPYearNr" ForeignColumnName="PYearNr" MultipleColumnTableReferenceGroupName="Claim1" />
+        <MultipleColumnTableReference Name="PolicyPProductCode" ForeignColumnName="PProductCode" MultipleColumnTableReferenceGroupName="Claim1" />
+        <MultipleColumnTableReference Name="PolicyPStateCode" ForeignColumnName="PStateCode" MultipleColumnTableReferenceGroupName="Claim1" />
+        <MultipleColumnTableReference Name="PolicyPSerial" ForeignColumnName="PSerial" MultipleColumnTableReferenceGroupName="Claim1" />
+        <TableReference Name="LodgementPersonID" TableName="Insurance.[default].Claim" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Claim">
@@ -57,8 +57,8 @@
 
     <Table Name="ContractorAppointment" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="ClaimID IsNullable="false" DataType="BIGINT" />
-        <Column Name="ContractorID IsNullable="false" DataType="BIGINT" />
+        <TableReference Name="ClaimID" TableName="Insurance.[default].ContractorAppointment" />
+        <TableReference Name="ContractorID" TableName="Insurance.[default].ContractorAppointment" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_ContractorAppointment">
@@ -72,12 +72,12 @@
 
     <Table Name="Cover" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="AssetID IsNullable="false" DataType="BIGINT" />
-        <Column Name="CoverTypeCode IsNullable="false" DataType="CHARACTER" />
-        <Column Name="PolicyPProductCode IsNullable="false" DataType="SMALLINT" />
-        <Column Name="PolicyPSerial IsNullable="false" DataType="INTEGER" />
-        <Column Name="PolicyPStateCode IsNullable="false" DataType="SMALLINT" />
-        <Column Name="PolicyPYearNr IsNullable="false" DataType="INTEGER" />
+        <TableReference Name="AssetID" TableName="Insurance.[default].Cover" />
+        <TableReference Name="CoverTypeCode" TableName="Insurance.[default].Cover" />
+        <MultipleColumnTableReference Name="PolicyPYearNr" ForeignColumnName="PYearNr" MultipleColumnTableReferenceGroupName="Cover2" />
+        <MultipleColumnTableReference Name="PolicyPProductCode" ForeignColumnName="PProductCode" MultipleColumnTableReferenceGroupName="Cover2" />
+        <MultipleColumnTableReference Name="PolicyPStateCode" ForeignColumnName="PStateCode" MultipleColumnTableReferenceGroupName="Cover2" />
+        <MultipleColumnTableReference Name="PolicyPSerial" ForeignColumnName="PSerial" MultipleColumnTableReferenceGroupName="Cover2" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Cover">
@@ -95,8 +95,8 @@
 
     <Table Name="CoverType" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="CoverTypeCode IsNullable="false" DataType="CHARACTER" />
-        <Column Name="CoverTypeName IsNullable="false" DataType="VARCHAR" />
+        <Column Name="CoverTypeCode IsNullable="false" DataType="AnsiStringFixedLength" />
+        <Column Name="CoverTypeName IsNullable="false" DataType="AnsiString" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_CoverType">
@@ -114,9 +114,9 @@
 
     <Table Name="CoverWording" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="CoverTypeCode IsNullable="false" DataType="CHARACTER" />
-        <Column Name="PolicyWordingText IsNullable="false" DataType="VARCHAR" />
-        <Column Name="StartDate IsNullable="false" DataType="DATE" />
+        <Column Name="PolicyWordingText IsNullable="false" DataType="AnsiString" />
+        <Column Name="StartDate IsNullable="false" DataType="Date" />
+        <TableReference Name="CoverTypeCode" TableName="Insurance.[default].CoverWording" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_CoverWording">
@@ -131,10 +131,10 @@
 
     <Table Name="LossType" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="InvolvesDriving IsNullable="false" DataType="BOOLEAN" />
-        <Column Name="IsSingleVehicleIncident IsNullable="false" DataType="BOOLEAN" />
-        <Column Name="LiabilityCode IsNullable="true" DataType="CHARACTER" Length="1" />
-        <Column Name="LossTypeCode IsNullable="false" DataType="CHARACTER" />
+        <Column Name="InvolvesDriving IsNullable="false" DataType="Boolean" />
+        <Column Name="IsSingleVehicleIncident IsNullable="false" DataType="Boolean" />
+        <Column Name="LiabilityCode IsNullable="true" DataType="AnsiStringFixedLength" Length="1" />
+        <Column Name="LossTypeCode IsNullable="false" DataType="AnsiStringFixedLength" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_LossType">
@@ -147,12 +147,12 @@
 
     <Table Name="LostItem" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="Description IsNullable="false" DataType="VARCHAR" Length="1024" />
-        <Column Name="IncidentClaimID IsNullable="false" DataType="BIGINT" />
-        <Column Name="LostItemNr IsNullable="false" DataType="INTEGER" />
-        <Column Name="PurchaseDate IsNullable="true" DataType="DATE" />
-        <Column Name="PurchasePlace IsNullable="true" DataType="VARCHAR" />
-        <Column Name="PurchasePrice IsNullable="true" DataType="DECIMAL" Length="18" Scale="2" />
+        <Column Name="Description IsNullable="false" DataType="AnsiString" Length="1024" />
+        <Column Name="LostItemNr IsNullable="false" DataType="Int32" />
+        <Column Name="PurchaseDate IsNullable="true" DataType="Date" />
+        <Column Name="PurchasePlace IsNullable="true" DataType="AnsiString" />
+        <Column Name="PurchasePrice IsNullable="true" DataType="Decimal" Length="18" Scale="2" />
+        <TableReference Name="IncidentClaimID" TableName="Insurance.[default].LostItem" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_LostItem">
@@ -166,32 +166,32 @@
 
     <Table Name="Party" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="CompanyContactPersonID IsNullable="true" DataType="BIGINT" />
-        <Column Name="IsACompany IsNullable="false" DataType="BOOLEAN" />
-        <Column Name="PartyID IsNullable="false" DataType="BIGINT" />
-        <Column Name="PersonAddressCity IsNullable="true" DataType="VARCHAR" />
-        <Column Name="PersonAddressPostcode IsNullable="true" DataType="VARCHAR" />
-        <Column Name="PersonAddressStateCode IsNullable="true" DataType="SMALLINT" />
-        <Column Name="PersonAddressStreet IsNullable="true" DataType="VARCHAR" Length="256" />
-        <Column Name="PersonBirthDate IsNullable="true" DataType="DATE" />
-        <Column Name="PersonBusinessPhoneNr IsNullable="true" DataType="VARCHAR" />
-        <Column Name="PersonContactTime IsNullable="true" DataType="TIME" />
-        <Column Name="PersonEmail IsNullable="true" DataType="VARCHAR" />
-        <Column Name="PersonFamilyName IsNullable="true" DataType="VARCHAR" Length="256" />
-        <Column Name="PersonGivenName IsNullable="true" DataType="VARCHAR" Length="256" />
-        <Column Name="PersonHomePhoneNr IsNullable="true" DataType="VARCHAR" />
-        <Column Name="PersonIsInternational IsNullable="true" DataType="BOOLEAN" />
-        <Column Name="PersonLicenseNumber IsNullable="true" DataType="VARCHAR" />
-        <Column Name="PersonLicenseType IsNullable="true" DataType="VARCHAR" />
-        <Column Name="PersonMobilePhoneNr IsNullable="true" DataType="VARCHAR" />
-        <Column Name="PersonOccupation IsNullable="true" DataType="VARCHAR" />
-        <Column Name="PersonPreferredContactMethod IsNullable="true" DataType="CHARACTER" Length="1" />
-        <Column Name="PersonTitle IsNullable="true" DataType="VARCHAR" />
-        <Column Name="PersonYearNr IsNullable="true" DataType="INTEGER" />
-        <Column Name="PostalAddressCity IsNullable="true" DataType="VARCHAR" />
-        <Column Name="PostalAddressPostcode IsNullable="true" DataType="VARCHAR" />
-        <Column Name="PostalAddressStateCode IsNullable="true" DataType="SMALLINT" />
-        <Column Name="PostalAddressStreet IsNullable="true" DataType="VARCHAR" Length="256" />
+        <Column Name="IsACompany IsNullable="false" DataType="Boolean" />
+        <Column Name="PartyID IsNullable="false" DataType="Int64" />
+        <Column Name="PersonAddressCity IsNullable="true" DataType="AnsiString" />
+        <Column Name="PersonAddressPostcode IsNullable="true" DataType="AnsiString" />
+        <Column Name="PersonAddressStreet IsNullable="true" DataType="AnsiString" Length="256" />
+        <Column Name="PersonBirthDate IsNullable="true" DataType="Date" />
+        <Column Name="PersonBusinessPhoneNr IsNullable="true" DataType="AnsiString" />
+        <Column Name="PersonContactTime IsNullable="true" DataType="Time" />
+        <Column Name="PersonEmail IsNullable="true" DataType="AnsiString" />
+        <Column Name="PersonFamilyName IsNullable="true" DataType="AnsiString" Length="256" />
+        <Column Name="PersonGivenName IsNullable="true" DataType="AnsiString" Length="256" />
+        <Column Name="PersonHomePhoneNr IsNullable="true" DataType="AnsiString" />
+        <Column Name="PersonIsInternational IsNullable="true" DataType="Boolean" />
+        <Column Name="PersonLicenseNumber IsNullable="true" DataType="AnsiString" />
+        <Column Name="PersonLicenseType IsNullable="true" DataType="AnsiString" />
+        <Column Name="PersonMobilePhoneNr IsNullable="true" DataType="AnsiString" />
+        <Column Name="PersonOccupation IsNullable="true" DataType="AnsiString" />
+        <Column Name="PersonPreferredContactMethod IsNullable="true" DataType="AnsiStringFixedLength" Length="1" />
+        <Column Name="PersonTitle IsNullable="true" DataType="AnsiString" />
+        <Column Name="PersonYearNr IsNullable="true" DataType="Int32" />
+        <Column Name="PostalAddressCity IsNullable="true" DataType="AnsiString" />
+        <Column Name="PostalAddressPostcode IsNullable="true" DataType="AnsiString" />
+        <Column Name="PostalAddressStreet IsNullable="true" DataType="AnsiString" Length="256" />
+        <TableReference Name="PersonAddressStateCode" TableName="Insurance.[default].Party" />
+        <TableReference Name="PostalAddressStateCode" TableName="Insurance.[default].Party" />
+        <TableReference Name="CompanyContactPersonID" TableName="Insurance.[default].Party" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Party">
@@ -204,14 +204,14 @@
 
     <Table Name="Policy" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="ApplicationNr IsNullable="false" DataType="INTEGER" />
-        <Column Name="AuthorisedRepID IsNullable="true" DataType="BIGINT" />
-        <Column Name="ITCClaimed IsNullable="true" DataType="DECIMAL" Length="18" Scale="2" />
-        <Column Name="InsuredID IsNullable="false" DataType="BIGINT" />
-        <Column Name="PProductCode IsNullable="false" DataType="SMALLINT" />
-        <Column Name="PSerial IsNullable="false" DataType="INTEGER" />
-        <Column Name="PStateCode IsNullable="false" DataType="SMALLINT" />
-        <Column Name="PYearNr IsNullable="false" DataType="INTEGER" />
+        <Column Name="ApplicationNr IsNullable="false" DataType="Int32" />
+        <Column Name="ITCClaimed IsNullable="true" DataType="Decimal" Length="18" Scale="2" />
+        <Column Name="PSerial IsNullable="false" DataType="Int32" />
+        <Column Name="PYearNr IsNullable="false" DataType="Int32" />
+        <TableReference Name="PProductCode" TableName="Insurance.[default].Policy" />
+        <TableReference Name="PStateCode" TableName="Insurance.[default].Policy" />
+        <TableReference Name="InsuredID" TableName="Insurance.[default].Policy" />
+        <TableReference Name="AuthorisedRepID" TableName="Insurance.[default].Policy" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Policy">
@@ -227,9 +227,9 @@
 
     <Table Name="Product" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="Alias IsNullable="true" DataType="CHARACTER" Length="3" />
-        <Column Name="Description IsNullable="true" DataType="VARCHAR" Length="1024" />
-        <Column Name="ProductCode IsNullable="false" DataType="SMALLINT" />
+        <Column Name="Alias IsNullable="true" DataType="AnsiStringFixedLength" Length="3" />
+        <Column Name="Description IsNullable="true" DataType="AnsiString" Length="1024" />
+        <Column Name="ProductCode IsNullable="false" DataType="Int16" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Product">
@@ -252,13 +252,13 @@
 
     <Table Name="PropertyDamage" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="AddressCity IsNullable="false" DataType="VARCHAR" />
-        <Column Name="AddressPostcode IsNullable="true" DataType="VARCHAR" />
-        <Column Name="AddressStateCode IsNullable="true" DataType="SMALLINT" />
-        <Column Name="AddressStreet IsNullable="false" DataType="VARCHAR" Length="256" />
-        <Column Name="IncidentClaimID IsNullable="true" DataType="BIGINT" />
-        <Column Name="OwnerName IsNullable="true" DataType="VARCHAR" Length="256" />
-        <Column Name="PhoneNr IsNullable="true" DataType="VARCHAR" />
+        <Column Name="AddressCity IsNullable="false" DataType="AnsiString" />
+        <Column Name="AddressPostcode IsNullable="true" DataType="AnsiString" />
+        <Column Name="AddressStreet IsNullable="false" DataType="AnsiString" Length="256" />
+        <Column Name="OwnerName IsNullable="true" DataType="AnsiString" Length="256" />
+        <Column Name="PhoneNr IsNullable="true" DataType="AnsiString" />
+        <TableReference Name="AddressStateCode" TableName="Insurance.[default].PropertyDamage" />
+        <TableReference Name="IncidentClaimID" TableName="Insurance.[default].PropertyDamage" />
       </Columns>
       <Keys>
         <UniqueKey Name="UK_PropertyDamage_Claim ID_Street_City_Postcode_State Code">
@@ -275,8 +275,8 @@
 
     <Table Name="State" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="StateCode IsNullable="false" DataType="SMALLINT" />
-        <Column Name="StateName IsNullable="true" DataType="VARCHAR" Length="256" />
+        <Column Name="StateCode IsNullable="false" DataType="Int16" />
+        <Column Name="StateName IsNullable="true" DataType="AnsiString" Length="256" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_State">
@@ -294,14 +294,14 @@
 
     <Table Name="ThirdParty" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="InsurerID IsNullable="true" DataType="BIGINT" />
-        <Column Name="ModelYearNr IsNullable="true" DataType="INTEGER" />
-        <Column Name="PersonID IsNullable="false" DataType="BIGINT" />
-        <Column Name="VehicleIncidentClaimID IsNullable="false" DataType="BIGINT" />
-        <Column Name="VehicleRegistrationNr IsNullable="true" DataType="CHARACTER" Length="8" />
-        <Column Name="VehicleTypeBadge IsNullable="true" DataType="VARCHAR" />
-        <Column Name="VehicleTypeMake IsNullable="true" DataType="VARCHAR" />
-        <Column Name="VehicleTypeModel IsNullable="true" DataType="VARCHAR" />
+        <Column Name="ModelYearNr IsNullable="true" DataType="Int32" />
+        <Column Name="VehicleRegistrationNr IsNullable="true" DataType="AnsiStringFixedLength" Length="8" />
+        <Column Name="VehicleTypeBadge IsNullable="true" DataType="AnsiString" />
+        <Column Name="VehicleTypeMake IsNullable="true" DataType="AnsiString" />
+        <Column Name="VehicleTypeModel IsNullable="true" DataType="AnsiString" />
+        <TableReference Name="PersonID" TableName="Insurance.[default].ThirdParty" />
+        <TableReference Name="VehicleIncidentClaimID" TableName="Insurance.[default].ThirdParty" />
+        <TableReference Name="InsurerID" TableName="Insurance.[default].ThirdParty" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_ThirdParty">
@@ -315,9 +315,9 @@
 
     <Table Name="UnderwritingDemerit" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="OccurrenceCount IsNullable="true" DataType="INTEGER" />
-        <Column Name="UnderwritingQuestionID IsNullable="false" DataType="BIGINT" />
-        <Column Name="VehicleIncidentClaimID IsNullable="false" DataType="BIGINT" />
+        <Column Name="OccurrenceCount IsNullable="true" DataType="Int32" />
+        <TableReference Name="UnderwritingQuestionID" TableName="Insurance.[default].UnderwritingDemerit" />
+        <TableReference Name="VehicleIncidentClaimID" TableName="Insurance.[default].UnderwritingDemerit" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_UnderwritingDemerit">
@@ -331,8 +331,8 @@
 
     <Table Name="UnderwritingQuestion" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="Text IsNullable="false" DataType="VARCHAR" />
-        <Column Name="UnderwritingQuestionID IsNullable="false" DataType="BIGINT" />
+        <Column Name="Text IsNullable="false" DataType="AnsiString" />
+        <Column Name="UnderwritingQuestionID IsNullable="false" DataType="Int64" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_UnderwritingQuestion">
@@ -350,18 +350,18 @@
 
     <Table Name="Vehicle" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="AssetID IsNullable="false" DataType="BIGINT" />
-        <Column Name="Colour IsNullable="true" DataType="VARCHAR" />
-        <Column Name="DealerID IsNullable="true" DataType="BIGINT" />
-        <Column Name="EngineNumber IsNullable="true" DataType="VARCHAR" />
-        <Column Name="FinanceInstitutionID IsNullable="true" DataType="BIGINT" />
-        <Column Name="HasCommercialRegistration IsNullable="false" DataType="BOOLEAN" />
-        <Column Name="ModelYearNr IsNullable="false" DataType="INTEGER" />
-        <Column Name="RegistrationNr IsNullable="false" DataType="CHARACTER" Length="8" />
-        <Column Name="VIN IsNullable="false" DataType="INTEGER" />
-        <Column Name="VehicleTypeBadge IsNullable="true" DataType="VARCHAR" />
-        <Column Name="VehicleTypeMake IsNullable="false" DataType="VARCHAR" />
-        <Column Name="VehicleTypeModel IsNullable="false" DataType="VARCHAR" />
+        <Column Name="Colour IsNullable="true" DataType="AnsiString" />
+        <Column Name="EngineNumber IsNullable="true" DataType="AnsiString" />
+        <Column Name="HasCommercialRegistration IsNullable="false" DataType="Boolean" />
+        <Column Name="ModelYearNr IsNullable="false" DataType="Int32" />
+        <Column Name="RegistrationNr IsNullable="false" DataType="AnsiStringFixedLength" Length="8" />
+        <Column Name="VIN IsNullable="false" DataType="Int32" />
+        <Column Name="VehicleTypeBadge IsNullable="true" DataType="AnsiString" />
+        <Column Name="VehicleTypeMake IsNullable="false" DataType="AnsiString" />
+        <Column Name="VehicleTypeModel IsNullable="false" DataType="AnsiString" />
+        <TableReference Name="DealerID" TableName="Insurance.[default].Vehicle" />
+        <TableReference Name="FinanceInstitutionID" TableName="Insurance.[default].Vehicle" />
+        <TableReference Name="AssetID" TableName="Insurance.[default].Vehicle" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Vehicle">
@@ -374,23 +374,23 @@
 
     <Table Name="VehicleIncident" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="Description IsNullable="true" DataType="VARCHAR" Length="1024" />
-        <Column Name="DrivingBloodTestResult IsNullable="true" DataType="VARCHAR" />
-        <Column Name="DrivingBreathTestResult IsNullable="true" DataType="VARCHAR" />
-        <Column Name="DrivingCharge IsNullable="true" DataType="VARCHAR" />
-        <Column Name="DrivingHospitalName IsNullable="true" DataType="VARCHAR" />
-        <Column Name="DrivingIntoxication IsNullable="true" DataType="VARCHAR" />
-        <Column Name="DrivingIsAWarning IsNullable="true" DataType="BOOLEAN" />
-        <Column Name="DrivingNonconsentReason IsNullable="true" DataType="VARCHAR" />
-        <Column Name="DrivingPersonID IsNullable="true" DataType="BIGINT" />
-        <Column Name="DrivingUnlicensedReason IsNullable="true" DataType="VARCHAR" />
-        <Column Name="IncidentClaimID IsNullable="false" DataType="BIGINT" />
-        <Column Name="LossTypeCode IsNullable="true" DataType="CHARACTER" />
-        <Column Name="OccurredWhileBeingDriven IsNullable="false" DataType="BOOLEAN" />
-        <Column Name="PreviousDamageDescription IsNullable="true" DataType="VARCHAR" Length="1024" />
-        <Column Name="Reason IsNullable="true" DataType="VARCHAR" />
-        <Column Name="TowedLocation IsNullable="true" DataType="VARCHAR" />
-        <Column Name="WeatherDescription IsNullable="true" DataType="VARCHAR" Length="1024" />
+        <Column Name="Description IsNullable="true" DataType="AnsiString" Length="1024" />
+        <Column Name="DrivingBloodTestResult IsNullable="true" DataType="AnsiString" />
+        <Column Name="DrivingBreathTestResult IsNullable="true" DataType="AnsiString" />
+        <Column Name="DrivingCharge IsNullable="true" DataType="AnsiString" />
+        <Column Name="DrivingHospitalName IsNullable="true" DataType="AnsiString" />
+        <Column Name="DrivingIntoxication IsNullable="true" DataType="AnsiString" />
+        <Column Name="DrivingIsAWarning IsNullable="true" DataType="Boolean" />
+        <Column Name="DrivingNonconsentReason IsNullable="true" DataType="AnsiString" />
+        <Column Name="DrivingUnlicensedReason IsNullable="true" DataType="AnsiString" />
+        <Column Name="OccurredWhileBeingDriven IsNullable="false" DataType="Boolean" />
+        <Column Name="PreviousDamageDescription IsNullable="true" DataType="AnsiString" Length="1024" />
+        <Column Name="Reason IsNullable="true" DataType="AnsiString" />
+        <Column Name="TowedLocation IsNullable="true" DataType="AnsiString" />
+        <Column Name="WeatherDescription IsNullable="true" DataType="AnsiString" Length="1024" />
+        <TableReference Name="DrivingPersonID" TableName="Insurance.[default].VehicleIncident" />
+        <TableReference Name="LossTypeCode" TableName="Insurance.[default].VehicleIncident" />
+        <TableReference Name="IncidentClaimID" TableName="Insurance.[default].VehicleIncident" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_VehicleIncident">
@@ -403,13 +403,13 @@
 
     <Table Name="Witness" SchemaName="Insurance.[default]">
       <Columns>
-        <Column Name="AddressCity IsNullable="true" DataType="VARCHAR" />
-        <Column Name="AddressPostcode IsNullable="true" DataType="VARCHAR" />
-        <Column Name="AddressStateCode IsNullable="true" DataType="SMALLINT" />
-        <Column Name="AddressStreet IsNullable="true" DataType="VARCHAR" Length="256" />
-        <Column Name="ContactPhoneNr IsNullable="true" DataType="VARCHAR" />
-        <Column Name="IncidentClaimID IsNullable="false" DataType="BIGINT" />
-        <Column Name="Name IsNullable="false" DataType="VARCHAR" Length="256" />
+        <Column Name="AddressCity IsNullable="true" DataType="AnsiString" />
+        <Column Name="AddressPostcode IsNullable="true" DataType="AnsiString" />
+        <Column Name="AddressStreet IsNullable="true" DataType="AnsiString" Length="256" />
+        <Column Name="ContactPhoneNr IsNullable="true" DataType="AnsiString" />
+        <Column Name="Name IsNullable="false" DataType="AnsiString" Length="256" />
+        <TableReference Name="AddressStateCode" TableName="Insurance.[default].Witness" />
+        <TableReference Name="IncidentClaimID" TableName="Insurance.[default].Witness" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Witness">

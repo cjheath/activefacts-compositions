@@ -5,11 +5,11 @@
   <Tables>
     <Table Name="BackOrderAllocation" SchemaName="Warehousing.[default]">
       <Columns>
-        <Column Name="PurchaseOrderItemProductID IsNullable="false" DataType="BIGINT" />
-        <Column Name="PurchaseOrderItemPurchaseOrderID IsNullable="false" DataType="BIGINT" />
-        <Column Name="Quantity IsNullable="false" DataType="INTEGER" />
-        <Column Name="SalesOrderItemProductID IsNullable="false" DataType="BIGINT" />
-        <Column Name="SalesOrderItemSalesOrderID IsNullable="false" DataType="BIGINT" />
+        <Column Name="Quantity IsNullable="false" DataType="Int32" />
+        <MultipleColumnTableReference Name="PurchaseOrderItemPurchaseOrderID" ForeignColumnName="PurchaseOrderID" MultipleColumnTableReferenceGroupName="BackOrderAllocation0" />
+        <MultipleColumnTableReference Name="PurchaseOrderItemProductID" ForeignColumnName="ProductID" MultipleColumnTableReferenceGroupName="BackOrderAllocation0" />
+        <MultipleColumnTableReference Name="SalesOrderItemSalesOrderID" ForeignColumnName="SalesOrderID" MultipleColumnTableReferenceGroupName="BackOrderAllocation1" />
+        <MultipleColumnTableReference Name="SalesOrderItemProductID" ForeignColumnName="ProductID" MultipleColumnTableReferenceGroupName="BackOrderAllocation1" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_BackOrderAllocation">
@@ -25,10 +25,10 @@
 
     <Table Name="Bin" SchemaName="Warehousing.[default]">
       <Columns>
-        <Column Name="BinID IsNullable="false" DataType="BIGINT" />
-        <Column Name="ProductID IsNullable="true" DataType="BIGINT" />
-        <Column Name="Quantity IsNullable="false" DataType="INTEGER" />
-        <Column Name="WarehouseID IsNullable="true" DataType="BIGINT" />
+        <Column Name="BinID IsNullable="false" DataType="Int64" />
+        <Column Name="Quantity IsNullable="false" DataType="Int32" />
+        <TableReference Name="ProductID" TableName="Warehousing.[default].Bin" />
+        <TableReference Name="WarehouseID" TableName="Warehousing.[default].Bin" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Bin">
@@ -41,13 +41,13 @@
 
     <Table Name="DispatchItem" SchemaName="Warehousing.[default]">
       <Columns>
-        <Column Name="DispatchID IsNullable="false" DataType="BIGINT" />
-        <Column Name="DispatchItemID IsNullable="false" DataType="BIGINT" />
-        <Column Name="ProductID IsNullable="false" DataType="BIGINT" />
-        <Column Name="Quantity IsNullable="false" DataType="INTEGER" />
-        <Column Name="SalesOrderItemProductID IsNullable="true" DataType="BIGINT" />
-        <Column Name="SalesOrderItemSalesOrderID IsNullable="true" DataType="BIGINT" />
-        <Column Name="TransferRequestID IsNullable="true" DataType="BIGINT" />
+        <Column Name="DispatchID IsNullable="false" DataType="Int64" />
+        <Column Name="DispatchItemID IsNullable="false" DataType="Int64" />
+        <Column Name="Quantity IsNullable="false" DataType="Int32" />
+        <TableReference Name="ProductID" TableName="Warehousing.[default].DispatchItem" />
+        <MultipleColumnTableReference Name="SalesOrderItemSalesOrderID" ForeignColumnName="SalesOrderID" MultipleColumnTableReferenceGroupName="DispatchItem1" />
+        <MultipleColumnTableReference Name="SalesOrderItemProductID" ForeignColumnName="ProductID" MultipleColumnTableReferenceGroupName="DispatchItem1" />
+        <TableReference Name="TransferRequestID" TableName="Warehousing.[default].DispatchItem" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_DispatchItem">
@@ -60,7 +60,7 @@
 
     <Table Name="Party" SchemaName="Warehousing.[default]">
       <Columns>
-        <Column Name="PartyID IsNullable="false" DataType="BIGINT" />
+        <Column Name="PartyID IsNullable="false" DataType="Int64" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Party">
@@ -73,7 +73,7 @@
 
     <Table Name="Product" SchemaName="Warehousing.[default]">
       <Columns>
-        <Column Name="ProductID IsNullable="false" DataType="BIGINT" />
+        <Column Name="ProductID IsNullable="false" DataType="Int64" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Product">
@@ -86,9 +86,9 @@
 
     <Table Name="PurchaseOrder" SchemaName="Warehousing.[default]">
       <Columns>
-        <Column Name="PurchaseOrderID IsNullable="false" DataType="BIGINT" />
-        <Column Name="SupplierID IsNullable="false" DataType="BIGINT" />
-        <Column Name="WarehouseID IsNullable="false" DataType="BIGINT" />
+        <Column Name="PurchaseOrderID IsNullable="false" DataType="Int64" />
+        <TableReference Name="SupplierID" TableName="Warehousing.[default].PurchaseOrder" />
+        <TableReference Name="WarehouseID" TableName="Warehousing.[default].PurchaseOrder" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_PurchaseOrder">
@@ -101,9 +101,9 @@
 
     <Table Name="PurchaseOrderItem" SchemaName="Warehousing.[default]">
       <Columns>
-        <Column Name="ProductID IsNullable="false" DataType="BIGINT" />
-        <Column Name="PurchaseOrderID IsNullable="false" DataType="BIGINT" />
-        <Column Name="Quantity IsNullable="false" DataType="INTEGER" />
+        <Column Name="Quantity IsNullable="false" DataType="Int32" />
+        <TableReference Name="ProductID" TableName="Warehousing.[default].PurchaseOrderItem" />
+        <TableReference Name="PurchaseOrderID" TableName="Warehousing.[default].PurchaseOrderItem" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_PurchaseOrderItem">
@@ -117,13 +117,13 @@
 
     <Table Name="ReceivedItem" SchemaName="Warehousing.[default]">
       <Columns>
-        <Column Name="ProductID IsNullable="false" DataType="BIGINT" />
-        <Column Name="PurchaseOrderItemProductID IsNullable="true" DataType="BIGINT" />
-        <Column Name="PurchaseOrderItemPurchaseOrderID IsNullable="true" DataType="BIGINT" />
-        <Column Name="Quantity IsNullable="false" DataType="INTEGER" />
-        <Column Name="ReceiptID IsNullable="false" DataType="BIGINT" />
-        <Column Name="ReceivedItemID IsNullable="false" DataType="BIGINT" />
-        <Column Name="TransferRequestID IsNullable="true" DataType="BIGINT" />
+        <Column Name="Quantity IsNullable="false" DataType="Int32" />
+        <Column Name="ReceiptID IsNullable="false" DataType="Int64" />
+        <Column Name="ReceivedItemID IsNullable="false" DataType="Int64" />
+        <TableReference Name="ProductID" TableName="Warehousing.[default].ReceivedItem" />
+        <MultipleColumnTableReference Name="PurchaseOrderItemPurchaseOrderID" ForeignColumnName="PurchaseOrderID" MultipleColumnTableReferenceGroupName="ReceivedItem1" />
+        <MultipleColumnTableReference Name="PurchaseOrderItemProductID" ForeignColumnName="ProductID" MultipleColumnTableReferenceGroupName="ReceivedItem1" />
+        <TableReference Name="TransferRequestID" TableName="Warehousing.[default].ReceivedItem" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_ReceivedItem">
@@ -136,9 +136,9 @@
 
     <Table Name="SalesOrder" SchemaName="Warehousing.[default]">
       <Columns>
-        <Column Name="CustomerID IsNullable="false" DataType="BIGINT" />
-        <Column Name="SalesOrderID IsNullable="false" DataType="BIGINT" />
-        <Column Name="WarehouseID IsNullable="false" DataType="BIGINT" />
+        <Column Name="SalesOrderID IsNullable="false" DataType="Int64" />
+        <TableReference Name="CustomerID" TableName="Warehousing.[default].SalesOrder" />
+        <TableReference Name="WarehouseID" TableName="Warehousing.[default].SalesOrder" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_SalesOrder">
@@ -151,9 +151,9 @@
 
     <Table Name="SalesOrderItem" SchemaName="Warehousing.[default]">
       <Columns>
-        <Column Name="ProductID IsNullable="false" DataType="BIGINT" />
-        <Column Name="Quantity IsNullable="false" DataType="INTEGER" />
-        <Column Name="SalesOrderID IsNullable="false" DataType="BIGINT" />
+        <Column Name="Quantity IsNullable="false" DataType="Int32" />
+        <TableReference Name="ProductID" TableName="Warehousing.[default].SalesOrderItem" />
+        <TableReference Name="SalesOrderID" TableName="Warehousing.[default].SalesOrderItem" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_SalesOrderItem">
@@ -167,11 +167,11 @@
 
     <Table Name="TransferRequest" SchemaName="Warehousing.[default]">
       <Columns>
-        <Column Name="FromWarehouseID IsNullable="false" DataType="BIGINT" />
-        <Column Name="ProductID IsNullable="false" DataType="BIGINT" />
-        <Column Name="Quantity IsNullable="false" DataType="INTEGER" />
-        <Column Name="ToWarehouseID IsNullable="false" DataType="BIGINT" />
-        <Column Name="TransferRequestID IsNullable="false" DataType="BIGINT" />
+        <Column Name="Quantity IsNullable="false" DataType="Int32" />
+        <Column Name="TransferRequestID IsNullable="false" DataType="Int64" />
+        <TableReference Name="FromWarehouseID" TableName="Warehousing.[default].TransferRequest" />
+        <TableReference Name="ProductID" TableName="Warehousing.[default].TransferRequest" />
+        <TableReference Name="ToWarehouseID" TableName="Warehousing.[default].TransferRequest" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_TransferRequest">
@@ -184,7 +184,7 @@
 
     <Table Name="Warehouse" SchemaName="Warehousing.[default]">
       <Columns>
-        <Column Name="WarehouseID IsNullable="false" DataType="BIGINT" />
+        <Column Name="WarehouseID IsNullable="false" DataType="Int64" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Warehouse">

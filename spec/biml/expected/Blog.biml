@@ -5,8 +5,8 @@
   <Tables>
     <Table Name="Author" SchemaName="Blog.[default]">
       <Columns>
-        <Column Name="AuthorId IsNullable="false" DataType="BIGINT" />
-        <Column Name="AuthorName IsNullable="false" DataType="VARCHAR" Length="64" />
+        <Column Name="AuthorId IsNullable="false" DataType="Int64" />
+        <Column Name="AuthorName IsNullable="false" DataType="AnsiString" Length="64" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Author">
@@ -24,12 +24,12 @@
 
     <Table Name="Comment" SchemaName="Blog.[default]">
       <Columns>
-        <Column Name="AuthorId IsNullable="false" DataType="BIGINT" />
-        <Column Name="CommentId IsNullable="false" DataType="BIGINT" />
-        <Column Name="ContentStyle IsNullable="true" DataType="VARCHAR" Length="20" />
-        <Column Name="ContentText IsNullable="false" DataType="VARCHAR" Length="MAX" />
-        <Column Name="ParagraphOrdinal IsNullable="false" DataType="INTEGER" />
-        <Column Name="ParagraphPostId IsNullable="false" DataType="BIGINT" />
+        <Column Name="CommentId IsNullable="false" DataType="Int64" />
+        <Column Name="ContentStyle IsNullable="true" DataType="AnsiString" Length="20" />
+        <Column Name="ContentText IsNullable="false" DataType="AnsiString" Length="MAX" />
+        <TableReference Name="AuthorId" TableName="Blog.[default].Comment" />
+        <MultipleColumnTableReference Name="ParagraphPostId" ForeignColumnName="PostId" MultipleColumnTableReferenceGroupName="Comment1" />
+        <MultipleColumnTableReference Name="ParagraphOrdinal" ForeignColumnName="Ordinal" MultipleColumnTableReferenceGroupName="Comment1" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Comment">
@@ -42,10 +42,10 @@
 
     <Table Name="Paragraph" SchemaName="Blog.[default]">
       <Columns>
-        <Column Name="ContentStyle IsNullable="true" DataType="VARCHAR" Length="20" />
-        <Column Name="ContentText IsNullable="false" DataType="VARCHAR" Length="MAX" />
-        <Column Name="Ordinal IsNullable="false" DataType="INTEGER" />
-        <Column Name="PostId IsNullable="false" DataType="BIGINT" />
+        <Column Name="ContentStyle IsNullable="true" DataType="AnsiString" Length="20" />
+        <Column Name="ContentText IsNullable="false" DataType="AnsiString" Length="MAX" />
+        <Column Name="Ordinal IsNullable="false" DataType="Int32" />
+        <TableReference Name="PostId" TableName="Blog.[default].Paragraph" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Paragraph">
@@ -59,9 +59,9 @@
 
     <Table Name="Post" SchemaName="Blog.[default]">
       <Columns>
-        <Column Name="AuthorId IsNullable="false" DataType="BIGINT" />
-        <Column Name="PostId IsNullable="false" DataType="BIGINT" />
-        <Column Name="TopicId IsNullable="false" DataType="BIGINT" />
+        <Column Name="PostId IsNullable="false" DataType="Int64" />
+        <TableReference Name="AuthorId" TableName="Blog.[default].Post" />
+        <TableReference Name="TopicId" TableName="Blog.[default].Post" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Post">
@@ -74,9 +74,9 @@
 
     <Table Name="Topic" SchemaName="Blog.[default]">
       <Columns>
-        <Column Name="ParentTopicId IsNullable="true" DataType="BIGINT" />
-        <Column Name="TopicId IsNullable="false" DataType="BIGINT" />
-        <Column Name="TopicName IsNullable="false" DataType="VARCHAR" Length="64" />
+        <Column Name="TopicId IsNullable="false" DataType="Int64" />
+        <Column Name="TopicName IsNullable="false" DataType="AnsiString" Length="64" />
+        <TableReference Name="ParentTopicId" TableName="Blog.[default].Topic" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Topic">

@@ -5,7 +5,7 @@
   <Tables>
     <Table Name="OT" SchemaName="FKProblem.[default]">
       <Columns>
-        <Column Name="Name IsNullable="false" DataType="VARCHAR" />
+        <Column Name="Name IsNullable="false" DataType="AnsiString" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_OT">
@@ -18,8 +18,8 @@
 
     <Table Name="VTP" SchemaName="FKProblem.[default]">
       <Columns>
-        <Column Name="Name IsNullable="false" DataType="VARCHAR" />
-        <Column Name="VTName IsNullable="false" DataType="VARCHAR" />
+        <Column Name="Name IsNullable="false" DataType="AnsiString" />
+        <TableReference Name="VTName" TableName="FKProblem.[default].VTP" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_VTP">
@@ -33,9 +33,9 @@
 
     <Table Name="VTPRestriction" SchemaName="FKProblem.[default]">
       <Columns>
-        <Column Name="VTName IsNullable="false" DataType="VARCHAR" />
-        <Column Name="VTPName IsNullable="false" DataType="VARCHAR" />
-        <Column Name="VTPVTName IsNullable="false" DataType="VARCHAR" />
+        <TableReference Name="VTName" TableName="FKProblem.[default].VTPRestriction" />
+        <MultipleColumnTableReference Name="VTPVTName" ForeignColumnName="VTName" MultipleColumnTableReferenceGroupName="VTPRestriction1" />
+        <MultipleColumnTableReference Name="VTPName" ForeignColumnName="Name" MultipleColumnTableReferenceGroupName="VTPRestriction1" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_VTPRestriction">

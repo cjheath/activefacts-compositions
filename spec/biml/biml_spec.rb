@@ -37,9 +37,7 @@ describe "BIML output from CQL" do
   else
     files = `git ls-files "#{dir}/*.cql"`.split(/\n/)
   end
-  
-  puts files
-  
+
   files.each do |cql_file|
     basename = File.basename(cql_file, '.cql')
     expected = cql_file.sub(%r{(.*/)?([^/]*).cql\Z}, expected_dir+'/\2.biml')
@@ -56,8 +54,6 @@ describe "BIML output from CQL" do
       compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, basename)
       compositor.generate
 
-      puts "compiled #{basename}"
-      
       output = ActiveFacts::Generators::Doc::BIML.new(compositor.composition).generate
 
       # Save or delete the actual output file:

@@ -5,7 +5,7 @@
   <Tables>
     <Table Name="Magnet" SchemaName="MagnetPole.[default]">
       <Columns>
-        <Column Name="MagnetAutoCounter IsNullable="false" DataType="BIGINT" />
+        <Column Name="MagnetAutoCounter IsNullable="false" DataType="Int64" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_Magnet">
@@ -18,8 +18,8 @@
 
     <Table Name="MagnetPole" SchemaName="MagnetPole.[default]">
       <Columns>
-        <Column Name="IsNorth IsNullable="false" DataType="BOOLEAN" />
-        <Column Name="MagnetAutoCounter IsNullable="false" DataType="BIGINT" />
+        <Column Name="IsNorth IsNullable="false" DataType="Boolean" />
+        <TableReference Name="MagnetAutoCounter" TableName="MagnetPole.[default].MagnetPole" />
       </Columns>
       <Keys>
         <PrimaryKey Name="PK_MagnetPole">
