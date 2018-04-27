@@ -201,6 +201,6 @@ module ActiveFacts
       end
     end
 
-    publish_generator Doc::BIML
+    publish_generator Doc::BIML, "Generate the BIML schema file for any relational compositor"
   end
 end
