@@ -20,6 +20,6 @@ module ActiveFacts
       end
 
     end
-    publish_generator SQL::MySQL
+    publish_generator SQL::MySQL, "Generate a schema for MySQL using any relational compositor"
   end
 end

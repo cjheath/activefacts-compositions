@@ -161,6 +161,6 @@ module ActiveFacts
 
     end
 
-    publish_compositor(Staging)
+    publish_compositor Staging, "A relational composition augmented with audit attributes for staging data transformations"
   end
 end

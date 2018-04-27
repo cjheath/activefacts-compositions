@@ -62,11 +62,11 @@ class SchemaCompositor
         option = compositor
       end
 
-      if action = ActiveFacts::Compositions.compositors[option]
+      if action, helptext = ActiveFacts::Compositions.compositors[option]
         options.delete(option)
         check_options(action, modes)
         @compositors << [action, modes, option]
-      elsif action = ActiveFacts::Generators.generators[option]
+      elsif action, helptext = ActiveFacts::Generators.generators[option]
         options.delete(option)
         check_options(action, modes)
         @generators << [action, modes, option]

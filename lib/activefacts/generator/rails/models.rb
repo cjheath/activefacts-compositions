@@ -250,6 +250,6 @@ module ActiveFacts
         MM = ActiveFacts::Metamodel unless const_defined?(:MM)
       end
     end
-    publish_generator Rails::Models
+    publish_generator Rails::Models, "Generate models in Ruby for use with ActiveRecord and Rails. Use a relational compositor"
   end
 end

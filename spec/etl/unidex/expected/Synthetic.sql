@@ -80,7 +80,7 @@ FROM (
 ) AS s
 UNION ALL
 SELECT DISTINCT
-        right(regexp_split_to_table(regexp_replace(phone_number, '[^0-9]+', '', 'g'), E',\\|'), 8) AS value,
+        right(regexp_replace(regexp_split_to_table(phone_number, E'[,|]'), '[^0-9]+', '', 'g'), 8) AS value,
         NULL AS phonetic,
         'phone'::text AS processing,
         'person'::text AS source_table,

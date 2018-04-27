@@ -693,6 +693,6 @@ module ActiveFacts
         MM = ActiveFacts::Metamodel unless const_defined?(:MM)
       end
     end
-    publish_generator Doc::LDM
+    publish_generator Doc::LDM, "Logical Data Model documentation in HTML. Use a relational compositor"
   end
 end

@@ -20,6 +20,6 @@ module ActiveFacts
       end
 
     end
-    publish_generator SQL::Postgres
+    publish_generator SQL::Postgres, "Generate a schema for Postgres using any relational compositor"
   end
 end

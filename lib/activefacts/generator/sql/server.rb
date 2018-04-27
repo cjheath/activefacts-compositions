@@ -20,6 +20,6 @@ module ActiveFacts
       end
 
     end
-    publish_generator SQL::Server
+    publish_generator SQL::Server, "Generate a schema for SQL Server using any relational compositor"
   end
 end

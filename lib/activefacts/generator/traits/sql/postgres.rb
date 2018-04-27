@@ -169,7 +169,7 @@ module ActiveFacts
           def number_or_null expr
             # This doesn't handle all valid Postgres numeric literals (e.g. 2.3e-4)
             Expression.new(
-              %Q{CASE WHEN #{expr} ~ '^ *[-+]?([0-9]+[.]?[0-9]*|[.][0-9]+) *$' THEN #{expr}::numeric ELSE NULL END},
+              %Q{CASE WHEN #{expr} ~ '^ *[-+]?([0-9]+[.]?[0-9]*|[.][0-9]+) *$' THEN (#{expr}::numeric)::text ELSE NULL END},
               MM::DataType::TYPE_Real,
               false
             )
@@ -183,9 +183,9 @@ module ActiveFacts
             )
           end
 
-          def split_on_separators expr, seps = ',\\\\|'
+          def split_on_separators expr, seps = ',|'
             Expression.new(
-              %Q{regexp_split_to_table(#{expr}, E'#{seps}')},
+              %Q{regexp_split_to_table(#{expr}, E'[#{seps}]')},
               MM::DataType::TYPE_String, true, true
             )
           end
@@ -193,7 +193,7 @@ module ActiveFacts
           # Extract separated numbers, remove non-digits, take the last 8 (removing area codes etc)
           def phone_numbers expr
             Expression.new(
-              %Q{right(#{split_on_separators(%Q{regexp_replace(#{expr}, '[^0-9]+', '', 'g')})}, 8)},
+              %Q{right(regexp_replace(#{split_on_separators(expr)}, '[^0-9]+', '', 'g'), 8)},
               MM::DataType::TYPE_String,
               true
             )
@@ -248,7 +248,7 @@ module ActiveFacts
           # Both lists here are added to the supertype's lists
           def reserved_words
             @postgres_reserved_words ||= %w{
-              ANALYSE ANALYZE LIMIT PLACING RETURNING VARIADIC
+              ANALYSE ANALYZE LIMIT PLACING RETURNING SYMMETRIC VARIADIC
             }
             super + @postgres_reserved_words
           end

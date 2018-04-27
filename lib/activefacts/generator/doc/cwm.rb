@@ -1,7 +1,7 @@
 #
 #       ActiveFacts Common Warehouse Metamodel Generator
 #
-# This generator produces an CWM XMI-formated model of a Composition.
+# This generator produces an CWM XMI-formatted model of a Composition.
 #
 # Copyright (c) 2016 Infinuendo. Read the LICENSE file.
 #
@@ -519,6 +519,6 @@ module ActiveFacts
         
       end
     end
-    publish_generator Doc::CWM
+    publish_generator Doc::CWM, "Common Warehouse Metamodel represented as an XMI file. Use a relational compositor"
   end
 end

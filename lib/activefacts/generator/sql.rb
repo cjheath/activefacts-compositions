@@ -179,6 +179,6 @@ module ActiveFacts
       end
     end
 
-    publish_generator SQL
+    publish_generator SQL, "Generate a schema in standard SQL-99 using any relational compositor"
   end
 end

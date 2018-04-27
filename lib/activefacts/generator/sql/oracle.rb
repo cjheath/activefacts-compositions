@@ -20,6 +20,6 @@ module ActiveFacts
       end
 
     end
-    publish_generator SQL::Oracle
+    publish_generator SQL::Oracle, "Generate a schema for Oracle using any relational compositor"
   end
 end

@@ -970,6 +970,6 @@ module ActiveFacts
 
     end
 
-    publish_compositor(Relational)
+    publish_compositor Relational, "A relational composition for operational databases in optimal normal form"
   end
 end

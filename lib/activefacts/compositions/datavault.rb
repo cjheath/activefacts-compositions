@@ -717,6 +717,6 @@ module ActiveFacts
 
     end
 
-    publish_compositor(DataVault)
+    publish_compositor DataVault, "A relational composition suitable for full-history storage along Data Vault lines"
   end
 end

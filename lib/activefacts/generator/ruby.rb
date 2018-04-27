@@ -126,6 +126,6 @@ module ActiveFacts
         super
       end
     end
-    publish_generator Ruby
+    publish_generator Ruby, "Generate Ruby code for fact-based programming with the activefacts-api. Use the binary compositor"
   end
 end

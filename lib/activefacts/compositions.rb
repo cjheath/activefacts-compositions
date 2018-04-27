@@ -8,8 +8,8 @@ module ActiveFacts
       @@compositors ||= {}
     end
 
-    def self.publish_compositor klass
-      compositors[klass.name.sub(/^ActiveFacts::Compositions::/,'').gsub(/::/, '/').downcase] = klass
+    def self.publish_compositor klass, helptext = ''
+      compositors[klass.name.sub(/^ActiveFacts::Compositions::/,'').gsub(/::/, '/').downcase] = [klass, helptext]
     end
   end
 end
