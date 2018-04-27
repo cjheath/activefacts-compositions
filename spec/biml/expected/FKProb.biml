@@ -1,0 +1,52 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Databases>
+    <Database Name="FKProblem"/>
+  </Databases>
+  <Tables>
+    <Table Name="OT" SchemaName="FKProblem.[default]">
+      <Columns>
+        <Column Name="Name IsNullable="false" DataType="AnsiString" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_OT">
+          <Columns>
+            <Column ColumnName="Name"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="VTP" SchemaName="FKProblem.[default]">
+      <Columns>
+        <Column Name="Name IsNullable="false" DataType="AnsiString" />
+        <TableReference Name="VTName" TableName="FKProblem.[default].VTP" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_VTP">
+          <Columns>
+            <Column ColumnName="Name"/>
+            <Column ColumnName="Name"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="VTPRestriction" SchemaName="FKProblem.[default]">
+      <Columns>
+        <TableReference Name="VTName" TableName="FKProblem.[default].VTPRestriction" />
+        <MultipleColumnTableReference Name="VTPVTName" ForeignColumnName="VTName" MultipleColumnTableReferenceGroupName="VTPRestriction1" />
+        <MultipleColumnTableReference Name="VTPName" ForeignColumnName="Name" MultipleColumnTableReferenceGroupName="VTPRestriction1" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_VTPRestriction">
+          <Columns>
+            <Column ColumnName="Name"/>
+            <Column ColumnName="Name"/>
+            <Column ColumnName="Name"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+  </Tables>
+</Biml>

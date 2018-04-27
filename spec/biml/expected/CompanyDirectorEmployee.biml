@@ -1,0 +1,126 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Databases>
+    <Database Name="CompanyDirectorEmployee"/>
+  </Databases>
+  <Tables>
+    <Table Name="Attendance" SchemaName="CompanyDirectorEmployee.[default]">
+      <Columns>
+        <MultipleColumnTableReference Name="AttendeeGivenName" ForeignColumnName="GivenName" MultipleColumnTableReferenceGroupName="Attendance0" />
+        <MultipleColumnTableReference Name="AttendeeFamilyName" ForeignColumnName="FamilyName" MultipleColumnTableReferenceGroupName="Attendance0" />
+        <MultipleColumnTableReference Name="MeetingCompanyName" ForeignColumnName="CompanyName" MultipleColumnTableReferenceGroupName="Attendance1" />
+        <MultipleColumnTableReference Name="MeetingDate" ForeignColumnName="Date" MultipleColumnTableReferenceGroupName="Attendance1" />
+        <MultipleColumnTableReference Name="MeetingIsBoardMeeting" ForeignColumnName="IsBoardMeeting" MultipleColumnTableReferenceGroupName="Attendance1" />
+      </Columns>
+      <Keys>
+        <UniqueKey Name="UK_Attendance_Given Name_Family Name_Company Name_Date_Is Board Meeting">
+          <Columns>
+            <Column ColumnName="Given Name"/>
+            <Column ColumnName="Family Name"/>
+            <Column ColumnName="Company Name"/>
+            <Column ColumnName="Date"/>
+            <Column ColumnName="Is Board Meeting"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Company" SchemaName="CompanyDirectorEmployee.[default]">
+      <Columns>
+        <Column Name="CompanyName IsNullable="false" DataType="AnsiString" Length="48" />
+        <Column Name="IsListed IsNullable="false" DataType="Boolean" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Company">
+          <Columns>
+            <Column ColumnName="Company Name"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Directorship" SchemaName="CompanyDirectorEmployee.[default]">
+      <Columns>
+        <Column Name="AppointmentDate IsNullable="false" DataType="Date" />
+        <TableReference Name="CompanyName" TableName="CompanyDirectorEmployee.[default].Directorship" />
+        <MultipleColumnTableReference Name="DirectorGivenName" ForeignColumnName="GivenName" MultipleColumnTableReferenceGroupName="Directorship1" />
+        <MultipleColumnTableReference Name="DirectorFamilyName" ForeignColumnName="FamilyName" MultipleColumnTableReferenceGroupName="Directorship1" />
+      </Columns>
+      <Keys>
+        <UniqueKey Name="UK_Directorship_Given Name_Family Name_Company Name">
+          <Columns>
+            <Column ColumnName="Given Name"/>
+            <Column ColumnName="Family Name"/>
+            <Column ColumnName="Company Name"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Employee" SchemaName="CompanyDirectorEmployee.[default]">
+      <Columns>
+        <Column Name="EmployeeNr IsNullable="false" DataType="Int32" />
+        <Column Name="ManagerIsCeo IsNullable="true" DataType="Boolean" />
+        <TableReference Name="CompanyName" TableName="CompanyDirectorEmployee.[default].Employee" />
+        <TableReference Name="ManagerNr" TableName="CompanyDirectorEmployee.[default].Employee" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Employee">
+          <Columns>
+            <Column ColumnName="Employee Nr"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Employment" SchemaName="CompanyDirectorEmployee.[default]">
+      <Columns>
+        <TableReference Name="EmployeeNr" TableName="CompanyDirectorEmployee.[default].Employment" />
+        <MultipleColumnTableReference Name="PersonGivenName" ForeignColumnName="GivenName" MultipleColumnTableReferenceGroupName="Employment1" />
+        <MultipleColumnTableReference Name="PersonFamilyName" ForeignColumnName="FamilyName" MultipleColumnTableReferenceGroupName="Employment1" />
+      </Columns>
+      <Keys>
+        <UniqueKey Name="UK_Employment_Given Name_Family Name_Employee Nr">
+          <Columns>
+            <Column ColumnName="Given Name"/>
+            <Column ColumnName="Family Name"/>
+            <Column ColumnName="Employee Nr"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Meeting" SchemaName="CompanyDirectorEmployee.[default]">
+      <Columns>
+        <Column Name="Date IsNullable="false" DataType="Date" />
+        <Column Name="IsBoardMeeting IsNullable="false" DataType="Boolean" />
+        <TableReference Name="CompanyName" TableName="CompanyDirectorEmployee.[default].Meeting" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Meeting">
+          <Columns>
+            <Column ColumnName="Company Name"/>
+            <Column ColumnName="Date"/>
+            <Column ColumnName="Is Board Meeting"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Person" SchemaName="CompanyDirectorEmployee.[default]">
+      <Columns>
+        <Column Name="BirthDate IsNullable="true" DataType="Date" />
+        <Column Name="FamilyName IsNullable="true" DataType="AnsiString" Length="48" />
+        <Column Name="GivenName IsNullable="false" DataType="AnsiString" Length="48" />
+      </Columns>
+      <Keys>
+        <UniqueKey Name="UK_Person_Given Name_Family Name">
+          <Columns>
+            <Column ColumnName="Given Name"/>
+            <Column ColumnName="Family Name"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+  </Tables>
+</Biml>

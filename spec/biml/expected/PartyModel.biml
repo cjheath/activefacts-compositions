@@ -1,0 +1,47 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Databases>
+    <Database Name="Party"/>
+  </Databases>
+  <Tables>
+    <Table Name="Company" SchemaName="Party.[default]">
+      <Columns>
+        <TableReference Name="PartyID" TableName="Party.[default].Company" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Company">
+          <Columns>
+            <Column ColumnName="Party ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Party" SchemaName="Party.[default]">
+      <Columns>
+        <Column Name="PartyID IsNullable="false" DataType="Int64" />
+        <Column Name="PartyTypeCode IsNullable="false" DataType="AnsiString" Length="16" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Party">
+          <Columns>
+            <Column ColumnName="Party ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Person" SchemaName="Party.[default]">
+      <Columns>
+        <TableReference Name="PartyID" TableName="Party.[default].Person" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Person">
+          <Columns>
+            <Column ColumnName="Party ID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+  </Tables>
+</Biml>

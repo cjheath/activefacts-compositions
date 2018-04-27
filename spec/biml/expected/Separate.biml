@@ -1,0 +1,71 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Databases>
+    <Database Name="Separate"/>
+  </Databases>
+  <Tables>
+    <Table Name="Base" SchemaName="Separate.[default]">
+      <Columns>
+        <Column Name="BaseGUID IsNullable="false" DataType="Binary" Length="16" />
+        <Column Name="BaseVal IsNullable="false" DataType="Val" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Base">
+          <Columns>
+            <Column ColumnName="Base GUID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Partition" SchemaName="Separate.[default]">
+      <Columns>
+        <Column Name="BaseGUID IsNullable="false" DataType="Binary" Length="16" />
+        <Column Name="BaseVal IsNullable="false" DataType="Val" />
+        <Column Name="PartVal IsNullable="false" DataType="Val" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Partition">
+          <Columns>
+            <Column ColumnName="Base GUID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="PartitionInd" SchemaName="Separate.[default]">
+      <Columns>
+        <Column Name="AbsorbedPartAbsPartVal IsNullable="true" DataType="Val" />
+        <Column Name="BaseGUID IsNullable="false" DataType="Binary" Length="16" />
+        <Column Name="BaseVal IsNullable="false" DataType="Val" />
+        <Column Name="PartitionIndKey IsNullable="false" DataType="Binary" Length="16" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_PartitionInd">
+          <Columns>
+            <Column ColumnName="PartitionInd Key"/>
+          </Columns>
+        </PrimaryKey>
+        <UniqueKey Name="UK_PartitionInd_Base GUID">
+          <Columns>
+            <Column ColumnName="Base GUID"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Separate" SchemaName="Separate.[default]">
+      <Columns>
+        <Column Name="SepVal IsNullable="false" DataType="Val" />
+        <TableReference Name="BaseGUID" TableName="Separate.[default].Separate" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Separate">
+          <Columns>
+            <Column ColumnName="Base GUID"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+  </Tables>
+</Biml>

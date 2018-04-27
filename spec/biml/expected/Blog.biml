@@ -1,0 +1,96 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Databases>
+    <Database Name="Blog"/>
+  </Databases>
+  <Tables>
+    <Table Name="Author" SchemaName="Blog.[default]">
+      <Columns>
+        <Column Name="AuthorId IsNullable="false" DataType="Int64" />
+        <Column Name="AuthorName IsNullable="false" DataType="AnsiString" Length="64" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Author">
+          <Columns>
+            <Column ColumnName="Author Id"/>
+          </Columns>
+        </PrimaryKey>
+        <UniqueKey Name="UK_Author_Author Name">
+          <Columns>
+            <Column ColumnName="Author Name"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Comment" SchemaName="Blog.[default]">
+      <Columns>
+        <Column Name="CommentId IsNullable="false" DataType="Int64" />
+        <Column Name="ContentStyle IsNullable="true" DataType="AnsiString" Length="20" />
+        <Column Name="ContentText IsNullable="false" DataType="AnsiString" Length="MAX" />
+        <TableReference Name="AuthorId" TableName="Blog.[default].Comment" />
+        <MultipleColumnTableReference Name="ParagraphPostId" ForeignColumnName="PostId" MultipleColumnTableReferenceGroupName="Comment1" />
+        <MultipleColumnTableReference Name="ParagraphOrdinal" ForeignColumnName="Ordinal" MultipleColumnTableReferenceGroupName="Comment1" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Comment">
+          <Columns>
+            <Column ColumnName="Comment Id"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Paragraph" SchemaName="Blog.[default]">
+      <Columns>
+        <Column Name="ContentStyle IsNullable="true" DataType="AnsiString" Length="20" />
+        <Column Name="ContentText IsNullable="false" DataType="AnsiString" Length="MAX" />
+        <Column Name="Ordinal IsNullable="false" DataType="Int32" />
+        <TableReference Name="PostId" TableName="Blog.[default].Paragraph" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Paragraph">
+          <Columns>
+            <Column ColumnName="Post Id"/>
+            <Column ColumnName="Ordinal"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Post" SchemaName="Blog.[default]">
+      <Columns>
+        <Column Name="PostId IsNullable="false" DataType="Int64" />
+        <TableReference Name="AuthorId" TableName="Blog.[default].Post" />
+        <TableReference Name="TopicId" TableName="Blog.[default].Post" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Post">
+          <Columns>
+            <Column ColumnName="Post Id"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Topic" SchemaName="Blog.[default]">
+      <Columns>
+        <Column Name="TopicId IsNullable="false" DataType="Int64" />
+        <Column Name="TopicName IsNullable="false" DataType="AnsiString" Length="64" />
+        <TableReference Name="ParentTopicId" TableName="Blog.[default].Topic" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Topic">
+          <Columns>
+            <Column ColumnName="Topic Id"/>
+          </Columns>
+        </PrimaryKey>
+        <UniqueKey Name="UK_Topic_Topic Name">
+          <Columns>
+            <Column ColumnName="Topic Name"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+  </Tables>
+</Biml>

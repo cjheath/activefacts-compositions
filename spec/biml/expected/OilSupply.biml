@@ -1,0 +1,151 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Databases>
+    <Database Name="OilSupply"/>
+  </Databases>
+  <Tables>
+    <Table Name="AcceptableSubstitution" SchemaName="OilSupply.[default]">
+      <Columns>
+        <Column Name="Season IsNullable="false" DataType="AnsiString" Length="6" />
+        <TableReference Name="AlternateProductName" TableName="OilSupply.[default].AcceptableSubstitution" />
+        <TableReference Name="ProductName" TableName="OilSupply.[default].AcceptableSubstitution" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_AcceptableSubstitution">
+          <Columns>
+            <Column ColumnName="Product Name"/>
+            <Column ColumnName="Product Name"/>
+            <Column ColumnName="Season"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Month" SchemaName="OilSupply.[default]">
+      <Columns>
+        <Column Name="MonthNr IsNullable="false" DataType="Int32" />
+        <Column Name="Season IsNullable="false" DataType="AnsiString" Length="6" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Month">
+          <Columns>
+            <Column ColumnName="Month Nr"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Product" SchemaName="OilSupply.[default]">
+      <Columns>
+        <Column Name="ProductName IsNullable="false" DataType="AnsiString" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Product">
+          <Columns>
+            <Column ColumnName="Product Name"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="ProductionForecast" SchemaName="OilSupply.[default]">
+      <Columns>
+        <Column Name="Cost IsNullable="true" DataType="Currency" />
+        <Column Name="Quantity IsNullable="false" DataType="Int32" />
+        <TableReference Name="ProductName" TableName="OilSupply.[default].ProductionForecast" />
+        <TableReference Name="RefineryName" TableName="OilSupply.[default].ProductionForecast" />
+        <MultipleColumnTableReference Name="SupplyPeriodYearNr" ForeignColumnName="YearNr" MultipleColumnTableReferenceGroupName="ProductionForecast2" />
+        <MultipleColumnTableReference Name="SupplyPeriodMonthNr" ForeignColumnName="MonthNr" MultipleColumnTableReferenceGroupName="ProductionForecast2" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_ProductionForecast">
+          <Columns>
+            <Column ColumnName="Refinery Name"/>
+            <Column ColumnName="Year Nr"/>
+            <Column ColumnName="Month Nr"/>
+            <Column ColumnName="Product Name"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Refinery" SchemaName="OilSupply.[default]">
+      <Columns>
+        <Column Name="RefineryName IsNullable="false" DataType="AnsiString" Length="80" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Refinery">
+          <Columns>
+            <Column ColumnName="Refinery Name"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Region" SchemaName="OilSupply.[default]">
+      <Columns>
+        <Column Name="RegionName IsNullable="false" DataType="AnsiString" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Region">
+          <Columns>
+            <Column ColumnName="Region Name"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="RegionalDemand" SchemaName="OilSupply.[default]">
+      <Columns>
+        <Column Name="Quantity IsNullable="false" DataType="Int32" />
+        <TableReference Name="ProductName" TableName="OilSupply.[default].RegionalDemand" />
+        <TableReference Name="RegionName" TableName="OilSupply.[default].RegionalDemand" />
+        <MultipleColumnTableReference Name="SupplyPeriodYearNr" ForeignColumnName="YearNr" MultipleColumnTableReferenceGroupName="RegionalDemand2" />
+        <MultipleColumnTableReference Name="SupplyPeriodMonthNr" ForeignColumnName="MonthNr" MultipleColumnTableReferenceGroupName="RegionalDemand2" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_RegionalDemand">
+          <Columns>
+            <Column ColumnName="Region Name"/>
+            <Column ColumnName="Year Nr"/>
+            <Column ColumnName="Month Nr"/>
+            <Column ColumnName="Product Name"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="SupplyPeriod" SchemaName="OilSupply.[default]">
+      <Columns>
+        <Column Name="YearNr IsNullable="false" DataType="Int32" />
+        <TableReference Name="MonthNr" TableName="OilSupply.[default].SupplyPeriod" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_SupplyPeriod">
+          <Columns>
+            <Column ColumnName="Year Nr"/>
+            <Column ColumnName="Month Nr"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="TransportRoute" SchemaName="OilSupply.[default]">
+      <Columns>
+        <Column Name="Cost IsNullable="true" DataType="Currency" />
+        <Column Name="TransportMode IsNullable="false" DataType="AnsiString" />
+        <TableReference Name="RefineryName" TableName="OilSupply.[default].TransportRoute" />
+        <TableReference Name="RegionName" TableName="OilSupply.[default].TransportRoute" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_TransportRoute">
+          <Columns>
+            <Column ColumnName="Transport Mode"/>
+            <Column ColumnName="Refinery Name"/>
+            <Column ColumnName="Region Name"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+  </Tables>
+</Biml>

@@ -1,0 +1,35 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Databases>
+    <Database Name="MagnetPole"/>
+  </Databases>
+  <Tables>
+    <Table Name="Magnet" SchemaName="MagnetPole.[default]">
+      <Columns>
+        <Column Name="MagnetAutoCounter IsNullable="false" DataType="Int64" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Magnet">
+          <Columns>
+            <Column ColumnName="Magnet AutoCounter"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="MagnetPole" SchemaName="MagnetPole.[default]">
+      <Columns>
+        <Column Name="IsNorth IsNullable="false" DataType="Boolean" />
+        <TableReference Name="MagnetAutoCounter" TableName="MagnetPole.[default].MagnetPole" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_MagnetPole">
+          <Columns>
+            <Column ColumnName="Magnet AutoCounter"/>
+            <Column ColumnName="Is North"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+  </Tables>
+</Biml>

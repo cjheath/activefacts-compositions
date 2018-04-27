@@ -1,0 +1,225 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Databases>
+    <Database Name="CinemaTickets"/>
+  </Databases>
+  <Tables>
+    <Table Name="AllocatableCinemaSection" SchemaName="CinemaTickets.[default]">
+      <Columns>
+        <Column Name="SectionName IsNullable="false" DataType="AnsiString" />
+        <TableReference Name="CinemaID" TableName="CinemaTickets.[default].AllocatableCinemaSection" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_AllocatableCinemaSection">
+          <Columns>
+            <Column ColumnName="Cinema ID"/>
+            <Column ColumnName="Section Name"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Booking" SchemaName="CinemaTickets.[default]">
+      <Columns>
+        <Column Name="AddressText IsNullable="true" DataType="AnsiString" Length="MAX" />
+        <Column Name="BookingNr IsNullable="false" DataType="Int32" />
+        <Column Name="CollectionCode IsNullable="true" DataType="Int32" />
+        <Column Name="Number IsNullable="false" DataType="Int16" />
+        <Column Name="SectionName IsNullable="true" DataType="AnsiString" />
+        <Column Name="TicketsForBookingHaveBeenIssued IsNullable="false" DataType="Boolean" />
+        <TableReference Name="PersonID" TableName="CinemaTickets.[default].Booking" />
+        <MultipleColumnTableReference Name="SessionCinemaID" ForeignColumnName="CinemaID" MultipleColumnTableReferenceGroupName="Booking1" />
+        <MultipleColumnTableReference Name="SessionTimeYearNr" ForeignColumnName="SessionTimeYearNr" MultipleColumnTableReferenceGroupName="Booking1" />
+        <MultipleColumnTableReference Name="SessionTimeMonthNr" ForeignColumnName="SessionTimeMonthNr" MultipleColumnTableReferenceGroupName="Booking1" />
+        <MultipleColumnTableReference Name="SessionTimeDay" ForeignColumnName="SessionTimeDay" MultipleColumnTableReferenceGroupName="Booking1" />
+        <MultipleColumnTableReference Name="SessionTimeHour" ForeignColumnName="SessionTimeHour" MultipleColumnTableReferenceGroupName="Booking1" />
+        <MultipleColumnTableReference Name="SessionTimeMinute" ForeignColumnName="SessionTimeMinute" MultipleColumnTableReferenceGroupName="Booking1" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Booking">
+          <Columns>
+            <Column ColumnName="Booking Nr"/>
+          </Columns>
+        </PrimaryKey>
+        <UniqueKey Name="UK_Booking_Person ID_Cinema ID_Year Nr_Month Nr_Day_Hour_Minute">
+          <Columns>
+            <Column ColumnName="Person ID"/>
+            <Column ColumnName="Cinema ID"/>
+            <Column ColumnName="Year Nr"/>
+            <Column ColumnName="Month Nr"/>
+            <Column ColumnName="Day"/>
+            <Column ColumnName="Hour"/>
+            <Column ColumnName="Minute"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Cinema" SchemaName="CinemaTickets.[default]">
+      <Columns>
+        <Column Name="CinemaID IsNullable="false" DataType="Int64" />
+        <Column Name="Name IsNullable="false" DataType="AnsiString" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Cinema">
+          <Columns>
+            <Column ColumnName="Cinema ID"/>
+          </Columns>
+        </PrimaryKey>
+        <UniqueKey Name="UK_Cinema_Name">
+          <Columns>
+            <Column ColumnName="Name"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Film" SchemaName="CinemaTickets.[default]">
+      <Columns>
+        <Column Name="FilmID IsNullable="false" DataType="Int64" />
+        <Column Name="Name IsNullable="false" DataType="AnsiString" />
+        <Column Name="YearNr IsNullable="true" DataType="Int32" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Film">
+          <Columns>
+            <Column ColumnName="Film ID"/>
+          </Columns>
+        </PrimaryKey>
+        <UniqueKey Name="UK_Film_Name_Year Nr">
+          <Columns>
+            <Column ColumnName="Name"/>
+            <Column ColumnName="Year Nr"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Person" SchemaName="CinemaTickets.[default]">
+      <Columns>
+        <Column Name="EncryptedPassword IsNullable="true" DataType="AnsiString" />
+        <Column Name="LoginName IsNullable="true" DataType="AnsiString" />
+        <Column Name="PersonID IsNullable="false" DataType="Int64" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Person">
+          <Columns>
+            <Column ColumnName="Person ID"/>
+          </Columns>
+        </PrimaryKey>
+        <UniqueKey Name="UK_Person_Login Name">
+          <Columns>
+            <Column ColumnName="Login Name"/>
+          </Columns>
+        </UniqueKey>
+      </Keys>
+    </Table>
+
+    <Table Name="PlacesPaid" SchemaName="CinemaTickets.[default]">
+      <Columns>
+        <Column Name="Number IsNullable="false" DataType="Int16" />
+        <Column Name="PaymentMethodCode IsNullable="false" DataType="AnsiString" />
+        <TableReference Name="BookingNr" TableName="CinemaTickets.[default].PlacesPaid" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_PlacesPaid">
+          <Columns>
+            <Column ColumnName="Booking Nr"/>
+            <Column ColumnName="Payment Method Code"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Seat" SchemaName="CinemaTickets.[default]">
+      <Columns>
+        <Column Name="RowNr IsNullable="false" DataType="AnsiStringFixedLength" Length="2" />
+        <Column Name="SeatNumber IsNullable="false" DataType="Int16" />
+        <Column Name="SectionName IsNullable="true" DataType="AnsiString" />
+        <TableReference Name="RowCinemaID" TableName="CinemaTickets.[default].Seat" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Seat">
+          <Columns>
+            <Column ColumnName="Cinema ID"/>
+            <Column ColumnName="Row Nr"/>
+            <Column ColumnName="Seat Number"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="SeatAllocation" SchemaName="CinemaTickets.[default]">
+      <Columns>
+        <MultipleColumnTableReference Name="AllocatedSeatRowCinemaID" ForeignColumnName="RowCinemaID" MultipleColumnTableReferenceGroupName="SeatAllocation0" />
+        <MultipleColumnTableReference Name="AllocatedSeatRowNr" ForeignColumnName="RowNr" MultipleColumnTableReferenceGroupName="SeatAllocation0" />
+        <MultipleColumnTableReference Name="AllocatedSeatNumber" ForeignColumnName="SeatNumber" MultipleColumnTableReferenceGroupName="SeatAllocation0" />
+        <TableReference Name="BookingNr" TableName="CinemaTickets.[default].SeatAllocation" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_SeatAllocation">
+          <Columns>
+            <Column ColumnName="Booking Nr"/>
+            <Column ColumnName="Cinema ID"/>
+            <Column ColumnName="Row Nr"/>
+            <Column ColumnName="Seat Number"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="Session" SchemaName="CinemaTickets.[default]">
+      <Columns>
+        <Column Name="IsHighDemand IsNullable="false" DataType="Boolean" />
+        <Column Name="SessionTimeDay IsNullable="false" DataType="Int32" />
+        <Column Name="SessionTimeHour IsNullable="false" DataType="Int32" />
+        <Column Name="SessionTimeMinute IsNullable="false" DataType="Int32" />
+        <Column Name="SessionTimeMonthNr IsNullable="false" DataType="Int32" />
+        <Column Name="SessionTimeYearNr IsNullable="false" DataType="Int32" />
+        <Column Name="UsesAllocatedSeating IsNullable="false" DataType="Boolean" />
+        <TableReference Name="CinemaID" TableName="CinemaTickets.[default].Session" />
+        <TableReference Name="FilmID" TableName="CinemaTickets.[default].Session" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Session">
+          <Columns>
+            <Column ColumnName="Cinema ID"/>
+            <Column ColumnName="Year Nr"/>
+            <Column ColumnName="Month Nr"/>
+            <Column ColumnName="Day"/>
+            <Column ColumnName="Hour"/>
+            <Column ColumnName="Minute"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+    <Table Name="TicketPricing" SchemaName="CinemaTickets.[default]">
+      <Columns>
+        <Column Name="HighDemand IsNullable="false" DataType="Boolean" />
+        <Column Name="Price IsNullable="false" DataType="Currency" />
+        <Column Name="SectionName IsNullable="false" DataType="AnsiString" />
+        <Column Name="SessionTimeDay IsNullable="false" DataType="Int32" />
+        <Column Name="SessionTimeHour IsNullable="false" DataType="Int32" />
+        <Column Name="SessionTimeMinute IsNullable="false" DataType="Int32" />
+        <Column Name="SessionTimeMonthNr IsNullable="false" DataType="Int32" />
+        <Column Name="SessionTimeYearNr IsNullable="false" DataType="Int32" />
+        <TableReference Name="CinemaID" TableName="CinemaTickets.[default].TicketPricing" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_TicketPricing">
+          <Columns>
+            <Column ColumnName="Year Nr"/>
+            <Column ColumnName="Month Nr"/>
+            <Column ColumnName="Day"/>
+            <Column ColumnName="Hour"/>
+            <Column ColumnName="Minute"/>
+            <Column ColumnName="Cinema ID"/>
+            <Column ColumnName="Section Name"/>
+            <Column ColumnName="High Demand"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+  </Tables>
+</Biml>

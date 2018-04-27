@@ -1,0 +1,22 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+  <Databases>
+    <Database Name="Person"/>
+  </Databases>
+  <Tables>
+    <Table Name="Person" SchemaName="Person.[default]">
+      <Columns>
+        <Column Name="FamilyName IsNullable="false" DataType="AnsiString" />
+        <Column Name="GivenName IsNullable="false" DataType="AnsiString" />
+      </Columns>
+      <Keys>
+        <PrimaryKey Name="PK_Person">
+          <Columns>
+            <Column ColumnName="Family Name"/>
+            <Column ColumnName="Given Name"/>
+          </Columns>
+        </PrimaryKey>
+      </Keys>
+    </Table>
+
+  </Tables>
+</Biml>
