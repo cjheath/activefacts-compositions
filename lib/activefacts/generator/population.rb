@@ -91,18 +91,30 @@ module ActiveFacts
               when MM::Absorption       # Fact
                 fact_type = component.parent_role.fact_type
                 trace :population, "Fact Type #{fact_type.default_reading}"
-                role_values = instance.all_role_value.select{|rv| rv.population == @population && rv.fact.fact_type == fact_type}
-                raise "Population contains duplicate fact for #{fact_type.default_reading.inspect} in violation of uniqueness constraint" if role_values.size > 1
-                if role_values.empty?
-                  trace :population, "No fact is present"
-                  break
+
+                if MM::LinkFactType === fact_type
+                  # Populations do not contain LinkFactTypes for an Objectified Fact Type,
+                  # but Compositions use them. The child_role is probably a mirror role.
+                  role = fact_type.implying_role  # This is the real role
+                  fact_type = role.fact_type      # And this is the real fact
+                  raise "Internal error finding objectified fact" if instance.fact.fact_type != fact_type
+                  role_value = fact.all_role_value{|rv| rv.role == role}
+                else
+                  role_values = instance.all_role_value.select{|rv| rv.population == @population && rv.fact.fact_type == fact_type}
+                  raise "Population contains duplicate fact for #{fact_type.default_reading.inspect} in violation of uniqueness constraint" if role_values.size > 1
+                  if role_values.empty?
+                    trace :population, "No fact is present"
+                    break
+                  end
+                  residual_rvs = role_values[0].fact.all_role_value.to_a-[role_values[0]]
+                  raise "Instance of #{fact_type.default_reading.inspect} lacks some role players" unless residual_rvs.size == fact_type.all_role.size-1
+                  if residual_rvs.size != 1
+                    raise "Internal error in fact population, n-ary fact type #{fact_type.default_reading}"
+                  end
+                  role_value = residual_rvs[0]
                 end
-                residual_rvs = role_values[0].fact.all_role_value.to_a-[role_values[0]]
-                raise "Instance of #{fact_type.default_reading.inspect} lacks some role players" unless residual_rvs.size == fact_type.all_role.size-1
-                if residual_rvs.size != 1
-                  raise "Internal error in fact population, n-ary fact type #{fact_type.default_reading}"
-                end
-                current = residual_rvs[0].instance
+
+                current = role_value.instance
                 trace :population, "Instance is #{current.object_type.name}#{current.value ? ' = '+current.value.inspect : ''}"
                 value = current.value.inspect
 
@@ -113,8 +125,27 @@ module ActiveFacts
                 raise "Population contains duplicate fact for #{fact_type.default_reading.inspect} in violation of uniqueness constraint" if role_values.size > 1
                 value = true
 
-              # Value Type: instance.value
-              # Objectified Fact Type: instance.fact
+              when MM::ValueField
+                # The value is the value of the Value Type
+                value = current.value.inspect
+
+              when MM::Discriminator
+                # The value depends on which of the discriminated roles are played (must be only one)
+                raise "Cannot emit population containing a Discriminator, not implemented"
+                drs = component.all_discriminated_role.select{|dr| instance.all_role_value.detect{|rv| rv.role == dr.role}}
+                raise "Discriminator has ambiguous value, with more than one candidate role" if drs.size > 1
+                value = drs[0].value.inspect if drs[0]
+
+              # The following types are not conceptual so will never have asserted facts
+              when MM::Injection,
+                   MM::Scoping,
+                   MM::SurrogateKey,
+                   MM::ValidFrom,
+                   MM::Mapping,
+                   MM::ComputedValue,
+                   MM::HashValue
+                break
+
               else
                 raise "Unhandled Component type #{component.class.name} in composition"
               end
