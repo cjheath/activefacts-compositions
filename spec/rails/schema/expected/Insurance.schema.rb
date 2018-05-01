@@ -80,7 +80,7 @@ ActiveRecord::Schema.define(version: 20000000000000) do
     t.column "description", :string, limit: 1024, null: false
     t.column "purchase_date", :datetime, null: true
     t.column "purchase_place", :string, null: true
-    t.column "purchase_price", :decimal, limit: 18, scale: 2, null: true
+    t.column "purchase_price", :decimal, precision: 18, scale: 2, null: true
   end
 
   add_index "lost_items", ["incident_claim_id", "lost_item_nr"], name: :index_lost_items_on_incident_claim_id_lost_item_nr, unique: true
@@ -123,7 +123,7 @@ ActiveRecord::Schema.define(version: 20000000000000) do
     t.column "application_nr", :integer, null: false
     t.column "insured_id", :integer, null: false
     t.column "authorised_rep_id", :integer, null: true
-    t.column "itc_claimed", :decimal, limit: 18, scale: 2, null: true
+    t.column "itc_claimed", :decimal, precision: 18, scale: 2, null: true
   end
 
   add_index "policies", ["p_year_nr", "p_product_id", "p_state_id", "p_serial"], name: :index_policies_on_p_year_nr_p_product_id_p_state_id_p_serial, unique: true

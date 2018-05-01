@@ -205,11 +205,12 @@ module ActiveFacts
           end
 
           valid_parameters = MM::DataType::TypeParameters[type]
+          size_param = valid_parameters && valid_parameters.include?(:precision) ? :precision : :limit
           length_ok = valid_parameters &&
             ![MM::DataType::TYPE_Real, MM::DataType::TYPE_Integer].include?(type) &&
             (valid_parameters.include?(:length) || valid_parameters.include?(:precision))
           scale_ok = length_ok && valid_parameters.include?(:scale)
-          length_option = length_ok && options[:length] ? ", limit: #{options[:length]}" : ''
+          length_option = length_ok && options[:length] ? ", #{size_param}: #{options[:length]}" : ''
           scale_option = scale_ok && options[:scale] ? ", scale: #{options[:scale]}" : ''
           null_option = ", null: #{!options[:mandatory]}"
 

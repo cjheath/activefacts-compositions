@@ -56,9 +56,9 @@ ActiveRecord::Schema.define(version: 20000000000000) do
     t.column "alternate_variable_length_text", :string, null: false
     t.column "byte", :integer, null: false
     t.column "char8", :string, limit: 8, null: false
-    t.column "decimal14", :decimal, limit: 14, null: false
-    t.column "decimal14__6", :decimal, limit: 14, scale: 6, null: false
-    t.column "decimal8__3", :decimal, limit: 8, scale: 3, null: false
+    t.column "decimal14", :decimal, precision: 14, null: false
+    t.column "decimal14__6", :decimal, precision: 14, scale: 6, null: false
+    t.column "decimal8__3", :decimal, precision: 8, scale: 3, null: false
     t.column "fundamental_binary", :binary, null: false
     t.column "fundamental_boolean", :boolean, null: false
     t.column "fundamental_char", :string, null: false
