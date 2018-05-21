@@ -120,19 +120,47 @@ class SchemaCompositor
       exit 0 unless vocabulary
       vocabulary.finalise unless vocabulary == true
 
-      # Run one compositor
-      if @compositors.size != 1
-        raise "Expected one compositor, use --help for a list"
-      end
+      compositions =
+      	@compositors.map do |compositor_klass, modes, option|
+	  compositor = compositor_klass.new(vocabulary.constellation, basename, modes)
+	  compositor.generate
+	  [compositor_klass, compositor.composition]
+	end
 
-      compositor_klass, modes, option = @compositors[0]
-      compositor = compositor_klass.new(vocabulary.constellation, basename, modes)
-      compositor.generate
+      begin
+	# Run each generator
+	@generators.each do |generator_klass, modes|
+	  arity, composition_types = generator_klass.compatibility
+	  type_list = composition_types ? composition_types.map(&:to_s)*' or ' : nil
+	  if arity == 1
+	    # This generator processes each composition in turn
+	    compatible_compositions =
+	      compositions.
+	      select{|k, c| composition_types ? (composition_types&k.compatibility).size > 0 : true}
 
-      # Run each generator
-      @generators.each do |generator_klass, modes|
-        output = generator_klass.new(compositor.composition, modes).generate
-        puts output if output
+	    if compatible_compositions.size == 0
+	      raise "#{generator_klass.basename} expects a #{type_list} compositor; use --help for a list"
+	    end
+	    compatible_compositions.
+	      each do |k, c|
+		output = generator_klass.new(c, modes).generate
+		puts output if output
+	      end
+	  else
+	    # This generator either accepts "arity" compositions or any number
+	    if arity && compositions.size != arity
+	      raise "#{generator_klass.basename} expects #{arity} #{type_list} compositions; use --help for a list"
+	    end
+	    # Pass all compositions:
+	    output = generator_klass.new(compositions.map{|k,c| c}, modes).generate
+	    puts output if output
+	  end
+	end
+      rescue => e
+	$stderr.puts "#{e.message}"
+	if trace :exception
+	  $stderr.puts "\t#{e.backtrace*"\n\t"}"
+	end
       end
     end
   end

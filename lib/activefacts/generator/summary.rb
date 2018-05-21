@@ -11,6 +11,10 @@ require "activefacts/generator"
 module ActiveFacts
   module Metamodel
     class Composition
+      def self.compatibility
+        [1, nil]
+      end
+
       def summary
         classify_constraints
 

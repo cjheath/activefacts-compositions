@@ -18,6 +18,10 @@ module ActiveFacts
         {}
       end
 
+      def self.compatibility
+        %i{binary}
+      end
+
       def generate
         super
 

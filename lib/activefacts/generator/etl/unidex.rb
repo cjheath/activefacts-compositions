@@ -15,7 +15,6 @@ module ActiveFacts
   module Generators
     module ETL
       class Unidex
-
         MM = ActiveFacts::Metamodel unless const_defined?(:MM)
         def self.options
           # REVISIT: There's no way to support SQL dialect options here
@@ -27,6 +26,11 @@ module ActiveFacts
               dialect: [String, "SQL Dialect to use"]
             }
           )
+        end
+
+        def self.compatibility
+          # REVISIT: Remove the dependency on the "persistent" option of the staging compositor.
+          [1, %i{relational}]   # one relational composition
         end
 
         def initialize composition, options = {}

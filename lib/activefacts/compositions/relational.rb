@@ -19,6 +19,10 @@ module ActiveFacts
         }.merge(Compositor.options)
       end
 
+      def self.compatibility
+        %i{relational}
+      end
+
       def initialize constellation, name, options = {}, compositor_name = 'Relational'
         @option_surrogates = options.delete('surrogates')
 

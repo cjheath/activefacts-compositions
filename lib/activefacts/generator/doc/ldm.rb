@@ -21,8 +21,11 @@ module ActiveFacts
           }
         end
 
+        def self.compatibility
+          [1, %i{relational}]   # one relational composition
+        end
+
         def initialize compositions, options = {}
-          raise "--ldm only processes a single composition" if compositions.size > 1
           @composition = compositions[0]
           @options = options
           @underscore = options.has_key?("underscore") ? (options['underscore'] || '_') : ''

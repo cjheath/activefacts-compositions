@@ -24,6 +24,10 @@ module ActiveFacts
         merge(Relational.options)
       end
 
+      def self.compatibility
+        %i{relational}
+      end
+
       def initialize constellation, name, options = {}
         # Extract recognised options:
         @option_cdc = options.delete('cdc')

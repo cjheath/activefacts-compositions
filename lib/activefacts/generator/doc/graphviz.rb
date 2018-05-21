@@ -19,8 +19,11 @@ module ActiveFacts
           }
         end
 
+        def self.compatibility
+          [1, nil]  # one composition of ny kind
+        end
+
         def initialize compositions, options = {}
-          raise "--graphviz only processes a single composition" if compositions.size > 1
           @composition = compositions[0]
           @options = options
         end

@@ -19,6 +19,15 @@ module ActiveFacts
         }
       end
 
+      def self.compatibility
+        [nil, nil]
+      end
+  
+      def initialize composition, options = {}
+        @composition = composition
+        @options = options
+      end
+
       def initialize composition, options = {}
         @composition = composition
         @options = options
@@ -34,7 +43,9 @@ module ActiveFacts
           end
         end
 
-        @composition.validate(&report)
+        Array(@composition).each do |c|
+          c.validate(&report)
+        end
         nil
       end
     end

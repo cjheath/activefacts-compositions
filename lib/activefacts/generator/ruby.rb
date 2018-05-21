@@ -20,6 +20,10 @@ module ActiveFacts
         )
       end
 
+      def self.compatibility
+        [1, %i{binary}]
+      end
+
       def initialize composition, options = {}
         super
         @scope = options.delete('scope') || ''

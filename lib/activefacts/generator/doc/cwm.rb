@@ -15,31 +15,16 @@ require 'activefacts/support'
 module ActiveFacts
   module Generators
     module Doc
-      
-      # Add namespace id to metamodel forward referencing     
-      class ActiveFacts::Metamodel::Composite       # for tables
-        attr_accessor   :xmiid
-      end
-      
-      class ActiveFacts::Metamodel::Component      # for columns
-        attr_accessor   :xmiid
-        attr_accessor   :index_xmiid
-      end
-      
-      class ActiveFacts::Metamodel::Index           # for primary and unique indexes
-        attr_accessor   :xmiid
-      end
-      
-      class ActiveFacts::Metamodel::ForeignKey      # for foreign keys
-        attr_accessor   :xmiid
-      end
-      
-      class CWM      
+      class CWM
         MM = ActiveFacts::Metamodel unless const_defined?(:MM)
         def self.options
           {
             underscore: [String, "Use 'str' instead of underscore between words in table names"]
           }
+        end
+
+        def self.compatibility
+          [1, %i{relational}]   # one relational composition
         end
 
         def initialize composition, options = {}
@@ -119,15 +104,15 @@ module ActiveFacts
         def populate_namespace_ids
           model_ns = rawnsdef
           schema_ns = rawnsdef
-          
+
           @composition.
           all_composite.
           sort_by{|composite| composite.mapping.name}.
           map{|composite| populate_table_ids(composite)}
-          
+
           [model_ns, schema_ns]
         end
-        
+
         def populate_table_ids(table)
           tname = table_name(table)
           nsdef(table)
@@ -136,7 +121,7 @@ module ActiveFacts
             next if leaf.is_a?(MM::Absorption) && leaf.parent_role.fact_type.is_a?(MM::TypeInheritance)
             nsdef(leaf)
           end
-          table.all_index.sort_by do |idx| 
+          table.all_index.sort_by do |idx|
             idx.all_index_field.map { |ixf| ixf.component.xmiid }
           end.map do |index|
             nsdef(index)
@@ -146,7 +131,7 @@ module ActiveFacts
             nsdef(fk)
           end
         end
-        
+
         def generate_header
           "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
           "<!DOCTYPE XMI SYSTEM \"CWM-1.1.dtd\">\n" +
@@ -167,11 +152,11 @@ module ActiveFacts
           generate_data_types(2) +
           "  </XMI.content>\n"
         end
-            
+
         def generate_footer
           "</XMI>\n"
         end
-      
+
         def generate_catalog(depth, model_ns, schema_ns)
           catalog_start =
             indent(depth, "<CWMRDB:Catalog xmi.id=\"#{model_ns}\" name=\"Model\" visibility=\"public\">") +
@@ -179,34 +164,34 @@ module ActiveFacts
             indent(depth, "    <CWMRDB:Schema xmi.id=\"#{schema_ns}\" name=\"Schema\" visibility=\"public\" namespace=\"#{model_ns}\">") +
             indent(depth, "      <CWM:Namespace.ownedElement>")
 
-          catalog_body = 
+          catalog_body =
             @composition.
             all_composite.
             sort_by{|composite| composite.mapping.name}.
             map{|composite| generate_table(depth+4, schema_ns, composite)}*"\n" + "\n"
-        
+
           catalog_end =
             indent(depth, "      </CWM:Namespace.ownedElement>") +
             indent(depth, "    </CWMRDB:Schema>") +
             indent(depth, "  </CWM:Namespace.ownedElement>") +
             indent(depth, "</CWMRDB:Catalog>")
-        
+
           catalog_start + catalog_body + catalog_end
         end
-      
+
         def generate_data_types(depth)
           @datatypes.map do | dt |
             indent(depth, dt)
           end * ""
         end
-      
+
         def generate_table(depth, schema_ns, table)
           name = table_name(table)
           delayed_indices = []
-        
+
           table_start =
             indent(depth, "<CWMRDB:Table xmi.id=\"#{table.xmiid}\" name=\"#{name}\" isSystem=\"false\" isTemporary=\"false\" visibility=\"public\" namespace=\"#{schema_ns}\">")
-          
+
           table_columns =
             indent(depth, "  <CWM:Classifier.feature>") +
             (table.mapping.all_leaf.flat_map.sort_by{|c| column_name(c)}.map do |leaf|
@@ -220,7 +205,7 @@ module ActiveFacts
 
           table_keys =
             indent(depth, "  <CWM:Namespace.ownedElement>") +
-              (table.all_index.sort_by do |idx| 
+              (table.all_index.sort_by do |idx|
                 idx.all_index_field.map { |ixf| ixf.component.xmiid }
               end.map do |index|
                 generate_index(depth+2, table.xmiid, index, name, table.all_foreign_key_as_target_composite)
@@ -231,23 +216,23 @@ module ActiveFacts
               end
             ) * "" +
             indent(depth, "  </CWM:Namespace.ownedElement>")
-  
+
           table_end =
             indent(depth, "</CWMRDB:Table>")
-          
+
           table_start + table_columns + table_keys + table_end
         end
 
         def generate_column(depth, table_ns, column)
           name = safe_column_name(column)
-        
+
           is_nullable = column.path_mandatory ? "columnNoNulls" : "columnNullable"
           constraints = column.all_leaf_constraint
 
           type_name, options = column.data_type(data_type_context)
           options ||= {}
           length = options[:length]
-          
+
           type_name, type_num = normalise_type_cwm(type_name, length)
           column_params = ""
           type_params = ""
@@ -259,14 +244,14 @@ module ActiveFacts
 
         def create_data_type(type_name, type_num, type_params)
           type_ns = rawnsdef
-        
-          cwm_data_type = 
+
+          cwm_data_type =
             "<CWMRDB:SQLSimpleType xmi.id=\"#{type_ns}\" name=\"#{type_name}\" visibility=\"public\" typeNumber=\"#{type_num}\" #{type_params}/>"
-          
+
           @datatypes << cwm_data_type
           type_ns
         end
-        
+
         def generate_index(depth, table_ns, index, table_name, all_fks_as_target)
           key_ns = index.xmiid
 
@@ -285,7 +270,7 @@ module ActiveFacts
           #   (index.composite_as_primary_index ? ' CLUSTERED' : ' NONCLUSTERED')
 
           key_type = primary ? 'CWMRDB:PrimaryKey' : 'CWM:UniqueKey'
-          
+
           # find target foreign keys for this index
           fks_as_target = all_fks_as_target
 
@@ -307,7 +292,7 @@ module ActiveFacts
             if fks_as_target.count > 0
               indent(depth, "<CWM:UniqueKey.keyRelationship>") +
               fks_as_target.map do |fk|
-                indent(depth, " <CWM:KeyRelationship xmi.idref=\"#{fk.xmiid}\"/>") 
+                indent(depth, " <CWM:KeyRelationship xmi.idref=\"#{fk.xmiid}\"/>")
               end * "" +
               indent(depth, "</CWM:UniqueKey.keyRelationship>")
             else
@@ -316,10 +301,10 @@ module ActiveFacts
             indent(depth, "</#{key_type}>")
           end
         end
-        
+
         def generate_foreign_key(depth, table_ns, fk)
           key_ns = fk.xmiid
-          
+
           if fk.all_foreign_key_field.size == 1
             fkf = fk.all_foreign_key_field[0]
             ixf = fk.all_index_field[0]
@@ -335,16 +320,16 @@ module ActiveFacts
                 out += indent(depth, "    <CWM:StructuralFeature xmi.idref=\"#{fkf.component.xmiid}\" uniqueKey=\"#{ixf.component.index_xmiid}\" />")
               end
               out
-            end + 
+            end +
             indent(depth, "  </CWM:KeyRelationship.feature>") +
             indent(depth, "</CWMRDB:ForeignKey>")
           end
           # fk.all_foreign_key_field.map{|fkf| safe_column_name fkf.component}*", " +
           # ") REFERENCES #{safe_table_name fk.composite} (" +
           # fk.all_index_field.map{|ixf| safe_column_name ixf.component}*", " +
-        
+
           # indent(depth, "<CWMRDB:ForeignKey xmi.id=\"#{key_ns}\" name=\"R#{key_ns}\" visibility=\"public\" namespace=\"#{ns}\" feature=\"_41\" uniqueKey=\"_48\" deleteRule=\"importedKeyRestrict\"  updateRule=\"importedKeyRestrict\"/>")
-            
+
         end
 
         def boolean_type
@@ -426,8 +411,8 @@ module ActiveFacts
             ['int', 4]
           end
         end
-        
- 
+
+
         def sql_value(value)
           value.is_literal_string ? sql_string(value.literal) : value.literal
         end
@@ -516,9 +501,29 @@ module ActiveFacts
             default_varchar_type
           end
         end
-        
+
       end
     end
     publish_generator Doc::CWM, "Common Warehouse Metamodel represented as an XMI file. Use a relational compositor"
+  end
+
+  module Metamodel
+    # Add namespace id to metamodel forward referencing
+    class Composite       # for tables
+      attr_accessor   :xmiid
+    end
+
+    class Component      # for columns
+      attr_accessor   :xmiid
+      attr_accessor   :index_xmiid
+    end
+
+    class Index           # for primary and unique indexes
+      attr_accessor   :xmiid
+    end
+
+    class ForeignKey      # for foreign keys
+      attr_accessor   :xmiid
+    end
   end
 end

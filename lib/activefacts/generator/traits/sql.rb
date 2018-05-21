@@ -36,6 +36,10 @@ module ActiveFacts
           }
         end
 
+        def compatibility
+          [1, %i{relational}]
+        end
+
         # The options parameter overrides any default options set by sub-traits
         def defaults_and_options options
           options

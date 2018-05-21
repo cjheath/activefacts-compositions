@@ -29,6 +29,10 @@ module ActiveFacts
         )
       end
 
+      def self.compatibility
+        [1, %i{relational}]   # one relational composition
+      end
+
       def initialize composition, options = {}
         @composition = composition
         @options = options
@@ -76,7 +80,7 @@ module ActiveFacts
         "-- #{composite.mapping.name}\n" +
         composite.mapping.object_type.all_instance.map do |instance|
           ncv = named_column_values leaf_column_names, instance
-          %Q{INSERT OR UPDATE #{safe_table_name composite}(#{ncv.map{|name, value|name}*', '})\n} +
+          %Q{INSERT INTO #{safe_table_name composite}(#{ncv.map{|name, value|name}*', '})\n} +
           %Q{\tVALUES (#{ncv.map{|name, value| value}*', '});}
         end.sort * "\n"
       end

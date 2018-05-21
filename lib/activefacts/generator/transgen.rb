@@ -19,6 +19,11 @@ module ActiveFacts
         }
       end
 
+      def self.compatibility
+        # REVISIT: This should accept 2 compositions
+        [1, %i{relational}]
+      end
+  
       def initialize composition, options = {}
         @composition = composition
         @options = options

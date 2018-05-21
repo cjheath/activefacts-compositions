@@ -40,6 +40,10 @@ module ActiveFacts
         })
       end
 
+      def self.compatibility
+        %i{datavault relational}
+      end
+
       def initialize constellation, name, options = {}
         # Extract recognised options:
         datavault_initialize options

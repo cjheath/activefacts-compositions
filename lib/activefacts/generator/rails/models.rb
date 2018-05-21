@@ -23,6 +23,11 @@ module ActiveFacts
           })
         end
 
+        def self.compatibility
+          # REVISIT: We depend on the surrogate option being enabled if any PK is not Rails-friendly
+          [1, %i{relational}]   # one relational composition
+        end
+
         def initialize composition, options = {}
           @composition = composition
           @options = options
