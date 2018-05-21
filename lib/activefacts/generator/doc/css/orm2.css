@@ -1,0 +1,124 @@
+a:link, a:visited {
+  color: #8A0092; text-decoration: underline;
+}
+
+ul {
+  margin: 0px 0px 0px 2em;
+  -webkit-margin-before: 0px;
+  -webkit-margin-after: 0px;
+  -webkit-padding-start: 0px;
+  padding: 0px;
+}
+
+pre.slide {
+  background-color: #000;
+  padding: 5px;
+  display: table-cell;
+  border-style: dashed;
+  border-width: 2px;
+  border-color: #BBB;
+}
+
+span {
+  font-family: "Frutiger", sans-serif;
+}
+
+.keyword {
+  color: #0000CC;
+}
+.term, .concept {
+  /* Xcolor: #6A0072;   The color used by NORMA */
+  color: #8A0092;
+}
+.vocabulary, .object_type {
+  /* Xcolor: #6A0072;   The color used by NORMA */
+  color: #8A0092;
+}
+.linking, .copula {
+  color: #0E5400;
+}
+.literal, .value {
+  color: #FF990E;
+}
+
+dd {
+  margin-bottom: 0.5em;
+  margin-left: 60px;
+  text-indent: -20px;
+}
+
+dd ul {
+  margin-left: -80px;
+  text-indent: 80px;
+}
+
+
+.glossary-sidebar {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  width: 240px;
+  display: block;
+  margin: 0;
+  padding: 0 16px;
+  border-right: solid #DDD 3px;
+  background: #EEE;
+}
+
+.glossary-toc {
+  position: absolute;
+  top: 0px;
+  bottom: 24px;
+  overflow: auto;
+  margin: 0;
+  padding: 0 0;
+  list-style: none;
+  font-family: Menlo, Consolas, Monaco, "Lucida Console", monospace;
+}
+
+.glossary-controls {
+  position: absolute; bottom: 0px;
+}
+
+.glossary-doc {
+  position: absolute;
+  display: block;
+  background: #FFF;
+  border-right: solid #EEE 3px;
+  font: 300 16px/1.4 "Myriad Pro", "Helvetica Neue", Helvetica, "Arial Unicode MS", Arial, sans-serif;
+  overflow: auto;
+  padding: 0 0 0 30px;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 270px;
+}
+
+.glossary-toc li {
+  margin-left: 20px;
+  text-indent: -20px;
+}
+
+.glossary-doc dl {
+  margin-bottom: 1600px;
+}
+
+.glossary-doc dd {
+  margin-bottom: 30px;
+}
+
+.glossary-constraint {
+  background: #EDC;
+}
+
+.value {
+  display: inline;
+}
+
+.keyword,
+.glossary-facttype,
+.glossary-reading {
+  display: inline;
+  XXbackground: #E8E8E8;
+}
