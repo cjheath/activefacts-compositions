@@ -52,7 +52,7 @@ describe "Unidex views from CQL" do
       compositor = ActiveFacts::Compositions::Staging.new(vocabulary.constellation, basename, "persistent"=>true, "stgname"=>"+")
       compositor.generate
 
-      output = ActiveFacts::Generators::ETL::Unidex.new(compositor.composition, "dialect"=>"postgres").generate
+      output = ActiveFacts::Generators::ETL::Unidex.new(vocabulary.constellation, compositor.composition, "dialect"=>"postgres").generate
 
       # Save or delete the actual output file:
       if expected_text != output

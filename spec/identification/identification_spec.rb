@@ -52,7 +52,7 @@ describe "Summary of some identification patterns" do
       compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, "test")
       compositor.generate
 
-      output = ActiveFacts::Generators::SQL::Server.new(compositor.composition).generate
+      output = ActiveFacts::Generators::SQL::Server.new(vocabulary.constellation, compositor.composition).generate
 
       # Save or delete the actual output file:
       if expected_text != output

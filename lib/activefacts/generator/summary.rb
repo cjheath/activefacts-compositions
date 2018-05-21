@@ -9,6 +9,26 @@ require "activefacts/compositions/constraints"
 require "activefacts/generator"
 
 module ActiveFacts
+  module Generators
+    class Summary
+      def self.options
+        {
+        }
+      end
+
+      def initialize constellation, composition, options = {}
+        @constellation = constellation
+        @composition = composition
+        @options = options
+      end
+
+      def generate
+        @composition.summary
+      end
+    end
+    publish_generator Summary, "Succinctly display the full structure of any composition"
+  end
+
   module Metamodel
     class Composition
       def self.compatibility
@@ -101,24 +121,5 @@ module ActiveFacts
         )*''
       end
     end
-  end
-
-  module Generators
-    class Summary
-      def self.options
-        {
-        }
-      end
-
-      def initialize composition, options = {}
-        @composition = composition
-        @options = options
-      end
-
-      def generate
-        @composition.summary
-      end
-    end
-    publish_generator Summary, "Succinctly display the full structure of any composition"
   end
 end

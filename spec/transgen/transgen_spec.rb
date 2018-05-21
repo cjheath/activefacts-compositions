@@ -45,7 +45,7 @@ describe "Transform generator from CQL" do
     compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, 'Person', {})
     compositor.generate
 
-    output = ActiveFacts::Generators::TransGen.new(compositor.composition, options).generate
+    output = ActiveFacts::Generators::TransGen.new(vocabulary.constellation, compositor.composition, options).generate
 
     File.write(actual_file, output)
 
@@ -72,7 +72,7 @@ describe "Transform generator from CQL" do
     compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, 'Staff_Personnel', {})
     compositor.generate
 
-    output = ActiveFacts::Generators::TransGen.new(compositor.composition, options).generate
+    output = ActiveFacts::Generators::TransGen.new(vocabulary.constellation, compositor.composition, options).generate
 
     File.write(actual_file, output)
 
@@ -99,7 +99,7 @@ describe "Transform generator from CQL" do
     compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, 'Staff_Personnel_gen', {})
     compositor.generate
 
-    output = ActiveFacts::Generators::TransGen.new(compositor.composition, options).generate
+    output = ActiveFacts::Generators::TransGen.new(vocabulary.constellation, compositor.composition, options).generate
 
     File.write(actual_file, output)
 

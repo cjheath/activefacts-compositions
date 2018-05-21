@@ -52,7 +52,7 @@ describe "Rails schema from CQL" do
       compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, basename, "surrogates" => true)
       compositor.generate
 
-      output = ActiveFacts::Generators::Rails::Schema.new(compositor.composition, "closed_world" => true).generate
+      output = ActiveFacts::Generators::Rails::Schema.new(vocabulary.constellation, compositor.composition, "closed_world" => true).generate
 
       # Save or delete the actual output file:
       expected_text.gsub!(/Schema.define\(version: \d{14}/, 'Schema.define(version: 20000000000000') if expected_text

@@ -40,13 +40,13 @@ class SchemaCompositor
         begin
           require(pathname = path+"/"+filename)
           trace :loading, "Loaded #{pathname}"
-	  filename
+          filename
         rescue LoadError => e
           trace :loading, "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
-	  nil
+          nil
         rescue Exception => e
           $stderr.puts "Can't load #{pathname}: #{e.class}: #{e.message} #{e.backtrace[0]}"
-	  nil
+          nil
         end
       end.compact
     end
@@ -74,7 +74,7 @@ class SchemaCompositor
         check_options(action, modes)
         @generators << [action, modes, option]
       elsif option == 'help'
-      	# Finish, then help
+        # Finish, then help
       else
         $stderr.puts "Action --#{option} is not recognised"
         exit 1
@@ -119,48 +119,53 @@ class SchemaCompositor
         end
       exit 0 unless vocabulary
       vocabulary.finalise unless vocabulary == true
+      constellation = vocabulary.constellation
 
       compositions =
-      	@compositors.map do |compositor_klass, modes, option|
-	  compositor = compositor_klass.new(vocabulary.constellation, basename, modes)
-	  compositor.generate
-	  [compositor_klass, compositor.composition]
-	end
+        @compositors.map do |compositor_klass, modes, option|
+          compositor = compositor_klass.new(constellation, basename, modes)
+          compositor.generate
+          [compositor_klass, compositor.composition]
+        end
 
       begin
-	# Run each generator
-	@generators.each do |generator_klass, modes|
-	  arity, composition_types = generator_klass.compatibility
-	  type_list = composition_types ? composition_types.map(&:to_s)*' or ' : nil
-	  if arity == 1
-	    # This generator processes each composition in turn
-	    compatible_compositions =
-	      compositions.
-	      select{|k, c| composition_types ? (composition_types&k.compatibility).size > 0 : true}
+        # Run each generator
+        @generators.each do |generator_klass, modes|
+          arity, composition_types = generator_klass.compatibility
+          type_list = composition_types ? composition_types.map(&:to_s)*' or ' : nil
+          compatible_compositions =
+            compositions.
+              select{|k, c| composition_types ? (composition_types&k.compatibility).size > 0 : true}
 
-	    if compatible_compositions.size == 0
-	      raise "#{generator_klass.basename} expects a #{type_list} compositor; use --help for a list"
-	    end
-	    compatible_compositions.
-	      each do |k, c|
-		output = generator_klass.new(c, modes).generate
-		puts output if output
-	      end
-	  else
-	    # This generator either accepts "arity" compositions or any number
-	    if arity && compositions.size != arity
-	      raise "#{generator_klass.basename} expects #{arity} #{type_list} compositions; use --help for a list"
-	    end
-	    # Pass all compositions:
-	    output = generator_klass.new(compositions.map{|k,c| c}, modes).generate
-	    puts output if output
-	  end
-	end
+          if arity == 0
+            # No composition is required
+            output = generator_klass.new(constellation, compositions.map{|k,c| c}, modes).generate
+            puts output if output
+          elsif arity == 1
+            # This generator processes each composition in turn
+            if compatible_compositions.size == 0
+              raise "#{generator_klass.basename} expects a #{type_list} compositor; use --help for a list"
+            end
+            compatible_compositions.
+              each do |k, c|
+                output = generator_klass.new(constellation, c, modes).generate
+                puts output if output
+              end
+          else
+            # This generator either accepts "arity" compositions or any number
+            if arity && compositions.size != arity
+              raise "#{generator_klass.basename} expects #{arity} #{type_list} compositions; use --help for a list"
+            end
+            # Pass all compositions:
+            output = generator_klass.new(constellation, compositions.map{|k,c| c}, modes).generate
+            puts output if output
+          end
+        end
       rescue => e
-	$stderr.puts "#{e.message}"
-	if trace :exception
-	  $stderr.puts "\t#{e.backtrace*"\n\t"}"
-	end
+        $stderr.puts "#{e.message}"
+        if trace :exception
+          $stderr.puts "\t#{e.backtrace*"\n\t"}"
+        end
       end
     end
   end
@@ -187,13 +192,13 @@ class SchemaCompositor
             ' num'
           when Pathname
             ' file'
-	  when Array
-	    " { #{type.map(&:to_s)*' | '} }"
+          when Array
+            " { #{type.map(&:to_s)*' | '} }"
           else
             ' str'
           end
 
-	spaces = (s = 24-tag.size) < 2 ? 2 : s
+        spaces = (s = 24-tag.size) < 2 ? 2 : s
         stream.puts "\t#{tag}#{' '*spaces}#{description}"
       end
     end

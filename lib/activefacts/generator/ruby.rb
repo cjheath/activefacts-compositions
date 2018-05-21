@@ -24,7 +24,7 @@ module ActiveFacts
         [1, %i{binary}]
       end
 
-      def initialize composition, options = {}
+      def initialize constellation, composition, options = {}
         super
         @scope = options.delete('scope') || ''
         @scope = @scope.split(/::/)

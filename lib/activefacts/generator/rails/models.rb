@@ -28,7 +28,8 @@ module ActiveFacts
           [1, %i{relational}]   # one relational composition
         end
 
-        def initialize composition, options = {}
+        def initialize constellation, composition, options = {}
+          @constellation = constellation
           @composition = composition
           @options = options
           @option_keep = options.delete("keep")

@@ -18,7 +18,8 @@ module ActiveFacts
         }
       end
 
-      def initialize composition, options = {}
+      def initialize constellation, composition, options = {}
+        @constellation = constellation
         @composition = composition
         @options = options
         @comments = @options.delete("comments")

@@ -23,12 +23,8 @@ module ActiveFacts
         [nil, nil]
       end
   
-      def initialize composition, options = {}
-        @composition = composition
-        @options = options
-      end
-
-      def initialize composition, options = {}
+      def initialize constellation, composition, options = {}
+        @constellation = constellation
         @composition = composition
         @options = options
       end
@@ -43,7 +39,8 @@ module ActiveFacts
           end
         end
 
-        Array(@composition).each do |c|
+        Array(@composition).
+        each do |c|
           c.validate(&report)
         end
         nil

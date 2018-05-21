@@ -16,7 +16,7 @@ describe "SQL schema from CQL" do
       compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, "test")
       compositor.generate
 
-      output = ActiveFacts::Generators::SQL.new(compositor.composition, {'columns' => 'snake'}).generate
+      output = ActiveFacts::Generators::SQL.new(vocabulary.constellation, compositor.composition, {'columns' => 'snake'}).generate
       expect(output).to eq <<EOS
 CREATE TABLE Magnet (
 	-- Magnet has Magnet AutoCounter

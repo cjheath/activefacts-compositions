@@ -24,7 +24,8 @@ module ActiveFacts
       include Traits::SQL
       extend Traits::SQL
 
-      def initialize composition, options = {}
+      def initialize constellation, composition, options = {}
+        @constellation = constellation
         @composition = composition
         process_options options
       end

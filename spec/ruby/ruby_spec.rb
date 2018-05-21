@@ -52,7 +52,7 @@ describe "Ruby schema from CQL" do
       compositor = ActiveFacts::Compositions::Binary.new(vocabulary.constellation, basename)
       compositor.generate
 
-      output = ActiveFacts::Generators::Ruby.new(compositor.composition).generate
+      output = ActiveFacts::Generators::Ruby.new(vocabulary.constellation, compositor.composition).generate
 
       # Save or delete the actual output file:
       if expected_text != output

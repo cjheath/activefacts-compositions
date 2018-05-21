@@ -54,7 +54,7 @@ describe "DataVault schema from CQL" do
       compositor = ActiveFacts::Compositions::DataVault.new(vocabulary.constellation, basename, "fks" => "hash")
       compositor.generate
 
-      output = ActiveFacts::Generators::Summary.new(compositor.composition).generate
+      output = ActiveFacts::Generators::Summary.new(vocabulary.constellation, compositor.composition).generate
 
       # Save or delete the actual output file:
       if expected_text != output

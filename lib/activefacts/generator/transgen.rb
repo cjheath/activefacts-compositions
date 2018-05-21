@@ -24,7 +24,8 @@ module ActiveFacts
         [1, %i{relational}]
       end
   
-      def initialize composition, options = {}
+      def initialize constellation, composition, options = {}
+        @constellation = constellation
         @composition = composition
         @options = options
       end

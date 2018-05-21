@@ -23,7 +23,8 @@ module ActiveFacts
           [1, nil]  # one composition of ny kind
         end
 
-        def initialize compositions, options = {}
+        def initialize constellation, composition, options = {}
+          @constellation = constellation
           @composition = compositions[0]
           @options = options
         end

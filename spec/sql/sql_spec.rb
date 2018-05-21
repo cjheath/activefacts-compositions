@@ -51,7 +51,7 @@ describe "SQL schema from CQL" do
       compositor = ActiveFacts::Compositions::Relational.new(vocabulary.constellation, basename)
       compositor.generate
 
-      output = ActiveFacts::Generators::SQL.new(compositor.composition).generate
+      output = ActiveFacts::Generators::SQL.new(vocabulary.constellation, compositor.composition).generate
 
       # Save or delete the actual output file:
       if expected_text != output
