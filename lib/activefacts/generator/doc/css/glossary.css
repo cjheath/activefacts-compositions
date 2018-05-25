@@ -1,0 +1,100 @@
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+/* Default settings that can be changed dynamically by controls */
+.glossary-facttype, .glossary-constraints { display: block; }
+.glossary-doc.hide-alternates .glossary-alternates { display: none; }
+.glossary-doc.hide-constraints .glossary-constraints { display: none; }
+.glossary-doc.hide-examples .glossary-example { display: none; }
+
+.glossary-doc {
+  position: absolute;
+  display: block;
+  background: #FFF;
+  border-right: solid #EEE 3px;
+  overflow: auto;
+  padding: 0 0 0 16px;
+  height: 100%;
+  left: 0px; right: 270px;	  /* Sidebar at right */
+  /* left: 270px; right: 0px;	  /* Sidebar at left */
+  font-family: "Helvetica Neue", Helvetica, "Arial Unicode MS", Arial, sans-serif;
+}
+
+.glossary-sidebar {
+  position: absolute;
+  display: block;
+  height: 100%;
+  right: 0px; width: 270px;	  /* Sidebar at right */
+  /* left: 0px; width: 270px;	  /* Sidebar at left */
+  margin: 0;
+  XXpadding: 0 16px;
+  border-left: solid #DDD 3px;
+  border-right: solid #DDD 3px;
+  background: #EEE;
+  font-family: "Helvetica Neue", Helvetica, "Arial Unicode MS", Arial, sans-serif;
+}
+
+.glossary-toc {
+  position: absolute;
+  top: 0px;
+  bottom: 24px;
+  width: 100%;
+  overflow: auto;
+  margin: 0;
+  padding: 0 0;
+  list-style: none;
+}
+
+.glossary-controls {
+  position: absolute; bottom: 0px;
+}
+
+.glossary-toc li {
+  padding: 0px 1em 0px 1em;
+}
+
+.glossary-toc li:hover {
+  background: #DDD;
+}
+
+.glossary-doc dl,
+.screenheight {
+  margin-bottom: 2400px;  /* ensure we can scroll any item to the top of the screen */
+}
+
+.glossary-doc dd {
+  margin-bottom: 30px;
+  margin-left: 40px;
+}
+
+.glossary-doc dd .glossary-constraints {
+  margin-left: -80px;	/* Extend the highlight all the way left */
+  text-indent: 80px;
+}
+
+.glossary-alternates .glossary-reading {
+  display: inline;
+}
+
+.glossary-alternates {
+  XXtext-indent: 2em;
+  font-size: smaller;
+}
+
+.glossary-constraints {
+  /* a block of constraints */
+  background: #EDC;
+  margin: 0px 0px 0px 2em;
+  padding: 0px;
+}
+.glossary-constraint {
+  margin-left: 40px;
+  text-indent: 5em;
+  font-size: smaller;
+}
+.glossary-constraint .keyword {
+  background: #EDC;
+  font-style: italic;
+}

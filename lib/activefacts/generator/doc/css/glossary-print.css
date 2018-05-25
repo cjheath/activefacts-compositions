@@ -1,0 +1,41 @@
+.glossary-toc {
+  display: none;
+}
+
+.glossary-facttype,
+.glossary-reading {
+  display: inline;
+}
+
+.glossary-doc dd {
+  margin-bottom: 30px;
+}
+
+.glossary-constraints {
+  /* a block of constraints */
+  margin: 0px 0px 0px 2em;
+  padding: 0px;
+}
+
+.glossary-constraint {
+  text-indent: 2em;
+  font-size: smaller;
+}
+
+.glossary-alternates {
+  XXtext-indent: 2em;
+  font-size: smaller;
+}
+
+.glossary-constraint .constraint {
+  font-style: italic;
+}
+
+.glossary-doc dd .glossary-constraints {
+  margin-left: 0px;
+  text-indent: 0px;
+}
+
+a {
+  text-decoration: none;
+}

@@ -13,11 +13,11 @@ module ActiveFacts
   module Generators #:nodoc:
     module Doc
       class Glossary #:nodoc:
+        MM = ActiveFacts::Metamodel
+
         # Options are comma or space separated:
-        # * gen_bootstrap Generate bootstrap styled glossary html
         def self.options
           {
-            gen_bootstrap: ['Boolean', "Generate bootstrap styled glossary html"],
           }
         end
 
@@ -28,9 +28,9 @@ module ActiveFacts
         # Base class for generators of object-oriented class libraries for an ActiveFacts vocabulary.
         def initialize constellation, composition, options = {}
           @constellation = constellation
+          @compositions = Array(composition)
           @vocabulary = constellation.Vocabulary.values[0]
           @options = options
-          @gen_bootstrap = options.has_key?("gen_bootstrap")
         end
 
         def puts(*a)
@@ -47,92 +47,65 @@ module ActiveFacts
               all_object_type.
               sort_by{|o| o.name.gsub(/ /,'').downcase}
 
+          "<html><head>" +
           glossary_start +
+          "</head><body>" +
           glossary_body +
-          glossary_end
+          glossary_end +
+          "</body>"
         end
 
         def glossary_start
-          if !@gen_bootstrap
-            # puts "<link rel='stylesheet' href='css/orm2.css' media='screen' type='text/css'/>"
-            css_file = "/css/orm2.css"
-
-            File.open(File.dirname(__FILE__)+css_file) do |f|
-              "<style media='screen' type='text/css'>\n" +
-              f.read +
-              %Q{
-                .glossary-facttype, .glossary-constraints { display: block; }
-                .glossary-doc.hide-alternates .glossary-alternates { display: none; }
-                .glossary-doc.hide-constraints .glossary-constraints { display: none; }
-                .glossary-doc.hide-examples .glossary-example { display: none; }
-              }.gsub(/^\s+/, '') +
-              "</style>\n"
-            end +
-
-            %Q{
-              <style media='print' type='text/css'>
-              .keyword { color: #0000CC; font-style: italic; display: inline; }
-              .vocabulary, .object_type { color: #8A0092; font-weight: bold; }
-              .copula { color: #0E5400; }
-              .value { color: #FF990E; display: inline; }
-              .glossary-toc { display: none; }
-              .glossary-facttype, .glossary-reading { display: inline; }
-              </style>
-            }.gsub(/^\s+/, '')
-
-          else
-            ''
-          end
+          # Inline the following CSS files:
+          {
+            screen: ["reset.css", "orm2.css", "glossary.css", "treetable.css"],
+            print: ["orm2-print.css", "glossary-print.css"]
+          }.
+          flat_map do |media, css_files|
+            css_files.map do |css_file|
+              File.open(filename = File.dirname(__FILE__)+"/css/"+css_file) do |f|
+                "<!-- #{css_file} -->\n"+
+                "<style media='#{media}' type='text/css'>\n#{f.read}</style>\n"
+              end
+            end
+          end*''.gsub(/^\s+/, '')
         end
 
         def glossary_body
-          if @gen_bootstrap
-            object_types_dump_toc() +
-            object_types_dump_def()
-          else
-            object_types_dump_def() +
-            object_types_dump_toc()
-          end
+          object_types_dump_toc +
+          object_types_dump_def
         end
 
         def glossary_end
-          if !@gen_bootstrap
-            %Q{
-              <script type="text/javascript">
-              function toggle_class(e, c) {
-                if (!e) return;
-                var n = e.className;
-                var i = n.indexOf(c);
-                if (i == -1) {
-                  e.className = n+' '+c;
-                } else {
-                  e.className = n.slice(0, i)+n.slice(i+c.length);
-                }
-                if (document.location.toString().indexOf('#') >= 0)
-                  document.location = document.location; // Re-scroll to the current fragment
+          %Q{
+            <script type="text/javascript">
+            function toggle_class(e, c) {
+              if (!e) return;
+              var n = e.className;
+              var i = n.indexOf(c);
+              if (i == -1) {
+                e.className = n+' '+c;
+              } else {
+                e.className = n.slice(0, i)+n.slice(i+c.length);
               }
-              function toggle_constraints() {
-                toggle_class(document.getElementById('glossary-doc'), 'hide-constraints');
-              }
-              function toggle_alternates() {
-                toggle_class(document.getElementById('glossary-doc'), 'hide-alternates');
-              }
-              function toggle_examples() {
-                toggle_class(document.getElementById('glossary-doc'), 'hide-examples');
-              }
-              </script>
-            }.gsub(/^\s+/, '')
-          else
-            ''
-          end
+              if (document.location.toString().indexOf('#') >= 0)
+                document.location = document.location; // Re-scroll to the current fragment
+            }
+            function toggle_constraints() {
+              toggle_class(document.getElementById('glossary-doc'), 'hide-constraints');
+            }
+            function toggle_alternates() {
+              toggle_class(document.getElementById('glossary-doc'), 'hide-alternates');
+            }
+            function toggle_examples() {
+              toggle_class(document.getElementById('glossary-doc'), 'hide-examples');
+            }
+            </script>
+          }.gsub(/^\s+/, '')
         end
 
         def object_types_dump_toc
-          if @gen_bootstrap
-            '<div class="col-md-3 glossary-sidebar">' + "\n"
-          else
-            '<div class="glossary-sidebar">' + "\n"
-          end +
+          '<div class="glossary-sidebar">' + "\n" +
           '<h1 style="visibility: hidden">X</h1>' +"\n" +
           '<ol class="glossary-toc">' + "\n" +
           @all_object_type.
@@ -156,11 +129,7 @@ module ActiveFacts
         end
 
         def object_types_dump_def
-          if @gen_bootstrap
-            '<div class="col-md-5 glossary-doc hide-alternates hide-constraints" id="glossary-doc">' + "\n"
-          else
-            '<div class="glossary-doc hide-alternates hide-constraints" id="glossary-doc">' + "\n"
-          end +
+          '<div class="glossary-doc hide-alternates hide-constraints" id="glossary-doc">' + "\n" +
           "<h1>#{@vocabulary.name}</h1>\n" +
           "<dl>\n" +
           @all_object_type.
@@ -179,7 +148,79 @@ module ActiveFacts
               end
             end*"\n" +
           "</dl>\n" +
+          dump_compositions +
           "</div>\n"
+        end
+
+        def dump_compositions
+          div(
+            @compositions.map{|c| dump_composition(c)}*'',
+            'composition'
+          )
+        end
+
+        # Each component has
+        # * a span for the title,
+        # * a tt-type if it's a value type
+        # * an tt-desc if it has an associated fact type
+        # * child nodes
+        def component c, klass = ''
+          name = c.name
+          title = span(name, 'term'+(c.is_mandatory ? ' mandatory' : ''))
+          type = ''
+          if MM::Mapping === c && MM::EntityType === (o = c.object_type)
+            if o.fact_type 
+              objectified_reading = o.fact_type.preferred_reading
+              desc = div(
+                span('is where ', :keyword) + expand_reading(objectified_reading, false),
+                'tt-desc'
+              )
+            else
+              desc = div(
+                span('is identified by ', :keyword) +
+                o.preferred_identifier_roles.map{|r| span(r.role_name || r.name, 'term') }*', ',
+                'tt-desc'
+              )
+            end
+          else
+            desc = div('', 'tt-desc')
+          end
+          case c
+          when MM::Absorption
+            ft = c.parent_role.fact_type
+            preferred_reading = ft.reading_preferably_starting_with_role(c.parent_role)
+            desc = div(div(expand_reading(preferred_reading, false), 'glossary-reading'), 'tt-desc')
+            if c.all_member.size == 0
+              name = c.column_name*''
+              title = span(name, 'term'+(c.is_mandatory ? ' mandatory' : ''))
+              type = div(div(c.child_role.object_type.name, 'term'), 'tt-type')
+            else
+              title = span('('+name+')', 'term'+(c.is_mandatory ? ' mandatory' : ''))
+            end
+            if MM::TypeInheritance === ft
+              title = "as a "+title
+            end
+          # Add other special cases here
+          end
+
+
+          div(
+            title +
+            type +
+            desc +
+            c.all_member.map do |member|
+              component(member)
+            end*'',
+            'tt-node'+klass
+          )
+        end
+
+        def dump_composition c
+          "<hr>\n" +
+          c.all_composite_by_name.map do |composite|
+            composite.mapping.re_rank
+            component(composite.mapping, ' tt-outer')
+          end*'&nbsp;'
         end
 
         def element(text, attrs, tag = 'span')
@@ -204,18 +245,18 @@ module ActiveFacts
 
         # A definition of a term
         def termdef(name)
-          element(name, {:name => name, :class => 'object_type'}, 'a')
+          element(name, {:name => name, :class=>:term}, 'a')
         end
 
         # A reference to a defined term (excluding role adjectives)
         def termref(name, role_name = nil)
           role_name ||= name
-          element(role_name, {:href=>'#'+name, :class=>:object_type}, 'a')
+          element(role_name, {:href=>'#'+name, :class=>:term}, 'a')
         end
 
         # Text that should appear as part of a term (including role adjectives)
         def term(name)
-          element(name, :class=>:object_type)
+          element(name, :class=>:term)
         end
 
         def value_type_dump(o, include_alternate = true, include_facts = true, include_constraints = true)
@@ -305,7 +346,7 @@ module ActiveFacts
               end
               role_ref rr, freq_con, l_adj, name, t_adj, role_name_def, literal
             end,
-            {:class => 'copula'}
+            {:class => 'reading'}
           )
         end
 
@@ -373,7 +414,7 @@ module ActiveFacts
               div(
                 element(
                   reading.expand_with_final_presence_constraint { |*a| role_ref(*a) },
-                  {:class => 'copula'}
+                  {:class => 'reading'}
                 ),
                 'glossary-constraint'
               ) + "\n"

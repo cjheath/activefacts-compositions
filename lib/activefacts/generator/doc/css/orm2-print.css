@@ -1,0 +1,19 @@
+.keyword {
+  color: #0000CC;
+  font-style: italic;
+  display: inline;
+}
+
+.schema, .term {
+  color: #8A0092;
+  font-weight: bold;
+}
+
+.reading {
+  color: #0E5400;
+}
+
+.value {
+  color: #FF990E;
+  display: inline;
+}

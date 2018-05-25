@@ -1,31 +1,26 @@
+.keyword {
+  color: #0000CC;
+}
+
+.schema, .term, .concept {
+  /* Xcolor: #6A0072;   The color used by NORMA */
+  color: #8A0092;
+}
+
+.reading {
+  color: #0E5400;
+}
+
+.value {
+  color: #FF990E;
+}
+
 a:link, a:visited {
   color: #8A0092; text-decoration: underline;
 }
 
 span {
-  font-family: "Frutiger", sans-serif;
-}
-
-.keyword {
-  color: #0000CC;
-}
-
-.term, .concept {
-  /* Xcolor: #6A0072;   The color used by NORMA */
-  color: #8A0092;
-}
-
-.vocabulary, .object_type {
-  /* Xcolor: #6A0072;   The color used by NORMA */
-  color: #8A0092;
-}
-
-.linking, .reading {
-  color: #0E5400;
-}
-
-.literal, .value {
-  color: #FF990E;
+  font-family: "Helvetica Neue", Helvetica,"Arial Unicode MS", Arial, sans-serif;
 }
 
 .glossary-objectification .glossary-reading {
