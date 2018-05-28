@@ -12,6 +12,7 @@ body {
 .glossary {
   position: relative;
   height: 100%;
+  font-family: "Helvetica Neue", Helvetica, "Arial Unicode MS", Arial, sans-serif;
 }
 
 .glossary-compositions {
@@ -29,7 +30,6 @@ body {
   overflow: auto;
   top: 0px;
   bottom: 25px;			  /* Leave room for the controls */
-  font-family: "Helvetica Neue", Helvetica, "Arial Unicode MS", Arial, sans-serif;
 }
 
 .glossary-doc > * {
