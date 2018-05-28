@@ -128,6 +128,12 @@ body {
   font-size: smaller;
 }
 
+.glossary-facttype > .glossary-reading,
+.glossary-objectification {
+  margin-left: 20px;
+  text-indent: -20px;
+}
+
 .glossary-alternates .glossary-reading,
 .glossary-objectification .glossary-reading
 {
@@ -135,7 +141,6 @@ body {
 }
 
 .glossary-alternates {
-  XXtext-indent: 2em;
   font-size: smaller;
   overflow: hidden;
 }
@@ -144,16 +149,20 @@ body {
   overflow: hidden;
 }
 
+.glossary-doc dd .glossary-constraints {
+  margin-left: -40px;	/* Extend the highlight further left */
+  text-indent: 40px;
+}
+
 .glossary-constraints {
   /* a block of constraints */
   background: #EDC;
-  margin: 0px 0px 0px 2em;
   padding: 0px;
   overflow: hidden;
 }
 .glossary-constraint {
-  margin-left: 40px;
-  text-indent: 5em;
+  margin-left: 70px;  /* 30 added to the 40 from above */
+  text-indent: -10px; /* Ensure that wrap is indented */
   font-size: smaller;
 }
 .glossary-constraint .keyword {
