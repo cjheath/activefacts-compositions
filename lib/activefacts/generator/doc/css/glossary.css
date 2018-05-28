@@ -124,9 +124,8 @@ body {
   margin-left: 40px;	/* Indent it from the head term */
 }
 
-.glossary-doc dd .glossary-constraints {
-  margin-left: -80px;	/* Extend the highlight all the way left */
-  text-indent: 80px;
+.glossary-doc dd > * {
+  font-size: smaller;
 }
 
 .glossary-alternates .glossary-reading,
