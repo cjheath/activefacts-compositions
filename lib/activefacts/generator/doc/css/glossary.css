@@ -27,20 +27,21 @@ body {
   display: block;
   background: #FFF;
   overflow: auto;
-  height: 100%;
+  top: 0px;
+  bottom: 25px;			  /* Leave room for the controls */
   padding-left: 20px;
   font-family: "Helvetica Neue", Helvetica, "Arial Unicode MS", Arial, sans-serif;
 }
 
 .glossary-doc.glossary-toc-right {
   /* Table of contents at right */
-  left: 0px; right: 270px;        
+  left: 0px; right: 270px;
   border-right: solid #EEE 3px;
 }
 
 .glossary-doc.glossary-toc-left {
   /* Table of contents at right */
-  left: 270px; right: 0px;        
+  left: 270px; right: 0px;
 }
 
 .glossary-controls,
@@ -111,12 +112,12 @@ body {
 }
 
 /* Hover controls: comment out to leave it under toggle button control */
-.glossary-doc dt:hover + dd,                          /* When hovering over the head, show the contents */
-.glossary-doc dd:hover,                               /* Keep showing the contents when we slide into it */
-/* .glossary-doc dt:hover + dd .glossary-alternates,  /* Show the alternates when you hover over the head */
-/* .glossary-doc dt:hover + dd .glossary-constraints, /* Show the constraints when you hover over the head */
-.glossary-doc dt:hover + dd .glossary-example,        /* Show the examples when hovering over the head */
-.glossary-doc dd:hover .glossary-example              /* Keep showing the examples when we slide into the body */
+.glossary-doc dt:hover + dd,				/* When hovering over the head, show the contents */
+.glossary-doc dd:hover,					/* Keep showing the contents when we slide into it */
+/* .glossary-doc dt:hover + dd .glossary-alternates,	/* Show the alternates when you hover over the head */
+/* .glossary-doc dt:hover + dd .glossary-constraints,	/* Show the constraints when you hover over the head */
+.glossary-doc dt:hover + dd .glossary-example,		/* Show the examples when hovering over the head */
+.glossary-doc dd:hover .glossary-example		/* Keep showing the examples when we slide into the body */
 { max-height: 2000px;
   XXmargin-bottom: 30px;  /* ease-out works both ways if animating this :( */
   background: #DDD;

@@ -441,7 +441,7 @@ module ActiveFacts
           defn_term =
             "  <dt>" +
               "#{termdef(o.name)}" +
-              " (objectification)" +
+              " (objectification#{o.supertypes.size > 0 ? ', subtype' : ''})" +
               # Don't display OFT inline  " (#{span('in which', 'keyword')} #{fact_type(o.fact_type, false, o, nil)})" +
               "</dt>\n"
           # REVISIT: Handle separate identification
@@ -463,9 +463,7 @@ module ActiveFacts
         def entity_type_dump(o, include_alternate = true, include_facts = true, include_constraints = true)
           pi = o.preferred_identifier
           supers = o.supertypes
-          if (supers.size > 0) # Ignore identification by a supertype:
-            pi = nil if pi && pi.role_sequence.all_role_ref.detect{|rr| rr.role.fact_type.is_a?(ActiveFacts::Metamodel::TypeInheritance) }
-          end
+          pi = nil if pi && o.identifying_supertype
 
           defn_term =
             "  <dt>" +
