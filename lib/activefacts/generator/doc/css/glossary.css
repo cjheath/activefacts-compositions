@@ -95,7 +95,9 @@ body {
   text-indent: 80px;
 }
 
-.glossary-alternates .glossary-reading {
+.glossary-alternates .glossary-reading,
+.glossary-objectification .glossary-reading
+{
   display: inline;
 }
 

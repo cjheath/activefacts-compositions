@@ -133,7 +133,7 @@ module ActiveFacts
         end
 
         def object_types_dump_def
-          '<div class="glossary-doc hide-alternates hide-constraints" id="glossary-doc">' + "\n" +
+          '<div class="glossary-doc hide-facts hide-alternates hide-constraints" id="glossary-doc">' + "\n" +
           "<h1>#{@vocabulary.name}</h1>\n" +
           "<dl>\n" +
           @all_object_type.
@@ -387,8 +387,9 @@ module ActiveFacts
         def fact_type_with_constraints(ft, include_alternates = true, wrt = nil, include_constraints = true)
           if ft.entity_type
             div(
-              div(termref(ft.entity_type.name) + span(' is where ', 'keyword')) +
-              div(fact_type(ft, include_alternates, wrt)),
+              span(' is where ', 'keyword') +
+              (ft.entity_type == wrt ? '' : termref(ft.entity_type.name)) +
+              fact_type(ft, include_alternates, wrt),
               'glossary-objectification'
             )
           else
@@ -429,13 +430,14 @@ module ActiveFacts
           defn_term =
             "  <dt>" +
               "#{termdef(o.name)}" +
-              # " (#{span('in which', 'keyword')} #{fact_type(o.fact_type, false, nil, nil)})" +
+              " (objectification)" +
+              # Don't display OFT inline  " (#{span('in which', 'keyword')} #{fact_type(o.fact_type, false, o, nil)})" +
               "</dt>\n"
           # REVISIT: Handle separate identification
 
           defn_detail =
             "  <dd>" +
-            fact_type_with_constraints(o.fact_type, include_alternate, nil, include_constraints) + "\n" +
+            fact_type_with_constraints(o.fact_type, include_alternate, o, include_constraints) + "\n" +
 
             o.fact_type.all_role_in_order.map do |r|
               n = r.object_type.name
