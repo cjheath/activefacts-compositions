@@ -483,7 +483,7 @@ module ActiveFacts
                 )
               end * ", " + "\n"
             else
-              ''
+              ' (subtype)'
             end +
             "</dt>\n"
 
