@@ -43,6 +43,7 @@ body {
   left: 270px; right: 0px;        
 }
 
+.glossary-controls,
 .glossary-doc.glossary-is-toc
 {
   /* the glossary is the table of contents for something else */
@@ -87,6 +88,13 @@ body {
 
 .glossary-controls {
   position: absolute; bottom: 0px;
+  border: solid #DDD 3px;
+  padding-left: 20px;
+  background: #DDD;
+}
+
+.glossary-controls > * {
+  width: 22%;
 }
 
 .glossary-toc-list li {
