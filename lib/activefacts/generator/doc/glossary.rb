@@ -194,7 +194,7 @@ module ActiveFacts
             ft = c.parent_role.fact_type
             preferred_reading = ft.reading_preferably_starting_with_role(c.parent_role)
             desc = div(div(expand_reading(preferred_reading, false), 'glossary-reading'), 'tt-desc')
-            if c.all_member.size == 0
+            if MM::ValueType === c.object_type
               name = c.column_name*''
               title = span(name, 'term'+(c.is_mandatory ? ' mandatory' : ''))
               type = div(div(c.child_role.object_type.name, 'term'), 'tt-type')
