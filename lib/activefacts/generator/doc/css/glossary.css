@@ -3,11 +3,30 @@ body {
   padding: 0px;
 }
 
-/* Default settings that can be changed dynamically by controls */
-.glossary-facttype, .glossary-constraints { display: block; }
-.glossary-doc.hide-alternates .glossary-alternates { display: none; }
-.glossary-doc.hide-constraints .glossary-constraints { display: none; }
-.glossary-doc.hide-examples .glossary-example { display: none; }
+/* Size of sections when dynamically hidden by controls (incl with a transition) */
+.glossary-doc.hide-facts dd { max-height: 0px; margin-bottom: 0px; }
+.glossary-doc.hide-alternates .glossary-alternates { max-height: 0px; }
+.glossary-doc.hide-constraints .glossary-constraints { max-height: 0px; }
+.glossary-doc.hide-examples .glossary-example { max-height: 0px; }
+
+/* Hover controls: comment out to leave it under toggle button control */
+.glossary-doc dt:hover + dd,                          /* When hovering over the head, show the contents */
+.glossary-doc dd:hover,                               /* Keep showing the contents when we slide into it */
+/* .glossary-doc dt:hover + dd .glossary-alternates,  /* Show the alternates when you hover over the head */
+/* .glossary-doc dt:hover + dd .glossary-constraints, /* Show the constraints when you hover over the head */
+.glossary-doc dt:hover + dd .glossary-example,        /* Show the examples when hovering over the head */
+.glossary-doc dd:hover .glossary-example              /* Keep showing the examples when we slide into the body */
+{ max-height: 2000px;
+  XXmargin-bottom: 30px;  /* ease-out works both ways if animating this :( */
+  background: #DDD;
+}
+
+/* After the hover moves away, wait a while before hiding */
+.glossary-doc dd
+{
+  transition: max-height 1s;
+  transition-timing-function: ease-out;
+}
 
 .glossary-doc {
   position: absolute;
@@ -65,6 +84,8 @@ body {
 }
 
 .glossary-doc dd {
+  overflow: hidden;
+  max-height: 2000px;
   margin-bottom: 30px;
   margin-left: 40px;
 }
@@ -81,6 +102,11 @@ body {
 .glossary-alternates {
   XXtext-indent: 2em;
   font-size: smaller;
+  overflow: hidden;
+}
+
+.glossary-example {
+  overflow: hidden;
 }
 
 .glossary-constraints {
@@ -88,6 +114,7 @@ body {
   background: #EDC;
   margin: 0px 0px 0px 2em;
   padding: 0px;
+  overflow: hidden;
 }
 .glossary-constraint {
   margin-left: 40px;

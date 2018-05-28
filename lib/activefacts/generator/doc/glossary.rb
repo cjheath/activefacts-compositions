@@ -91,6 +91,9 @@ module ActiveFacts
               if (document.location.toString().indexOf('#') >= 0)
                 document.location = document.location; // Re-scroll to the current fragment
             }
+            function toggle_facts() {
+              toggle_class(document.getElementById('glossary-doc'), 'hide-facts');
+            }
             function toggle_constraints() {
               toggle_class(document.getElementById('glossary-doc'), 'hide-constraints');
             }
@@ -120,6 +123,7 @@ module ActiveFacts
           %Q{
             </ol>
             <div class="glossary-controls">
+            <input type="button" onclick="toggle_facts()" value="Facts" class="glossary-toggle-facts">
             <input type="button" onclick="toggle_constraints()" value="Constraints" class="glossary-toggle-constraint">
             <input type="button" onclick="toggle_alternates()" value="Alternates" class="glossary-toggle-alternates">
             <input type="button" onclick="toggle_examples()" value="Examples" class="glossary-toggle-examples">

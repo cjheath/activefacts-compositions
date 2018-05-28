@@ -9,6 +9,7 @@
 
 .glossary-doc dd {
   margin-bottom: 30px;
+  max-height: auto;
 }
 
 .glossary-constraints {
