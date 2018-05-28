@@ -14,7 +14,7 @@ div.tt-outer {			/* The wrapper for a Tree-Table structure */
   background-color: #FFF;	/* Make the message stand out from the background */
   border: 3px ridge;            /* A nice border around each node */
   padding-left: 0.5em;          /* Start text a bit further inside the border */
-  margin-left: 1em;		/* Indent each node a further 20px */
+  margin-left: 5px;		/* Indent each node a further 20px */
   margin-right: -3px;		/* Overlay the right border of the outer object */
   margin-bottom: -3px;		/* Overlay the bottom border of the outer object */
 }
@@ -56,7 +56,7 @@ div:first-of-type.tt-alt:before {
   display: inline-block;
   border-left: 3px ridge;	/* Draw a vertical separator to the left */
   background: #FFF;		/* Ensure a long tt-type doesn't show through */
-  right: 8px;			/* Fill the space to the far right, minus borders */
+  right: 11px;			/* Fill the space to the far right, minus borders */
   left: 36em;			/* Start where the data type ends */
   padding: 0px 5px 0px 5px;	/* Leave room at the start and end */
   line-height: 1.5em;		/* Separate the lines by more than the height */
