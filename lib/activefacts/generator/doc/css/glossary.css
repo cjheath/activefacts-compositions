@@ -16,8 +16,8 @@ body {
 
 .glossary-compositions {
   position: absolute;
-  left: 0px; right: 450px;	  /* as main item with glossary on right */
-  margin-right: 20px;
+  left: 0px; right: 456px;	  /* as main item with glossary on right */
+  margin-right: 0px;
   overflow: auto;
   height: 100%;
 }
@@ -29,8 +29,11 @@ body {
   overflow: auto;
   top: 0px;
   bottom: 25px;			  /* Leave room for the controls */
-  padding-left: 20px;
   font-family: "Helvetica Neue", Helvetica, "Arial Unicode MS", Arial, sans-serif;
+}
+
+.glossary-doc > * {
+  padding-left: 20px;
 }
 
 .glossary-doc.glossary-toc-right {
@@ -90,12 +93,12 @@ body {
 .glossary-controls {
   position: absolute; bottom: 0px;
   border: solid #DDD 3px;
-  padding-left: 20px;
   background: #DDD;
 }
 
 .glossary-controls > * {
-  width: 22%;
+  width: 24%;
+  padding: 0px;
 }
 
 .glossary-toc-list li {

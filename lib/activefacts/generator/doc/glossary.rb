@@ -215,19 +215,22 @@ module ActiveFacts
               component(member)
             end*'',
             'tt-node'+klass
-          )
+          )+"\n"
         end
 
         def dump_compositions
-          div(
+          element(
             @compositions.map do |c|
-              div(
-                element(c.compositor_name + ' Composition', {}, 'h3') +
-                dump_composition(c),
-                'composition'
+              "\n"+
+              element(
+                element(element(c.compositor_name, {href: "#{'#'}#{c.compositor_name}-composition"}, 'a'), {}, 'h2') + "\n" +
+                element(dump_composition(c), {}, 'div'),
+                {id: "#{c.compositor_name}-composition"},
+                'section'
               )
-            end*"\n",
-            'glossary-compositions'
+            end*'',
+            {class: 'tabs glossary-compositions'},
+            'article'
           )
         end
 
@@ -235,7 +238,7 @@ module ActiveFacts
           c.all_composite_by_name.map do |composite|
             composite.mapping.re_rank
             component(composite.mapping, ' tt-outer')
-          end*'&nbsp;'
+          end*"&nbsp;\n"
         end
 
         def element(text, attrs, tag = 'span')
