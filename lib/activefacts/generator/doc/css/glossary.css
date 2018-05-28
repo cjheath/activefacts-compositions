@@ -152,6 +152,8 @@ body {
 .glossary-alternates {
   font-size: smaller;
   overflow: hidden;
+  text-indent: -10px;
+  padding-left: 10px;
 }
 
 .glossary-example {
