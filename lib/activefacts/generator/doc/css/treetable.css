@@ -14,7 +14,6 @@ div.tt-outer {			/* The wrapper for a Tree-Table structure */
 }
 
 .tt-node {			/* A node in a Tree-Table structure */
-  Xbackground-color: #DDD;	/* Make the message stand out from the background */
   background-color: #FFF;	/* Make the message stand out from the background */
   border: 3px ridge;            /* A nice border around each node */
   padding-left: 0.5em;          /* Start text a bit further inside the border */

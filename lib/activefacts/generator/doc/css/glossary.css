@@ -9,53 +9,70 @@ body {
 .glossary-doc.hide-constraints .glossary-constraints { max-height: 0px; }
 .glossary-doc.hide-examples .glossary-example { max-height: 0px; }
 
-/* Hover controls: comment out to leave it under toggle button control */
-.glossary-doc dt:hover + dd,                          /* When hovering over the head, show the contents */
-.glossary-doc dd:hover,                               /* Keep showing the contents when we slide into it */
-/* .glossary-doc dt:hover + dd .glossary-alternates,  /* Show the alternates when you hover over the head */
-/* .glossary-doc dt:hover + dd .glossary-constraints, /* Show the constraints when you hover over the head */
-.glossary-doc dt:hover + dd .glossary-example,        /* Show the examples when hovering over the head */
-.glossary-doc dd:hover .glossary-example              /* Keep showing the examples when we slide into the body */
-{ max-height: 2000px;
-  XXmargin-bottom: 30px;  /* ease-out works both ways if animating this :( */
-  background: #DDD;
+.glossary {
+  position: relative;
+  height: 100%;
 }
 
-/* After the hover moves away, wait a while before hiding */
-.glossary-doc dd
-{
-  transition: max-height 1s;
-  transition-timing-function: ease-out;
+.glossary-compositions {
+  position: absolute;
+  left: 0px; right: 450px;	  /* as main item with glossary on right */
+  margin-right: 20px;
 }
 
 .glossary-doc {
   position: absolute;
   display: block;
   background: #FFF;
-  border-right: solid #EEE 3px;
   overflow: auto;
-  padding: 0 0 0 16px;
   height: 100%;
-  left: 0px; right: 270px;	  /* Sidebar at right */
-  /* left: 270px; right: 0px;	  /* Sidebar at left */
+  padding-left: 20px;
   font-family: "Helvetica Neue", Helvetica, "Arial Unicode MS", Arial, sans-serif;
 }
 
-.glossary-sidebar {
+.glossary-doc.glossary-toc-right {
+  /* Table of contents at right */
+  left: 0px; right: 270px;        
+  border-right: solid #EEE 3px;
+}
+
+.glossary-doc.glossary-toc-left {
+  /* Table of contents at right */
+  left: 270px; right: 0px;        
+}
+
+.glossary-doc.glossary-is-toc
+{
+  /* the glossary is the table of contents for something else */
+  width: 450px; right: 0px;
+  border-left: solid #DDD 3px;
+  border-right: solid #DDD 3px;	  /* To here */
+}
+
+.glossary-toc {
   position: absolute;
   display: block;
   height: 100%;
-  right: 0px; width: 270px;	  /* Sidebar at right */
-  /* left: 0px; width: 270px;	  /* Sidebar at left */
   margin: 0;
-  XXpadding: 0 16px;
   border-left: solid #DDD 3px;
   border-right: solid #DDD 3px;
   background: #EEE;
   font-family: "Helvetica Neue", Helvetica, "Arial Unicode MS", Arial, sans-serif;
 }
 
-.glossary-toc {
+.glossary-toc.glossary-toc-right {
+  right: 0px; width: 270px;	  /* Sidebar at right */
+}
+
+.glossary-toc.glossary-toc-left {
+  left: 0px; width: 270px;	  /* Sidebar at left */
+}
+
+.glossary-toc.glossary-is-toc {
+  right: 0px; width: 0px;	  /* Hidden */
+}
+
+.glossary-toc-list {
   position: absolute;
   top: 0px;
   bottom: 24px;
@@ -70,11 +87,11 @@ body {
   position: absolute; bottom: 0px;
 }
 
-.glossary-toc li {
+.glossary-toc-list li {
   padding: 0px 1em 0px 1em;
 }
 
-.glossary-toc li:hover {
+.glossary-toc-list li:hover {
   background: #DDD;
 }
 
@@ -83,11 +100,26 @@ body {
   margin-bottom: 2400px;  /* ensure we can scroll any item to the top of the screen */
 }
 
+/* Hover controls: comment out to leave it under toggle button control */
+.glossary-doc dt:hover + dd,                          /* When hovering over the head, show the contents */
+.glossary-doc dd:hover,                               /* Keep showing the contents when we slide into it */
+/* .glossary-doc dt:hover + dd .glossary-alternates,  /* Show the alternates when you hover over the head */
+/* .glossary-doc dt:hover + dd .glossary-constraints, /* Show the constraints when you hover over the head */
+.glossary-doc dt:hover + dd .glossary-example,        /* Show the examples when hovering over the head */
+.glossary-doc dd:hover .glossary-example              /* Keep showing the examples when we slide into the body */
+{ max-height: 2000px;
+  XXmargin-bottom: 30px;  /* ease-out works both ways if animating this :( */
+  background: #DDD;
+}
+
+/* After the hover moves away, wait a while before hiding */
 .glossary-doc dd {
+  transition: max-height 1s;
+  transition-timing-function: ease-out;
   overflow: hidden;
-  max-height: 2000px;
-  margin-bottom: 30px;
-  margin-left: 40px;
+  max-height: 2000px;	/* Animate this to zero to hide */
+  margin-bottom: 30px;	/* Some clearance from the next term */
+  margin-left: 40px;	/* Indent it from the head term */
 }
 
 .glossary-doc dd .glossary-constraints {

@@ -72,8 +72,13 @@ module ActiveFacts
         end
 
         def glossary_body
-          object_types_dump_toc +
-          object_types_dump_def
+          div(
+            object_types_dump_toc +
+            object_types_dump_def +
+            dump_compositions +
+            controls,
+            'glossary'
+          )
         end
 
         def glossary_end
@@ -108,9 +113,9 @@ module ActiveFacts
         end
 
         def object_types_dump_toc
-          '<div class="glossary-sidebar">' + "\n" +
-          '<h1 style="visibility: hidden">X</h1>' +"\n" +
-          '<ol class="glossary-toc">' + "\n" +
+          %Q{<div class="glossary-toc#{@compositions.size > 0 ? ' glossary-is-toc' : ' glossary-toc-right'}">} + "\n" +
+          # Don't show schema name here '<h1 style="visibility: hidden">X</h1>' +"\n" +
+          '<ol class="glossary-toc-list">' + "\n" +
           @all_object_type.
           reject do |o|
             o.name == '_ImplicitBooleanValueType' or
@@ -119,7 +124,10 @@ module ActiveFacts
           end.
           map do |o|
             "<li>#{termref(o.name)}</li>"
-          end *"\n" + "\n" +
+          end*"\n" + "</div>\n"
+        end
+
+        def controls
           %Q{
             </ol>
             <div class="glossary-controls">
@@ -128,12 +136,11 @@ module ActiveFacts
             <input type="button" onclick="toggle_alternates()" value="Alternates" class="glossary-toggle-alternates">
             <input type="button" onclick="toggle_examples()" value="Examples" class="glossary-toggle-examples">
             </div>
-            </div>
           }
         end
 
         def object_types_dump_def
-          '<div class="glossary-doc hide-facts hide-alternates hide-constraints" id="glossary-doc">' + "\n" +
+          %Q{<div class="glossary-doc#{@compositions.size > 0 ? ' glossary-is-toc' : ''} hide-facts hide-alternates hide-constraints" id="glossary-doc">} + "\n" +
           "<h1>#{@vocabulary.name}</h1>\n" +
           "<dl>\n" +
           @all_object_type.
@@ -152,15 +159,7 @@ module ActiveFacts
               end
             end*"\n" +
           "</dl>\n" +
-          dump_compositions +
           "</div>\n"
-        end
-
-        def dump_compositions
-          div(
-            @compositions.map{|c| dump_composition(c)}*'',
-            'composition'
-          )
         end
 
         # Each component has
@@ -219,8 +218,20 @@ module ActiveFacts
           )
         end
 
+        def dump_compositions
+          div(
+            @compositions.map do |c|
+              div(
+                element(c.compositor_name + ' Composition', {}, 'h3') +
+                dump_composition(c),
+                'composition'
+              )
+            end*"\n",
+            'glossary-compositions'
+          )
+        end
+
         def dump_composition c
-          "<hr>\n" +
           c.all_composite_by_name.map do |composite|
             composite.mapping.re_rank
             component(composite.mapping, ' tt-outer')
@@ -273,7 +284,7 @@ module ActiveFacts
             (if o.supertype
               span('is written as ', :keyword) + termref(o.supertype.name)
             else
-              " (a fundamental data type)"
+              " (fundamental)"
             end) +
             "</dt>\n"
 
@@ -387,8 +398,8 @@ module ActiveFacts
         def fact_type_with_constraints(ft, include_alternates = true, wrt = nil, include_constraints = true)
           if ft.entity_type
             div(
-              span(' is where ', 'keyword') +
               (ft.entity_type == wrt ? '' : termref(ft.entity_type.name)) +
+              span(' is where ', 'keyword') +
               fact_type(ft, include_alternates, wrt),
               'glossary-objectification'
             )
