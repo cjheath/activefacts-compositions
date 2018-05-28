@@ -2,14 +2,45 @@
   display: none;
 }
 
-.glossary-facttype,
-.glossary-reading {
+.glossary-doc h1 {
+  margin-bottom: 1em;
+}
+
+.glossary-doc dt,
+.glossary-facttype > .glossary-reading,
+.glossary-objectification {
+  margin-left: 20px;
+  text-indent: -20px;
+}
+
+.glossary-alternates {
+  font-size: smaller;
+  text-indent: -10px;
+  padding-left: 10px;
+}
+
+.glossary-doc dd .glossary-constraints {
+  margin-left: -40px;	/* Extend the highlight further left */
+  text-indent: 40px;
+}
+
+.glossary-alternates .glossary-reading,
+.glossary-objectification .glossary-reading {
   display: inline;
+}
+
+.screenheight {
+  margin-bottom: 0px;
+}
+
+.glossary-controls {
+  display:none;
 }
 
 .glossary-doc dd {
   margin-bottom: 30px;
   max-height: auto;
+  margin-left: 40px;	/* Indent it from the head term */
 }
 
 .glossary-constraints {

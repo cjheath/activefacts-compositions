@@ -58,7 +58,8 @@ module ActiveFacts
         def glossary_start
           # Inline the following CSS files:
           {
-            screen: ["reset.css", "orm2.css", "glossary.css", "treetable.css"],
+            all: ["reset.css", "treetable.css"],
+            screen: ["orm2.css", "glossary.css"],
             print: ["orm2-print.css", "glossary-print.css"]
           }.
           flat_map do |media, css_files|
@@ -223,7 +224,7 @@ module ActiveFacts
             @compositions.map do |c|
               "\n"+
               element(
-                element(element(c.compositor_name, {href: "#{'#'}#{c.compositor_name}-composition"}, 'a'), {}, 'h2') + "\n" +
+                element(element(c.compositor_name + ' Composition', {href: "#{'#'}#{c.compositor_name}-composition"}, 'a'), {}, 'h2') + "\n" +
                 element(dump_composition(c), {}, 'div'),
                 {id: "#{c.compositor_name}-composition"},
                 'section'
