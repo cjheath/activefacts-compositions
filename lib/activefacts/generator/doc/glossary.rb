@@ -209,15 +209,13 @@ module ActiveFacts
             else
               desc = div('', 'tt-desc')
             end
-          # Add other special cases here
           when MM::Indicator
             desc = div(
               expand_reading(c.role.fact_type.preferred_reading, false),
               'tt-desc'
             )
           else
-            p c
-            debugger
+            # Add other special cases here
             desc = div('', 'tt-desc')
           end
 

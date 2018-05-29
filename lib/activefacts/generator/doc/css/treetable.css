@@ -6,11 +6,12 @@
 /* Treetable */
 
 div.tt-outer {			/* The wrapper for a Tree-Table structure */
-  line-height: 1.5em;		/* Make it a bit roomy */
+  line-height: 1.7em;		/* Separate the lines by more than the height */
   margin: 10px;
 }
 
 .tt-node {			/* A node in a Tree-Table structure */
+  line-height: 1.5em;
   background-color: #FFF;	/* Make the message stand out from the background */
   border: 3px ridge;            /* A nice border around each node */
   padding-left: 0.5em;          /* Start text a bit further inside the border */
@@ -22,16 +23,17 @@ div.tt-outer {			/* The wrapper for a Tree-Table structure */
 .tt-list {			/* A node for an array or list of items */
   background: #DDF;		/* Make it stand out by colour */
   border: 4px ridge;		/* Use a slightly fatter border */
-  margin-left: 1.7em;		/* Stand a little to the left, not 2em like our peers */
+  XXmargin-left: 8px;		/* Stand a little further to the left than our peers */
   margin-top: -3px;		/* Stand a little to upwards */
   margin-right: -3px;		/* Bring the right margin to the left as well */
-  margin-bottom: 3px;		/* Leave room below for the shadow to show */
+  margin-bottom: 1px;		/* Leave room below for the shadow to show */
   box-shadow: 4px 4px 2px #888; /* Leave a shadow to the right and below */
 }
 
 .tt-list:before{
-  content:'(N)';
-  font-size: 6pt;
+  content:'(N)  ';
+  font-size: 8pt;
+  vertical-align: top;
 }
 
 .tt-alt {
@@ -58,12 +60,15 @@ div:first-of-type.tt-alt:before {
   background: #FFF;		/* Ensure a long tt-type doesn't show through */
   right: 11px;			/* Fill the space to the far right, minus borders */
   left: 36em;			/* Start where the data type ends */
-  padding: 0px 5px 0px 5px;	/* Leave room at the start and end */
+  padding: 0px 5px 4px 5px;	/* Leave room at the start and end */
   line-height: 1.5em;		/* Separate the lines by more than the height */
   height: 1.3em;		/* Clip the height to one line */
   overflow: hidden;		/* Don't attempt to show the whole text if it doesn't fit */
 }
 
+.tt-list > .tt-desc {
+  padding-bottom: 6px;		/* -list has a bigger border, so the -desc needs to be taller */
+}
 .tt-type {			/* Display the data type */
   position: absolute;		/* Glue it just left of the description */
   display: inline-block;
