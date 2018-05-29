@@ -172,23 +172,7 @@ module ActiveFacts
           name = c.name
           title = span(name, 'term'+(c.is_mandatory ? ' mandatory' : ''))
           type = ''
-          if MM::Mapping === c && MM::EntityType === (o = c.object_type)
-            if o.fact_type 
-              objectified_reading = o.fact_type.preferred_reading
-              desc = div(
-                span('is where ', :keyword) + expand_reading(objectified_reading, false),
-                'tt-desc'
-              )
-            else
-              desc = div(
-                span('is identified by ', :keyword) +
-                o.preferred_identifier_roles.map{|r| span(r.role_name || r.name, 'term') }*', ',
-                'tt-desc'
-              )
-            end
-          else
-            desc = div('', 'tt-desc')
-          end
+
           case c
           when MM::Absorption
             ft = c.parent_role.fact_type
@@ -198,13 +182,43 @@ module ActiveFacts
               name = c.column_name*''
               title = span(name, 'term'+(c.is_mandatory ? ' mandatory' : ''))
               type = div(div(c.child_role.object_type.name, 'term'), 'tt-type')
+            elsif c.all_member.size == 0
+              title = span(name, 'term'+(c.is_mandatory ? ' mandatory' : ''))
             else
               title = span('('+name+')', 'term'+(c.is_mandatory ? ' mandatory' : ''))
             end
             if MM::TypeInheritance === ft
               title = "as a "+title
             end
+            klass = klass+' tt-list' unless c.parent_role.is_unique
+          when MM::Mapping
+            if MM::EntityType === (o = c.object_type)
+              if o.fact_type
+                objectified_reading = o.fact_type.preferred_reading
+                desc = div(
+                  span('is where ', :keyword) + expand_reading(objectified_reading, false),
+                  'tt-desc'
+                )
+              else
+                desc = div(
+                  span('is identified by ', :keyword) +
+                  o.preferred_identifier_roles.map{|r| span(r.role_name || r.name, 'term') }*', ',
+                  'tt-desc'
+                )
+              end
+            else
+              desc = div('', 'tt-desc')
+            end
           # Add other special cases here
+          when MM::Indicator
+            desc = div(
+              expand_reading(c.role.fact_type.preferred_reading, false),
+              'tt-desc'
+            )
+          else
+            p c
+            debugger
+            desc = div('', 'tt-desc')
           end
 
 
@@ -212,7 +226,10 @@ module ActiveFacts
             title +
             type +
             desc +
-            c.all_member.map do |member|
+            c.
+            all_member.
+            sort_by{|m| m.ordinal}.
+            map do |member|
               component(member)
             end*'',
             'tt-node'+klass
