@@ -22,9 +22,10 @@ class SchemaCompositor
 
   # Parse options into a hash, and values for each option into a hash
   def initialize argv
+    @argv = argv.dup
     @options = {}
-    while argv[0] =~ /^-/
-      option, value = argv.shift.split(/[=:]/, 2)
+    while @argv[0] =~ /^-/
+      option, value = @argv.shift.split(/[=:]/, 2)
       csv = (value =~ /,/ ? value.split(',') : Array(value))
       modes = csv.inject({}){|h,s| k, v = s.split(/=/, 2); h[k] = v || true; h }
       @options[option.sub(/^-*/,'')] = modes
@@ -85,9 +86,9 @@ class SchemaCompositor
     end
   end
 
-  def process_files argv
+  def process_files
     # Process each input file:
-    argv.each do |arg|
+    @argv.each do |arg|
       filename, input_options = *arg.split(/=/, 2)
 
       # Load the correct file type input method
@@ -236,4 +237,4 @@ if sc.options['help'] || (sc.generators.empty? && sc.compositors.empty?)
   exit
 end
 
-sc.process_files ARGV
+sc.process_files

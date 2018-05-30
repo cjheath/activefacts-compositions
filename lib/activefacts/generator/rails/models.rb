@@ -13,7 +13,7 @@ module ActiveFacts
   module Generators
     module Rails
       class Models
-        HEADER = "# Auto-generated from CQL, edits will be lost"
+        HEADER = "# Auto-generated (edits will be lost) using:"
         def self.options
           ({
             keep:       ['Boolean', "Keep stale model files"],
@@ -117,7 +117,9 @@ module ActiveFacts
           filename = composite.rails.singular_name+'.rb'
           out = create_if_ok(filename)
           return nil unless out
-          out.puts "#{HEADER}\n\n"+model
+          out.puts "#{HEADER}\n" +
+            "\# #{([File.basename($0)]+ARGV)*' '}\n\n" +
+            model
         ensure
           out.close if out
           nil

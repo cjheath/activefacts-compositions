@@ -1,5 +1,6 @@
 #
-# schema.rb auto-generated for FKProb
+# Auto-generated (edits will be lost) using:
+# rspec spec/rails/models/models_spec.rb spec/rails/schema/schema_spec.rb
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)

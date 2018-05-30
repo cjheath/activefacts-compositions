@@ -15,7 +15,7 @@ module ActiveFacts
     module Rails
       class Schema
         MM = ActiveFacts::Metamodel unless const_defined?(:MM)
-        HEADER = "# Auto-generated from CQL, edits will be lost"
+        HEADER = "# Auto-generated (edits will be lost) using:"
         def self.options
           ({
             fks:              ['Boolean', "Generate foreign key definitions"],
@@ -62,7 +62,8 @@ module ActiveFacts
           header =
             [
               '#',
-              "# schema.rb auto-generated for #{@composition.name}",
+              "#{HEADER}",
+              "\# #{([File.basename($0)]+ARGV)*' '}",
               '#',
               '',
               "ActiveRecord::Base.logger = Logger.new(STDOUT)",
