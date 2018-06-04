@@ -29,7 +29,7 @@ body {
   background: #FFF;
   overflow: auto;
   top: 0px;
-  bottom: 25px;			  /* Leave room for the controls */
+  bottom: 0px;
 }
 
 .glossary-doc > * {
@@ -38,22 +38,30 @@ body {
 
 .glossary-doc.glossary-toc-right {
   /* Table of contents at right */
-  left: 0px; right: 270px;
+  left: 0px; right: 450px;
   border-right: solid #EEE 3px;
 }
 
 .glossary-doc.glossary-toc-left {
   /* Table of contents at right */
-  left: 270px; right: 0px;
+  left: 450px; right: 0px;
 }
 
-.glossary-controls,
+.glossary-controls
+{
+  /* the glossary is the table of contents for something else */
+  width: 450px; right: 0px;
+  border-left: solid #DDD 3px;
+  border-right: solid #DDD 3px;	  /* To here */
+}
+
 .glossary-doc.glossary-is-toc
 {
   /* the glossary is the table of contents for something else */
   width: 450px; right: 0px;
   border-left: solid #DDD 3px;
   border-right: solid #DDD 3px;	  /* To here */
+  bottom: 25px;			  /* Leave room for the controls */
 }
 
 .glossary-toc {
@@ -68,11 +76,11 @@ body {
 }
 
 .glossary-toc.glossary-toc-right {
-  right: 0px; width: 270px;	  /* Sidebar at right */
+  right: 0px; width: 450px;	  /* Sidebar at right */
 }
 
 .glossary-toc.glossary-toc-left {
-  left: 0px; width: 270px;	  /* Sidebar at left */
+  left: 0px; width: 450px;	  /* Sidebar at left */
 }
 
 .glossary-toc.glossary-is-toc {

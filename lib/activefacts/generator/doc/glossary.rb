@@ -114,7 +114,7 @@ module ActiveFacts
         end
 
         def object_types_dump_toc
-          %Q{<div class="glossary-toc#{@compositions.size > 0 ? ' glossary-is-toc' : ' glossary-toc-right'}">} + "\n" +
+          %Q{\n<div class="glossary-toc#{@compositions.size > 0 ? ' glossary-is-toc' : ' glossary-toc-right'}">\n} +
           # Don't show schema name here '<h1 style="visibility: hidden">X</h1>' +"\n" +
           '<ol class="glossary-toc-list">' + "\n" +
           @all_object_type.
@@ -125,7 +125,7 @@ module ActiveFacts
           end.
           map do |o|
             "<li>#{termref(o.name)}</li>"
-          end*"\n" + "</div>\n"
+          end*"\n" + "\n</div>\n\n"
         end
 
         def controls
@@ -141,7 +141,7 @@ module ActiveFacts
         end
 
         def object_types_dump_def
-          %Q{<div class="glossary-doc#{@compositions.size > 0 ? ' glossary-is-toc' : ''} hide-facts hide-alternates hide-constraints" id="glossary-doc">} + "\n" +
+          %Q{<div class="glossary-doc #{@compositions.size > 0 ? 'glossary-is-toc' : 'glossary-toc-right'} hide-facts hide-alternates hide-constraints" id="glossary-doc">} + "\n" +
           "<h1>#{@vocabulary.name}</h1>\n" +
           "<dl>\n" +
           @all_object_type.
@@ -235,6 +235,8 @@ module ActiveFacts
         end
 
         def dump_compositions
+          return '' if @compositions.empty?
+
           element(
             @compositions.map do |c|
               "\n"+
