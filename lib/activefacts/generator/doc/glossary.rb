@@ -182,18 +182,22 @@ module ActiveFacts
               name = c.column_name*''
               title = span(name, 'term'+(c.is_mandatory ? ' mandatory' : ''))
               type = div(div(c.child_role.object_type.name, 'term'), 'tt-type')
-            elsif c.all_member.size == 0
+            #elsif c.all_member.size == 0
+            #  title = span(name, 'term'+(c.is_mandatory ? ' mandatory' : ''))
+            #else
               title = span(name, 'term'+(c.is_mandatory ? ' mandatory' : ''))
-            else
-              title = span('('+name+')', 'term'+(c.is_mandatory ? ' mandatory' : ''))
             end
             if MM::TypeInheritance === ft
               title = "as a "+title
+            elsif c.full_absorption
+              title = "fully absorbing "+title
             end
             if to = (c.foreign_key && c.foreign_key.composite) or
+              (
                 composite_mappings = c.object_type.all_mapping.select{|m| m.composite} and
                 composite_mappings.size == 1 and  # In a binary mapping, there aren't any ForeignKeys
                 to = composite_mappings[0].composite
+              )
               title = element(title, {href: '#'+composite_anchor(to)}, 'a')
             end
             klass = klass+' tt-list' unless c.parent_role.is_unique
