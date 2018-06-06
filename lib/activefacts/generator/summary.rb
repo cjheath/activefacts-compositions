@@ -16,6 +16,10 @@ module ActiveFacts
         }
       end
 
+      def self.compatibility
+        [1, nil]
+      end
+
       def initialize constellation, composition, options = {}
         @constellation = constellation
         @composition = composition
@@ -31,10 +35,6 @@ module ActiveFacts
 
   module Metamodel
     class Composition
-      def self.compatibility
-        [1, nil]
-      end
-
       def summary
         classify_constraints
 
