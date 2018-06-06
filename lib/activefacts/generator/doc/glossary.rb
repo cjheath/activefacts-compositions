@@ -190,8 +190,12 @@ module ActiveFacts
             if MM::TypeInheritance === ft
               title = "as a "+title
             end
+            if c.foreign_key
+              title = element(title, {href: '#'+composite_anchor(c.foreign_key.composite)}, 'a')
+            end
             klass = klass+' tt-list' unless c.parent_role.is_unique
-          when MM::Mapping
+
+          when MM::Mapping  # A mapping that's not an absorption; usually a Composite
             if MM::EntityType === (o = c.object_type)
               if o.fact_type
                 objectified_reading = o.fact_type.preferred_reading
@@ -209,6 +213,7 @@ module ActiveFacts
             else
               desc = div('', 'tt-desc')
             end
+
           when MM::Indicator
             desc = div(
               expand_reading(c.role.fact_type.preferred_reading, false),
@@ -250,10 +255,18 @@ module ActiveFacts
           )
         end
 
+        def composite_anchor composite
+          "#{composite.composition.compositor_name}_#{composite.mapping.name.words.titlecase}"
+        end
+
         def dump_composition c
           c.all_composite_by_name.map do |composite|
             composite.mapping.re_rank
-            component(composite.mapping, ' tt-outer')
+            element(
+              component(composite.mapping, ' tt-outer'),
+              {name: composite_anchor(composite)},
+              'a'
+            )
           end*"&nbsp;\n"
         end
 
