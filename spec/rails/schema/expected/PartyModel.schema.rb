@@ -1,9 +1,10 @@
 #
-# schema.rb auto-generated for PartyModel
+# Auto-generated (edits will be lost) using:
+# rspec spec/rails/models/models_spec.rb spec/rails/schema/schema_spec.rb
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Schema.define(version: 20160802114152) do
+ActiveRecord::Schema.define(version: 20000000000000) do
   enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
 
   create_table "companies", id: false, force: true do |t|
