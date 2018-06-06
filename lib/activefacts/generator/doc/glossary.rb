@@ -190,8 +190,11 @@ module ActiveFacts
             if MM::TypeInheritance === ft
               title = "as a "+title
             end
-            if c.foreign_key
-              title = element(title, {href: '#'+composite_anchor(c.foreign_key.composite)}, 'a')
+            if to = (c.foreign_key && c.foreign_key.composite) or
+                composite_mappings = c.object_type.all_mapping.select{|m| m.composite} and
+                composite_mappings.size == 1 and  # In a binary mapping, there aren't any ForeignKeys
+                to = composite_mappings[0].composite
+              title = element(title, {href: '#'+composite_anchor(to)}, 'a')
             end
             klass = klass+' tt-list' unless c.parent_role.is_unique
 
