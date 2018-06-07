@@ -175,6 +175,23 @@ module ActiveFacts
           type = ''
 
           case c
+          when MM::Indicator
+            ft = c.role.fact_type
+            desc = div(div(expand_reading(ft.preferred_reading, false), 'glossary-reading'), 'tt-desc')
+            type = div(div('boolean', 'term'), 'tt-type')
+
+          when MM::Discriminator,
+               MM::Injection,
+                 MM::ComputedValue,
+                  MM::HashValue,
+                 MM::SurrogateKey,
+          #    MM::Scoping,
+               MM::ValidFrom  # This should be an Injection
+            p c
+            debugger
+            print ''
+            # REVISIT
+
           when MM::Absorption
             ft = c.parent_role.fact_type
             preferred_reading = ft.reading_preferably_starting_with_role(c.parent_role)
@@ -203,6 +220,7 @@ module ActiveFacts
             end
             klass = klass+' tt-list' unless c.parent_role.is_unique
 
+          # when MM::ValueField ... Mapping works here
           when MM::Mapping  # A mapping that's not an absorption; usually a Composite
             if MM::EntityType === (o = c.object_type)
               if o.fact_type
