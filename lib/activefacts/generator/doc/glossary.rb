@@ -171,6 +171,7 @@ module ActiveFacts
         def component c, klass = ''
           name = c.name
           title = span(name, 'term'+(c.is_mandatory ? ' mandatory' : ''))
+          desc = ''
           type = ''
 
           case c

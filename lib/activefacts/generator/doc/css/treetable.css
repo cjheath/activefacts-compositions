@@ -15,7 +15,7 @@ div.tt-outer {			/* The wrapper for a Tree-Table structure */
   background-color: #FFF;	/* Make the message stand out from the background */
   border: 3px ridge;            /* A nice border around each node */
   padding-left: 0.5em;          /* Start text a bit further inside the border */
-  margin-left: 5px;		/* Indent each node a further 20px */
+  margin-left: 5px;		/* Indent each node this much further  */
   margin-right: -3px;		/* Overlay the right border of the outer object */
   margin-bottom: -3px;		/* Overlay the bottom border of the outer object */
 }
@@ -23,7 +23,7 @@ div.tt-outer {			/* The wrapper for a Tree-Table structure */
 .tt-list {			/* A node for an array or list of items */
   background: #DDF;		/* Make it stand out by colour */
   border: 4px ridge;		/* Use a slightly fatter border */
-  XXmargin-left: 8px;		/* Stand a little further to the left than our peers */
+  margin-left: 1px;		/* Stand a little further to the left than our peers */
   margin-top: -3px;		/* Stand a little to upwards */
   margin-right: -3px;		/* Bring the right margin to the left as well */
   margin-bottom: 1px;		/* Leave room below for the shadow to show */
@@ -67,6 +67,7 @@ div:first-of-type.tt-alt:before {
 }
 
 .tt-list > .tt-desc {
+  background: #DDF;		/* Make it stand out by colour */
   padding-bottom: 6px;		/* -list has a bigger border, so the -desc needs to be taller */
 }
 .tt-type {			/* Display the data type */
