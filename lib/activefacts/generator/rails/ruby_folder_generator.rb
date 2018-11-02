@@ -35,7 +35,7 @@ module ActiveFacts
         def record_extant_files_to_remove
           @preexisting_files = []
           return if @option_keep
-          @preexisting_files = extant_files
+          @preexisting_files = extant_files || []
         end
 
         def delete_old_generated_files

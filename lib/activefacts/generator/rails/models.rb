@@ -21,7 +21,6 @@ module ActiveFacts
             output:        [String,    "Overwrite model files into this output directory"],
             concern:       [String,    "Namespace for the concerns"],
             validation:    ['Boolean', "Disable generation of validations"],
-            output_models: [String,    "Generate models in given directory (as well as concerns)"],
           })
         end
 
@@ -37,13 +36,6 @@ module ActiveFacts
           @option_keep = options.delete("keep")
           @option_concern = options.delete("concern")
 
-          @option_output_models = options.delete("output_models")
-          if !@option_output_models && @option_concern
-            @option_output_models = "app/models"
-          end
-          @option_output_models = nil if @option_output_models == "-" # dash for stdout
-          @option_output_models = nil unless @option_concern # Can't generate models without a concern as the names will clash.
-
           @option_output = options.delete("output")
           if !@option_output && @option_concern
             @option_output = "app/models/#{ACTR::singular_name @option_concern}"
@@ -54,43 +46,15 @@ module ActiveFacts
         end
 
         def generate_files
-          concerns =
-            @composition.
-            all_composite.
-            sort_by{|composite| composite.mapping.name}.
-            map{|composite| generate_composite composite}.
-            compact*"\n"
-
-          models =
-            @composition.
-            all_composite.
-            sort_by{|composite| composite.mapping.name}.
-            map{|composite| generate_model composite}.
-            compact*"\n"
+          @composition.
+          all_composite.
+          sort_by{|composite| composite.mapping.name}.
+          map{|composite| generate_composite composite}.
+          compact*"\n"
         end
 
         def extant_files
-          files = []
-          files += Dir[@option_output+'/*.rb'] if @option_output
-          files += Dir[@option_output_models+'/*.rb'] if @option_output_models
-          files
-        end
-
-        def generate_model composite
-          concern_module = @option_concern ? "#{@option_concern}::" : ""
-          model = "class #{composite.rails.class_name} < ApplicationRecord\n  include #{concern_module}#{composite.rails.class_name}\nend\n"
-
-          return model unless @option_output_models
-
-          filename = composite.rails.singular_name+'.rb'
-          out = create_if_ok(@option_output_models, filename)
-          return nil unless out
-          out.puts "#{HEADER}\n" +
-            "\# #{([File.basename($0)]+ARGV)*' '}\n\n" +
-            model
-        ensure
-          out.close if out
-          nil
+          Dir[@option_output+'/*.rb'] if @option_output
         end
 
         def generate_composite composite
