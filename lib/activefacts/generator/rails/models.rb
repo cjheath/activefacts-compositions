@@ -8,6 +8,7 @@ require 'activefacts/metamodel'
 require 'activefacts/compositions'
 require 'activefacts/generator'
 require 'activefacts/compositions/traits/rails'
+require 'active_support/inflector/methods'
 
 module ActiveFacts
   module Generators
@@ -35,6 +36,11 @@ module ActiveFacts
           @option_keep = options.delete("keep")
           @option_output = options.delete("output")
           @option_concern = options.delete("concern")
+          if !@option_output && @option_concern
+            @option_output = "app/models/#{ActiveSupport::Inflector.underscore @option_concern}"
+          end
+          @option_output = nil if @option_output == "-" # dash for stdout
+
           @option_validations = options.include?('validations') ? options.delete("validations") : true
         end
 
