@@ -74,7 +74,7 @@ module ActiveFacts
           cleaned = 0
           @preexisting_files.each do |pathname|
             if generated_file_exists(pathname) == true
-              File.unlink(pathname) 
+              File.unlink(pathname)
               cleaned += 1
             else
               remaining << pathname
