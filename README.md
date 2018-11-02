@@ -29,7 +29,7 @@ And then execute:
 
 ## Development
 
-After checking out the repo, run `bundle` to install dependencies. Then, run `rake rspec` to run the tests.
+After checking out the repo, run `bundle` to install dependencies. Then, run `rake spec` to run the tests.
 
 To install this gem onto your local machine from local source code, run `rake install`.
 
