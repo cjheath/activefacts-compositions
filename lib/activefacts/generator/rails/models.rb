@@ -81,7 +81,7 @@ module ActiveFacts
         def generated_file_exists pathname
           File.open(pathname, 'r') do |existing|
             first_lines = existing.read(1024)     # Make it possible to pass over a magic charset comment
-            if first_lines.length == 0 or first_lines =~ %r{^#{HEADER}}
+            if first_lines.length == 0 or first_lines =~ %r{^#{Regexp.quote HEADER}}
               return true
             end
           end
