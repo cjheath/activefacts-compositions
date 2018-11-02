@@ -8,18 +8,20 @@ require 'activefacts/metamodel'
 require 'activefacts/compositions'
 require 'activefacts/generator'
 require 'activefacts/compositions/traits/rails'
+require 'activefacts/generator/rails/ruby_folder_generator'
 
 module ActiveFacts
   module Generators
     module Rails
       class Models
-        HEADER = "# Auto-generated (edits will be lost) using:"
+        include RubyFolderGenerator
         def self.options
           ({
-            keep:       ['Boolean', "Keep stale model files"],
-            output:     [String,    "Overwrite model files into this output directory"],
-            concern:    [String,    "Namespace for the concerns"],
-            validation: ['Boolean', "Disable generation of validations"],
+            keep:          ['Boolean', "Keep stale model files"],
+            output:        [String,    "Overwrite model files into this output directory"],
+            concern:       [String,    "Namespace for the concerns"],
+            validation:    ['Boolean', "Disable generation of validations"],
+            output_models: [String,    "Generate models in given directory (as well as concerns)"],
           })
         end
 
@@ -33,8 +35,16 @@ module ActiveFacts
           @composition = composition
           @options = options
           @option_keep = options.delete("keep")
-          @option_output = options.delete("output")
           @option_concern = options.delete("concern")
+
+          @option_output_models = options.delete("output_models")
+          if !@option_output_models && @option_concern
+            @option_output_models = "app/models"
+          end
+          @option_output_models = nil if @option_output_models == "-" # dash for stdout
+          @option_output_models = nil unless @option_concern # Can't generate models without a concern as the names will clash.
+
+          @option_output = options.delete("output")
           if !@option_output && @option_concern
             @option_output = "app/models/#{ACTR::singular_name @option_concern}"
           end
@@ -43,74 +53,44 @@ module ActiveFacts
           @option_validations = options.include?('validations') ? options.delete("validations") : true
         end
 
-        def warn *a
-          $stderr.puts *a
-        end
-
-        def generate
-          list_extant_files
-
-          @ok = true
-          models =
+        def generate_files
+          concerns =
             @composition.
             all_composite.
             sort_by{|composite| composite.mapping.name}.
             map{|composite| generate_composite composite}.
             compact*"\n"
 
-          warn "\# #{@composition.name} generated with errors" unless @ok
-          delete_old_generated_files if @option_output && !@option_keep
-
-          models
+          models =
+            @composition.
+            all_composite.
+            sort_by{|composite| composite.mapping.name}.
+            map{|composite| generate_model composite}.
+            compact*"\n"
         end
 
-        def list_extant_files
-          @preexisting_files = []
-          return if @option_keep
-          @preexisting_files += Dir[@option_output+'/*.rb'] if @option_output
+        def extant_files
+          files = []
+          files += Dir[@option_output+'/*.rb'] if @option_output
+          files += Dir[@option_output_models+'/*.rb'] if @option_output_models
+          files
         end
 
-        def delete_old_generated_files
-          remaining = []
-          cleaned = 0
-          @preexisting_files.each do |pathname|
-            if generated_file_exists(pathname) == true
-              File.unlink(pathname)
-              cleaned += 1
-            else
-              remaining << pathname
-            end
-          end
-          $stderr.puts "Cleaned up #{cleaned} old generated files" if @preexisting_files.size > 0
-          $stderr.puts "Remaining non-generated files:\n\t#{remaining*"\n\t"}" if remaining.size > 0
-        end
+        def generate_model composite
+          concern_module = @option_concern ? "#{@option_concern}::" : ""
+          model = "class #{composite.rails.class_name} < ApplicationRecord\n  include #{concern_module}#{composite.rails.class_name}\nend\n"
 
-        def generated_file_exists pathname
-          File.open(pathname, 'r') do |existing|
-            first_lines = existing.read(1024)     # Make it possible to pass over a magic charset comment
-            if first_lines.length == 0 or first_lines =~ %r{^#{Regexp.quote HEADER}}
-              return true
-            end
-          end
-          return false    # File exists, but is not generated
-        rescue Errno::ENOENT
-          return nil      # File does not exist
-        end
+          return model unless @option_output_models
 
-        def create_if_ok filename
-          # Create a file in the output directory, being careful not to overwrite carelessly
-          out = $stdout
-          if @option_output
-            pathname = (@option_output+'/'+filename).gsub(%r{//+}, '/')
-            @preexisting_files.reject!{|f| f == pathname }    # Don't clean up this file
-            if generated_file_exists(pathname) == false
-              warn "not overwriting non-generated file #{pathname}"
-              @ok = false
-              return nil
-            end
-            out = File.open(pathname, 'w')
-          end
-          out
+          filename = composite.rails.singular_name+'.rb'
+          out = create_if_ok(@option_output_models, filename)
+          return nil unless out
+          out.puts "#{HEADER}\n" +
+            "\# #{([File.basename($0)]+ARGV)*' '}\n\n" +
+            model
+        ensure
+          out.close if out
+          nil
         end
 
         def generate_composite composite
@@ -122,7 +102,7 @@ module ActiveFacts
           return model unless @option_output
 
           filename = composite.rails.singular_name+'.rb'
-          out = create_if_ok(filename)
+          out = create_if_ok(@option_output, filename)
           return nil unless out
           out.puts "#{HEADER}\n" +
             "\# #{([File.basename($0)]+ARGV)*' '}\n\n" +
