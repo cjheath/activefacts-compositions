@@ -8,7 +8,6 @@ require 'activefacts/metamodel'
 require 'activefacts/compositions'
 require 'activefacts/generator'
 require 'activefacts/compositions/traits/rails'
-require 'active_support/inflector/methods'
 
 module ActiveFacts
   module Generators
@@ -37,7 +36,7 @@ module ActiveFacts
           @option_output = options.delete("output")
           @option_concern = options.delete("concern")
           if !@option_output && @option_concern
-            @option_output = "app/models/#{ActiveSupport::Inflector.underscore @option_concern}"
+            @option_output = "app/models/#{ACTR::singular_name @option_concern}"
           end
           @option_output = nil if @option_output == "-" # dash for stdout
 
@@ -49,7 +48,7 @@ module ActiveFacts
         end
 
         def generate
-          list_extant_files if @option_output && !@option_keep
+          list_extant_files
 
           @ok = true
           models =
@@ -66,7 +65,9 @@ module ActiveFacts
         end
 
         def list_extant_files
-          @preexisting_files = Dir[@option_output+'/*.rb']
+          @preexisting_files = []
+          return if @option_keep
+          @preexisting_files += Dir[@option_output+'/*.rb'] if @option_output
         end
 
         def delete_old_generated_files
