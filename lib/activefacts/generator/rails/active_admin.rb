@@ -1,5 +1,5 @@
 #
-#       ActiveFacts Rails Models Generator
+#       ActiveFacts Admin App Generator
 #
 # Copyright (c) 2018 Daniel Heath. Read the LICENSE file.
 #
@@ -41,9 +41,10 @@ module ActiveFacts
           admins =
             @composition.
             all_composite.
-            sort_by{|composite| composite.mapping.name}.
-            map{|composite| generate_admin composite}.
-            compact*"\n"
+            sort_by {|composite| composite.mapping.name}.
+            reject {|composite| composite.mapping.object_type.is_static}.
+            map {|composite| generate_admin composite}.
+            compact * "\n"
         end
 
         def extant_files
