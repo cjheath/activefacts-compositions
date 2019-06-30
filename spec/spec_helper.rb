@@ -6,14 +6,16 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
 require 'activefacts/compositions'
 
-RSpec.configure do |config|
-  rd, wr = IO.pipe
-  if fork
-    $stdout.reopen wr
-    rd.close
-  else
-    $stdin.reopen rd
-    wr.close
-    Process.exec "tee "+Pathname.new(__FILE__+'/../log').relative_path_from(Pathname(Dir.pwd)).to_s
+unless RUBY_PLATFORM == "java"
+  RSpec.configure do |config|
+    rd, wr = IO.pipe
+    if fork
+      $stdout.reopen wr
+      rd.close
+    else
+      $stdin.reopen rd
+      wr.close
+      Process.exec "tee "+Pathname.new(__FILE__+'/../log').relative_path_from(Pathname(Dir.pwd)).to_s
+    end
   end
 end

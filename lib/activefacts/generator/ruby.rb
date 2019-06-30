@@ -55,8 +55,8 @@ module ActiveFacts
       end
 
       def class_prelude(object_type, supertype)
-        global_qualifier = object_type == supertype ? '::' :''
-        "  class #{object_type.name.words.capcase}" + (supertype ? " < #{global_qualifier}#{supertype.name.words.capcase}" : '') + "\n"
+        global_qualifier = object_type == supertype ? ('::') : ''
+        "  class #{object_type.name.words.capcase}" + (supertype ? (" < #{global_qualifier}#{supertype.name.words.capcase}") : '') + "\n"
       end
 
       def class_finale(object_type)

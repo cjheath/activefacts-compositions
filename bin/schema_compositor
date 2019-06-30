@@ -66,15 +66,25 @@ class SchemaCompositor
         option = compositor
       end
 
-      if (action, helptext = ActiveFacts::Compositions.compositors[option]) && action
+      # Is it a compositor?
+      action, helptext = ActiveFacts::Compositions.compositors[option]
+      if action
         options.delete(option)
         check_options(action, modes)
         @compositors << [action, modes, option]
-      elsif (action, helptext = ActiveFacts::Generators.generators[option]) && action
+	next
+      end
+
+      # Is it a generator?
+      action, helptext = ActiveFacts::Generators.generators[option]
+      if action
         options.delete(option)
         check_options(action, modes)
         @generators << [action, modes, option]
-      elsif option == 'help'
+	next
+      end
+
+      if option == 'help'
         # Finish, then help
       else
         $stderr.puts "Action --#{option} is not recognised"
