@@ -1,18 +1,18 @@
 PATH
   remote: /Users/cjh/work/activefacts/api
   specs:
-    activefacts-api (1.9.12)
+    activefacts-api (1.9.13)
       rbtree-pure (~> 0, >= 0.1.1)
       tracing (~> 2, >= 2.0.4)
 
 PATH
   remote: /Users/cjh/work/activefacts/compositions
   specs:
-    activefacts-compositions (1.9.22)
+    activefacts-compositions (1.9.23)
       activefacts-api (~> 1, >= 1.9.11)
       activefacts-cql (~> 1, >= 1.9.5)
       activefacts-metamodel (~> 1, >= 1.9.22)
-      activesupport (>= 4.2.7)
+      activesupport (~> 5, >= 5.2.4.3)
       json (~> 1.8)
       tracing (~> 2, >= 2.0.6)
 
@@ -40,48 +40,43 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (5.2.1)
+    activesupport (5.2.8.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    byebug (1.8.2)
-      columnize (~> 0.3.6)
-      debugger-linecache (~> 1.2.0)
-    columnize (0.3.6)
-    concurrent-ruby (1.0.5)
-    debugger-linecache (1.2.0)
-    diff-lcs (1.3)
-    i18n (1.1.1)
+    concurrent-ruby (1.1.10)
+    diff-lcs (1.5.0)
+    i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     json (1.8.6)
-    minitest (5.11.3)
+    minitest (5.16.2)
     polyglot (0.3.5)
     rake (10.5.0)
     rbtree-pure (0.1.1)
-    rspec (3.6.0)
-      rspec-core (~> 3.6.0)
-      rspec-expectations (~> 3.6.0)
-      rspec-mocks (~> 3.6.0)
-    rspec-core (3.6.0)
-      rspec-support (~> 3.6.0)
-    rspec-expectations (3.6.0)
+    rspec (3.11.0)
+      rspec-core (~> 3.11.0)
+      rspec-expectations (~> 3.11.0)
+      rspec-mocks (~> 3.11.0)
+    rspec-core (3.11.0)
+      rspec-support (~> 3.11.0)
+    rspec-expectations (3.11.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.6.0)
-    rspec-mocks (3.6.0)
+      rspec-support (~> 3.11.0)
+    rspec-mocks (3.11.1)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.6.0)
-    rspec-support (3.6.0)
-    rubyzip (1.2.2)
+      rspec-support (~> 3.11.0)
+    rspec-support (3.11.0)
+    rubyzip (2.3.2)
     thread_safe (0.3.6)
-    tracing (2.0.8)
-    treetop (1.6.10)
+    tracing (2.0.9)
+    treetop (1.6.11)
       polyglot (~> 0.3)
-    tzinfo (1.2.5)
+    tzinfo (1.2.10)
       thread_safe (~> 0.1)
 
 PLATFORMS
-  ruby
+  x86_64-darwin-18
 
 DEPENDENCIES
   activefacts-api!
@@ -90,11 +85,10 @@ DEPENDENCIES
   activefacts-factil!
   activefacts-metamodel!
   bundler (>= 1.10)
-  byebug (~> 1.8.2)
   json (~> 1.8)
   rake (~> 10.0)
   rspec (~> 3.3)
   rubyzip
 
 BUNDLED WITH
-   1.16.2
+   2.3.16
