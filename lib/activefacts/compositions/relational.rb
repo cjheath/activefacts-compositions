@@ -86,6 +86,9 @@ module ActiveFacts
           # Populate the target fields of foreign keys
           complete_foreign_keys
 
+          # Ensure that all index fields follow the ordering of their associated presence constraint
+          reorder_index_fields
+
           # Remove mappings for objects we have absorbed
           clean_unused_mappings
         end
@@ -787,6 +790,7 @@ module ActiveFacts
             when MM::Index
               # If we're using hash surrogates, refuse to include a surrogate in the natural index:
               next if @option_fk == :hash && (!!is_primary == (mapping.root.natural_index == path))
+              # We have to come back to reorder these based on the order of roles in the path.presence_constraint
               @constellation.IndexField(access_path: path, ordinal: path.all_index_field.size, component: mapping)
             when MM::ForeignKey
               # If we're using hash surrogates, foreign keys only contain surrogates.
@@ -819,6 +823,48 @@ module ActiveFacts
                 end
               else
                 raise "Foreign key from #{path.source_composite.mapping.name} references target table #{target.mapping.name} which has no primary index"
+              end
+            end
+          end
+        end
+      end
+
+      # Index fields are ordered by the order the fields were added to the composite (after re_rank).
+      # We want them to reflect the ordering of the roles in the underlying presence constraint instead
+      # This is horrid legubrious code, sorry about that. It's been retro-fitted to avoid unwanted impacts
+      def reorder_index_fields
+        @composition.all_composite.each do |composite|
+          composite.all_access_path.each do |index|
+            next unless MM::Index === index
+                      # .map(&:fact_type).map(&:default_reading).inspect
+            next if index.all_index_field.size <= 1
+            pc = index.presence_constraint
+            trace :relational_paths, "Reordering fields of index #{index.inspect} to match presence constraint" do
+              ordering =
+                index.all_index_field.inject([]) do |fields, index_field|
+                  trace :relational_paths, "Considering index field for #{index_field.component.inspect}" do
+                    c = index_field.component
+                    position = nil
+                    loop do
+                      break unless c.is_a?(MM::Absorption)
+                      trace :relational_paths, "... absorbing #{c.inspect}"
+                      position = pc.role_sequence.all_role_ref.sort_by(&:ordinal).find_index{|rr| rr.role == c.child_role}
+                      if position
+                        break
+                      end
+                      break unless (c = c.parent)
+                    end
+                    fields.append [index_field, [position, index_field.ordinal]]
+                  end
+                end
+              new_ordinal = 0
+              ordering = ordering.sort_by{|e| e[1]}
+              index.all_index_field.each do |f|     # Avoid duplicate key violations
+                f.ordinal = f.ordinal+index.all_index_field.size
+              end
+              ordering.each do |index_field, rank|
+                index_field.ordinal = new_ordinal
+                new_ordinal += 1
               end
             end
           end
