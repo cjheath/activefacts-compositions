@@ -10,7 +10,3 @@ if this_file =~ %r{\A#{ENV['HOME']}}i and !ENV['USE_INSTALLED']
   gem 'activefacts-metamodel', path: dir+'/metamodel'
   gem 'activefacts-cql', path: dir+'/cql'
 end
-
-group :development do
-  gem 'byebug'
-end
