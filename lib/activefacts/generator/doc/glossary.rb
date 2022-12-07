@@ -25,20 +25,11 @@ module ActiveFacts
           [0, nil]   # no composition is required
         end
 
-        # Base class for generators of object-oriented class libraries for an ActiveFacts vocabulary.
         def initialize constellation, composition, options = {}
           @constellation = constellation
           @compositions = Array(composition)
           @vocabulary = constellation.Vocabulary.values[0]
           @options = options
-        end
-
-        def puts(*a)
-          @out.puts *a
-        end
-
-        def print(*a)
-          @out.print *a
         end
 
         def generate
@@ -250,19 +241,33 @@ module ActiveFacts
             desc = div('', 'tt-desc')
           end
 
-
-          div(
-            title +
-            type +
-            desc +
-            c.
-            all_member.
+          groups = c.exclusive_groups
+          non_exclusive_members = c.all_member.select do |m|
+            !groups.detect{|sx, (mandatory, members)| members.include?(m)}
+          end
+          seen = {}
+          members = non_exclusive_members.
             sort_by{|m| m.ordinal}.
             map do |member|
               component(member)
-            end*'',
-            'tt-node'+klass
-          )+"\n"
+            end*'' +
+            groups.map do |sx, (mandatory, excl_members)|
+              # REVISIT: When a member is in multiple exclusive groups, it's emitted more than once
+              # REVISIT: Subtype Indicators are covered under the same exclusive constraint as the subtype.
+              div(
+                excl_members.map do |m|
+                  k = klass + (mandatory ? ' tt-one' : ' tt-any')
+                  if seen[m]
+                    div(span(m.name, 'term'+(m.is_mandatory ? ' mandatory' : ''))+' (as above)', 'tt-node'+k)+"\n"
+                  else
+                    seen[m] = true
+                    component(m, k)
+                  end
+                end*''
+              )
+            end*''
+
+          div(title + type + desc + members, 'tt-node'+klass)+"\n"
         end
 
         def dump_compositions

@@ -36,21 +36,27 @@ div.tt-outer {			/* The wrapper for a Tree-Table structure */
   vertical-align: top;
 }
 
-.tt-alt {
+.tt-one,
+.tt-any {
   border-radius: 10px 10px 0px 10px;  /* Use rounded corners */
   margin-top: 10px;		/* Leave a space above alternative items */
 }
-div:first-of-type.tt-alt {
+XX:div:first-of-type.tt-one {
   margin-top: 0px !important;	/* Don't leave a space above the first list item */
 }
-div:first-of-type.tt-alt:before {
-  content:'either';
-  font-size: 6pt;
+div:first-of-type.tt-one:before {
+  content: 'either ';
+  font-size: small;
 }
-
-.tt-alt:before{
-  content:'or';
-  font-size: 6pt;
+div:first-of-type.tt-any:before {
+  content: 'maybe ';
+  font-size: small;
+}
+.tt-one:before,
+.tt-any:before
+{
+  content: 'or ';
+  font-size: small;
 }
 
 .tt-desc {			/* Display the data item description */
