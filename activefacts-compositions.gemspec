@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", ">= 10"
   spec.add_development_dependency "rspec", "~> 3.3"
 
-  spec.add_runtime_dependency "activesupport", ">= 4.2.7"
+  spec.add_runtime_dependency "activesupport", "~>5", ">= 5.2.4.3"
   spec.add_runtime_dependency "json", "~> 1.8"
   spec.add_runtime_dependency "tracing", "~> 2", ">= 2.0.6"
 
