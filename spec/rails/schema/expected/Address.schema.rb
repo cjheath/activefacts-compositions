@@ -1,6 +1,5 @@
 #
-# Auto-generated (edits will be lost) using:
-# rspec spec/rails/models/models_spec.rb spec/rails/schema/schema_spec.rb
+# Auto-generated (edits will be lost)
 #
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)

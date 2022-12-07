@@ -46,7 +46,7 @@ CREATE TABLE Claim (
 	-- Primary index to Claim(Claim ID in "Claim has Claim ID")
 	PRIMARY KEY(ClaimID),
 	-- Unique index to Claim(Policy, p_sequence in "Claim is on Policy", "Claim has Claim Sequence")
-	UNIQUE(PSequence, PolicyPYearNr, PolicyPProductCode, PolicyPStateCode, PolicyPSerial)
+	UNIQUE(PolicyPYearNr, PolicyPProductCode, PolicyPStateCode, PolicyPSerial, PSequence)
 );
 
 

@@ -49,11 +49,11 @@
 #       Primary index to Claim(Claim ID in "Claim has Claim ID")
 #         IndexField part 0 in Claim references Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"
 #       Unique index to Claim(Policy, p_sequence in "Claim is on Policy", "Claim has Claim Sequence")
-#         IndexField part 0 in Claim references Absorption (mandatory) in Claim of P_sequence in "Claim has Claim Sequence"
-#         IndexField part 1 in Claim references Absorption (existential) in P_year of Year Nr in "Year has Year Nr"
-#         IndexField part 2 in Claim references Absorption (existential) in P_product of Product Code in "Product has Product Code"
-#         IndexField part 3 in Claim references Absorption (existential) in P_state of State Code in "State has State Code"
-#         IndexField part 4 in Claim references Absorption (existential) in Policy of P_serial in "Policy has Policy Serial"
+#         IndexField part 0 in Claim references Absorption (existential) in P_year of Year Nr in "Year has Year Nr"
+#         IndexField part 1 in Claim references Absorption (existential) in P_product of Product Code in "Product has Product Code"
+#         IndexField part 2 in Claim references Absorption (existential) in P_state of State Code in "State has State Code"
+#         IndexField part 3 in Claim references Absorption (existential) in Policy of P_serial in "Policy has Policy Serial"
+#         IndexField part 4 in Claim references Absorption (mandatory) in Claim of P_sequence in "Claim has Claim Sequence"
 #     Foreign keys inbound
 #       Foreign Key from Contractor Appointment to Claim over Absorption (existential) in Contractor Appointment of Claim in "Contractor Appointment involves Claim"
 #         ForeignKeyField part 0 in Contractor Appointment is Absorption (existential) in Claim of Claim ID in "Claim has Claim ID"

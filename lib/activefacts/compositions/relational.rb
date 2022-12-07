@@ -831,14 +831,14 @@ module ActiveFacts
 
       # Index fields are ordered by the order the fields were added to the composite (after re_rank).
       # We want them to reflect the ordering of the roles in the underlying presence constraint instead
-      # This is horrid legubrious code, sorry about that. It's been retro-fitted to avoid unwanted impacts
+      # This is horrid lugubrious code, sorry about that. It's been retro-fitted to avoid unwanted impacts
       def reorder_index_fields
         @composition.all_composite.each do |composite|
           composite.all_access_path.each do |index|
             next unless MM::Index === index
                       # .map(&:fact_type).map(&:default_reading).inspect
             next if index.all_index_field.size <= 1
-            pc = index.presence_constraint
+            next unless pc = index.presence_constraint
             trace :relational_paths, "Reordering fields of index #{index.inspect} to match presence constraint" do
               ordering =
                 index.all_index_field.inject([]) do |fields, index_field|
@@ -858,7 +858,7 @@ module ActiveFacts
                   end
                 end
               new_ordinal = 0
-              ordering = ordering.sort_by{|e| e[1]}
+              ordering = ordering.sort{|a, b| a[1] <=> b[1] || 0}
               index.all_index_field.each do |f|     # Avoid duplicate key violations
                 f.ordinal = f.ordinal+index.all_index_field.size
               end
