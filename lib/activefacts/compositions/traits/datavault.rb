@@ -42,7 +42,7 @@ module ActiveFacts
 
         def compile text
           @vocabulary = @constellation.Vocabulary.values[0]
-          @compiler ||= ActiveFacts::CQL::Compiler.new(@vocabulary, constellation: @constellation)
+          @compiler ||= ActiveFacts::CQL::Compiler.new(@vocabulary.name+'.cql', constellation: @constellation)
           @compiler.compile("schema #{@vocabulary.name};\n"+text)
         end
 

@@ -64,7 +64,9 @@ describe "Rails schema from CQL" do
       end
 
       if expected_text
-        expect(output).to be_like(expected_text), "Output #{actual} doesn't match expected #{expected}"
+        o = output.gsub(/#.*[Aa]uto-*generated.*$/, '')
+        e = expected_text.gsub(/#.*[Aa]uto-*generated.*$/, '')
+        expect(o).to be_like(e), "Output #{actual} doesn't match expected #{expected}"
       else
         pending "Actual output in #{actual} can't be compared with missing expected file #{expected}"
         expect(expected_text).to_not be_nil, "I don't know what to expect"
